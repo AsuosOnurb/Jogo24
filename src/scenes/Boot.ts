@@ -9,16 +9,16 @@ class Boot extends Phaser.Scene {
         // more setup stuff here
         // ...
 
-        window.addEventListener('resize', this.resize.bind(this));
+        //window.addEventListener('resize', this.resize.bind(this));
 
         this.scene.start('MainMenu');
     }
-
+    /** 
     resize() {
         let w = window.innerWidth * window.devicePixelRatio;
         let h = window.innerHeight * window.devicePixelRatio;
         // manually resize the game with the Phaser 3.16 scalemanager
-        this.scale.resize(w, h);
+        //this.scale.resize(w, h);
         // Check which scene is active.
         for (let scene of this.scene.manager.scenes) {
             if (scene.scene.settings.active) {
@@ -31,7 +31,8 @@ class Boot extends Phaser.Scene {
             }
         }
     }
-
+    */
 }
 
 export default Boot;
+
