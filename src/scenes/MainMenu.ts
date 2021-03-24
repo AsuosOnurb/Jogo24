@@ -3,68 +3,113 @@ import ImageButton from '~/game_objects/ImageButton';
 
 export default class HelloWorldScene extends Phaser.Scene {
 
-    private panelGroup!: Phaser.GameObjects.Group;
-    private aboutUsPanel!: Phaser.GameObjects.Sprite;
-    private backButtonImage!: Phaser.GameObjects.Sprite;
+    private mainMenuButtonsGroup!: Phaser.GameObjects.Group; // Contains all the buttons in the main menu
     private aboutUsButton!: Phaser.GameObjects.Sprite;
-    private aboutUsTextObject!: Phaser.GameObjects.Text;
+    private howToPlayButton!: Phaser.GameObjects.Sprite;
+    
+    private panelGroup!: Phaser.GameObjects.Group;
+    private panelImage!: Phaser.GameObjects.Sprite;
+    private panelBackButton!: Phaser.GameObjects.Sprite;
+    private panelText!: Phaser.GameObjects.Text;
+
+    private readonly ABOUT_GAME: string = "Things about the game";
+    private readonly HOW_TO_PLAY: string = "This is how to play the game";
 
 
     constructor() {
-        super('hello-world')
+        super('MainMenu');
 
     }
 
     preload() {
-        this.load.image('aboutUsPanel', 'assets/images/ui/panels/panel.png');
+        this.load.image('panel', 'assets/images/ui/panels/panel.png');
         this.load.image('btn_back', 'assets/images/ui/buttons/btn_back.png');
     }
 
-   
+
     create() {
 
-        /* ================About us button ======================== */
-       this.aboutUsButton = this.add.sprite(128, window.innerHeight - 32, 'btn_back');
-       this.aboutUsButton.setInteractive();
-       this.aboutUsButton.on("pointerdown", () => {
-           console.log("Ho");
-            this.aboutUsButton.setInteractive(false);
-            this.panelGroup.setVisible(true);
+        // ============================ Setup Main Menu Buttons ======================== //
+        // The group
+        this.mainMenuButtonsGroup = this.add.group();
+
+        // About the game button
+        this.aboutUsButton = this.add.sprite(128, window.innerHeight - 64, 'btn_back');
+        this.aboutUsButton.setInteractive();
+        this.aboutUsButton.on("pointerdown", () => {
+            console.log("Clicked About Gamea btn");
             
-       });
+            this.mainMenuButtonsGroup.setVisible(false);
+            this.panelGroup.setVisible(true)
+            this.panelText.text = this.ABOUT_GAME;
+        });
 
-    
-        // ============================= About Us panel Setup ============= //
+        // How to play button
+        this.howToPlayButton = this.add.sprite(128 + 128, window.innerHeight - 64, 'btn_back');
+        this.howToPlayButton.setInteractive();
+        this.howToPlayButton.on('pointerdown', () => {
+            console.log("clicked how to play btn");
+
+            this.mainMenuButtonsGroup.setVisible(false);
+            this.panelGroup.setVisible(true)
+            this.panelText.text = this.HOW_TO_PLAY;
+
+        });
+        // Add buttons into the group
+        this.mainMenuButtonsGroup.add(this.aboutUsButton);
+        this.mainMenuButtonsGroup.add(this.howToPlayButton);
+
+        // ================ Panel setup ====================================================
+
+        // The panel group
         this.panelGroup = this.add.group();
-        
+
         // The panel image
-       this.aboutUsPanel = this.add.sprite(window.innerWidth/2, window.innerHeight / 2,'aboutUsPanel');
+        this.panelImage = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'panel');
 
-       // The back button image
-       this.backButtonImage = this.add.sprite(200 , 160, 'btn_back');
-       // The back button event
-       this.backButtonImage.setInteractive();
-       this.backButtonImage.on("pointerdown", () => {
-            console.log("Hey");
+        // The back button image
+        this.panelBackButton = this.add.sprite(0, 0, 'btn_back');
+        this.panelBackButton.setInteractive();
+        // The back button event
+        this.panelBackButton.on("pointerdown", () => {
+            console.log("Clicked to go back from about game panel");
             this.panelGroup.setVisible(false);
-            this.backButtonImage.setInteractive(true);
-       });
+            this.mainMenuButtonsGroup.setVisible(true);
+        });
 
-       // The text
-       const text: string = "Um texto muito fixe ... yey.....";
-       this.aboutUsTextObject = this.add.text((window.innerWidth / 2) - 256, window.innerHeight / 2, text, {fontSize: "32px"});
-       this.aboutUsTextObject.style.fontSize = "20";
+        // Put back button and panel image into the panel group
+        this.panelGroup.add(this.panelBackButton);
+        this.panelGroup.add(this.panelImage);
 
-       this.panelGroup.add(this.aboutUsPanel);
-       this.panelGroup.add(this.backButtonImage);
-       this.panelGroup.add(this.aboutUsTextObject);
+        // The panel group starts invisible
+        this.panelGroup.setVisible(false);
+
+        // ============================= "About the game" and "How to play" texts ======================//
+        this.panelText = this.add.text(0, 0, "DEFAULT_TEXT");
+        this.panelText.setVisible(false);
+        
+        this.panelGroup.add(this.panelText);
 
 
-       
+        // Position everyting
+        this.resizeField(this.sys.game.config.width, this.sys.game.config.height);
 
-       
     }
 
-    
-    
+
+    resizeField(w, h)
+    {
+        console.log("Called");
+        
+        this.aboutUsButton.setPosition(128 , h - 96, 0, 0);
+        this.howToPlayButton.setPosition(128 + 128, h - 96, 0, 0);
+
+        this.panelImage.setPosition(w / 2, h/2);
+
+        this.panelBackButton.setPosition(128 , 128, 0, 0);
+
+        this.panelText.setPosition(w/2, h/2);
+    }
+
+
 }
