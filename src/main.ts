@@ -6,7 +6,7 @@ import MainMenu from './scenes/MainMenu'
 
 var config = {
     type: Phaser.WEBGL,
-    backgroundColor: '#0D161D',
+    backgroundColor: '#ff9600',
     pixelArt: true,
     width: window.innerWidth * window.devicePixelRatio, // set game width by multiplying window width with devicePixelRatio
     height: window.innerHeight * window.devicePixelRatio, // set game height by multiplying window height with devicePixelRatio
