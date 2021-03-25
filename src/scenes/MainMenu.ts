@@ -106,6 +106,14 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     }
 
+    update(){
+        const gameId = document.getElementById("game");
+        if(gameId){
+            gameId.style.width = '100%';
+            gameId.style.height = '100%';
+        }
+    }
+
     /** 
     resizeField(w, h)
     {
