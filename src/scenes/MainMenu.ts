@@ -102,11 +102,11 @@ export default class HelloWorldScene extends Phaser.Scene {
 
 
         // Position everyting
-        this.resizeField(this.sys.game.config.width, this.sys.game.config.height);
+        //this.resizeField(this.sys.game.config.width, this.sys.game.config.height);
 
     }
 
-
+    /** 
     resizeField(w, h)
     {
         console.log("Called");
@@ -120,6 +120,6 @@ export default class HelloWorldScene extends Phaser.Scene {
 
         this.panelText.setPosition(w/2, h/2);
     }
-
+    */
 
 }
