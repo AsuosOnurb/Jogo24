@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
-import solutions_map from './solutions_map.json';
+import solutions_map from './solutions_map.json'
+import dificulty_map from './dificulty_map.json'
 
 type GameState = {
     difficulty: string;
