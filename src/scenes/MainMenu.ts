@@ -110,7 +110,7 @@ export default class HelloWorldScene extends Phaser.Scene {
             .on("pointerover", () => this.btnPlaySoloEasy.setFrame(1))
             .on("pointerout", () => this.btnPlaySoloEasy.setFrame(0))
             .on("pointerup", () => this.startSoloGame("Easy")); // Starts solo game on easy diff. 
-        this.btnPlaySoloEasyText = this.add.text(window.innerWidth / 2 - 512 - 64, window.innerHeight / 2 - 16, "FÁCIL", { fontSize: "32px" });
+        this.btnPlaySoloEasyText = this.add.text(window.innerWidth / 2 - 512 - 96, window.innerHeight / 2 - 32, "FÁCIL", { fontSize: "64px" });
 
         // Play Solo Medium button
         this.btnPlaySoloMedium = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'btn');
@@ -119,7 +119,7 @@ export default class HelloWorldScene extends Phaser.Scene {
             .on("pointerover", () => this.btnPlaySoloMedium.setFrame(1))
             .on("pointerout", () => this.btnPlaySoloMedium.setFrame(0))
             .on("pointerup", () => this.startSoloGame("Medium")); // Starts solo game on medium diff. 
-        this.btnPlaySoloMediumText = this.add.text(window.innerWidth / 2 - 64, window.innerHeight / 2 - 16, "MÉDIO", { fontSize: "32px" });
+        this.btnPlaySoloMediumText = this.add.text(window.innerWidth / 2 - 96, window.innerHeight / 2 - 32, "MÉDIO", { fontSize: "64px" });
 
         // Play Solo Hard button
         this.btnPlaySoloHard = this.add.sprite(window.innerWidth / 2 + 512, window.innerHeight / 2, 'btn');
@@ -128,7 +128,7 @@ export default class HelloWorldScene extends Phaser.Scene {
             .on("pointerover", () => this.btnPlaySoloHard.setFrame(1))
             .on("pointerout", () => this.btnPlaySoloHard.setFrame(0))
             .on("pointerup", () => this.startSoloGame("Hard")); // Starts solo game on medium diff. 
-        this.btnPlaySoloHardText = this.add.text(window.innerWidth / 2 + 512 - 64, window.innerHeight / 2 - 16, "DIFÍCIL", { fontSize: "32px" });
+        this.btnPlaySoloHardText = this.add.text(window.innerWidth / 2 + 512 - 128, window.innerHeight / 2 - 32, "DIFÍCIL", { fontSize: "64px" });
 
 
         this.mainMenuButtonsGroup.setVisible(true);

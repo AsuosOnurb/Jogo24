@@ -18,8 +18,9 @@ export default class SoloGame extends Phaser.Scene {
     private textCurrentCard!: Phaser.GameObjects.Text;
 
     // Text
-    private textTotalWrong!: Phaser.GameObjects.Text;
-    private textTotalCorrect!: Phaser.GameObjects.Text;
+    private textTotalWrong!: Phaser.GameObjects.Text; // Total wrong counter label
+    private textTotalCorrect!: Phaser.GameObjects.Text; // Total correct counter label
+    private textPlayerInput!: Phaser.GameObjects.Text; // The player input 
 
     // Buttons
     private btnNewCard!: Phaser.GameObjects.Sprite;
@@ -36,6 +37,8 @@ export default class SoloGame extends Phaser.Scene {
 
     private btnOperationDivide!: Phaser.GameObjects.Sprite;
     private btnOperationDivideText!: Phaser.GameObjects.Text;
+
+    private btnGotoMenu!: Phaser.GameObjects.Sprite;
 
     constructor() {
         super("SoloGame");
@@ -62,25 +65,17 @@ export default class SoloGame extends Phaser.Scene {
 
 
     create() {
-        // Setup labels
-        this.textCurrentCard = this.add.text(window.innerWidth / 2 - 256, window.innerHeight / 2,
-            this.gameState.currentCard, { fontSize: "64px", color: "#292d33"});
+        // Setup labels 
+        this.setupLabels();
 
-        this.textTotalCorrect = this.add.text(16, 16, "Correctos: 0", { fontSize: "32px" });
-        this.textTotalWrong = this.add.text(16, 64, "Incorrectos: 0", { fontSize: "32px" });
-
-        // Setup the "New Card" button and its text
-        this.btnNewCard = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2 + 96, "btn");
-        this.btnNewCard.setScale(0.3, 0.3);
-        this.btnNewCard.setInteractive()
-            .on("pointerover", () => this.btnNewCard.setFrame(1))
-            .on("pointerout", () => this.btnNewCard.setFrame(0))
-            .on("pointerup", () => this.newCard());
-        this.btnNewCardText = this.add.text(window.innerWidth / 2 - 96, window.innerHeight / 2 + 80,
-            "Nova Carta", { fontSize: "32px" });
+        // Setup the number buttons and the "New Card" button
+        this.setupCardButtons();
 
         // Setup the operation button: "Add", "Multiply", etc..
         this.setupOperationButtons();
+
+        // Setup buttons like "Go to Menu" and things like that...
+        this.setupMiscButtons();
 
     }
 
@@ -89,11 +84,30 @@ export default class SoloGame extends Phaser.Scene {
     }
 
 
-    newCard(): void {
-        // const generatedCard: string = CardGenerator.GenerateCard(this.gameState.difficulty);
-        const generatedCard: string = "1 - 7 - 9 - 9";
-        this.gameState.currentCard = generatedCard;
-        this.textCurrentCard.text = generatedCard;
+    setupLabels() {
+        this.textCurrentCard = this.add.text(window.innerWidth / 2 - 384, window.innerHeight / 2,
+            this.gameState.currentCard, { fontSize: "96px", color: "#292d33" });
+
+        this.textTotalCorrect = this.add.text(16, 16, "Correctos: 0", { fontSize: "32px" });
+        this.textTotalWrong = this.add.text(16, 64, "Incorrectos: 0", { fontSize: "32px" });
+
+
+        this.textPlayerInput = this.add.text(window.innerWidth / 2 - 512, 128, "PLAYER INPUT HERE",
+            { fontSize: "96px", color: "#292d33", backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 } });
+    }
+
+    setupCardButtons() {
+        // Setup the "New Card" button and its text
+        this.btnNewCard = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2 + 128, "btn");
+        this.btnNewCard.setScale(0.3, 0.3);
+        this.btnNewCard.setInteractive()
+            .on("pointerover", () => this.btnNewCard.setFrame(1))
+            .on("pointerout", () => this.btnNewCard.setFrame(0))
+            .on("pointerup", () => this.newCard());
+        this.btnNewCardText = this.add.text(window.innerWidth / 2 - 96, window.innerHeight / 2 + 112,
+            "Nova Carta", { fontSize: "32px" });
+
+        // Now we have to setup a button for each number in the card (4 buttons)
 
     }
 
@@ -107,17 +121,17 @@ export default class SoloGame extends Phaser.Scene {
             .on("pointerout", () => this.btnOperationAdd.setFrame(0))
             .on("pointerup", () => this.performAddition());
 
-        this.btnOperationAddText = this.add.text(this.btnOperationAdd.x - 20, this.btnOperationAdd.y - 30 , "+", {fontSize: "64px"});
+        this.btnOperationAddText = this.add.text(this.btnOperationAdd.x - 20, this.btnOperationAdd.y - 30, "+", { fontSize: "64px" });
 
         // Subtraction operation button
-        this.btnOperationSubtract= this.add.sprite(window.innerWidth - 128, window.innerHeight - 256, "btn");
+        this.btnOperationSubtract = this.add.sprite(window.innerWidth - 128, window.innerHeight - 256, "btn");
         this.btnOperationSubtract.setScale(0.2, 0.4);
         this.btnOperationSubtract.setInteractive()
             .on("pointerover", () => this.btnOperationSubtract.setFrame(1))
             .on("pointerout", () => this.btnOperationSubtract.setFrame(0))
             .on("pointerup", () => this.performSubtraction());
 
-        this.btnOperationSubtractText = this.add.text(this.btnOperationSubtract.x - 20, this.btnOperationSubtract.y - 30 , "-", {fontSize: "64px"});
+        this.btnOperationSubtractText = this.add.text(this.btnOperationSubtract.x - 20, this.btnOperationSubtract.y - 30, "-", { fontSize: "64px" });
 
 
         // Multiplication operation button
@@ -128,7 +142,7 @@ export default class SoloGame extends Phaser.Scene {
             .on("pointerout", () => this.btnOperationMultiply.setFrame(0))
             .on("pointerup", () => this.performMultiplication());
 
-        this.btnOperationMultiplyText = this.add.text(this.btnOperationMultiply.x - 20, this.btnOperationMultiply.y - 30 , "x", {fontSize: "64px"});
+        this.btnOperationMultiplyText = this.add.text(this.btnOperationMultiply.x - 20, this.btnOperationMultiply.y - 30, "x", { fontSize: "64px" });
 
         // Divion operation button
         this.btnOperationDivide = this.add.sprite(window.innerWidth - 128, window.innerHeight - 128, "btn");
@@ -138,8 +152,45 @@ export default class SoloGame extends Phaser.Scene {
             .on("pointerout", () => this.btnOperationDivide.setFrame(0))
             .on("pointerup", () => this.performDivision());
 
-        this.btnOperationDivideText = this.add.text(this.btnOperationDivide.x - 20, this.btnOperationDivide.y - 30 , "÷", {fontSize: "64px"});
+        this.btnOperationDivideText = this.add.text(this.btnOperationDivide.x - 20, this.btnOperationDivide.y - 30, "÷", { fontSize: "64px" });
     }
-}
 
-// ÷
+    setupMiscButtons() {
+        this.btnGotoMenu = this.add.sprite(128 + 32, window.innerHeight - 64, "btn");
+        this.btnGotoMenu.setScale(0.4, 0.4);
+        this.btnGotoMenu.setInteractive()
+            .on("pointerover", () => this.btnGotoMenu.setFrame(1))
+            .on("poiterout", () => this.btnGotoMenu.setFrame(0))
+            .on("pointerup", () => this.scene.start("MainMenu"));
+        this.add.text(this.btnGotoMenu.x - 80, this.btnGotoMenu.y -32 , "MENU", {fontSize: "64px"});
+    }
+
+    performAddition(): void {
+        console.log("Performing Addition");
+    }
+
+    performSubtraction(): void {
+        console.log("Performing Subtraction");
+
+    }
+
+    performMultiplication(): void {
+        console.log("Performing Multiplication");
+
+    }
+
+    performDivision(): void {
+        console.log("Performing Division");
+
+    }
+
+    newCard(): void {
+        // const generatedCard: string = CardGenerator.GenerateCard(this.gameState.difficulty);
+        console.log(`Generating a new ${this.gameState.difficulty} card`);
+        const generatedCard: string = "1 - 7 - 9 - 9";
+        this.gameState.currentCard = generatedCard;
+        this.textCurrentCard.text = generatedCard;
+    }
+
+
+}
