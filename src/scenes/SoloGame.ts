@@ -2,6 +2,8 @@ import Phaser from 'phaser'
 import solutions_map from './solutions_map.json'
 import dificulty_map from './dificulty_map.json'
 
+import BetterText from '../better/BetterText'
+
 type GameState = {
     difficulty: string;
 
@@ -164,7 +166,8 @@ export default class SoloGame extends Phaser.Scene {
             .on("pointerover", () => this.btnGotoMenu.setFrame(1))
             .on("poiterout", () => this.btnGotoMenu.setFrame(0))
             .on("pointerup", () => this.scene.start("MainMenu"));
-        this.add.text(this.btnGotoMenu.x - 80, this.btnGotoMenu.y -32 , "MENU", {fontSize: "64px"});
+        // this.add.text(this.btnGotoMenu.x - 80, this.btnGotoMenu.y -32 , "MENU", {fontSize: "64px"});
+        var menuText = new BetterText(this, this.btnGotoMenu.x - 80, this.btnGotoMenu.y -32 , "MENU", {fontSize: 64} )
     }
 
     performAddition(): void {
