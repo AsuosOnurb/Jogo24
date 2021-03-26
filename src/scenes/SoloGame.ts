@@ -49,7 +49,7 @@ export default class SoloGame extends Phaser.Scene {
         this.gameState = {
             difficulty: data.difficulty,
             currentTime: 0.0,
-            currentCard: "? - ? - ? - ?",
+            currentCard: "?  ?  ?  ?",
             totalCorrect: 0,
             totalWrong: 0
         };
@@ -85,11 +85,11 @@ export default class SoloGame extends Phaser.Scene {
 
 
     setupLabels() {
-        this.textCurrentCard = this.add.text(window.innerWidth / 2 - 384, window.innerHeight / 2,
-            this.gameState.currentCard, { fontSize: "96px", color: "#292d33" });
+        this.textCurrentCard = this.add.text(window.innerWidth / 2 - 320, window.innerHeight / 2,
+            this.gameState.currentCard, { fontSize: "96px", color: "#292d33", fontStyle: "bold" });
 
-        this.textTotalCorrect = this.add.text(16, 16, "Correctos: 0", { fontSize: "32px" });
-        this.textTotalWrong = this.add.text(16, 64, "Incorrectos: 0", { fontSize: "32px" });
+        this.textTotalCorrect = this.add.text(16, 16, "Correctos: 0", { fontSize: "32px", color: "#292d33", fontStyle: "bold" });
+        this.textTotalWrong = this.add.text(16, 64, "Incorrectos: 0", { fontSize: "32px", color: "#292d33", fontStyle: "bold" });
 
 
         this.textPlayerInput = this.add.text(window.innerWidth / 2 - 512, 128, "PLAYER INPUT HERE",
@@ -187,7 +187,7 @@ export default class SoloGame extends Phaser.Scene {
     newCard(): void {
         // const generatedCard: string = CardGenerator.GenerateCard(this.gameState.difficulty);
         console.log(`Generating a new ${this.gameState.difficulty} card`);
-        const generatedCard: string = "1 - 7 - 9 - 9";
+        const generatedCard: string = "1  7  9  9";
         this.gameState.currentCard = generatedCard;
         this.textCurrentCard.text = generatedCard;
     }
