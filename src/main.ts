@@ -2,6 +2,7 @@ import Phaser from 'phaser'
 
 import Boot from './scenes/Boot'
 import MainMenu from './scenes/MainMenu'
+import SoloGame from './scenes/SoloGame';
 
 
 var config = {
@@ -16,7 +17,8 @@ var config = {
     },
     scene: [
         Boot,
-        MainMenu
+        MainMenu,
+        SoloGame
     ]
 };
 

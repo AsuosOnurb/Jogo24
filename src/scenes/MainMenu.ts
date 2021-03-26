@@ -104,13 +104,13 @@ export default class HelloWorldScene extends Phaser.Scene {
             .on("pointerout", () => this.howToPlayButton.setFrame(0));
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = this.add.sprite(window.innerWidth/2- 512, window.innerHeight / 2, 'btn');
+        this.btnPlaySoloEasy = this.add.sprite(window.innerWidth / 2 - 512, window.innerHeight / 2, 'btn');
         this.btnPlaySoloEasy.setScale(0.5, 0.5);
         this.btnPlaySoloEasy.setInteractive()
             .on("pointerover", () => this.btnPlaySoloEasy.setFrame(1))
             .on("pointerout", () => this.btnPlaySoloEasy.setFrame(0))
             .on("pointerup", () => this.startSoloGame("Easy")); // Starts solo game on easy diff. 
-        this.btnPlaySoloEasyText = this.add.text(window.innerWidth/2- 512 - 64, window.innerHeight/2 - 16, "FÁCIL", {fontSize: "32px"});
+        this.btnPlaySoloEasyText = this.add.text(window.innerWidth / 2 - 512 - 64, window.innerHeight / 2 - 16, "FÁCIL", { fontSize: "32px" });
 
         // Play Solo Medium button
         this.btnPlaySoloMedium = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'btn');
@@ -119,7 +119,7 @@ export default class HelloWorldScene extends Phaser.Scene {
             .on("pointerover", () => this.btnPlaySoloMedium.setFrame(1))
             .on("pointerout", () => this.btnPlaySoloMedium.setFrame(0))
             .on("pointerup", () => this.startSoloGame("Medium")); // Starts solo game on medium diff. 
-        this.btnPlaySoloMediumText = this.add.text(window.innerWidth/2 - 64, window.innerHeight/2 - 16, "MÉDIO", {fontSize: "32px"});
+        this.btnPlaySoloMediumText = this.add.text(window.innerWidth / 2 - 64, window.innerHeight / 2 - 16, "MÉDIO", { fontSize: "32px" });
 
         // Play Solo Hard button
         this.btnPlaySoloHard = this.add.sprite(window.innerWidth / 2 + 512, window.innerHeight / 2, 'btn');
@@ -128,7 +128,7 @@ export default class HelloWorldScene extends Phaser.Scene {
             .on("pointerover", () => this.btnPlaySoloHard.setFrame(1))
             .on("pointerout", () => this.btnPlaySoloHard.setFrame(0))
             .on("pointerup", () => this.startSoloGame("Hard")); // Starts solo game on medium diff. 
-        this.btnPlaySoloHardText = this.add.text(window.innerWidth/2 + 512 - 64, window.innerHeight/2 - 16, "DIFÍCIL", {fontSize: "32px"});
+        this.btnPlaySoloHardText = this.add.text(window.innerWidth / 2 + 512 - 64, window.innerHeight / 2 - 16, "DIFÍCIL", { fontSize: "32px" });
 
 
         this.mainMenuButtonsGroup.setVisible(true);
@@ -178,6 +178,20 @@ export default class HelloWorldScene extends Phaser.Scene {
         if (gameId) {
             gameId.style.width = '100%';
             gameId.style.height = '100%';
+        }
+    }
+
+    startSoloGame(difficulty: string): void {
+        console.log(`Starting solo game on ${difficulty} difficulty.`);
+        
+        if (difficulty === "Easy") {
+            this.scene.start("SoloGame", { difficulty: "Easy" });
+        }
+        else if (difficulty === "Medium") {
+            this.scene.start("SoloGame", { difficulty: "Medium" });
+        }
+        else if (difficulty === "Hard") {
+            this.scene.start("SoloGame", { difficulty: "Hard" });
         }
     }
 
