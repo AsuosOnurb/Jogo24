@@ -1,10 +1,11 @@
 import Phaser from 'phaser'
+import solutions_map from './solutions_map.json';
 
 type GameState = {
     difficulty: string;
 
     currentTime: number;
-    currentCard: string; // A string like "1 - 4 -5 -9"
+    currentCard: string; // A string like "1459"
 
     totalCorrect: integer;
     totalWrong: integer;
