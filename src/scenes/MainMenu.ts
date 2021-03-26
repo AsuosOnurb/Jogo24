@@ -7,6 +7,16 @@ export default class HelloWorldScene extends Phaser.Scene {
     private aboutUsButton!: Phaser.GameObjects.Sprite;
     private howToPlayButton!: Phaser.GameObjects.Sprite;
 
+    private btnPlaySoloEasy!: Phaser.GameObjects.Sprite;
+    private btnPlaySoloEasyText!: Phaser.GameObjects.Text;
+
+    private btnPlaySoloMedium!: Phaser.GameObjects.Sprite;
+    private btnPlaySoloMediumText!: Phaser.GameObjects.Text;
+
+    private btnPlaySoloHard!: Phaser.GameObjects.Sprite;
+    private btnPlaySoloHardText!: Phaser.GameObjects.Text;
+
+
     private panelGroup!: Phaser.GameObjects.Group;
     private panelRectangle!: Phaser.GameObjects.Graphics;
     private panelBackButton!: Phaser.GameObjects.Sprite;
@@ -25,7 +35,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.spritesheet('btn_close', 'assets/images/ui/buttons/btn_close.png', {frameWidth: 550, frameHeight: 550});
+        this.load.spritesheet('btn_close', 'assets/images/ui/buttons/btn_close.png', { frameWidth: 550, frameHeight: 550 });
 
         this.load.spritesheet('btn', 'assets/images/ui/buttons/btns_base.png', { frameWidth: 724, frameHeight: 180 })
 
@@ -42,13 +52,13 @@ export default class HelloWorldScene extends Phaser.Scene {
         // The panel image
         // this.panelImage = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'panel');
         //this.panelRectangle = this.add.rectangle(window.innerWidth / 2, window.innerHeight / 2,
-          //  window.innerWidth - 256, window.innerHeight - 256, 0xfce303);
+        //  window.innerWidth - 256, window.innerHeight - 256, 0xfce303);
         graphics.fillStyle(0xfce303, 1);
-        this.panelRectangle = graphics.fillRoundedRect(128, 128 ,window.innerWidth - 256, window.innerHeight - 512, 13);
+        this.panelRectangle = graphics.fillRoundedRect(128, 128, window.innerWidth - 256, window.innerHeight - 512, 13);
 
 
         // The back button image
-        this.panelBackButton = this.add.sprite(window.innerWidth/2 + 512 + 128, 128, 'btn_close');
+        this.panelBackButton = this.add.sprite(window.innerWidth / 2 + 512 + 128, 128, 'btn_close');
         this.panelBackButton.setScale(0.3, 0.3);
         this.panelBackButton.setInteractive()
             .on("pointerdown", () => { this.closePanel(); })
@@ -56,8 +66,8 @@ export default class HelloWorldScene extends Phaser.Scene {
             .on("pointerover", () => this.panelBackButton.setFrame(1))
             .on("pointerout", () => this.panelBackButton.setFrame(0))
 
-              
-       
+
+
 
         // Put back button and panel image into the panel group
         this.panelGroup.add(this.panelBackButton);
@@ -67,7 +77,7 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.panelGroup.setVisible(false);
 
         // ============================= "About the game" and "How to play" texts ======================//
-        this.panelText = this.add.text(128 + 16, 128+16, "DEFAULT_TEXT", { color: "0xffff", fontSize: "32px" });
+        this.panelText = this.add.text(128 + 16, 128 + 16, "DEFAULT_TEXT", { color: "0xffff", fontSize: "32px" });
         this.panelText.setVisible(false);
 
         this.panelGroup.add(this.panelText);
@@ -81,11 +91,8 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.aboutUsButton.setScale(0.3, 0.3);
         this.aboutUsButton.setInteractive()
             .on("pointerup", () => this.showAboutUsPanel())
-            .on("pointerdown", () => this.aboutUsButton.setFrame(1))
             .on("pointerover", () => { console.log("Over"); this.aboutUsButton.setFrame(1) })
-            .on("pointerout", () => this.aboutUsButton.setFrame(0))
-
-
+            .on("pointerout", () => this.aboutUsButton.setFrame(0));
 
 
         // How to play button
@@ -93,9 +100,35 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.howToPlayButton.setScale(0.3, 0.3);
         this.howToPlayButton.setInteractive()
             .on("pointerup", () => this.showHowToPlayPanel())
-            .on("pointerdown", () => this.howToPlayButton.setFrame(1))
             .on("pointerover", () => { console.log("Over"); this.howToPlayButton.setFrame(1) })
             .on("pointerout", () => this.howToPlayButton.setFrame(0));
+
+        // Play Solo Easy button
+        this.btnPlaySoloEasy = this.add.sprite(window.innerWidth/2- 512, window.innerHeight / 2, 'btn');
+        this.btnPlaySoloEasy.setScale(0.5, 0.5);
+        this.btnPlaySoloEasy.setInteractive()
+            .on("pointerover", () => this.btnPlaySoloEasy.setFrame(1))
+            .on("pointerout", () => this.btnPlaySoloEasy.setFrame(0))
+            .on("pointerup", () => this.startSoloGame("Easy")); // Starts solo game on easy diff. 
+        this.btnPlaySoloEasyText = this.add.text(window.innerWidth/2- 512 - 64, window.innerHeight/2 - 16, "FÁCIL", {fontSize: "32px"});
+
+        // Play Solo Medium button
+        this.btnPlaySoloMedium = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'btn');
+        this.btnPlaySoloMedium.setScale(0.5, 0.5);
+        this.btnPlaySoloMedium.setInteractive()
+            .on("pointerover", () => this.btnPlaySoloMedium.setFrame(1))
+            .on("pointerout", () => this.btnPlaySoloMedium.setFrame(0))
+            .on("pointerup", () => this.startSoloGame("Medium")); // Starts solo game on medium diff. 
+        this.btnPlaySoloMediumText = this.add.text(window.innerWidth/2 - 64, window.innerHeight/2 - 16, "MÉDIO", {fontSize: "32px"});
+
+        // Play Solo Hard button
+        this.btnPlaySoloHard = this.add.sprite(window.innerWidth / 2 + 512, window.innerHeight / 2, 'btn');
+        this.btnPlaySoloHard.setScale(0.5, 0.5);
+        this.btnPlaySoloHard.setInteractive()
+            .on("pointerover", () => this.btnPlaySoloHard.setFrame(1))
+            .on("pointerout", () => this.btnPlaySoloHard.setFrame(0))
+            .on("pointerup", () => this.startSoloGame("Hard")); // Starts solo game on medium diff. 
+        this.btnPlaySoloHardText = this.add.text(window.innerWidth/2 + 512 - 64, window.innerHeight/2 - 16, "DIFÍCIL", {fontSize: "32px"});
 
 
         this.mainMenuButtonsGroup.setVisible(true);
@@ -103,11 +136,20 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.panelText.text = this.HOW_TO_PLAY;
 
 
-        // Add buttons into the group
+        // Add buttons and texts into the main menu group
         this.mainMenuButtonsGroup.add(this.aboutUsButton);
         this.mainMenuButtonsGroup.add(this.howToPlayButton);
 
-        
+        this.mainMenuButtonsGroup.add(this.btnPlaySoloEasy); // Add solo easy btn
+        this.mainMenuButtonsGroup.add(this.btnPlaySoloEasyText); // Add solo easy btn text
+
+        this.mainMenuButtonsGroup.add(this.btnPlaySoloMedium); // Add solo medium btn
+        this.mainMenuButtonsGroup.add(this.btnPlaySoloMediumText); // Add solo medium btn text
+
+        this.mainMenuButtonsGroup.add(this.btnPlaySoloHard); // Add solo hard btn
+        this.mainMenuButtonsGroup.add(this.btnPlaySoloHardText); // Add solo hard btn text
+
+
 
 
         // Position everyting
@@ -115,8 +157,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     }
 
-    closePanel()
-    {
+    closePanel() {
         this.panelGroup.setVisible(false);
         this.mainMenuButtonsGroup.setVisible(true);
     }
