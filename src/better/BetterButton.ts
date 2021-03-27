@@ -1,5 +1,6 @@
 import Phaser from 'phaser'
-import BetterText from './BetterText';
+import BetterText from './BetterText'
+import {DPR} from './dpr'
 
 export default class BetterButton extends Phaser.GameObjects.Sprite 
 {
@@ -7,22 +8,20 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
 
    constructor(scene: Phaser.Scene, x: number, y:number, xScale:number, yScale:number,  text:string|undefined, textStyle:any , texture:string|Phaser.Textures.Texture)
     {
-        super(scene, x * devicePixelRatio, y * devicePixelRatio, texture, 0);
+        super(scene, x , y , texture);
 
         console.log(this.texture)
  
         // add the button itself to the scene
         scene.add.existing(this);
 
-        this.setScale(xScale * devicePixelRatio, yScale * devicePixelRatio);
+        this.setScale(xScale  , yScale  );
 
         // Buttons are interactible by default
-        this.setInteractive();
-
-        // We can also set the animation frames for the different button states.
-        // For now, there are 2 animation states for buttons: On pointer hover/over, and on pointer out
-        this.on("pointerout", () => this.setFrame(0));
-        this.on("pointerover", () => this.setFrame(1));
+        this.setInteractive()
+            .on("pointerout", () => this.setFrame(0))
+            .on("pointerover", () => this.setFrame(1))
+            .on("pointerdown", () => this.setFrame(1));
 
         // Set the text
         if (!(text === undefined || textStyle === undefined))

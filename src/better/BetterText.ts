@@ -1,4 +1,5 @@
 import Phaser from 'phaser'
+import {DPR} from './dpr'
 
 export default class BetterText extends Phaser.GameObjects.Text 
 {
@@ -6,10 +7,10 @@ export default class BetterText extends Phaser.GameObjects.Text
     {
         if (style.fontSize)
         {
-            style.fontSize *= devicePixelRatio;
+            style.fontSize *= 1;
         }
 
-        super(scene, x * devicePixelRatio, y * devicePixelRatio, text, style);
+        super(scene, x , y , text, style);
     
         scene.add.existing(this);
     }

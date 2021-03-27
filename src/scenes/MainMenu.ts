@@ -1,5 +1,6 @@
-import Phaser from 'phaser'
+import Phaser, { Display, Scale } from 'phaser'
 import BetterButton from '~/better/BetterButton';
+import { DPR } from '~/better/dpr';
 
 
 export default class HelloWorldScene extends Phaser.Scene {
@@ -7,6 +8,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     private mainMenuButtonsGroup!: Phaser.GameObjects.Group; // Contains all the buttons in the main menu
     private aboutUsButton!: BetterButton;
     private howToPlayButton!: BetterButton;
+    private btnLeaderboards!: BetterButton;
 
     private btnPlaySoloEasy!: BetterButton;
     private btnPlaySoloMedium!: BetterButton;
@@ -79,26 +81,30 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.mainMenuButtonsGroup = this.add.group();
 
         // About the game button
-        this.aboutUsButton = new BetterButton(this, window.innerWidth / 2 - 512, window.innerHeight - 64, 0.3, 0.3, "SOBRE O JOGO", { fontSize: 16, fontFamily:"bold" }, "btn");
-        this.aboutUsButton.on("pointerdown", () => this.showAboutUsPanel());
+        this.aboutUsButton = new BetterButton(this,  256, window.innerHeight - 64, 0.3, 0.3, "SOBRE O JOGO", { fontSize: 16, fontFamily:"bold" }, "btn");
+        this.aboutUsButton.on("pointerup", () => this.showAboutUsPanel());
 
         // How to play button
-        this.howToPlayButton = new BetterButton(this, window.innerWidth / 2 + 512, window.innerHeight - 64, 0.3, 0.3, "COMO JOGAR", { fontSize: 16, fontFamily:"bold" }, "btn");
-        this.howToPlayButton.on("pointerdown", () => this.showHowToPlayPanel());
+        this.howToPlayButton = new BetterButton(this, 2*256, window.innerHeight - 64, 0.3, 0.3, "COMO JOGAR", { fontSize: 16, fontFamily:"bold" }, "btn");
+        this.howToPlayButton.on("pointerup", () => this.showHowToPlayPanel());
+
+        // How to play button
+        this.btnLeaderboards = new BetterButton(this, 3*256, window.innerHeight - 64, 0.3, 0.3, "LEADERBOARDS", { fontSize: 16, fontFamily:"bold" }, "btn");
+        this.btnLeaderboards.on("pointerup", () => this.showHowToPlayPanel());
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = new BetterButton(this, window.innerWidth / 2 - 512, window.innerHeight / 2, 0.5, 0.5, "FÁCIL", { fontSize: 32, fontFamily:"bold" }, "btn");
-        this.btnPlaySoloEasy.on("pointerdown", () => this.startSoloGame("Easy"));
+        this.btnPlaySoloEasy = new BetterButton(this, 256 , window.innerHeight / 2, 0.4, 0.4, "FÁCIL", { fontSize: 32, fontFamily:"bold" }, "btn");
+        this.btnPlaySoloEasy.on("pointerup", () => this.startSoloGame("Easy"));
         
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2, 0.5, 0.5, "MÉDIO", { fontSize: 32, fontFamily:"bold" }, "btn");
-        this.btnPlaySoloMedium.on("pointerdown", () => this.startSoloGame("Medium"));
+        this.btnPlaySoloMedium = new BetterButton(this, window.innerWidth /2     , window.innerHeight / 2, 0.4, 0.4, "MÉDIO", { fontSize: 32, fontFamily:"bold" }, "btn");
+        this.btnPlaySoloMedium.on("pointerup", () => this.startSoloGame("Medium"));
 
         // Play Solo Hard button
-        this.btnPlaySoloHard = new BetterButton(this, window.innerWidth / 2 + 512, window.innerHeight / 2, 0.5, 0.5, "DIFÍCIL", { fontSize: 32, fontFamily:"bold" }, "btn");
-        this.btnPlaySoloHard.on("pointerdown", () => this.startSoloGame("Hard"));
+        this.btnPlaySoloHard = new BetterButton(this, window.innerWidth - 256, window.innerHeight / 2, 0.4, 0.4, "DIFÍCIL", { fontSize: 32, fontFamily:"bold" }, "btn");
+        this.btnPlaySoloHard.on("pointerup", () => this.startSoloGame("Hard"));
 
 
         this.mainMenuButtonsGroup.setVisible(true);
@@ -114,8 +120,8 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.mainMenuButtonsGroup.add(this.btnPlaySoloMedium); // Add solo medium btn
         this.mainMenuButtonsGroup.add(this.btnPlaySoloHard); // Add solo hard btn
 
-
-
+        this.scale.displaySize.setAspectRatio(innerWidth / innerHeight);
+        this.scale.refresh();
 
         // Position everyting
         //this.resizeField(this.sys.game.config.width, this.sys.game.config.height);
@@ -160,5 +166,6 @@ export default class HelloWorldScene extends Phaser.Scene {
         }
     }
 
+    
 
 }
