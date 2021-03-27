@@ -10,7 +10,6 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
     {
         super(scene, x , y , texture);
 
-        console.log(this.texture)
  
         // add the button itself to the scene
         scene.add.existing(this);
@@ -27,7 +26,6 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
         if (!(text === undefined || textStyle === undefined))
             this.textObject = new BetterText(scene, x, y, text, textStyle);
 
-        console.log(this.textObject);
 
     }
 

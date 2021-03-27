@@ -13,9 +13,10 @@ var config = {
     backgroundColor: '#ff9600',
     DEF_WIDTH,
     DEF_HEIGHT,
+    pixelArt: true,
     scale: {
         zoom: 1,
-        width: DEF_WIDTH,
+        width: DEF_WIDTH ,
         height: DEF_HEIGHT,
         mode: Phaser.Scale.FIT, //Auto fit of the scene, keeping the aspect ratio  
         autoCenter: Phaser.Scale.CENTER_BOTH //Center the scene in the center of the window,
