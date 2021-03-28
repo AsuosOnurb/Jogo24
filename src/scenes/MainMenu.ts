@@ -155,13 +155,13 @@ export default class HelloWorldScene extends Phaser.Scene {
         console.log(`Starting solo game on ${difficulty} difficulty.`);
 
         if (difficulty === "Easy") {
-            this.scene.start("SoloGame", { difficulty: "Easy" });
+            this.scene.start("SoloGame", { difficulty: 1 });
         }
         else if (difficulty === "Medium") {
-            this.scene.start("SoloGame", { difficulty: "Medium" });
+            this.scene.start("SoloGame", { difficulty: 2 });
         }
         else if (difficulty === "Hard") {
-            this.scene.start("SoloGame", { difficulty: "Hard" });
+            this.scene.start("SoloGame", { difficulty: 3 });
         }
     }
 

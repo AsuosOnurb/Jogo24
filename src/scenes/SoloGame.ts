@@ -1,12 +1,13 @@
 import Phaser from 'phaser'
-import solutions_map from './solutions_map.json'
-import dificulty_map from './dificulty_map.json'
+
 
 import BetterText from '~/better/BetterText'
 import BetterButton from '~/better/BetterButton'
 
+import CardGenerator from '~/game_objects/CardGenerator'
+
 type GameState = {
-    difficulty: string;
+    difficulty: number;
 
     currentTime: number;
     currentCard: string; // A string like "1459"
@@ -18,6 +19,7 @@ type GameState = {
 
 export default class SoloGame extends Phaser.Scene {
     private gameState!: GameState;
+    private cardGenerator!: CardGenerator;
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
     private textCurrentCard!: BetterText;
@@ -37,6 +39,8 @@ export default class SoloGame extends Phaser.Scene {
 
     constructor() {
         super("SoloGame");
+
+        this.cardGenerator = new CardGenerator();
     }
 
     init(data) {
@@ -143,7 +147,8 @@ export default class SoloGame extends Phaser.Scene {
 
     newCard(): void {
         // const generatedCard: string = CardGenerator.GenerateCard(this.gameState.difficulty);
-        const generatedCard: string = "1  7  9  9";
+        const generatedCard: string = this.cardGenerator.generateCard(this.gameState.difficulty);
+        
         this.gameState.currentCard = generatedCard;
         this.textCurrentCard.text = generatedCard;
     }

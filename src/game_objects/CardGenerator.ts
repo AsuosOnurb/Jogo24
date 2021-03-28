@@ -1,3 +1,5 @@
+import * as diffJson from "~/scenes/dificulty_map.json"
+
 export default class CardGenerator 
 {
     constructor()
@@ -5,8 +7,12 @@ export default class CardGenerator
 
     }
 
-    generateCard() : string 
+    generateCard(difficulty: number) : string 
     {
-        return "ff";
+        // Get the list of cards with difficulty level 'difficulty'
+        const cardList = diffJson[difficulty];
+
+        // Now we choose a random index on the list
+        return cardList[Math.floor(Math.random() * cardList.length)].toString();
     }
 }
