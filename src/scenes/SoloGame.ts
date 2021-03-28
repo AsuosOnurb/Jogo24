@@ -22,7 +22,6 @@ export default class SoloGame extends Phaser.Scene {
     private cardGenerator!: CardGenerator;
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
-    private textCurrentCard!: BetterText;
 
     // Text
     private textTotalWrong!: BetterText // Total wrong counter label
@@ -36,6 +35,15 @@ export default class SoloGame extends Phaser.Scene {
     private btnOperationMultiply!:BetterButton;
     private btnOperationDivide!: BetterButton;
     private btnGotoMenu!: BetterButton;
+
+    /*
+     Card Buttons.
+     These buttons are changed everytime we generate a new card. 
+     Each button is associated with one of the 4 numbers.
+    */
+    private numberBtns!: Array<BetterButton>;
+    
+
 
     constructor() {
         super("SoloGame");
@@ -82,8 +90,7 @@ export default class SoloGame extends Phaser.Scene {
 
 
     setupLabels() {
-        this.textCurrentCard = new BetterText(this,960 - 348, 540,
-            this.gameState.currentCard, { fontSize: 96, color: "#292d33", fontStyle: "bold" } );
+       
 
         this.textTotalCorrect = new BetterText(this, 1920 - 320, 540 + 64, "CORRECTOS: 0", {fontSize: 32, color:"#292d33", fontStyle: "bold"})
         this.textTotalWrong = new BetterText(this,  1920 - 320, 540 + 128, "INCORRECTOS: 0", {fontSize: 32, color:"#292d33", fontStyle: "bold"})
@@ -99,6 +106,12 @@ export default class SoloGame extends Phaser.Scene {
         this.btnNewCard.on("pointerup", () => this.newCard());
     
         // Now we have to setup a button for each number in the card (4 buttons)
+        this.numberBtns  = [
+            new BetterButton(this, 640, 540, 0.3, 0.5, "?", {fontSize: 96}, "btn"),
+            new BetterButton(this, 896, 540, 0.3, 0.5, "?", {fontSize: 96}, "btn"),
+            new BetterButton(this, 1152, 540, 0.3, 0.5, "?", {fontSize: 96}, "btn"),
+            new BetterButton(this, 1408, 540, 0.3, 0.5, "?", {fontSize: 96}, "btn"),
+        ]
 
     }
 
@@ -148,9 +161,12 @@ export default class SoloGame extends Phaser.Scene {
     newCard(): void {
         // const generatedCard: string = CardGenerator.GenerateCard(this.gameState.difficulty);
         const generatedCard: string = this.cardGenerator.generateCard(this.gameState.difficulty);
-        
+
         this.gameState.currentCard = generatedCard;
-        this.textCurrentCard.text = generatedCard;
+
+        // Change the current card number buttons
+        for(let i = 0; i < generatedCard.length; i++)
+            this.numberBtns[i].setText(generatedCard[i]);
     }
 
 
