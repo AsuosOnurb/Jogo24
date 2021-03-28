@@ -25,6 +25,9 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
         if (!(text === undefined || textStyle === undefined))
             this.textObject = new BetterText(scene, x, y, text, textStyle);
 
+        // offset the text object position
+        this.textObject?.setOrigin(0.5);
+
 
     }
 
