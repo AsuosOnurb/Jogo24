@@ -78,19 +78,19 @@ export default class SoloGame extends Phaser.Scene {
 
 
     setupLabels() {
-        this.textCurrentCard = new BetterText(this, window.innerWidth / 2 - 320, window.innerHeight / 2,
+        this.textCurrentCard = new BetterText(this,960 - 348, 540,
             this.gameState.currentCard, { fontSize: 96, color: "#292d33", fontStyle: "bold" } );
 
-        this.textTotalCorrect = new BetterText(this, window.innerWidth - 300, window.innerHeight - 448, "CORRECTOS: 0", {fontSize: 32, color:"#292d33", fontStyle: "bold"})
-        this.textTotalWrong = new BetterText(this, window.innerWidth - 300, window.innerHeight - 384, "INCORRECTOS: 0", {fontSize: 32, color:"#292d33", fontStyle: "bold"})
+        this.textTotalCorrect = new BetterText(this, 1920 - 320, 540 + 64, "CORRECTOS: 0", {fontSize: 32, color:"#292d33", fontStyle: "bold"})
+        this.textTotalWrong = new BetterText(this,  1920 - 320, 540 + 128, "INCORRECTOS: 0", {fontSize: 32, color:"#292d33", fontStyle: "bold"})
 
         
-        this.textPlayerInput = new BetterText(this, window.innerWidth / 2 - 512, 128, "PLAYER INPUT HERE",
+        this.textPlayerInput = new BetterText(this, 480 , 128, "PLAYER INPUT HERE",
         { fontSize: 96, color: "#292d33", fontFamily:"bold",backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 } });
     }
 
     setupCardButtons() {
-        this.btnNewCard = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 128, 0.3, 0.3, "NOVA CARTA", {fontSize: 24}, "btn");
+        this.btnNewCard = new BetterButton(this, 960, 540+ 128, 0.3, 0.3, "NOVA CARTA", {fontSize: 24}, "btn");
         console.log(this.btnNewCard);
         this.btnNewCard.on("pointerup", () => this.newCard());
     
@@ -101,24 +101,24 @@ export default class SoloGame extends Phaser.Scene {
     setupOperationButtons() {
 
         // Addition operation button
-        this.btnOperationAdd = new BetterButton(this, window.innerWidth - 384, window.innerHeight - 256, 0.2, 0.4, "+", {fontSize: 64}, "btn");
+        this.btnOperationAdd = new BetterButton(this, 1920 - 320, 1080 -  200, 0.2, 0.4, "+", {fontSize: 64}, "btn");
         this.btnOperationAdd.on("pointerup", () => this.performAddition());
 
         // Subtraction operation button
-        this.btnOperationSubtract =  new BetterButton(this, window.innerWidth - 128, window.innerHeight - 256, 0.2, 0.4, "-", {fontSize: 64}, "btn");
+        this.btnOperationSubtract =  new BetterButton(this, 1920 - 128, 1080 - 200, 0.2, 0.4, "-", {fontSize: 64}, "btn");
         this.btnOperationSubtract.on("pointerup", () => this.performSubtraction());
 
         // Multiplication operation button
-        this.btnOperationMultiply = new BetterButton(this, window.innerWidth - 384, window.innerHeight - 128, 0.2, 0.4, "x", {fontSize: 64}, "btn");
+        this.btnOperationMultiply = new BetterButton(this,1920 - 320, 1080 - 64, 0.2, 0.4, "x", {fontSize: 64}, "btn");
         this.btnOperationMultiply.on("pointerup", () => this.performMultiplication());
 
         // Divion operation button
-        this.btnOperationDivide = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 128, 0.2, 0.4, "÷", {fontSize: 64}, "btn");
+        this.btnOperationDivide = new BetterButton(this, 1920 - 128, 1080 - 64, 0.2, 0.4, "÷", {fontSize: 64}, "btn");
         this.btnOperationDivide.on("pointerup", () => this.performDivision());
     }
 
     setupMiscButtons() {
-        this.btnGotoMenu = new BetterButton(this, 128 + 32, window.innerHeight - 64, 0.4, 0.4, "MENU", {fontSize: 64}, "btn");
+        this.btnGotoMenu = new BetterButton(this, 128 + 32, 1080-64, 0.4, 0.4, "MENU", {fontSize: 64}, "btn");
         this.btnGotoMenu.on("pointerup", () => this.scene.start("MainMenu"));
     }
 

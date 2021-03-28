@@ -1,23 +1,17 @@
 import Phaser, { AUTO } from 'phaser'
-import { DPR } from './better/dpr';
-
 import Boot from './scenes/Boot'
 import MainMenu from './scenes/MainMenu'
 import SoloGame from './scenes/SoloGame';
 
-const DEF_WIDTH = innerWidth;
-const DEF_HEIGHT = innerHeight;
+const DEF_WIDTH = 1920;
+const DEF_HEIGHT = 1080;
 
 var config = {
     type: Phaser.AUTO,
     backgroundColor: '#ff9600',
-    DEF_WIDTH,
-    DEF_HEIGHT,
-    pixelArt: true,
     scale: {
-        zoom: 1,
-        width: DEF_WIDTH ,
-        height: DEF_HEIGHT,
+        width: 1920 * devicePixelRatio,
+        height: 1080 * devicePixelRatio,
         mode: Phaser.Scale.FIT, //Auto fit of the scene, keeping the aspect ratio  
         autoCenter: Phaser.Scale.CENTER_BOTH //Center the scene in the center of the window,
     },

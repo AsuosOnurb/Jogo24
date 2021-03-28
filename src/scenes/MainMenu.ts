@@ -1,7 +1,6 @@
 import Phaser, { Display, Scale } from 'phaser'
 import BetterButton from '~/better/BetterButton';
-import { DPR } from '~/better/dpr';
-
+import BetterText from '~/better/BetterText';
 
 export default class HelloWorldScene extends Phaser.Scene {
 
@@ -17,8 +16,8 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     private panelGroup!: Phaser.GameObjects.Group;
     private panelRectangle!: Phaser.GameObjects.Graphics;
-    private panelBackButton!: Phaser.GameObjects.Sprite;
-    private panelText!: Phaser.GameObjects.Text;
+    private panelBackButton!: BetterButton;
+    private panelText!: BetterText;
 
     private readonly ABOUT_GAME: string = `  The 24 game was invented by Robert Sun, who is from Shangai and earned his degree\nin Electronic Engineering in the United States. Sun created this game, in 1988 with\nthe intention of getting students to explore the relationships between numbers. He wanted to show how Math can be powergul, attractive and fascinating. 
                                             This author supports the idea that patterns are the essence of Math, and emphasizes that it is important to discover different ways to relate numbers.\n\n
@@ -71,7 +70,7 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.panelGroup.setVisible(false);
 
         // ============================= "About the game" and "How to play" texts ======================//
-        this.panelText = this.add.text(128 + 16, 128 + 16, "DEFAULT_TEXT", { color: "0xffff", fontSize: "32px" });
+        this.panelText = new BetterText(this, 128 + 16, 128 + 16, "DEFAULT_TEXT", { color: "0xffff", fontSize: 32 });
         this.panelText.setVisible(false);
 
         this.panelGroup.add(this.panelText);
@@ -99,11 +98,11 @@ export default class HelloWorldScene extends Phaser.Scene {
         
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium = new BetterButton(this, window.innerWidth /2     , window.innerHeight / 2, 0.4, 0.4, "MÉDIO", { fontSize: 32, fontFamily:"bold" }, "btn");
+        this.btnPlaySoloMedium = new BetterButton(this, 768     , window.innerHeight / 2, 0.4, 0.4, "MÉDIO", { fontSize: 32, fontFamily:"bold" }, "btn");
         this.btnPlaySoloMedium.on("pointerup", () => this.startSoloGame("Medium"));
 
         // Play Solo Hard button
-        this.btnPlaySoloHard = new BetterButton(this, window.innerWidth - 256, window.innerHeight / 2, 0.4, 0.4, "DIFÍCIL", { fontSize: 32, fontFamily:"bold" }, "btn");
+        this.btnPlaySoloHard = new BetterButton(this, 1280, window.innerHeight / 2, 0.4, 0.4, "DIFÍCIL", { fontSize: 32, fontFamily:"bold" }, "btn");
         this.btnPlaySoloHard.on("pointerup", () => this.startSoloGame("Hard"));
 
 
