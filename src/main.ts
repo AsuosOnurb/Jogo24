@@ -9,9 +9,12 @@ const DEF_HEIGHT = 1080;
 var config = {
     type: Phaser.AUTO,
     backgroundColor: '#ff9600',
+    DEF_WIDTH,
+    DEF_HEIGHT,
     scale: {
-        width: 1920 * devicePixelRatio,
-        height: 1080 * devicePixelRatio,
+        zoom: 1 / devicePixelRatio,
+        width: DEF_WIDTH * devicePixelRatio,
+        height: DEF_HEIGHT * devicePixelRatio,
         mode: Phaser.Scale.FIT, //Auto fit of the scene, keeping the aspect ratio  
         autoCenter: Phaser.Scale.CENTER_BOTH //Center the scene in the center of the window,
     },

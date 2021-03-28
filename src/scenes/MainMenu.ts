@@ -8,6 +8,8 @@ export default class HelloWorldScene extends Phaser.Scene {
     private aboutUsButton!: BetterButton;
     private howToPlayButton!: BetterButton;
     private btnLeaderboards!: BetterButton;
+    private btnTrainingCamp!: BetterButton;
+    private btnTabletMode!: BetterButton;
 
     private btnPlaySoloEasy!: BetterButton;
     private btnPlaySoloMedium!: BetterButton;
@@ -58,10 +60,6 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.panelBackButton = new BetterButton(this, innerWidth / 2, innerHeight/2, 0.3, 0.3, undefined, undefined, 'btn_close');
         this.panelBackButton.on("pointerdown", () => this.closePanel());
             
-
-
-
-
         // Put back button and panel image into the panel group
         this.panelGroup.add(this.panelBackButton);
         this.panelGroup.add(this.panelRectangle);
@@ -80,16 +78,23 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.mainMenuButtonsGroup = this.add.group();
 
         // About the game button
-        this.aboutUsButton = new BetterButton(this,  256, window.innerHeight - 64, 0.3, 0.3, "SOBRE O JOGO", { fontSize: 16, fontFamily:"bold" }, "btn");
+        this.aboutUsButton = new BetterButton(this,  512, 1080 - 64, 0.3, 0.3, "SOBRE O JOGO", { fontSize: 16, fontFamily:"bold" }, "btn");
         this.aboutUsButton.on("pointerup", () => this.showAboutUsPanel());
 
-        // How to play button
-        this.howToPlayButton = new BetterButton(this, 2*256, window.innerHeight - 64, 0.3, 0.3, "COMO JOGAR", { fontSize: 16, fontFamily:"bold" }, "btn");
-        this.howToPlayButton.on("pointerup", () => this.showHowToPlayPanel());
+        // Training mode button
+        this.btnTrainingCamp = new BetterButton(this,  512 + 256, 1080 - 64, 0.3, 0.3, "CAMPO DE TREINO", { fontSize: 16, fontFamily:"bold" }, "btn");
+
+
+        // Top 100 button
+        this.btnLeaderboards = new BetterButton(this, 1024, 1080 - 64, 0.3, 0.3, "TOP 100", { fontSize: 16, fontFamily:"bold" }, "btn");
 
         // How to play button
-        this.btnLeaderboards = new BetterButton(this, 3*256, window.innerHeight - 64, 0.3, 0.3, "LEADERBOARDS", { fontSize: 16, fontFamily:"bold" }, "btn");
-        this.btnLeaderboards.on("pointerup", () => this.showHowToPlayPanel());
+        this.howToPlayButton = new BetterButton(this, 1280, 1080 - 64, 0.3, 0.3, "INSTRUÇÕES", { fontSize: 16, fontFamily:"bold" }, "btn");
+        this.howToPlayButton.on("pointerup", () => this.showHowToPlayPanel());
+
+        // Tablet mode button
+        this.btnTabletMode = new BetterButton(this, 1536, 1080 - 64, 0.3, 0.3, "MODO TABLET", { fontSize: 16, fontFamily:"bold" }, "btn");
+        
 
 
         // Play Solo Easy button

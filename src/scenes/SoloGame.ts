@@ -34,6 +34,9 @@ export default class SoloGame extends Phaser.Scene {
     private btnOperationSubtract!: BetterButton;
     private btnOperationMultiply!:BetterButton;
     private btnOperationDivide!: BetterButton;
+    private btnLeftParent!: BetterButton;
+    private btnRightParent!: BetterButton;
+    
     private btnGotoMenu!: BetterButton;
 
     /*
@@ -96,7 +99,7 @@ export default class SoloGame extends Phaser.Scene {
         this.textTotalWrong = new BetterText(this,  1920 - 320, 540 + 128, "INCORRECTOS: 0", {fontSize: 32, color:"#292d33", fontStyle: "bold"})
 
         
-        this.textPlayerInput = new BetterText(this, 480 , 128, "PLAYER INPUT HERE",
+        this.textPlayerInput = new BetterText(this, 480 , 128, "",
         { fontSize: 96, color: "#292d33", fontFamily:"bold",backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 } });
     }
 
@@ -113,25 +116,37 @@ export default class SoloGame extends Phaser.Scene {
             new BetterButton(this, 1408, 540, 0.3, 0.5, "?", {fontSize: 96}, "btn"),
         ]
 
+        for(let i = 0; i < this.numberBtns.length; i++)
+            this.numberBtns[i].on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text}${this.gameState.currentCard[i]}`));
+
     }
 
     setupOperationButtons() {
 
         // Addition operation button
         this.btnOperationAdd = new BetterButton(this, 1920 - 320, 1080 -  200, 0.2, 0.4, "+", {fontSize: 64}, "btn");
-        this.btnOperationAdd.on("pointerup", () => this.performAddition());
+        this.btnOperationAdd.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} + `));
 
         // Subtraction operation button
         this.btnOperationSubtract =  new BetterButton(this, 1920 - 128, 1080 - 200, 0.2, 0.4, "-", {fontSize: 64}, "btn");
-        this.btnOperationSubtract.on("pointerup", () => this.performSubtraction());
+        this.btnOperationSubtract.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} - `));
 
         // Multiplication operation button
         this.btnOperationMultiply = new BetterButton(this,1920 - 320, 1080 - 64, 0.2, 0.4, "x", {fontSize: 64}, "btn");
-        this.btnOperationMultiply.on("pointerup", () => this.performMultiplication());
+        this.btnOperationMultiply.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} * `));
 
         // Divion operation button
         this.btnOperationDivide = new BetterButton(this, 1920 - 128, 1080 - 64, 0.2, 0.4, "÷", {fontSize: 64}, "btn");
-        this.btnOperationDivide.on("pointerup", () => this.performDivision());
+        this.btnOperationDivide.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} / `));
+
+        // Left parentheses
+        this.btnLeftParent = new BetterButton(this, 1920 - 320, 1080 - 320, 0.2, 0.4, "(", {fontSize: 64}, "btn");
+        this.btnLeftParent.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text}(`));
+
+        // Right parentheses
+        this.btnRightParent = new BetterButton(this, 1920 - 128, 1080 - 320, 0.2, 0.4, ")", {fontSize: 64}, "btn");
+        this.btnRightParent.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text})`));
+
     }
 
     setupMiscButtons() {

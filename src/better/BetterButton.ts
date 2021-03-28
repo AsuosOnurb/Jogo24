@@ -1,6 +1,8 @@
 import Phaser from 'phaser'
 import BetterText from './BetterText'
 
+
+
 export default class BetterButton extends Phaser.GameObjects.Sprite 
 {
     private textObject!: BetterText;
@@ -13,7 +15,7 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
         // add the button itself to the scene
         scene.add.existing(this);
 
-        this.setScale(xScale *devicePixelRatio , yScale * devicePixelRatio  );
+        this.setScale(xScale * devicePixelRatio , yScale * devicePixelRatio );
 
         // Buttons are interactible by default
         this.setInteractive()
@@ -29,6 +31,11 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
         this.textObject?.setOrigin(0.5);
 
 
+    }
+
+    setText(newText: string) : void
+    {
+        this.textObject.setText(newText);
     }
 
     setText(newText: string) : void

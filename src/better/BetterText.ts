@@ -20,7 +20,7 @@ export default class BetterText extends Phaser.GameObjects.Text
             style.fontStyle = "bold";
         }
 
-        super(scene, x * devicePixelRatio, y * devicePixelRatio , text, style);
+        super(scene, x * devicePixelRatio , y * devicePixelRatio  , text, style);
         
         scene.add.existing(this);
     }
