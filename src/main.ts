@@ -1,19 +1,19 @@
-import Phaser from 'phaser'
-
+import Phaser, { AUTO } from 'phaser'
 import Boot from './scenes/Boot'
 import MainMenu from './scenes/MainMenu'
 import SoloGame from './scenes/SoloGame';
 
+const DEF_WIDTH = 1920;
+const DEF_HEIGHT = 1080;
 
 var config = {
-    type: Phaser.WEBGL,
+    type: Phaser.AUTO,
     backgroundColor: '#ff9600',
-    pixelArt: true,
-    width: window.innerWidth * window.devicePixelRatio, // set game width by multiplying window width with devicePixelRatio
-    height: window.innerHeight * window.devicePixelRatio, // set game height by multiplying window height with devicePixelRatio
     scale: {
+        width: 1920 * devicePixelRatio,
+        height: 1080 * devicePixelRatio,
         mode: Phaser.Scale.FIT, //Auto fit of the scene, keeping the aspect ratio  
-        autoCenter: Phaser.Scale.CENTER_BOTH //Center the scene in the center of the window
+        autoCenter: Phaser.Scale.CENTER_BOTH //Center the scene in the center of the window,
     },
     scene: [
         Boot,
