@@ -100,7 +100,7 @@ export default class SoloGame extends Phaser.Scene {
 
         
         this.textPlayerInput = new BetterText(this, 480 , 128, "",
-        { fontSize: 96, color: "#292d33", fontFamily:"bold",backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 } });
+        { fontSize: 96, color: "#292d33",backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 } });
     }
 
     setupCardButtons() {

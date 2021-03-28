@@ -15,10 +15,10 @@ export default class BetterText extends Phaser.GameObjects.Text
             style.color = "#292d33";
         }
 
-        if(!style.fontFamily)
-        {
-            style.fontStyle = "bold";
-        }
+        style.fontFamily= "Vertiky";
+        style.fontStyle = "bold";
+
+        
 
         super(scene, x * devicePixelRatio , y * devicePixelRatio  , text, style);
         

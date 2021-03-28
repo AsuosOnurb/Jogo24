@@ -12,7 +12,6 @@ var config = {
     DEF_WIDTH,
     DEF_HEIGHT,
     scale: {
-        zoom: 1 / devicePixelRatio,
         width: DEF_WIDTH * devicePixelRatio,
         height: DEF_HEIGHT * devicePixelRatio,
         mode: Phaser.Scale.FIT, //Auto fit of the scene, keeping the aspect ratio  
