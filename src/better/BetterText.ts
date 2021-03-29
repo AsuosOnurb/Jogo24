@@ -21,6 +21,8 @@ export default class BetterText extends Phaser.GameObjects.Text
         
 
         super(scene, x * devicePixelRatio , y * devicePixelRatio  , text, style);
+
+        
         
         scene.add.existing(this);
     }

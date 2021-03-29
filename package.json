@@ -25,6 +25,7 @@
 		"typescript": "^3.8.3"
 	},
 	"dependencies": {
+		"expr-eval": "^2.0.2",
 		"phaser": "^3.50.1"
 	},
 	"parcelCleanPaths": [

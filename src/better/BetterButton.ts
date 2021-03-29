@@ -38,9 +38,9 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
         this.textObject.setText(newText);
     }
 
-    setText(newText: string) : void
+    getText(): string
     {
-        this.textObject.setText(newText);
+        return this.textObject.text;
     }
 
 }
