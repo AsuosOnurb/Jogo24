@@ -212,15 +212,18 @@ export default class SoloGame extends Phaser.Scene {
 
 
     checkSolution(): void {
+
+        Solutions.debugTest();
+        
         // Get the player input text
         const arithExprText: string = this.textPlayerInput.text.replace(/x/g, ' * '); // We have to replace 'x's with '*' because the parser prefers '*' to denote multiplication.
-
-
+        console.log("=> Input: " + arithExprText);
+        
         /* 
             Here, we use 'epx-val' library's Parser that can parse arithmetic expressions.
             Because we can't trust the user to input a correct expression, we must be prepared to catch an exception.
         */
-
+        
         let result = -1;
         try 
         {
@@ -230,6 +233,7 @@ export default class SoloGame extends Phaser.Scene {
             console.log(e);
         }
         
+        console.log("=> Result: " + result);
         
 
         // Check what happened
@@ -243,7 +247,7 @@ export default class SoloGame extends Phaser.Scene {
             console.log("========== EHHHRRRRRRR!!!!! =============");
             this.textPlayerInput.setBackgroundColor("#eb310c")
         }
-
+        
 
     }
 
