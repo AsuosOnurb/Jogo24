@@ -29,20 +29,22 @@ export default class SoloGame extends Phaser.Scene {
     // Text
     private textTotalWrong!: BetterText // Total wrong counter label
     private textTotalCorrect!: BetterText; // Total correct counter label
-    private textPlayerInput!: BetterText; // The player input 
+    private textPlayerInput!: BetterText; // The player input / arithmetic expression
     private textSolution!: BetterText; // debug only
 
     // Buttons
-    private btnNewCard!: BetterButton;
-    private btnOperationAdd!: BetterButton;
-    private btnOperationSubtract!: BetterButton;
-    private btnOperationMultiply!: BetterButton;
-    private btnOperationDivide!: BetterButton;
-    private btnLeftParent!: BetterButton;
-    private btnRightParent!: BetterButton;
-    private btnCheckSolution!: BetterButton;
+    private btnNewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
+    private btnResetInput!: BetterButton;           // Restes player input. Lets him try again the current card.
 
-    private btnGotoMenu!: BetterButton;
+    private btnOperationAdd!: BetterButton;         // Perdorms Addition
+    private btnOperationSubtract!: BetterButton;    // Performs Subtraction
+    private btnOperationMultiply!: BetterButton;    // Performs Multiplication
+    private btnOperationDivide!: BetterButton;      // Perfroms Division
+    private btnLeftParent!: BetterButton;           // Adds a left parentheses
+    private btnRightParent!: BetterButton;          // Adds a right parentheses
+    private btnCheckSolution!: BetterButton;        // Checks if the user input's expression equates to 24
+
+    private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
 
     /*
      Card Buttons.
@@ -50,8 +52,6 @@ export default class SoloGame extends Phaser.Scene {
      Each button is associated with one of the 4 numbers.
     */
     private numberBtns!: Array<BetterButton>;
-
-
 
     constructor() {
         super("SoloGame");
@@ -68,11 +68,6 @@ export default class SoloGame extends Phaser.Scene {
             totalWrong: 0
         };
 
-
-    }
-
-
-    preload() {
 
     }
 
@@ -100,8 +95,8 @@ export default class SoloGame extends Phaser.Scene {
     setupLabels() {
 
 
-        this.textTotalCorrect = new BetterText(this, 1920 - 320, 540 + 64, "CORRECTOS: 0", { fontSize: 32, color: "#292d33", fontStyle: "bold" })
-        this.textTotalWrong = new BetterText(this, 1920 - 320, 540 + 128, "INCORRECTOS: 0", { fontSize: 32, color: "#292d33", fontStyle: "bold" })
+        this.textTotalCorrect = new BetterText(this, 1920 - 320, 540 + 64, "Correctos: 0", { fontSize: 32, color: "#292d33", fontStyle: "bold" })
+        this.textTotalWrong = new BetterText(this, 1920 - 320, 540 + 128, "Incorrectos: 0", { fontSize: 32, color: "#292d33", fontStyle: "bold" })
 
 
         this.textPlayerInput = new BetterText(this, 480, 128, "",
@@ -139,6 +134,24 @@ export default class SoloGame extends Phaser.Scene {
 
             });
         }
+
+        // This button lets the user reset his attempt at the current card.
+        this.btnResetInput = new BetterButton(this, 960, this.textPlayerInput.y + 48, 0.3, 0.3, "↺", { fontSize: 64 }, "btn");
+        this.btnResetInput.on("pointerup", () => 
+        {
+            // Reset the input box
+            this.textPlayerInput.setText(""); 
+            this.textPlayerInput.setBackgroundColor("#fce303");
+
+            // Enable each of the card buttons
+            for (let i = 0; i < this.numberBtns.length; i++) {
+                // Each button starts disabled
+                this.numberBtns[i].setInteractive();
+                this.numberBtns[i].setAlpha(1);
+    
+            }
+
+        });
 
 
 
@@ -202,6 +215,12 @@ export default class SoloGame extends Phaser.Scene {
 
         }
 
+        // Make the 'reset' and 'check' buttons enabled again
+        this.btnResetInput.setInteractive();
+        this.btnResetInput.setAlpha(1);
+        this.btnCheckSolution.setInteractive();
+        this.btnCheckSolution.setAlpha(1);
+
         // We can also reset the player input text box
         this.textPlayerInput.setText("");
         this.textPlayerInput.setBackgroundColor("#fce303");
@@ -213,7 +232,7 @@ export default class SoloGame extends Phaser.Scene {
 
     checkSolution(): void {
 
-        Solutions.debugTest();
+        // Solutions.debugTest();
         
         // Get the player input text
         const arithExprText: string = this.textPlayerInput.text.replace(/x/g, ' * '); // We have to replace 'x's with '*' because the parser prefers '*' to denote multiplication.
@@ -241,13 +260,30 @@ export default class SoloGame extends Phaser.Scene {
             console.log("=========== Correct!! YEY! ============");
             this.textPlayerInput.setBackgroundColor("#69f200")
 
+            this.gameState.totalCorrect += 1;
+            this.textTotalCorrect.setText(`Correctos: ${this.gameState.totalCorrect}`);
+
         }
 
         else {
             console.log("========== EHHHRRRRRRR!!!!! =============");
             this.textPlayerInput.setBackgroundColor("#eb310c")
+
+            this.gameState.totalWrong += 1;
+            this.textTotalWrong.setText(`Incorrectos: ${this.gameState.totalWrong}`);
+
         }
         
+        // From this point, the player can only ask for a new card. He cannot try again.
+        // So we disable the 'reset' button
+        this.btnResetInput.disableInteractive();
+        this.btnResetInput.setAlpha(0.3);
+
+        // Also disable the 'check' button
+        this.btnCheckSolution.disableInteractive();
+        this.btnCheckSolution.setAlpha(0.3);
+
+
 
     }
 
