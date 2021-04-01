@@ -20,6 +20,7 @@ type GameState = {
 
 }
 
+
 export default class SoloGame extends Phaser.Scene {
     private gameState!: GameState;
     private cardGenerator!: CardGenerator;
@@ -53,6 +54,10 @@ export default class SoloGame extends Phaser.Scene {
     */
     private numberBtns!: Array<BetterButton>;
 
+    private initialTime;
+    private timedEvent;
+    private timerText;
+
     constructor() {
         super("SoloGame");
 
@@ -71,7 +76,6 @@ export default class SoloGame extends Phaser.Scene {
 
     }
 
-
     create() {
         // Setup labels 
         this.setupLabels();
@@ -84,11 +88,10 @@ export default class SoloGame extends Phaser.Scene {
 
         // Setup buttons like "Go to Menu" and things like that...
         this.setupMiscButtons();
-
     }
 
     update() {
-
+        //this.updateTimer();
     }
 
 
@@ -227,6 +230,8 @@ export default class SoloGame extends Phaser.Scene {
 
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
+
+        this.timer_function();
     }
 
 
@@ -285,6 +290,29 @@ export default class SoloGame extends Phaser.Scene {
 
 
 
+    }
+    
+    timer_function(): void {
+        console.log('create');
+        // 1 minute in seconds
+        this.initialTime = 60;
+
+        this.timerText = new BetterText(this,256 , window.innerHeight / 2,"00:"+ this.initialTime,{font: "100px Arial", fill: "#fff"});
+
+        // Each 1000 ms call onEvent
+        this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+    }
+
+    formatTime(seconds): string{
+        // Returns formated time
+        if (seconds < 10)
+            return `00:0${seconds}`;
+        return `00:${seconds}`;
+    }
+
+    onEvent(): void{
+    this.initialTime -= 1; // One second
+    this.timerText.setText(this.formatTime(this.initialTime));
     }
 
 }
