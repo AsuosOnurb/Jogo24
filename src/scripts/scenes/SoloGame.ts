@@ -236,6 +236,11 @@ export default class SoloGame extends Phaser.Scene {
             
         }
 
+        // DIsable 'Reset' button
+        this.btnResetInput.SetDisabled();
+
+        // Disable 'Backspace' button
+        this.btnBackspace.SetDisabled();
 
         // We also reset the player input text box
         this.textPlayerInput.setText("");
@@ -298,6 +303,7 @@ export default class SoloGame extends Phaser.Scene {
 
         // Also disable the 'check' button
         this.btnCheckSolution.SetDisabled();
+
         
     }
 
