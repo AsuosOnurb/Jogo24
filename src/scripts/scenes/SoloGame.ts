@@ -236,14 +236,6 @@ export default class SoloGame extends Phaser.Scene {
             
         }
 
-        // Make the 'reset' button enabled again
-        this.btnResetInput.SetEnabled();
-
-        // Enable 'Check' button
-        this.btnCheckSolution.SetEnabled();
-
-        // Enable the 'Backspace' button
-        this.btnBackspace.SetEnabled();
 
         // We also reset the player input text box
         this.textPlayerInput.setText("");
@@ -358,10 +350,19 @@ export default class SoloGame extends Phaser.Scene {
 
     Handle_Backspace(): void
     {
-        // If this backspace left the input blank, then disable the 'Check' button
+        // If this backspace left the input blank, then disable the some buttons 
         if (this.textPlayerInput.text.length === 1)
+        {
             // Empty input field. Disable the 'Check' button
             this.btnCheckSolution.SetDisabled();
+
+            // Disable reset button
+            this.btnResetInput.SetDisabled();
+
+            // Also disable the 'backspace' button
+            this.btnBackspace.SetDisabled();
+        }
+            
         
         
         const lastInsertedChar = this.textPlayerInput.text[this.textPlayerInput.text.length-1];
@@ -409,6 +410,12 @@ export default class SoloGame extends Phaser.Scene {
 
         // Enable the 'Check' button
         this.btnCheckSolution.SetEnabled();
+
+        // Enable 'Backspace' button
+        this.btnBackspace.SetEnabled();
+
+        // Enable 'Reset' button
+        this.btnResetInput.SetEnabled();
 
     }
 
