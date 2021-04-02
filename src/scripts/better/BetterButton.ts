@@ -6,6 +6,7 @@ import BetterText from './BetterText'
 export default class BetterButton extends Phaser.GameObjects.Sprite 
 {
     private textObject!: BetterText;
+    private isEnabled: boolean;
 
    constructor(scene: Phaser.Scene, x: number, y:number, xScale:number, yScale:number,  text:string|undefined, textStyle:any , texture:string|Phaser.Textures.Texture)
     {
@@ -33,14 +34,34 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
 
     }
 
-    setText(newText: string) : void
+    SetText(newText: string) : void
     {
         this.textObject.setText(newText);
     }
 
-    getText(): string
+    GetText(): string
     {
         return this.textObject.text;
     }
 
+    SetEnabled()
+    {
+        this.setInteractive();
+        this.setAlpha(1);
+        this.isEnabled = true;
+    }
+
+    SetDisabled(): void
+    {
+        this.disableInteractive();
+        this.setAlpha(0.3);
+        this.isEnabled = false;
+    }
+
+    IsEnabled() : boolean
+    {
+        return this.isEnabled;
+    }
+
+   
 }

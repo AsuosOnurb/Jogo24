@@ -5,7 +5,15 @@ import BetterButton from '../better/BetterButton'
 import CardGenerator from '../utils/CardGenerator'
 import Solutions from '../utils/Solutions'
 import ExprEval from 'expr-eval'
+import Utils from '../utils/Utils'
 
+enum ExpressionState {
+    FirstOperand,
+    Operator,       // (firstOp OPERATOR ?)
+    SecondOperand, // (firstOp OPERATOR secondOp)
+
+    ThirdOperand, // (firstOp OPERATOR secondOp) ? thirdOp
+}
 
 enum GameStage {
     Init, // The first moment after the main menu. 'New Card' still wasn't pressed.
@@ -18,18 +26,27 @@ enum GameStage {
 type GameState = {
     difficulty: number;
 
-    currentTime: number;
     currentCard: string; // A string like "1459"
 
     totalCorrect: integer;
     totalWrong: integer;
+
+    stage: GameStage;
+
+    expressionState: ExpressionState;
+
 
 }
 
 
 export default class SoloGame extends Phaser.Scene {
     private gameState!: GameState;
-    private cardGenerator!: CardGenerator;
+
+    // ====================== GROUPS ============================
+    private group_cardButtons!: Phaser.GameObjects.Group;
+    private group_operationButtons!: Phaser.GameObjects.Group;
+    private group_allButtons!: Phaser.GameObjects.Group;
+
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
 
@@ -41,7 +58,8 @@ export default class SoloGame extends Phaser.Scene {
 
     // Buttons
     private btnNewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
-    private btnResetInput!: BetterButton;           // Restes player input. Lets him try again the current card.
+    private btnResetInput!: BetterButton;           // Resets player input. Lets him try again the current card.
+    private btnBackspace!: BetterButton;           // Lets the user delete the last inserted character.
 
     private btnOperationAdd!: BetterButton;         // Perdorms Addition
     private btnOperationSubtract!: BetterButton;    // Performs Subtraction
@@ -61,79 +79,61 @@ export default class SoloGame extends Phaser.Scene {
     private numberBtns!: Array<BetterButton>;
 
 
-    /*
-        The timer.
-        The player has 2 minutes per game. 
-        When the time runs out, the all buttons are disabled and player can only retry the game or go to the main menu
-
-    */
-    private readonly AVAILABLE_TIME: integer = 120000;
-    private timer!: Phaser.Time.TimerEvent;
-    private timerText: BetterText;
-
     constructor() {
         super("SoloGame");
 
-        this.cardGenerator = new CardGenerator();
     }
 
     init(data) {
+
         this.gameState = {
             difficulty: data.difficulty,
-            currentTime: 0.0,
             currentCard: "?  ?  ?  ?",
             totalCorrect: 0,
-            totalWrong: 0
+            totalWrong: 0,
+
+            stage: GameStage.Init,
+            expressionState: ExpressionState.FirstOperand,
+
         };
 
 
-    }
+        // Setup the events and their listeners
+        this.events.on('Init', this.Handle_Init, this);
+        this.events.on('Start', this.Handle_Start, this);
+        this.events.on('Play', this.Handle_Play, this);
+        this.events.on('End', this.Handle_End, this);
 
-    create() {
-        // Setup labels 
-        this.setupLabels();
+        this.events.on('BackspaceButtonClick', this.Handle_Backspace, this);
 
-        // Setup the number buttons and the "New Card" button
-        this.setupCardButtons();
+        this.events.on('NumberButtonClick', this.Handle_NumberButtonClick, this);
 
-        // Setup the operation button: "Add", "Multiply", etc..
-        this.setupOperationButtons();
-
-        // Setup buttons like "Go to Menu" and things like that...
-        this.setupMiscButtons();
-
-        // Setup the timer and its text
-        this.timer = this.time.delayedCall(this.AVAILABLE_TIME, this.timeRanOut);
-        this.timerText = new BetterText(this, 0, 0, "Tempo: ", { fontSize: 32 });
-    }
-
-    update() {
-
-        // Display the remaining time
-        this.updateTimerText();
-
+        // Game starts on 'Init' state
+        this.events.emit('Init');
     }
 
 
-    setupLabels() {
+
+
+
+    SetupLabels() {
 
 
         this.textTotalCorrect = new BetterText(this, 1920 - 320, 540 + 64, "Correctos: 0", { fontSize: 32, color: "#292d33", fontStyle: "bold" })
         this.textTotalWrong = new BetterText(this, 1920 - 320, 540 + 128, "Incorrectos: 0", { fontSize: 32, color: "#292d33", fontStyle: "bold" })
 
 
-        this.textPlayerInput = new BetterText(this, 480, 128, "",
+        this.textPlayerInput = new BetterText(this, window.innerWidth / 2, 128, "",
             { fontSize: 96, color: "#292d33", backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 }, fixedWidth: 1024 * devicePixelRatio });
-
+        this.textPlayerInput.setOrigin(0.5, 0.5);
         this.textSolution = new BetterText(this, 960, 1080 - 128, "", { fontSize: 32 });
 
     }
 
-    setupCardButtons() {
-        this.btnNewCard = new BetterButton(this, 960, 540 + 128, 0.3, 0.3, "NOVA CARTA", { fontSize: 32 }, "btn");
-        this.btnNewCard.on("pointerup", () => this.newCard());
+    SetupButtons() {
 
-        // Now we have to setup a button for each number in the card (4 buttons)
+
+        // Setup a button for each number in the card (4 buttons)
         this.numberBtns = [
             new BetterButton(this, 640, 540, 0.3, 0.5, "?", { fontSize: 96 }, "btn"),
             new BetterButton(this, 896, 540, 0.3, 0.5, "?", { fontSize: 96 }, "btn"),
@@ -143,117 +143,121 @@ export default class SoloGame extends Phaser.Scene {
 
         for (let i = 0; i < this.numberBtns.length; i++) {
             // Each button starts disabled
-            this.numberBtns[i].disableInteractive();
-            this.numberBtns[i].setAlpha(0.3);
+            this.numberBtns[i].SetDisabled();
 
 
-            this.numberBtns[i].on("pointerup", () => {
-                // Once a number button is clicked, it has to be disabled
-                this.numberBtns[i].disableInteractive();
-                this.numberBtns[i].setAlpha(0.3);
-
-                // Add the number to the user input box
-                this.textPlayerInput.setText(`${this.textPlayerInput.text}${this.gameState.currentCard[i]}`);
-
-            });
+            this.numberBtns[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.gameState.currentCard[i]));
+           
+            
         }
 
         // This button lets the user reset his attempt at the current card.
-        this.btnResetInput = new BetterButton(this, 960, this.textPlayerInput.y + 224, 0.3, 0.3, "↺", { fontSize: 64 }, "btn");
-        this.btnResetInput.on("pointerup", () => {
-            // Reset the input box
-            this.textPlayerInput.setText("");
-            this.textPlayerInput.setBackgroundColor("#fce303");
+        this.btnResetInput = new BetterButton(this, window.innerWidth / 2 - 320, this.textPlayerInput.y + 128, 0.3, 0.3, "↺", { fontSize: 64 }, "btn");
+        this.btnResetInput.on("pointerup", () => this.ResetInput());
+        this.btnResetInput.SetDisabled();
 
-            // Enable each of the card buttons
-            for (let i = 0; i < this.numberBtns.length; i++) {
-                // Each button starts disabled
-                this.numberBtns[i].setInteractive();
-                this.numberBtns[i].setAlpha(1);
+       
+        // 'Backspace' button
+        this.btnBackspace = new BetterButton(this, window.innerWidth / 2 + 320, this.textPlayerInput.y + 128, 0.3, 0.3, '🠔', { fontSize: 32 }, "btn");
+        this.btnBackspace.on("pointerup", () => this.events.emit('BackspaceButtonClick'));
+        this.btnBackspace.SetDisabled();
 
-            }
-
-        });
-
-
-
-    }
-
-    setupOperationButtons() {
 
         // Addition operation button
         this.btnOperationAdd = new BetterButton(this, 1920 - 320, 1080 - 200, 0.2, 0.4, "+", { fontSize: 64 }, "btn");
         this.btnOperationAdd.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} + `));
+        this.btnOperationAdd.SetDisabled();
+
 
         // Subtraction operation button
         this.btnOperationSubtract = new BetterButton(this, 1920 - 128, 1080 - 200, 0.2, 0.4, "-", { fontSize: 64 }, "btn");
         this.btnOperationSubtract.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} - `));
+        this.btnOperationSubtract.SetDisabled();
+
 
         // Multiplication operation button
         this.btnOperationMultiply = new BetterButton(this, 1920 - 320, 1080 - 64, 0.2, 0.4, "x", { fontSize: 64 }, "btn");
         this.btnOperationMultiply.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} x `));
+        this.btnOperationMultiply.SetDisabled();
+
 
         // Divion operation button
         this.btnOperationDivide = new BetterButton(this, 1920 - 128, 1080 - 64, 0.2, 0.4, "÷", { fontSize: 64 }, "btn");
         this.btnOperationDivide.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} / `));
+        this.btnOperationDivide.SetDisabled();
+
 
         // Left parentheses
         this.btnLeftParent = new BetterButton(this, 1920 - 320, 1080 - 320, 0.2, 0.4, "(", { fontSize: 64 }, "btn");
         this.btnLeftParent.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text}(`));
+        this.btnLeftParent.SetDisabled();
 
         // Right parentheses
         this.btnRightParent = new BetterButton(this, 1920 - 128, 1080 - 320, 0.2, 0.4, ")", { fontSize: 64 }, "btn");
         this.btnRightParent.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text})`));
+        this.btnRightParent.SetDisabled();
 
         // Check solution button
         this.btnCheckSolution = new BetterButton(this, 960, 540 + 256, 0.3, 0.3, "CHECK", { fontSize: 32 }, "btn");
-        this.btnCheckSolution.on("pointerup", () => this.checkSolution());
+        this.btnCheckSolution.on("pointerup", () => this.CheckSolution());
+        this.btnCheckSolution.SetDisabled();
 
-    }
 
-    setupMiscButtons() {
+        // 'New Card' button
+        this.btnNewCard = new BetterButton(this, window.innerWidth / 2, 540 + 128, 0.3, 0.3, "NOVA CARTA", { fontSize: 32 }, "btn");
+        this.btnNewCard.on("pointerup", () => this.NewCard());
+
+
+
+        // Main Menu button
         this.btnGotoMenu = new BetterButton(this, 128 + 32, 1080 - 64, 0.4, 0.4, "MENU", { fontSize: 64 }, "btn");
         this.btnGotoMenu.on("pointerup", () => this.scene.start("MainMenu"));
+
     }
 
 
-    newCard(): void {
+
+    NewCard(): void {
+
+
         // const generatedCard: string = CardGenerator.GenerateCard(this.gameState.difficulty);
-        const generatedCard: string = this.cardGenerator.generateCard(this.gameState.difficulty);
+        //const generatedCard: string = this.cardGenerator.generateCard(this.gameState.difficulty);
+        const generatedCard: string = CardGenerator.generateCard(this.gameState.difficulty);
 
         this.gameState.currentCard = generatedCard;
 
         // Change the current card number buttons
         for (let i = 0; i < generatedCard.length; i++) {
             // Set the text of the number button
-            this.numberBtns[i].setText(generatedCard[i]);
+            this.numberBtns[i].SetText(generatedCard[i]);
 
-            // Make te button interactive
-            this.numberBtns[i].setInteractive();
-
-            // Remove transparency
-            this.numberBtns[i].setAlpha(1);
-
-
+            // Enable the button
+            this.numberBtns[i].SetEnabled();
+            
         }
 
-        // Make the 'reset' and 'check' buttons enabled again
-        this.btnResetInput.setInteractive();
-        this.btnResetInput.setAlpha(1);
-        this.btnCheckSolution.setInteractive();
-        this.btnCheckSolution.setAlpha(1);
+        // Make the 'reset' button enabled again
+        this.btnResetInput.SetEnabled();
 
-        // We can also reset the player input text box
+        // Enable 'Check' button
+        this.btnCheckSolution.SetEnabled();
+
+        // Enable the 'Backspace' button
+        this.btnBackspace.SetEnabled();
+
+        // We also reset the player input text box
         this.textPlayerInput.setText("");
         this.textPlayerInput.setBackgroundColor("#fce303");
 
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
 
+        console.log(this.gameState);
+
     }
 
 
-    checkSolution(): void {
+    CheckSolution(): void {
 
         // Solutions.debugTest();
 
@@ -297,29 +301,115 @@ export default class SoloGame extends Phaser.Scene {
 
         // From this point, the player can only ask for a new card. He cannot try again.
         // So we disable the 'reset' button
-        this.btnResetInput.disableInteractive();
-        this.btnResetInput.setAlpha(0.3);
+        this.btnResetInput.SetDisabled();
+        
 
         // Also disable the 'check' button
-        this.btnCheckSolution.disableInteractive();
-        this.btnCheckSolution.setAlpha(0.3);
+        this.btnCheckSolution.SetDisabled();
+        
+    }
 
+
+
+    ResetInput() {
+        // Reset the input box
+        this.textPlayerInput.setText("");
+        this.textPlayerInput.setBackgroundColor("#fce303");
+
+        // Enable each of the card buttons
+        for (let i = 0; i < this.numberBtns.length; i++) {
+            // Each button starts disabled
+            this.numberBtns[i].setInteractive();
+            this.numberBtns[i].setAlpha(1);
+        }
+
+        // Disable the 'check' button
+        this.btnCheckSolution.SetDisabled();
+    }
+
+
+    Handle_Init(): void {
+        console.log("Init")
+        // Setup labels 
+        this.SetupLabels();
+
+        // Setup ALL the buttons
+        this.SetupButtons();
+
+        this.events.emit("Start");
+    }
+
+    Handle_Start(): void {
+        console.log("Start")
+
+        this.events.emit("Play");
+    }
+
+    Handle_Play(): void {
+        console.log("Play");
 
 
     }
 
-
-    updateTimerText() {
-       const elapsed = this.timer.getElapsed();
-        const remaining = this.AVAILABLE_TIME - elapsed;
-        const seconds = remaining / 1000;
-
-        this.timerText.setText(`${seconds.toFixed(2)}`);
+    Handle_End(): void {
+        console.log("End");
 
     }
 
-    timeRanOut(): void {
-        console.log("Player is out of time!");
+    Handle_Backspace(): void
+    {
+        // If this backspace left the input blank, then disable the 'Check' button
+        if (this.textPlayerInput.text.length === 1)
+            // Empty input field. Disable the 'Check' button
+            this.btnCheckSolution.SetDisabled();
+        
+        
+        const lastInsertedChar = this.textPlayerInput.text[this.textPlayerInput.text.length-1];
+        if (Utils.IsNumeric(lastInsertedChar))
+        {
+            /*
+                 We are trying to delete a number.
+                 We go through all the buttons, 
+                        and enable the first one with the same numbers
+            */
+            for (let i = 0; i < this.gameState.currentCard.length; i++)
+            {
+                if (this.gameState.currentCard[i] === lastInsertedChar && !this.numberBtns[i].IsEnabled())
+                {
+                    this.numberBtns[i].SetEnabled();
+                    break; // We just want to enable one button
+                }
+            }
+
+
+        } else 
+        {
+            
+        }
+
+        console.log(lastInsertedChar);
+        const subtractedString = this.textPlayerInput.text.substr(0, this.textPlayerInput.text.length - 1);
+        console.log("New input: " + subtractedString);
+
+        // Set the new text
+        this.textPlayerInput.setText(subtractedString);
+
+        // Re-enable the corresponding number button
+    }
+
+    Handle_NumberButtonClick(clickedButtonIndex: number, num: number): void 
+    {
+        console.log("Clicked " + num);
+
+        // Once a number button is clicked, it has to be disabled
+        this.numberBtns[clickedButtonIndex].SetDisabled();
+
+        // Add the number to the user input box
+        this.textPlayerInput.setText(`${this.textPlayerInput.text}${num}`);
+
+        // Enable the 'Check' button
+        this.btnCheckSolution.SetEnabled();
+
     }
 
 

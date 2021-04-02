@@ -7,7 +7,7 @@ export default class CardGenerator
 
     }
 
-    generateCard(difficulty: number) : string 
+    static generateCard(difficulty: number) : string 
     {
         // Get the list of cards with difficulty level 'difficulty'
         const cardList = diffJson[difficulty];
