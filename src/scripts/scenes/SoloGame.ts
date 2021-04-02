@@ -1,13 +1,19 @@
 import Phaser from 'phaser'
 
-
-import BetterText from'../better/BetterText'
+import BetterText from '../better/BetterText'
 import BetterButton from '../better/BetterButton'
-
 import CardGenerator from '../utils/CardGenerator'
 import Solutions from '../utils/Solutions'
-
 import ExprEval from 'expr-eval'
+
+
+enum GameStage {
+    Init, // The first moment after the main menu. 'New Card' still wasn't pressed.
+    Start, // The first time the player presses the 'New card' button. Time starts ticking here (2 mins)
+    Play, // 'New card' was pressed (doesn't matter when). The timer is ticking.
+    End, // The timer ran out of time. Now the player can only click the 'Retry' button or the 'Menu' button
+}
+
 
 type GameState = {
     difficulty: number;
@@ -54,9 +60,16 @@ export default class SoloGame extends Phaser.Scene {
     */
     private numberBtns!: Array<BetterButton>;
 
-    private initialTime;
-    private timedEvent;
-    private timerText;
+
+    /*
+        The timer.
+        The player has 2 minutes per game. 
+        When the time runs out, the all buttons are disabled and player can only retry the game or go to the main menu
+
+    */
+    private readonly AVAILABLE_TIME: integer = 120000;
+    private timer!: Phaser.Time.TimerEvent;
+    private timerText: BetterText;
 
     constructor() {
         super("SoloGame");
@@ -88,10 +101,17 @@ export default class SoloGame extends Phaser.Scene {
 
         // Setup buttons like "Go to Menu" and things like that...
         this.setupMiscButtons();
+
+        // Setup the timer and its text
+        this.timer = this.time.delayedCall(this.AVAILABLE_TIME, this.timeRanOut);
+        this.timerText = new BetterText(this, 0, 0, "Tempo: ", { fontSize: 32 });
     }
 
     update() {
-        //this.updateTimer();
+
+        // Display the remaining time
+        this.updateTimerText();
+
     }
 
 
@@ -139,11 +159,10 @@ export default class SoloGame extends Phaser.Scene {
         }
 
         // This button lets the user reset his attempt at the current card.
-        this.btnResetInput = new BetterButton(this, 960, this.textPlayerInput.y + 48, 0.3, 0.3, "↺", { fontSize: 64 }, "btn");
-        this.btnResetInput.on("pointerup", () => 
-        {
+        this.btnResetInput = new BetterButton(this, 960, this.textPlayerInput.y + 224, 0.3, 0.3, "↺", { fontSize: 64 }, "btn");
+        this.btnResetInput.on("pointerup", () => {
             // Reset the input box
-            this.textPlayerInput.setText(""); 
+            this.textPlayerInput.setText("");
             this.textPlayerInput.setBackgroundColor("#fce303");
 
             // Enable each of the card buttons
@@ -151,7 +170,7 @@ export default class SoloGame extends Phaser.Scene {
                 // Each button starts disabled
                 this.numberBtns[i].setInteractive();
                 this.numberBtns[i].setAlpha(1);
-    
+
             }
 
         });
@@ -231,34 +250,31 @@ export default class SoloGame extends Phaser.Scene {
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
 
-        this.timer_function();
     }
 
 
     checkSolution(): void {
 
         // Solutions.debugTest();
-        
+
         // Get the player input text
         const arithExprText: string = this.textPlayerInput.text.replace(/x/g, ' * '); // We have to replace 'x's with '*' because the parser prefers '*' to denote multiplication.
         console.log("=> Input: " + arithExprText);
-        
+
         /* 
             Here, we use 'epx-val' library's Parser that can parse arithmetic expressions.
             Because we can't trust the user to input a correct expression, we must be prepared to catch an exception.
         */
-        
+
         let result = -1;
-        try 
-        {
+        try {
             result = ExprEval.Parser.evaluate(arithExprText); // The (winning) resul should be 24
-        } catch (e)
-        {
+        } catch (e) {
             console.log(e);
         }
-        
+
         console.log("=> Result: " + result);
-        
+
 
         // Check what happened
         if (result === 24) {
@@ -278,7 +294,7 @@ export default class SoloGame extends Phaser.Scene {
             this.textTotalWrong.setText(`Incorrectos: ${this.gameState.totalWrong}`);
 
         }
-        
+
         // From this point, the player can only ask for a new card. He cannot try again.
         // So we disable the 'reset' button
         this.btnResetInput.disableInteractive();
@@ -291,28 +307,20 @@ export default class SoloGame extends Phaser.Scene {
 
 
     }
-    
-    timer_function(): void {
-        console.log('create');
-        // 1 minute in seconds
-        this.initialTime = 60;
 
-        this.timerText = new BetterText(this,256 , window.innerHeight / 2,"00:"+ this.initialTime,{font: "100px Arial", fill: "#fff"});
 
-        // Each 1000 ms call onEvent
-        this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+    updateTimerText() {
+       const elapsed = this.timer.getElapsed();
+        const remaining = this.AVAILABLE_TIME - elapsed;
+        const seconds = remaining / 1000;
+
+        this.timerText.setText(`${seconds.toFixed(2)}`);
+
     }
 
-    formatTime(seconds): string{
-        // Returns formated time
-        if (seconds < 10)
-            return `00:0${seconds}`;
-        return `00:${seconds}`;
+    timeRanOut(): void {
+        console.log("Player is out of time!");
     }
 
-    onEvent(): void{
-    this.initialTime -= 1; // One second
-    this.timerText.setText(this.formatTime(this.initialTime));
-    }
 
 }
