@@ -1,6 +1,7 @@
 import Phaser, { Display, Scale } from 'phaser'
-import BetterButton from '~/better/BetterButton';
-import BetterText from '~/better/BetterText';
+
+import BetterButton from '../better/BetterButton'
+import BetterText from '../better/BetterText';
 
 export default class HelloWorldScene extends Phaser.Scene {
 
@@ -34,9 +35,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.spritesheet('btn_close', 'assets/images/ui/buttons/btn_close.png', { frameWidth: 550, frameHeight: 550 });
-
-        this.load.spritesheet('btn', 'assets/images/ui/buttons/btns_base.png', { frameWidth: 724, frameHeight: 180 })
+        
 
     }
 

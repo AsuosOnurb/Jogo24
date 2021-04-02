@@ -1,5 +1,5 @@
-import * as diffJson from "~/scenes/dificulty_map.json"
-
+// import * as diffJson from "~/scenes/dificulty_map.json"
+import * as diffJson from './dificulty_map.json'
 export default class CardGenerator 
 {
     constructor()

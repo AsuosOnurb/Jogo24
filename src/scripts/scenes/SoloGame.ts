@@ -1,13 +1,13 @@
 import Phaser from 'phaser'
 
 
-import BetterText from '~/better/BetterText'
-import BetterButton from '~/better/BetterButton'
+import BetterText from'../better/BetterText'
+import BetterButton from '../better/BetterButton'
 
-import CardGenerator from '~/game_objects/CardGenerator'
+import CardGenerator from '../utils/CardGenerator'
+import Solutions from '../utils/Solutions'
 
 import ExprEval from 'expr-eval'
-import Solutions from '~/game_objects/Solutions'
 
 type GameState = {
     difficulty: number;

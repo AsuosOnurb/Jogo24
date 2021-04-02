@@ -1,32 +1,21 @@
 {
-	"compilerOptions": {
-		"resolveJsonModule": true,
-		"target": "es2016",
-		"module": "es6",
-		"strict": true,
-		"noImplicitAny": false,
-		"noEmit": true,
-		"allowJs": true,
-		"jsx": "preserve",
-		"importHelpers": true,
-		"moduleResolution": "node",
-		"experimentalDecorators": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"sourceMap": true,
-		"baseUrl": "./src",
-		"paths": {
-		  "~/*": ["./*"]
-		},
-		"typeRoots": [
-			"node_modules/@types",
-			"node_module/phaser/types"
-		],
-		"types": [
-			"phaser"
-		]
-	},
-	"include": [
-		"src/**/*"
-	]
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ES2015",
+
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    "allowJs": true,
+    "allowUnreachableCode": false,
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "strictPropertyInitialization": false,
+
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "lib": ["dom", "esnext"]
+  }
 }

@@ -1,31 +1,61 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-<head>
-	<title>Jogo dos 24</title>
-	<style>
-		@font-face {
+    <meta name="theme-color" content="#000000" />
+
+    <link rel="manifest" href="./manifest.json" />
+
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="application-name" content="<%= htmlWebpackPlugin.options.gameName %>" />
+    <meta name="apple-mobile-web-app-title" content="<%= htmlWebpackPlugin.options.gameName %>" />
+    <meta name="msapplication-starturl" content="./" />
+
+    <link rel="icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
+    <link rel="apple-touch-icon" type="image/png" sizes="192x192" href="./icons/icons-192.png" />
+
+    <link rel="icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
+    <link rel="apple-touch-icon" type="image/png" sizes="512x512" href="./icons/icons-512.png" />
+
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon" />
+
+    <title><%= htmlWebpackPlugin.options.gameName %></title>
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+        background-color: #000000;
+      }
+
+      @font-face {
 			font-family: Vertiky;
-			src: url('../public/assets/fonts/vertiky/vertiky.otf');
+			src: url('../assets/fonts/vertiky/vertiky.otf');
 			font-weight: 400;
 			font-weight: normal;
 		}
-	</style>
+    </style>
 
-</head>
+    <noscript>Please enable javascript to continue using this application.</noscript>
 
-<body>
-
-	<style>
-		html,
-		body {
-			margin: 0;
-			padding: 0;
-			overflow: auto;
-			background-color: black;
-		}
-	</style>
-	<div style="font-family:Vertiky; position: absolute; left:-1000px; visibility:hidden;">.</div>
-	<script src="main.ts"></script>
-</body>
-
+    <!-- installs the serviceWorker -->
+    <!-- <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./sw.js')
+        })
+      }
+    </script> -->
+  </head>
+  <body>
+    <div style="font-family:Vertiky; position: absolute; left:-1000px; visibility:hidden;">.</div>
+    <div id="phaser-game"></div>
+  </body>
 </html>

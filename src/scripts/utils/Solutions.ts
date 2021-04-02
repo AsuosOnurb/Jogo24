@@ -1,4 +1,4 @@
-import * as solutionsJson from "~/scenes/solutions_map.json"
+import * as solutionsJson from './solutions_map.json'
 import ExprEval, { Parser } from 'expr-eval'
 
 export default class Solutions  {
