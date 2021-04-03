@@ -40,6 +40,7 @@ type GameState = {
 
 
 export default class SoloGame extends Phaser.Scene {
+    private isInstanced: boolean = false;
     private gameState!: GameState;
 
     // ====================== GROUPS ============================
@@ -78,13 +79,26 @@ export default class SoloGame extends Phaser.Scene {
     */
     private numberBtns!: Array<BetterButton>;
 
+    /*
+        ===== Timer =====
+    */
+    private initialTime;
+    private timedEvent!: Phaser.Time.TimerEvent;
+    private timerText!: BetterText;
+    private isTimeOver: Boolean;
 
     constructor() {
         super("SoloGame");
 
+
+
     }
 
+
+
+
     init(data) {
+
 
         this.gameState = {
             difficulty: data.difficulty,
@@ -97,23 +111,36 @@ export default class SoloGame extends Phaser.Scene {
 
         };
 
+        if (!this.isInstanced) {
+            this.events.on('Init', this.Handle_Init, this);
+            this.events.on('Start', this.Handle_Start, this);
+            this.events.on('Play', this.Handle_Play, this);
+            this.events.on('End', this.Handle_End, this);
 
-        // Setup the events and their listeners
-        this.events.on('Init', this.Handle_Init, this);
-        this.events.on('Start', this.Handle_Start, this);
-        this.events.on('Play', this.Handle_Play, this);
-        this.events.on('End', this.Handle_End, this);
+            this.events.on('BackspaceButtonClick', this.Handle_Backspace, this);
 
-        this.events.on('BackspaceButtonClick', this.Handle_Backspace, this);
+            this.events.on('NumberButtonClick', this.Handle_NumberButtonClick, this);
 
-        this.events.on('NumberButtonClick', this.Handle_NumberButtonClick, this);
+            // Setup timer an its text 
+            //this.timedEvent = this.time.delayedCall(60000, () => {}, undefined, this);
+            this.timerText = new BetterText(this, 256, window.innerHeight / 2, "2:00", { fontSize: 32 });
+        }
+
+
 
         // Game starts on 'Init' state
         this.events.emit('Init');
+        this.isInstanced = true;
+
     }
 
 
 
+
+    update() {
+        if (this.isTimeOver === false)
+            this.UpdateTimer();
+    }
 
 
     SetupLabels() {
@@ -147,8 +174,8 @@ export default class SoloGame extends Phaser.Scene {
 
 
             this.numberBtns[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.gameState.currentCard[i]));
-           
-            
+
+
         }
 
         // This button lets the user reset his attempt at the current card.
@@ -156,7 +183,7 @@ export default class SoloGame extends Phaser.Scene {
         this.btnResetInput.on("pointerup", () => this.ResetInput());
         this.btnResetInput.SetDisabled();
 
-       
+
         // 'Backspace' button
         this.btnBackspace = new BetterButton(this, window.innerWidth / 2 + 320, this.textPlayerInput.y + 128, 0.3, 0.3, '🠔', { fontSize: 32 }, "btn");
         this.btnBackspace.on("pointerup", () => this.events.emit('BackspaceButtonClick'));
@@ -211,7 +238,10 @@ export default class SoloGame extends Phaser.Scene {
 
         // Main Menu button
         this.btnGotoMenu = new BetterButton(this, 128 + 32, 1080 - 64, 0.4, 0.4, "MENU", { fontSize: 64 }, "btn");
-        this.btnGotoMenu.on("pointerup", () => this.scene.start("MainMenu"));
+        this.btnGotoMenu.on("pointerup", () => {
+            // this.scene.stop("SoloGame");
+            this.scene.start("MainMenu");
+        });
 
     }
 
@@ -233,7 +263,7 @@ export default class SoloGame extends Phaser.Scene {
 
             // Enable the button
             this.numberBtns[i].SetEnabled();
-            
+
         }
 
         // DIsable 'Reset' button
@@ -248,6 +278,9 @@ export default class SoloGame extends Phaser.Scene {
 
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
+
+
+        this.timedEvent = this.time.delayedCall(60000, () => { }, undefined, this);
 
         console.log(this.gameState);
 
@@ -299,12 +332,15 @@ export default class SoloGame extends Phaser.Scene {
         // From this point, the player can only ask for a new card. He cannot try again.
         // So we disable the 'reset' button
         this.btnResetInput.SetDisabled();
-        
+
+        // Disable the 'Backspace' button
+        this.btnBackspace.SetDisabled();
+
 
         // Also disable the 'check' button
         this.btnCheckSolution.SetDisabled();
 
-        
+
     }
 
 
@@ -327,7 +363,9 @@ export default class SoloGame extends Phaser.Scene {
 
 
     Handle_Init(): void {
-        console.log("Init")
+
+
+        //console.log("Init")
         // Setup labels 
         this.SetupLabels();
 
@@ -354,11 +392,9 @@ export default class SoloGame extends Phaser.Scene {
 
     }
 
-    Handle_Backspace(): void
-    {
+    Handle_Backspace(): void {
         // If this backspace left the input blank, then disable the some buttons 
-        if (this.textPlayerInput.text.length === 1)
-        {
+        if (this.textPlayerInput.text.length === 1) {
             // Empty input field. Disable the 'Check' button
             this.btnCheckSolution.SetDisabled();
 
@@ -368,30 +404,26 @@ export default class SoloGame extends Phaser.Scene {
             // Also disable the 'backspace' button
             this.btnBackspace.SetDisabled();
         }
-            
-        
-        
-        const lastInsertedChar = this.textPlayerInput.text[this.textPlayerInput.text.length-1];
-        if (Utils.IsNumeric(lastInsertedChar))
-        {
+
+
+
+        const lastInsertedChar = this.textPlayerInput.text[this.textPlayerInput.text.length - 1];
+        if (Utils.IsNumeric(lastInsertedChar)) {
             /*
                  We are trying to delete a number.
                  We go through all the buttons, 
                         and enable the first one with the same numbers
             */
-            for (let i = 0; i < this.gameState.currentCard.length; i++)
-            {
-                if (this.gameState.currentCard[i] === lastInsertedChar && !this.numberBtns[i].IsEnabled())
-                {
+            for (let i = 0; i < this.gameState.currentCard.length; i++) {
+                if (this.gameState.currentCard[i] === lastInsertedChar && !this.numberBtns[i].IsEnabled()) {
                     this.numberBtns[i].SetEnabled();
                     break; // We just want to enable one button
                 }
             }
 
 
-        } else 
-        {
-            
+        } else {
+
         }
 
         console.log(lastInsertedChar);
@@ -404,8 +436,7 @@ export default class SoloGame extends Phaser.Scene {
         // Re-enable the corresponding number button
     }
 
-    Handle_NumberButtonClick(clickedButtonIndex: number, num: number): void 
-    {
+    Handle_NumberButtonClick(clickedButtonIndex: number, num: number): void {
         console.log("Clicked " + num);
 
         // Once a number button is clicked, it has to be disabled
@@ -423,6 +454,16 @@ export default class SoloGame extends Phaser.Scene {
         // Enable 'Reset' button
         this.btnResetInput.SetEnabled();
 
+    }
+
+    UpdateTimer() {
+        const AVAILABLE_TIME = 60;
+        let time = Math.floor(this.timedEvent.getElapsedSeconds());
+        let remTime = AVAILABLE_TIME - time;
+
+
+
+        this.timerText.setText(`${remTime}`);
     }
 
 
