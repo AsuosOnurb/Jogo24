@@ -9,8 +9,8 @@ export default class HelloWorldScene extends Phaser.Scene {
     private aboutUsButton!: BetterButton;
     private howToPlayButton!: BetterButton;
     private btnLeaderboards!: BetterButton;
-    private btnTrainingCamp!: BetterButton;
     private btnTabletMode!: BetterButton;
+    private btnCredits!: BetterButton;
 
     private btnPlaySoloEasy!: BetterButton;
     private btnPlaySoloMedium!: BetterButton;
@@ -34,15 +34,21 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     }
 
-    preload() {
-        
-
-    }
-
 
     create() {
 
-        // ================ Panel setup ====================================================
+        // Add background image 
+        const bgImg = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'background');
+        bgImg.setScale(1.44, 1.37);
+
+        // Insert the toon image
+        const toonImg = this.add.sprite(256, window.innerHeight - 283, 'toon');
+
+        // Insert the title image
+        const titleImg = this.add.sprite(window.innerWidth / 2, 160, 'title');
+        titleImg.setScale(0.7, 0.7);
+
+        // ============================= Panel setup ====================================================
         var graphics = this.add.graphics();
         // The panel group
         this.panelGroup = this.add.group();
@@ -56,9 +62,9 @@ export default class HelloWorldScene extends Phaser.Scene {
 
 
         // The back button image
-        this.panelBackButton = new BetterButton(this, innerWidth / 2, innerHeight/2, 0.3, 0.3, undefined, undefined, 'btn_close');
+        this.panelBackButton = new BetterButton(this, innerWidth / 2, innerHeight / 2, 0.3, 0.3, undefined, undefined, 'btn_close');
         this.panelBackButton.on("pointerdown", () => this.closePanel());
-            
+
         // Put back button and panel image into the panel group
         this.panelGroup.add(this.panelBackButton);
         this.panelGroup.add(this.panelRectangle);
@@ -76,37 +82,36 @@ export default class HelloWorldScene extends Phaser.Scene {
         // The group
         this.mainMenuButtonsGroup = this.add.group();
 
-        // About the game button
-        this.aboutUsButton = new BetterButton(this,  window.innerWidth / 2 - 2*320, 1080 - 64, 0.3, 0.3, "SOBRE O JOGO", { fontSize: 16, fontFamily:"bold" }, "btn");
-        this.aboutUsButton.on("pointerup", () => this.showAboutUsPanel());
+        // Tablet mode button
+        this.btnTabletMode =            new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 21 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_tabletMode');
 
-        // Training mode button
-        this.btnTrainingCamp = new BetterButton(this,  window.innerWidth / 2 - 320, 1080 - 64, 0.3, 0.3, "CAMPO DE TREINO", { fontSize: 16, fontFamily:"bold" }, "btn");
-
+        // Credits button
+        this.btnCredits =               new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
 
         // Top 100 button
-        this.btnLeaderboards = new BetterButton(this, window.innerWidth / 2, 1080 - 64, 0.3, 0.3, "TOP 100", { fontSize: 16, fontFamily:"bold" }, "btn");
+        this.btnLeaderboards =          new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 11 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_top");
+
+        // About the game button
+        this.aboutUsButton =            new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 6 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_about');
+        this.aboutUsButton.on("pointerup", () => this.showAboutUsPanel());
 
         // How to play button
-        this.howToPlayButton = new BetterButton(this, window.innerWidth / 2 + 320, 1080 - 64, 0.3, 0.3, "INSTRUÇÕES", { fontSize: 16, fontFamily:"bold" }, "btn");
+        this.howToPlayButton =          new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_howToPlay");
         this.howToPlayButton.on("pointerup", () => this.showHowToPlayPanel());
 
-        // Tablet mode button
-        this.btnTabletMode = new BetterButton(this, window.innerWidth / 2 + 2*320, 1080 - 64, 0.3, 0.3, "MODO TABLET", { fontSize: 16, fontFamily:"bold" }, "btn");
-        
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = new BetterButton(this, window.innerWidth / 2 - 384 , window.innerHeight / 2, 0.4, 0.4, "FÁCIL", { fontSize: 32, fontFamily:"bold" }, "btn");
+        this.btnPlaySoloEasy =          new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy');
         this.btnPlaySoloEasy.on("pointerup", () => this.startSoloGame("Easy"));
-        
+
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium = new BetterButton(this, window.innerWidth / 2 , window.innerHeight / 2, 0.4, 0.4, "MÉDIO", { fontSize: 32, fontFamily:"bold" }, "btn");
+        this.btnPlaySoloMedium =        new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium');
         this.btnPlaySoloMedium.on("pointerup", () => this.startSoloGame("Medium"));
 
         // Play Solo Hard button
-        this.btnPlaySoloHard = new BetterButton(this, window.innerWidth / 2 + 384, window.innerHeight / 2, 0.4, 0.4, "DIFÍCIL", { fontSize: 32, fontFamily:"bold" }, "btn");
+        this.btnPlaySoloHard =          new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard');
         this.btnPlaySoloHard.on("pointerup", () => this.startSoloGame("Hard"));
 
 
@@ -126,8 +131,8 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.scale.displaySize.setAspectRatio(innerWidth / innerHeight);
         this.scale.refresh();
 
-        // Position everyting
-        //this.resizeField(this.sys.game.config.width, this.sys.game.config.height);
+
+
 
     }
 
@@ -169,6 +174,6 @@ export default class HelloWorldScene extends Phaser.Scene {
         }
     }
 
-    
+
 
 }

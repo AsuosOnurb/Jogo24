@@ -11,9 +11,29 @@ export default class PreloadScene extends Phaser.Scene {
       This is where we pre-load all of the images used in the game.
       This is done ONLY once for all images
     */
-      this.load.spritesheet('btn_close', 'assets/img/ui/buttons/btn_close.png', { frameWidth: 550, frameHeight: 550 });
-      this.load.spritesheet('btn', 'assets/img/ui/buttons/btns_base.png', { frameWidth: 724, frameHeight: 180 })
+    this.load.spritesheet('btn_close', 'assets/img/ui/buttons/btn_close.png', { frameWidth: 550, frameHeight: 550 });
+    this.load.spritesheet('btn', 'assets/img/ui/buttons/btns_base.png', { frameWidth: 724, frameHeight: 180 });
 
+    /* =================================== Main menu assets =================================== */
+    this.load.image('background', 'assets/img/ui/imgs/background0.png');
+    this.load.image('title', 'assets/img/ui/imgs/titulo1.png');
+    this.load.image('toon', 'assets/img/ui/imgs/boneco.png');
+
+    this.load.image('btn_easy', 'assets/img/ui/buttons/facilBT.png');
+    this.load.image('btn_medium', 'assets/img/ui/buttons/medioBT.png');
+    this.load.image('btn_hard', 'assets/img/ui/buttons/dificilBT.png');
+
+
+    this.load.image('btn_about', 'assets/img/ui/buttons/sobreojogoBT.png');
+    this.load.image('btn_howToPlay', 'assets/img/ui/buttons/instrucoesBT.png');
+    this.load.image('btn_top', 'assets/img/ui/buttons/topBT.png');
+    this.load.image('btn_tabletMode', 'assets/img/ui/buttons/modotabletBT.png');
+    this.load.image('btn_credits', 'assets/img/ui/buttons/creditosBT.png');
+
+    /* ======================================================================================== */
+
+
+    /* =================================== Solo game assets =================================== */
 
   }
 
