@@ -7,20 +7,7 @@ import Solutions from '../utils/Solutions'
 import ExprEval from 'expr-eval'
 import Utils from '../utils/Utils'
 
-enum ExpressionState {
-    FirstOperand,
-    Operator,       // (firstOp OPERATOR ?)
-    SecondOperand, // (firstOp OPERATOR secondOp)
 
-    ThirdOperand, // (firstOp OPERATOR secondOp) ? thirdOp
-}
-
-enum GameStage {
-    Init, // The first moment after the main menu. 'New Card' still wasn't pressed.
-    Start, // The first time the player presses the 'New card' button. Time starts ticking here (2 mins)
-    Play, // 'New card' was pressed (doesn't matter when). The timer is ticking.
-    End, // The timer ran out of time. Now the player can only click the 'Retry' button or the 'Menu' button
-}
 
 
 type GameState = {
@@ -31,10 +18,6 @@ type GameState = {
     totalCorrect: integer;
     totalWrong: integer;
 
-    stage: GameStage;
-
-    expressionState: ExpressionState;
-
 
 }
 
@@ -42,11 +25,6 @@ type GameState = {
 export default class SoloGame extends Phaser.Scene {
     private isInstanced: boolean = false;
     private gameState!: GameState;
-
-    // ====================== GROUPS ============================
-    private group_cardButtons!: Phaser.GameObjects.Group;
-    private group_operationButtons!: Phaser.GameObjects.Group;
-    private group_allButtons!: Phaser.GameObjects.Group;
 
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
@@ -66,9 +44,6 @@ export default class SoloGame extends Phaser.Scene {
     private btnOperationSubtract!: BetterButton;    // Performs Subtraction
     private btnOperationMultiply!: BetterButton;    // Performs Multiplication
     private btnOperationDivide!: BetterButton;      // Perfroms Division
-    private btnLeftParent!: BetterButton;           // Adds a left parentheses
-    private btnRightParent!: BetterButton;          // Adds a right parentheses
-    private btnCheckSolution!: BetterButton;        // Checks if the user input's expression equates to 24
 
     private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
 
@@ -79,18 +54,9 @@ export default class SoloGame extends Phaser.Scene {
     */
     private numberBtns!: Array<BetterButton>;
 
-    /*
-        ===== Timer =====
-    */
-    private initialTime;
-    private timedEvent!: Phaser.Time.TimerEvent;
-    private timerText!: BetterText;
-    private isTimeOver: Boolean;
 
     constructor() {
         super("SoloGame");
-
-
 
     }
 
@@ -106,42 +72,47 @@ export default class SoloGame extends Phaser.Scene {
             totalCorrect: 0,
             totalWrong: 0,
 
-            stage: GameStage.Init,
-            expressionState: ExpressionState.FirstOperand,
+          
 
         };
 
         if (!this.isInstanced) {
-            this.events.on('Init', this.Handle_Init, this);
-            this.events.on('Start', this.Handle_Start, this);
-            this.events.on('Play', this.Handle_Play, this);
-            this.events.on('End', this.Handle_End, this);
 
             this.events.on('BackspaceButtonClick', this.Handle_Backspace, this);
 
             this.events.on('NumberButtonClick', this.Handle_NumberButtonClick, this);
 
-            // Setup timer an its text 
-            //this.timedEvent = this.time.delayedCall(60000, () => {}, undefined, this);
-            this.timerText = new BetterText(this, 256, window.innerHeight / 2, "2:00", { fontSize: 32 });
+
         }
 
+        // Add background image 
+        const bgImg = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'blueBackground');
+        bgImg.setScale(1.44, 1.37);
+
+        // Insert the title image
+        const titleImg = this.add.sprite(256, 96, 'smallTitle');
+        titleImg.setScale(1, 1);
+
+        // Add card background image
+        const carBG = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'cardBG');
+
+        // Setup labels 
+        this.SetupLabels();
+
+        // Setup ALL the buttons
+        this.SetupButtons();
+
+        this.events.emit("Start");
 
 
-        // Game starts on 'Init' state
-        this.events.emit('Init');
+
         this.isInstanced = true;
 
     }
 
 
 
-
-    update() {
-        if (this.isTimeOver === false)
-            this.UpdateTimer();
-    }
-
+    // =============================== Game Setup (Button events/callbacks, labels/texts) ===================
 
     SetupLabels() {
 
@@ -191,60 +162,47 @@ export default class SoloGame extends Phaser.Scene {
 
 
         // Addition operation button
-        this.btnOperationAdd = new BetterButton(this, 1920 - 320, 1080 - 200, 0.2, 0.4, "+", { fontSize: 64 }, "btn");
+        this.btnOperationAdd = new BetterButton(this, 1920 - 320, 1080 - 200,0.8, 0.8, "", { fontSize: 64 }, "btn_addition");
         this.btnOperationAdd.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} + `));
-        this.btnOperationAdd.SetDisabled();
+        //this.btnOperationAdd.SetDisabled();
 
 
         // Subtraction operation button
-        this.btnOperationSubtract = new BetterButton(this, 1920 - 128, 1080 - 200, 0.2, 0.4, "-", { fontSize: 64 }, "btn");
+        this.btnOperationSubtract = new BetterButton(this, 1920 - 128, 1080 - 200, 0.8, 0.8, "", { fontSize: 64 }, "btn_subtraction");
         this.btnOperationSubtract.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} - `));
-        this.btnOperationSubtract.SetDisabled();
+        //this.btnOperationSubtract.SetDisabled();
 
 
         // Multiplication operation button
-        this.btnOperationMultiply = new BetterButton(this, 1920 - 320, 1080 - 64, 0.2, 0.4, "x", { fontSize: 64 }, "btn");
+        this.btnOperationMultiply = new BetterButton(this, 1920 - 320, 1080 - 64,0.8, 0.8, "", { fontSize: 64 }, "btn_multiplication");
         this.btnOperationMultiply.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} x `));
-        this.btnOperationMultiply.SetDisabled();
+        //this.btnOperationMultiply.SetDisabled();
 
 
-        // Divion operation button
-        this.btnOperationDivide = new BetterButton(this, 1920 - 128, 1080 - 64, 0.2, 0.4, "÷", { fontSize: 64 }, "btn");
+        // Division operation button
+        this.btnOperationDivide = new BetterButton(this, 1920 - 128, 1080 - 64, 0.8, 0.8, "", { fontSize: 64 }, "btn_division");
         this.btnOperationDivide.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text} / `));
-        this.btnOperationDivide.SetDisabled();
-
-
-        // Left parentheses
-        this.btnLeftParent = new BetterButton(this, 1920 - 320, 1080 - 320, 0.2, 0.4, "(", { fontSize: 64 }, "btn");
-        this.btnLeftParent.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text}(`));
-        this.btnLeftParent.SetDisabled();
-
-        // Right parentheses
-        this.btnRightParent = new BetterButton(this, 1920 - 128, 1080 - 320, 0.2, 0.4, ")", { fontSize: 64 }, "btn");
-        this.btnRightParent.on("pointerup", () => this.textPlayerInput.setText(`${this.textPlayerInput.text})`));
-        this.btnRightParent.SetDisabled();
-
-        // Check solution button
-        this.btnCheckSolution = new BetterButton(this, 960, 540 + 256, 0.3, 0.3, "CHECK", { fontSize: 32 }, "btn");
-        this.btnCheckSolution.on("pointerup", () => this.CheckSolution());
-        this.btnCheckSolution.SetDisabled();
+        //this.btnOperationDivide.SetDisabled();
 
 
         // 'New Card' button
-        this.btnNewCard = new BetterButton(this, window.innerWidth / 2, 540 + 128, 0.3, 0.3, "NOVA CARTA", { fontSize: 32 }, "btn");
+        this.btnNewCard = new BetterButton(this, window.innerWidth / 2, window.innerHeight/2, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
+        this.btnNewCard.setScale(0.6,0.6);
         this.btnNewCard.on("pointerup", () => this.NewCard());
 
 
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, 128 + 32, 1080 - 64, 0.4, 0.4, "MENU", { fontSize: 64 }, "btn");
+        this.btnGotoMenu = new BetterButton(this, 96, 1080 - 96, 0.4, 0.4, "", { fontSize: 64 }, 'btn_gotoMenu');
+        this.btnGotoMenu.setScale(0.8, 0.8);
         this.btnGotoMenu.on("pointerup", () => {
-            // this.scene.stop("SoloGame");
             this.scene.start("MainMenu");
         });
 
     }
 
+
+    // ============================================== Game Functionality ==============================================
 
 
     NewCard(): void {
@@ -278,9 +236,6 @@ export default class SoloGame extends Phaser.Scene {
 
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
-
-
-        this.timedEvent = this.time.delayedCall(60000, () => { }, undefined, this);
 
         console.log(this.gameState);
 
@@ -337,9 +292,7 @@ export default class SoloGame extends Phaser.Scene {
         this.btnBackspace.SetDisabled();
 
 
-        // Also disable the 'check' button
-        this.btnCheckSolution.SetDisabled();
-
+       
 
     }
 
@@ -357,46 +310,15 @@ export default class SoloGame extends Phaser.Scene {
             this.numberBtns[i].setAlpha(1);
         }
 
-        // Disable the 'check' button
-        this.btnCheckSolution.SetDisabled();
+       
     }
 
 
-    Handle_Init(): void {
-
-
-        //console.log("Init")
-        // Setup labels 
-        this.SetupLabels();
-
-        // Setup ALL the buttons
-        this.SetupButtons();
-
-        this.events.emit("Start");
-    }
-
-    Handle_Start(): void {
-        console.log("Start")
-
-        this.events.emit("Play");
-    }
-
-    Handle_Play(): void {
-        console.log("Play");
-
-
-    }
-
-    Handle_End(): void {
-        console.log("End");
-
-    }
 
     Handle_Backspace(): void {
         // If this backspace left the input blank, then disable the some buttons 
         if (this.textPlayerInput.text.length === 1) {
-            // Empty input field. Disable the 'Check' button
-            this.btnCheckSolution.SetDisabled();
+           
 
             // Disable reset button
             this.btnResetInput.SetDisabled();
@@ -445,8 +367,7 @@ export default class SoloGame extends Phaser.Scene {
         // Add the number to the user input box
         this.textPlayerInput.setText(`${this.textPlayerInput.text}${num}`);
 
-        // Enable the 'Check' button
-        this.btnCheckSolution.SetEnabled();
+     
 
         // Enable 'Backspace' button
         this.btnBackspace.SetEnabled();
@@ -456,15 +377,6 @@ export default class SoloGame extends Phaser.Scene {
 
     }
 
-    UpdateTimer() {
-        const AVAILABLE_TIME = 60;
-        let time = Math.floor(this.timedEvent.getElapsedSeconds());
-        let remTime = AVAILABLE_TIME - time;
-
-
-
-        this.timerText.setText(`${remTime}`);
-    }
 
 
 }

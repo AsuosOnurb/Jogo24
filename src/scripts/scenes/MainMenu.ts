@@ -38,7 +38,7 @@ export default class HelloWorldScene extends Phaser.Scene {
     create() {
 
         // Add background image 
-        const bgImg = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'background');
+        const bgImg = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'blueBackground');
         bgImg.setScale(1.44, 1.37);
 
         // Insert the toon image

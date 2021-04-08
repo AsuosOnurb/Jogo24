@@ -15,25 +15,44 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.spritesheet('btn', 'assets/img/ui/buttons/btns_base.png', { frameWidth: 724, frameHeight: 180 });
 
     /* =================================== Main menu assets =================================== */
-    this.load.image('background', 'assets/img/ui/imgs/background0.png');
-    this.load.image('title', 'assets/img/ui/imgs/titulo1.png');
-    this.load.image('toon', 'assets/img/ui/imgs/boneco.png');
+    this.load.image('blueBackground',   'assets/img/main_menu/background0.png');
+    this.load.image('title',        'assets/img/main_menu/titulo1.png');
+    this.load.image('toon',         'assets/img/main_menu/boneco.png');
 
-    this.load.image('btn_easy', 'assets/img/ui/buttons/facilBT.png');
-    this.load.image('btn_medium', 'assets/img/ui/buttons/medioBT.png');
-    this.load.image('btn_hard', 'assets/img/ui/buttons/dificilBT.png');
+    this.load.image('btn_easy',     'assets/img/main_menu/facilBT.png');
+    this.load.image('btn_medium',   'assets/img/main_menu/medioBT.png');
+    this.load.image('btn_hard',     'assets/img/main_menu/dificilBT.png');
 
 
-    this.load.image('btn_about', 'assets/img/ui/buttons/sobreojogoBT.png');
-    this.load.image('btn_howToPlay', 'assets/img/ui/buttons/instrucoesBT.png');
-    this.load.image('btn_top', 'assets/img/ui/buttons/topBT.png');
-    this.load.image('btn_tabletMode', 'assets/img/ui/buttons/modotabletBT.png');
-    this.load.image('btn_credits', 'assets/img/ui/buttons/creditosBT.png');
+    this.load.image('btn_about',      'assets/img/main_menu/sobreojogoBT.png');
+    this.load.image('btn_howToPlay',  'assets/img/main_menu/instrucoesBT.png');
+    this.load.image('btn_top',        'assets/img/main_menu/topBT.png');
+    this.load.image('btn_tabletMode', 'assets/img/main_menu/modotabletBT.png');
+    this.load.image('btn_credits',    'assets/img/main_menu/creditosBT.png');
 
     /* ======================================================================================== */
 
 
     /* =================================== Solo game assets =================================== */
+    this.load.image('smallTitle',   'assets/img/solo_game/titulo2-peq.png');
+
+    this.load.image('btn_playCard',   'assets/img/solo_game/playCard.png');
+    this.load.image('btn_gotoMenu',   'assets/img/solo_game/retmenuBT.png');
+
+
+    this.load.image('correctCounter',   'assets/img/solo_game/assinalaCertos.png');
+    this.load.image('wrongCounter',   'assets/img/solo_game/assinalaErrados.png');
+    this.load.image('inputBar',   'assets/img/solo_game/barra.png');
+
+
+    this.load.image('cardBG',   'assets/img/solo_game/cardBackground.png');
+
+    this.load.image('btn_addition',   'assets/img/solo_game/opAdicao.png');
+    this.load.image('btn_subtraction',   'assets/img/solo_game/opSubtracao.png');
+    this.load.image('btn_multiplication',   'assets/img/solo_game/opMultiplicacao.png');
+    this.load.image('btn_division',   'assets/img/solo_game/opDivisao.png');
+
+
 
   }
 

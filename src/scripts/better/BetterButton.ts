@@ -19,10 +19,7 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
         this.setScale(xScale * devicePixelRatio , yScale * devicePixelRatio );
 
         // Buttons are interactible by default
-        this.setInteractive()
-            .on("pointerout", () => this.setFrame(0))
-            .on("pointerover", () => this.setFrame(1))
-            .on("pointerdown", () => this.setFrame(1));
+        this.setInteractive();
 
         // Set the text
         if (!(text === undefined || textStyle === undefined))
