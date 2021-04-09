@@ -8,8 +8,7 @@ import ExprEval from 'expr-eval'
 import Utils from '../utils/Utils'
 
 
-enum State 
-{
+enum State {
     PickingOperand1,
     PickingOperation,
     PickingOperand2
@@ -87,7 +86,7 @@ export default class SoloGame extends Phaser.Scene {
             operand2: 0,
             result: 0,
             state: State.PickingOperand1
-          
+
 
         };
 
@@ -116,7 +115,7 @@ export default class SoloGame extends Phaser.Scene {
         const wrongBG = this.add.sprite(window.innerWidth - 192, window.innerHeight - 450, 'wrongCounter')
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        const inputBG = this.add.sprite(window.innerWidth / 2, 128,'inputBar');
+        const inputBG = this.add.sprite(window.innerWidth / 2, 128, 'inputBar');
 
         // Setup labels 
         this.SetupLabels();
@@ -140,13 +139,13 @@ export default class SoloGame extends Phaser.Scene {
     SetupLabels() {
 
 
-        this.textTotalCorrect = new BetterText(this, window.innerWidth  - 128, window.innerHeight - 600, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
+        this.textTotalCorrect = new BetterText(this, window.innerWidth - 128, window.innerHeight - 600, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalCorrect.setOrigin(0.5, 0.5);
-        this.textTotalWrong = new BetterText(this, window.innerWidth  - 128, window.innerHeight - 452, "0",  { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
+        this.textTotalWrong = new BetterText(this, window.innerWidth - 128, window.innerHeight - 452, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
         //this.textPlayerInput = new BetterText(this, window.innerWidth / 2, 128, "",
-          //  { fontSize: 96, color: "#292d33", backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 }, fixedWidth: 1024 * devicePixelRatio });
+        //  { fontSize: 96, color: "#292d33", backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 }, fixedWidth: 1024 * devicePixelRatio });
         //this.textPlayerInput.setOrigin(0.5, 0.5);
         //this.textSolution = new BetterText(this, 960, 1080 - 128, "", { fontSize: 32 });
 
@@ -157,11 +156,11 @@ export default class SoloGame extends Phaser.Scene {
 
         // Setup a button for each number in the card (4 buttons)
         this.numberBtns = [
-            new BetterButton(this, window.innerWidth / 2 - 196, window.innerHeight/2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, window.innerWidth / 2, window.innerHeight/2 - 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, window.innerWidth / 2 + 196, window.innerHeight/2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, window.innerWidth / 2 , window.innerHeight/2 + 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-           
+            new BetterButton(this, window.innerWidth / 2 - 196, window.innerHeight / 2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+            new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 - 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+            new BetterButton(this, window.innerWidth / 2 + 196, window.innerHeight / 2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+            new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+
         ]
 
         for (let i = 0; i < this.numberBtns.length; i++) {
@@ -171,7 +170,7 @@ export default class SoloGame extends Phaser.Scene {
         }
 
         // This button lets the user reset his attempt at the current card.
-        this.btnResetInput = new BetterButton(this, window.innerWidth / 2 - 320, 512 , 0.3, 0.3, "↺", { fontSize: 64 }, "btn");
+        this.btnResetInput = new BetterButton(this, window.innerWidth / 2 - 320, 512, 0.3, 0.3, "↺", { fontSize: 64 }, "btn");
         // this.btnResetInput.on("pointerup", () => this.ResetInput());
         this.btnResetInput.SetDisabled();
 
@@ -182,29 +181,37 @@ export default class SoloGame extends Phaser.Scene {
         this.btnBackspace.SetDisabled();
 
 
+
         // Addition operation button
-        this.btnOperationAdd = new BetterButton(this, window.innerWidth  - 256, window.innerHeight - 256,0.8, 0.8, "", { fontSize: 64 }, "btn_addition");
+        this.btnOperationAdd = new BetterButton(this, window.innerWidth - 256, window.innerHeight - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_addition");
         this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "addition"));
+        this.btnOperationAdd.SetDisabled();
 
 
         // Subtraction operation button
-        this.btnOperationSubtract = new BetterButton(this, window.innerWidth  - 96,  window.innerHeight - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_subtraction");
+        this.btnOperationSubtract = new BetterButton(this, window.innerWidth - 96, window.innerHeight - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_subtraction");
         this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "subtraction"));
+        this.btnOperationSubtract.SetDisabled();
+
 
 
         // Multiplication operation button
-        this.btnOperationMultiply = new BetterButton(this, window.innerWidth  - 256,  window.innerHeight - 96,0.8, 0.8, "", { fontSize: 64 }, "btn_multiplication");
+        this.btnOperationMultiply = new BetterButton(this, window.innerWidth - 256, window.innerHeight - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_multiplication");
         this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "multiplication"));
+        this.btnOperationMultiply.SetDisabled();
+
 
 
         // Division operation button
-        this.btnOperationDivide = new BetterButton(this, window.innerWidth - 96,  window.innerHeight - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_division");
+        this.btnOperationDivide = new BetterButton(this, window.innerWidth - 96, window.innerHeight - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_division");
         this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "division"));
+        this.btnOperationDivide.SetDisabled();
+
 
 
         // 'New Card' button
-        this.btnNewCard = new BetterButton(this, window.innerWidth / 2, window.innerHeight/2, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
-        this.btnNewCard.setScale(0.6,0.6);
+        this.btnNewCard = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
+        this.btnNewCard.setScale(0.6, 0.6);
         this.btnNewCard.on("pointerup", () => this.NewCard());
 
 
@@ -253,9 +260,11 @@ export default class SoloGame extends Phaser.Scene {
         // Disable 'Backspace' button
         this.btnBackspace.SetDisabled();
 
-        // We also reset the player input text box
-        //this.textPlayerInput.setText("");
-        //this.textPlayerInput.setBackgroundColor("#fce303");
+        // Disable Operation buttons
+        this.btnOperationAdd.SetDisabled();
+        this.btnOperationSubtract.SetDisabled();
+        this.btnOperationMultiply.SetDisabled();
+        this.btnOperationDivide.SetDisabled();
 
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
@@ -266,69 +275,33 @@ export default class SoloGame extends Phaser.Scene {
 
 
     CheckSolution(): void {
-        /*
-        // Solutions.debugTest();
-
-        // Get the player input text
-        const arithExprText: string = this.textPlayerInput.text.replace(/x/g, ' * '); // We have to replace 'x's with '*' because the parser prefers '*' to denote multiplication.
-        console.log("=> Input: " + arithExprText);
-
-        
-            // Here, we use 'epx-val' library's Parser that can parse arithmetic expressions.
-            // Because we can't trust the user to input a correct expression, we must be prepared to catch an exception.
-        
-
-        let result = -1;
-        try {
-            result = ExprEval.Parser.evaluate(arithExprText); // The (winning) resul should be 24
-        } catch (e) {
-            console.log(e);
+        // Check if we have 3 disabled/picked cards
+        let disabledCardCount = 0;
+        for (let i = 0; i < 4; i++) {
+            if (!this.numberBtns[i].IsEnabled())
+                disabledCardCount += 1;
         }
 
-        console.log("=> Result: " + result);
+        if (disabledCardCount === 3) {
 
-
-        // Check what happened
-        if (result === 24) {
-            console.log("=========== Correct!! YEY! ============");
-            //this.textPlayerInput.setBackgroundColor("#69f200")
-
-            this.gameState.totalCorrect += 1;
-            this.textTotalCorrect.setText(`Correctos: ${this.gameState.totalCorrect}`);
+            if (this.gameState.result === 24)
+                console.log(" !!!! PLAYER WON !!!!");
+            else
+                console.log(" WRONG ANSWER ");
 
         }
 
-        else {
-            console.log("========== EHHHRRRRRRR!!!!! =============");
-            this.textPlayerInput.setBackgroundColor("#eb310c")
-
-            this.gameState.totalWrong += 1;
-            this.textTotalWrong.setText(`Incorrectos: ${this.gameState.totalWrong}`);
-
-        }
-
-        // From this point, the player can only ask for a new card. He cannot try again.
-        // So we disable the 'reset' button
-        this.btnResetInput.SetDisabled();
-
-        // Disable the 'Backspace' button
-        this.btnBackspace.SetDisabled();
-
-        */
-       
 
     }
 
 
-  
+
     Handle_NumberButtonClick(clickedButtonIndex: number, num: number): void {
 
         // We decide what happens next based on the current state
-        if (this.gameState.state == State.PickingOperand1)
-        {
+        if (this.gameState.state == State.PickingOperand1) {
             // User is picking the first operand
             this.gameState.operand1 = num;
-
 
             // Disable the number button
             this.numberBtns[clickedButtonIndex].SetDisabled();
@@ -337,8 +310,15 @@ export default class SoloGame extends Phaser.Scene {
 
             // Then he has to pick an operation
             this.gameState.state = State.PickingOperation;
-        } else if (this.gameState.state == State.PickingOperand2)
-        {
+
+            // We have to enable the operation buttons 
+            // Operation buttons can be disabled
+            this.btnOperationAdd.SetEnabled();
+            this.btnOperationSubtract.SetEnabled();
+            this.btnOperationMultiply.SetEnabled();
+            this.btnOperationDivide.SetEnabled();
+
+        } else if (this.gameState.state == State.PickingOperand2) {
             // User is picking the second operand. 
             this.gameState.operand2 = num;
 
@@ -346,49 +326,55 @@ export default class SoloGame extends Phaser.Scene {
 
             // If user is on this state, it means he already picked a first operand and an operation.
             // Apply the operation to operand 1 and operand 2.
-            switch(this.gameState.operation)
-            {
+            switch (this.gameState.operation) {
                 case "addition":
-                {
-                    this.gameState.result = this.gameState.operand1 + this.gameState.operand2;
-                    break;
-                }
+                    {
+                        this.gameState.result = this.gameState.operand1 + this.gameState.operand2;
+                        break;
+                    }
 
                 case "subtraction":
-                {
-                    this.gameState.result = this.gameState.operand1 - this.gameState.operand2;
-                    break;
-                }
+                    {
+                        this.gameState.result = this.gameState.operand1 - this.gameState.operand2;
+                        break;
+                    }
 
                 case "multiplication":
-                {
-                    this.gameState.result = this.gameState.operand1 * this.gameState.operand2;
-                    break;
-                }
+                    {
+                        this.gameState.result = this.gameState.operand1 * this.gameState.operand2;
+                        break;
+                    }
 
                 case "division":
-                {
-                    this.gameState.result = this.gameState.operand1 / this.gameState.operand2;
-                    break;
-                }
+                    {
+                        this.gameState.result = this.gameState.operand1 / this.gameState.operand2;
+                        break;
+                    }
             }
 
             // The result is stored/shown in the last picked number button (operand 2 button)
             this.numberBtns[clickedButtonIndex].SetText(this.gameState.result.toString());
-            console.log("Operation resulted in: " +  this.gameState.result.toString() + "\n\n=======================================");
+            console.log("Operation resulted in: " + this.gameState.result.toString() + "\n\n=======================================");
 
 
 
             // Here is where we check for the solution
-            // If all the cards are picked
+            // If 3 cards are picked/disable and the the result is 24, then the player won.
+            this.CheckSolution();
 
 
             console.log("PLayer now has to chose the first operand again.");
 
             // The operation was completed. Now the player has to pick a new first operand again.
             this.gameState.state = State.PickingOperand1;
+
+            // Operation buttons can be disabled
+            this.btnOperationAdd.SetDisabled();
+            this.btnOperationSubtract.SetDisabled();
+            this.btnOperationMultiply.SetDisabled();
+            this.btnOperationDivide.SetDisabled();
         }
-      
+
         // Enable 'Backspace' button
         this.btnBackspace.SetEnabled();
 
@@ -397,8 +383,7 @@ export default class SoloGame extends Phaser.Scene {
 
     }
 
-    Handle_OperationButtonClick(operation: string)
-    {
+    Handle_OperationButtonClick(operation: string) {
         console.log("Operation: " + operation);
         this.gameState.operation = operation;
 
