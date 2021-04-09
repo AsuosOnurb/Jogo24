@@ -4,15 +4,13 @@ export default class PreloadScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('phaser-logo', 'assets/img/phaser-logo.png')
-
+ 
 
     /* 
       This is where we pre-load all of the images used in the game.
       This is done ONLY once for all images
     */
-    this.load.spritesheet('btn_close', 'assets/img/ui/buttons/btn_close.png', { frameWidth: 550, frameHeight: 550 });
-    this.load.spritesheet('btn', 'assets/img/ui/buttons/btns_base.png', { frameWidth: 724, frameHeight: 180 });
+ 
 
     /* =================================== Main menu assets =================================== */
     this.load.image('blueBackground',   'assets/img/main_menu/background0.png');
