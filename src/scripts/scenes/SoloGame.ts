@@ -42,6 +42,7 @@ export default class SoloGame extends Phaser.Scene {
     // Text
     private textTotalWrong!: BetterText // Total wrong counter label
     private textTotalCorrect!: BetterText; // Total correct counter label
+    private textMessage!: BetterText; // Displays on the top bar
     private textSolution!: BetterText; // debug only
 
     // Buttons
@@ -116,6 +117,10 @@ export default class SoloGame extends Phaser.Scene {
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
         const inputBG = this.add.sprite(window.innerWidth / 2, 128, 'inputBar');
+
+        // We might as well, for now, use the input bar as a place for player messages
+        this.textMessage = new BetterText(this, window.innerWidth / 2, 128, "", { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
+        this.textMessage.setOrigin(0.5, 0.5);
 
         // Setup labels 
         this.SetupLabels();
@@ -238,8 +243,9 @@ export default class SoloGame extends Phaser.Scene {
         this.gameState.operation = "none";
         this.gameState.state = State.PickingOperand1;
 
-        // const generatedCard: string = CardGenerator.GenerateCard(this.gameState.difficulty);
-        //const generatedCard: string = this.cardGenerator.generateCard(this.gameState.difficulty);
+        // Delete the top bar message
+        this.textMessage.setText("");
+
         const generatedCard: string = CardGenerator.generateCard(this.gameState.difficulty);
 
         this.gameState.currentCard = generatedCard;
@@ -285,9 +291,23 @@ export default class SoloGame extends Phaser.Scene {
         if (disabledCardCount === 3) {
 
             if (this.gameState.result === 24)
+            {
                 console.log(" !!!! PLAYER WON !!!!");
+                this.textMessage.setText("CORRECTO !");
+                // Update game state
+                this.gameState.totalCorrect += 1;
+                this.textTotalCorrect.setText(this.gameState.totalCorrect.toString());
+
+            }
             else
+            {
                 console.log(" WRONG ANSWER ");
+                this.textMessage.setText("INCORRECTO !");
+
+                this.gameState.totalWrong += 1;
+                this.textTotalWrong.setText(this.gameState.totalWrong.toString());
+
+            }
 
         }
 
