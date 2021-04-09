@@ -47,6 +47,8 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
         this.textObject.setAlpha(1);
         this.setAlpha(1);
         this.isEnabled = true;
+
+      
     }
 
     SetDisabled(): void
@@ -56,6 +58,7 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
         this.setAlpha(0.3);
         this.isEnabled = false;
 
+       
         
     }
 

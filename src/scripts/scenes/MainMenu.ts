@@ -128,8 +128,7 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.mainMenuButtonsGroup.add(this.btnPlaySoloMedium); // Add solo medium btn
         this.mainMenuButtonsGroup.add(this.btnPlaySoloHard); // Add solo hard btn
 
-        this.scale.displaySize.setAspectRatio(innerWidth / innerHeight);
-        this.scale.refresh();
+        
 
 
 

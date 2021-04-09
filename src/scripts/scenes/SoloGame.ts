@@ -376,6 +376,13 @@ export default class SoloGame extends Phaser.Scene {
             // The result is stored/shown in the last picked number button (operand 2 button)
             this.numberBtns[clickedButtonIndex].SetText(this.gameState.result.toString());
             console.log("Operation resulted in: " +  this.gameState.result.toString() + "\n\n=======================================");
+
+
+
+            // Here is where we check for the solution
+            // If all the cards are picked
+
+
             console.log("PLayer now has to chose the first operand again.");
 
             // The operation was completed. Now the player has to pick a new first operand again.
