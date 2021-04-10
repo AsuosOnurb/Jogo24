@@ -26,6 +26,11 @@ export class OperationsStack  {
     }
 
 
+    IsEmpty(): boolean
+    {
+        return this._Store.length === 0;
+    }
+
    
 
     

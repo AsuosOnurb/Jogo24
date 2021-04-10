@@ -1,7 +1,7 @@
 import Phaser from 'phaser'
 
-import {OperationsStack} from '../utils/OperationsStack'
-import {Operation} from '../utils/OperationsStack'
+import { OperationsStack } from '../utils/OperationsStack'
+import { Operation } from '../utils/OperationsStack'
 
 
 import BetterText from '../better/BetterText'
@@ -82,7 +82,7 @@ export default class SoloGame extends Phaser.Scene {
             totalCorrect: 0,
             totalWrong: 0,
 
-            currentOperation: 
+            currentOperation:
             {
                 operand1: -1,
                 operand1BtnIndex: -1,
@@ -160,7 +160,7 @@ export default class SoloGame extends Phaser.Scene {
         this.textTotalWrong = new BetterText(this, window.innerWidth - 128, window.innerHeight - 452, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
-       
+
 
     }
 
@@ -246,7 +246,7 @@ export default class SoloGame extends Phaser.Scene {
 
         // We have to reset the game state here
         this.ResetGameState(true);
-        
+
         // Delete the top bar message
         this.textMessage.setText("");
 
@@ -327,16 +327,20 @@ export default class SoloGame extends Phaser.Scene {
     Reset(): void {
         // First we reset the state
         this.ResetGameState(true);
-       
+
         // Then reset the number buttons
         for (let i = 0; i < 4; i++) {
             this.numberBtns[i].SetText(this.gameState.currentCard[i]);
             this.numberBtns[i].SetEnabled();
         }
+
+        // Disable the 'Reset' and 'Backspace' button
+        this.btnBackspace.SetDisabled();
+        this.btnReset.SetDisabled();
     }
 
 
-    
+
 
 
 
@@ -353,7 +357,7 @@ export default class SoloGame extends Phaser.Scene {
 
             // Store the index of the button that was clicked
             this.gameState.currentOperation.operand1BtnIndex = clickedButtonIndex;
-            
+
 
             console.log("Clicked number " + num + " as first operand.");
 
@@ -387,7 +391,7 @@ export default class SoloGame extends Phaser.Scene {
             switch (this.gameState.currentOperation.operation) {
                 case "addition":
                     {
-                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1  + this.gameState.currentOperation.operand2;
+                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1 + this.gameState.currentOperation.operand2;
                         break;
                     }
 
@@ -426,14 +430,14 @@ export default class SoloGame extends Phaser.Scene {
 
             // This operation is added to the operation stack
             this.gameState.operationStack.Push({
-                        operand1: this.gameState.currentOperation.operand1,
-                        operand1BtnIndex: this.gameState.currentOperation.operand1BtnIndex,
+                operand1: this.gameState.currentOperation.operand1,
+                operand1BtnIndex: this.gameState.currentOperation.operand1BtnIndex,
 
-                        operand2: this.gameState.currentOperation.operand2,
-                        operand2BtnIndex: this.gameState.currentOperation.operand2BtnIndex,
+                operand2: this.gameState.currentOperation.operand2,
+                operand2BtnIndex: this.gameState.currentOperation.operand2BtnIndex,
 
-                        operation: this.gameState.currentOperation.operation,
-                        result: this.gameState.currentOperation.result
+                operation: this.gameState.currentOperation.operation,
+                result: this.gameState.currentOperation.result
 
             });
 
@@ -451,7 +455,7 @@ export default class SoloGame extends Phaser.Scene {
             console.log(this.gameState.operationStack);
         }
 
-
+        console.log(this.gameState);
 
     }
 
@@ -463,48 +467,56 @@ export default class SoloGame extends Phaser.Scene {
         this.gameState.operationState = OperationState.PickingOperand2;
     }
 
-    HandleButtonClick_Backspace(): void 
-    {
+    HandleButtonClick_Backspace(): void {
+
+
         // Pop the last performed operation from the operation stack
         let lastOp = this.gameState.operationStack.Pop();
 
-        if (lastOp)
-        {
+        if (lastOp) {
+            // There was at least one element/operation on the stack
+
             // We have to change the buttons to the previous numbers and enable them
             this.numberBtns[lastOp.operand1BtnIndex].SetText(lastOp.operand1.toString());
             this.numberBtns[lastOp.operand1BtnIndex].SetEnabled();
 
-
             this.numberBtns[lastOp.operand2BtnIndex].SetText(lastOp.operand2.toString());
             this.numberBtns[lastOp.operand2BtnIndex].SetEnabled();
 
-
             // Reset the operation state
             this.ResetGameState(false);
-        }
 
+            // Check if the operation stack is now empty. If it is, then disable some buttons.
+            if (this.gameState.operationStack.IsEmpty()) {
+                this.btnReset.SetDisabled();
+                this.btnBackspace.SetDisabled();
+            }
+        }
     }
 
 
-    
-    ResetGameState(flagFullReset: boolean  = false): void 
+
+
+
+
+
+ResetGameState(flagFullReset: boolean = false): void {
+    this.gameState.operationState = OperationState.PickingOperand1;
+
+    this.gameState.currentOperation =
     {
-        this.gameState.operationState = OperationState.PickingOperand1;
+        operand1: -1,
+        operand1BtnIndex: -1,
+        operand2: -1,
+        operand2BtnIndex: -1,
+        operation: "none",
+        result: -1
+    };
 
-        this.gameState.currentOperation = 
-        {
-            operand1: -1,
-            operand1BtnIndex: -1,
-            operand2: -1,
-            operand2BtnIndex: -1,
-            operation: "none",
-            result: -1
-        };
-
-        if (flagFullReset)
+    if(flagFullReset)
             // Fully reset the game. Operation stack is renewd
             this.gameState.operationStack = new OperationsStack;
-    }
+}
 
 
 }
