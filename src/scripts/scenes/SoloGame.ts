@@ -8,8 +8,7 @@ import BetterText from '../better/BetterText'
 import BetterButton from '../better/BetterButton'
 import CardGenerator from '../utils/CardGenerator'
 import Solutions from '../utils/Solutions'
-import ExprEval from 'expr-eval'
-import Utils from '../utils/Utils'
+
 
 
 enum OperationState {
@@ -70,9 +69,6 @@ export default class SoloGame extends Phaser.Scene {
 
     }
 
-
-
-
     init(data) {
 
 
@@ -102,9 +98,10 @@ export default class SoloGame extends Phaser.Scene {
 
         if (!this.isInstanced) {
 
-            this.events.on('NumberButtonClick', this.Handle_NumberButtonClick, this);
-            this.events.on('OperationButtonClick', this.Handle_OperationButtonClick, this);
+            this.events.on('NumberButtonClick', this.HandleButtonClick_Number, this);
+            this.events.on('OperationButtonClick', this.HandleButtonClick_Operation, this);
 
+            this.events.on('ResetButtonClick', this.HandleButtonClick_Reset, this);
             this.events.on('BackspaceButtonClick', this.HandleButtonClick_Backspace, this);
 
 
@@ -139,7 +136,6 @@ export default class SoloGame extends Phaser.Scene {
         // Setup ALL the buttons
         this.SetupButtons();
 
-        this.events.emit("Start");
 
 
         this.textSolution = new BetterText(this, window.innerWidth - 512, 128, "", { fontSize: 32 });
@@ -184,7 +180,7 @@ export default class SoloGame extends Phaser.Scene {
 
         // This button lets the user reset his attempt at the current card.
         this.btnReset = new BetterButton(this, window.innerWidth / 2 - 196, window.innerHeight - 128, 0.2, 0.2, "↺", { fontSize: 64 }, "cardBG");
-        this.btnReset.on("pointerup", () => this.Reset());
+        this.btnReset.on("pointerup", () => this.events.emit('ResetButtonClick'));
         this.btnReset.SetDisabled();
 
 
@@ -324,7 +320,7 @@ export default class SoloGame extends Phaser.Scene {
 
 
     // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
-    Reset(): void {
+    HandleButtonClick_Reset(): void {
         // First we reset the state
         this.ResetGameState(true);
 
@@ -344,7 +340,7 @@ export default class SoloGame extends Phaser.Scene {
 
 
 
-    Handle_NumberButtonClick(clickedButtonIndex: number, num: number): void {
+    HandleButtonClick_Number(clickedButtonIndex: number, num: number): void {
 
         // We decide what happens next based on the current state
         if (this.gameState.operationState == OperationState.PickingOperand1) {
@@ -459,7 +455,7 @@ export default class SoloGame extends Phaser.Scene {
 
     }
 
-    Handle_OperationButtonClick(operation: string) {
+    HandleButtonClick_Operation(operation: string) {
         console.log("Operation: " + operation);
         this.gameState.currentOperation.operation = operation;
 
