@@ -1,5 +1,9 @@
 import Phaser from 'phaser'
 
+import {OperationsStack} from '../utils/OperationsStack'
+import {Operation} from '../utils/OperationsStack'
+
+
 import BetterText from '../better/BetterText'
 import BetterButton from '../better/BetterButton'
 import CardGenerator from '../utils/CardGenerator'
@@ -8,7 +12,7 @@ import ExprEval from 'expr-eval'
 import Utils from '../utils/Utils'
 
 
-enum State {
+enum OperationState {
     PickingOperand1,
     PickingOperation,
     PickingOperand2
@@ -21,14 +25,10 @@ type GameState = {
     totalCorrect: integer;
     totalWrong: integer;
 
-    // operand1 operation operand2 = result
-    state: State;
-    operand1: integer;
-    operation: string;
-    operand2: integer;
-    result: integer;
+    operationState: OperationState;
+    currentOperation: Operation;
 
-
+    operationStack: OperationsStack;
 }
 
 
@@ -47,7 +47,7 @@ export default class SoloGame extends Phaser.Scene {
 
     // Buttons
     private btnNewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
-    private btnResetInput!: BetterButton;           // Resets player input. Lets him try again the current card.
+    private btnReset!: BetterButton;           // Resets player input. Lets him try again the current card.
     private btnBackspace!: BetterButton;           // Lets the user delete the last inserted character.
 
     private btnOperationAdd!: BetterButton;         // Perdorms Addition
@@ -82,20 +82,31 @@ export default class SoloGame extends Phaser.Scene {
             totalCorrect: 0,
             totalWrong: 0,
 
-            operand1: 0,
-            operation: "?",
-            operand2: 0,
-            result: 0,
-            state: State.PickingOperand1
+            currentOperation: 
+            {
+                operand1: -1,
+                operand1BtnIndex: -1,
+
+                operand2: -1,
+                operand2BtnIndex: -1,
+
+                operation: "none",
+                result: -1
+            },
+            operationState: OperationState.PickingOperand1,
+
+            operationStack: new OperationsStack
 
 
         };
 
         if (!this.isInstanced) {
 
-            // this.events.on('BackspaceButtonClick', this.Handle_Backspace, this);
             this.events.on('NumberButtonClick', this.Handle_NumberButtonClick, this);
             this.events.on('OperationButtonClick', this.Handle_OperationButtonClick, this);
+
+            this.events.on('BackspaceButtonClick', this.HandleButtonClick_Backspace, this);
+
 
 
         }
@@ -131,7 +142,7 @@ export default class SoloGame extends Phaser.Scene {
         this.events.emit("Start");
 
 
-        this.textSolution = new BetterText(this, 960, 1080 - 128, "", { fontSize: 32 });
+        this.textSolution = new BetterText(this, window.innerWidth - 512, 128, "", { fontSize: 32 });
 
         this.isInstanced = true;
 
@@ -149,10 +160,7 @@ export default class SoloGame extends Phaser.Scene {
         this.textTotalWrong = new BetterText(this, window.innerWidth - 128, window.innerHeight - 452, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
-        //this.textPlayerInput = new BetterText(this, window.innerWidth / 2, 128, "",
-        //  { fontSize: 96, color: "#292d33", backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 }, fixedWidth: 1024 * devicePixelRatio });
-        //this.textPlayerInput.setOrigin(0.5, 0.5);
-        //this.textSolution = new BetterText(this, 960, 1080 - 128, "", { fontSize: 32 });
+       
 
     }
 
@@ -175,13 +183,13 @@ export default class SoloGame extends Phaser.Scene {
         }
 
         // This button lets the user reset his attempt at the current card.
-        this.btnResetInput = new BetterButton(this, window.innerWidth / 2 - 320, 512, 0.3, 0.3, "↺", { fontSize: 64 }, "btn");
-        // this.btnResetInput.on("pointerup", () => this.ResetInput());
-        this.btnResetInput.SetDisabled();
+        this.btnReset = new BetterButton(this, window.innerWidth / 2 - 196, window.innerHeight - 128, 0.2, 0.2, "↺", { fontSize: 64 }, "cardBG");
+        this.btnReset.on("pointerup", () => this.Reset());
+        this.btnReset.SetDisabled();
 
 
         // 'Backspace' button
-        this.btnBackspace = new BetterButton(this, window.innerWidth / 2 + 320, 512, 0.3, 0.3, '🠔', { fontSize: 32 }, "btn");
+        this.btnBackspace = new BetterButton(this, window.innerWidth / 2 + 196, window.innerHeight - 128, 0.2, 0.2, '🠔', { fontSize: 32 }, "cardBG");
         this.btnBackspace.on("pointerup", () => this.events.emit('BackspaceButtonClick'));
         this.btnBackspace.SetDisabled();
 
@@ -237,12 +245,8 @@ export default class SoloGame extends Phaser.Scene {
     NewCard(): void {
 
         // We have to reset the game state here
-        this.gameState.operand1 = -1;
-        this.gameState.operand2 = -1;
-        this.gameState.result = -1;
-        this.gameState.operation = "none";
-        this.gameState.state = State.PickingOperand1;
-
+        this.ResetGameState(true);
+        
         // Delete the top bar message
         this.textMessage.setText("");
 
@@ -261,7 +265,7 @@ export default class SoloGame extends Phaser.Scene {
         }
 
         // DIsable 'Reset' button
-        this.btnResetInput.SetDisabled();
+        this.btnReset.SetDisabled();
 
         // Disable 'Backspace' button
         this.btnBackspace.SetDisabled();
@@ -290,17 +294,21 @@ export default class SoloGame extends Phaser.Scene {
 
         if (disabledCardCount === 3) {
 
-            if (this.gameState.result === 24)
-            {
+            if (this.gameState.currentOperation.result === 24) {
                 console.log(" !!!! PLAYER WON !!!!");
                 this.textMessage.setText("CORRECTO !");
+
+
                 // Update game state
                 this.gameState.totalCorrect += 1;
                 this.textTotalCorrect.setText(this.gameState.totalCorrect.toString());
 
+                // We can disable the 'Reset' and 'Backspace' buttons
+                this.btnReset.SetDisabled();
+                this.btnBackspace.SetDisabled();
+
             }
-            else
-            {
+            else {
                 console.log(" WRONG ANSWER ");
                 this.textMessage.setText("INCORRECTO !");
 
@@ -315,21 +323,42 @@ export default class SoloGame extends Phaser.Scene {
     }
 
 
+    // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
+    Reset(): void {
+        // First we reset the state
+        this.ResetGameState(true);
+       
+        // Then reset the number buttons
+        for (let i = 0; i < 4; i++) {
+            this.numberBtns[i].SetText(this.gameState.currentCard[i]);
+            this.numberBtns[i].SetEnabled();
+        }
+    }
+
+
+    
+
+
 
     Handle_NumberButtonClick(clickedButtonIndex: number, num: number): void {
 
         // We decide what happens next based on the current state
-        if (this.gameState.state == State.PickingOperand1) {
-            // User is picking the first operand
-            this.gameState.operand1 = num;
+        if (this.gameState.operationState == OperationState.PickingOperand1) {
 
             // Disable the number button
             this.numberBtns[clickedButtonIndex].SetDisabled();
 
+            // User is picking the first operand
+            this.gameState.currentOperation.operand1 = num;
+
+            // Store the index of the button that was clicked
+            this.gameState.currentOperation.operand1BtnIndex = clickedButtonIndex;
+            
+
             console.log("Clicked number " + num + " as first operand.");
 
             // Then he has to pick an operation
-            this.gameState.state = State.PickingOperation;
+            this.gameState.operationState = OperationState.PickingOperation;
 
             // We have to enable the operation buttons 
             // Operation buttons can be disabled
@@ -338,43 +367,53 @@ export default class SoloGame extends Phaser.Scene {
             this.btnOperationMultiply.SetEnabled();
             this.btnOperationDivide.SetEnabled();
 
-        } else if (this.gameState.state == State.PickingOperand2) {
+            // Enable 'Backspace' button
+            this.btnBackspace.SetEnabled();
+
+            // Enable 'Reset' button
+            this.btnReset.SetEnabled();
+
+        } else if (this.gameState.operationState == OperationState.PickingOperand2) {
             // User is picking the second operand. 
-            this.gameState.operand2 = num;
+            this.gameState.currentOperation.operand2 = num;
+
+            // Store the index of the button that was clicked
+            this.gameState.currentOperation.operand2BtnIndex = clickedButtonIndex;
 
             console.log("Clicked number " + num + " as second operand.");
 
             // If user is on this state, it means he already picked a first operand and an operation.
             // Apply the operation to operand 1 and operand 2.
-            switch (this.gameState.operation) {
+            switch (this.gameState.currentOperation.operation) {
                 case "addition":
                     {
-                        this.gameState.result = this.gameState.operand1 + this.gameState.operand2;
+                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1  + this.gameState.currentOperation.operand2;
                         break;
                     }
 
                 case "subtraction":
                     {
-                        this.gameState.result = this.gameState.operand1 - this.gameState.operand2;
+                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1 - this.gameState.currentOperation.operand2;
                         break;
                     }
 
                 case "multiplication":
                     {
-                        this.gameState.result = this.gameState.operand1 * this.gameState.operand2;
+                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1 * this.gameState.currentOperation.operand2;
                         break;
                     }
 
                 case "division":
                     {
-                        this.gameState.result = this.gameState.operand1 / this.gameState.operand2;
+                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1 / this.gameState.currentOperation.operand2;
                         break;
                     }
             }
 
             // The result is stored/shown in the last picked number button (operand 2 button)
-            this.numberBtns[clickedButtonIndex].SetText(this.gameState.result.toString());
-            console.log("Operation resulted in: " + this.gameState.result.toString() + "\n\n=======================================");
+            this.numberBtns[clickedButtonIndex].SetText(this.gameState.currentOperation.result.toString());
+
+            console.log("Operation resulted in: " + this.gameState.currentOperation.result.toString() + "\n\n=======================================");
 
 
 
@@ -383,34 +422,89 @@ export default class SoloGame extends Phaser.Scene {
             this.CheckSolution();
 
 
-            console.log("PLayer now has to chose the first operand again.");
+            console.log("Player now has to chose the first operand again.");
+
+            // This operation is added to the operation stack
+            this.gameState.operationStack.Push({
+                        operand1: this.gameState.currentOperation.operand1,
+                        operand1BtnIndex: this.gameState.currentOperation.operand1BtnIndex,
+
+                        operand2: this.gameState.currentOperation.operand2,
+                        operand2BtnIndex: this.gameState.currentOperation.operand2BtnIndex,
+
+                        operation: this.gameState.currentOperation.operation,
+                        result: this.gameState.currentOperation.result
+
+            });
+
 
             // The operation was completed. Now the player has to pick a new first operand again.
-            this.gameState.state = State.PickingOperand1;
+            // We reset the operation state, but dont delete the stack of operations
+            this.ResetGameState(false);
 
             // Operation buttons can be disabled
             this.btnOperationAdd.SetDisabled();
             this.btnOperationSubtract.SetDisabled();
             this.btnOperationMultiply.SetDisabled();
             this.btnOperationDivide.SetDisabled();
+
+            console.log(this.gameState.operationStack);
         }
 
-        // Enable 'Backspace' button
-        this.btnBackspace.SetEnabled();
 
-        // Enable 'Reset' button
-        this.btnResetInput.SetEnabled();
 
     }
 
     Handle_OperationButtonClick(operation: string) {
         console.log("Operation: " + operation);
-        this.gameState.operation = operation;
+        this.gameState.currentOperation.operation = operation;
 
         // Player chose the operation. Now he has to pick the second operan
-        this.gameState.state = State.PickingOperand2;
+        this.gameState.operationState = OperationState.PickingOperand2;
     }
 
+    HandleButtonClick_Backspace(): void 
+    {
+        // Pop the last performed operation from the operation stack
+        let lastOp = this.gameState.operationStack.Pop();
+
+        if (lastOp)
+        {
+            // We have to change the buttons to the previous numbers and enable them
+            this.numberBtns[lastOp.operand1BtnIndex].SetText(lastOp.operand1.toString());
+            this.numberBtns[lastOp.operand1BtnIndex].SetEnabled();
+
+
+            this.numberBtns[lastOp.operand2BtnIndex].SetText(lastOp.operand2.toString());
+            this.numberBtns[lastOp.operand2BtnIndex].SetEnabled();
+
+
+            // Reset the operation state
+            this.ResetGameState(false);
+        }
+
+    }
+
+
+    
+    ResetGameState(flagFullReset: boolean  = false): void 
+    {
+        this.gameState.operationState = OperationState.PickingOperand1;
+
+        this.gameState.currentOperation = 
+        {
+            operand1: -1,
+            operand1BtnIndex: -1,
+            operand2: -1,
+            operand2BtnIndex: -1,
+            operation: "none",
+            result: -1
+        };
+
+        if (flagFullReset)
+            // Fully reset the game. Operation stack is renewd
+            this.gameState.operationStack = new OperationsStack;
+    }
 
 
 }
