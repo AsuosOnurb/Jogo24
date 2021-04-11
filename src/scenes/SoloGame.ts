@@ -22,6 +22,7 @@ type GameState = {
 
 
 export default class SoloGame extends Phaser.Scene {
+    private isInstanced: boolean = false;
     private gameState!: GameState;
     private cardGenerator!: CardGenerator;
 
@@ -72,8 +73,14 @@ export default class SoloGame extends Phaser.Scene {
             totalCorrect: 0,
             totalWrong: 0
         };
-
-
+        if (!this.isInstanced)
+        {
+            this.events.on('TimerClick', this.timer_function, this);
+        }
+        else{
+            this.events.emit('TimerClick', this.timer_function, this);
+        }
+        this.isInstanced = true;
     }
 
     create() {
@@ -101,6 +108,8 @@ export default class SoloGame extends Phaser.Scene {
         this.textTotalCorrect = new BetterText(this, 1920 - 320, 540 + 64, "Correctos: 0", { fontSize: 32, color: "#292d33", fontStyle: "bold" })
         this.textTotalWrong = new BetterText(this, 1920 - 320, 540 + 128, "Incorrectos: 0", { fontSize: 32, color: "#292d33", fontStyle: "bold" })
 
+        //Timer text
+        this.timerText = new BetterText(this,256 , window.innerHeight / 2,"",{font: "100px Arial", fill: "#fff"});
 
         this.textPlayerInput = new BetterText(this, 480, 128, "",
             { fontSize: 96, color: "#292d33", backgroundColor: "#fce303", align: "center", padding: { left: 32, right: 32, top: 32, bottom: 32 }, fixedWidth: 1024 * devicePixelRatio });
@@ -231,7 +240,9 @@ export default class SoloGame extends Phaser.Scene {
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
 
-        this.timer_function();
+        //Timer construction
+        //this.timer_function();
+        this.events.emit('TimerClick', this.timer_function, this);
     }
 
 
@@ -297,7 +308,7 @@ export default class SoloGame extends Phaser.Scene {
         // 1 minute in seconds
         this.initialTime = 60;
 
-        this.timerText = new BetterText(this,256 , window.innerHeight / 2,"00:"+ this.initialTime,{font: "100px Arial", fill: "#fff"});
+        this.timerText.setText(this.formatTime(this.initialTime));
 
         // Each 1000 ms call onEvent
         this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
@@ -311,8 +322,10 @@ export default class SoloGame extends Phaser.Scene {
     }
 
     onEvent(): void{
-    this.initialTime -= 1; // One second
+    if(this.initialTime>0)
+        this.initialTime -= 1; // One second
     this.timerText.setText(this.formatTime(this.initialTime));
     }
+
 
 }
