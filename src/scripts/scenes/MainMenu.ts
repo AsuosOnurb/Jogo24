@@ -42,6 +42,19 @@ export default class HelloWorldScene extends Phaser.Scene {
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
 
+        // Add fullscreen toggle icon
+        const fullScreenIcon = this.add.sprite(this.scale.width - 128, 128, 'fullscreenToggle');
+        fullScreenIcon.setScale(0.1, 0.1);
+        fullScreenIcon.setInteractive().on("pointerup", () => {
+            console.log("Hey")
+
+            if (this.scale.isFullscreen)
+                this.scale.stopFullscreen();
+            else 
+                this.scale.startFullscreen();
+
+        })
+
         // Insert the toon image
         const toonImg = this.add.sprite(this.scale.width / 2 - 720, this.scale.height - 283, 'toon');
 

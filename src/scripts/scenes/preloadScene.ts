@@ -12,6 +12,8 @@ export default class PreloadScene extends Phaser.Scene {
     */
  
 
+    this.load.image('fullscreenToggle', 'assets/img/fullScreen.png')
+
     /* =================================== Main menu assets =================================== */
     this.load.image('blueBackground',   'assets/img/main_menu/background0.png');
     this.load.image('title',        'assets/img/main_menu/titulo1.png');
