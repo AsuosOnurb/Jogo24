@@ -10,5 +10,6 @@ export default class Utils  {
         return /^\d+$/.test(str);
     }
 
+
     
 }

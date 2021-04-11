@@ -38,15 +38,15 @@ export default class HelloWorldScene extends Phaser.Scene {
     create() {
 
         // Add background image 
-        const bgImg = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'blueBackground');
-        bgImg.setDisplaySize(this.scale.width, window.innerHeight);
+        const bgImg = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'blueBackground');
+        bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
 
         // Insert the toon image
-        const toonImg = this.add.sprite(window.innerWidth / 2 - 720, window.innerHeight - 283, 'toon');
+        const toonImg = this.add.sprite(this.scale.width / 2 - 720, this.scale.height - 283, 'toon');
 
         // Insert the title image
-        const titleImg = this.add.sprite(window.innerWidth / 2, 160, 'title');
+        const titleImg = this.add.sprite( this.scale.width / 2, 160, 'title');
         titleImg.setScale(0.7, 0.7);
 
         // ============================= Panel setup ====================================================
@@ -54,12 +54,9 @@ export default class HelloWorldScene extends Phaser.Scene {
         // The panel group
         this.panelGroup = this.add.group();
 
-        // The panel image
-        // this.panelImage = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'panel');
-        //this.panelRectangle = this.add.rectangle(window.innerWidth / 2, window.innerHeight / 2,
-        //  window.innerWidth - 256, window.innerHeight - 256, 0xfce303);
+       
         graphics.fillStyle(0xfce303, 1);
-        this.panelRectangle = graphics.fillRoundedRect(128, 128, window.innerWidth - 256, window.innerHeight - 512, 13);
+        this.panelRectangle = graphics.fillRoundedRect(128, 128, this.scale.width - 256, this.scale.height - 512, 13);
 
 
         // The back button image
@@ -84,35 +81,35 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.mainMenuButtonsGroup = this.add.group();
 
         // Tablet mode button
-        this.btnTabletMode = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 21 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_tabletMode');
+        this.btnTabletMode = new BetterButton(this,this.scale.width- 128, this.scale.height - 64 - 21 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_tabletMode');
 
         // Credits button
-        this.btnCredits = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
+        this.btnCredits = new BetterButton(this, this.scale.width - 128,this.scale.height - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
 
         // Top 100 button
-        this.btnLeaderboards = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 11 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_top");
+        this.btnLeaderboards = new BetterButton(this, this.scale.width - 128,this.scale.height - 64 - 11 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_top");
 
         // About the game button
-        this.aboutUsButton = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 6 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_about');
+        this.aboutUsButton = new BetterButton(this,this.scale.width - 128, this.scale.height - 64 - 6 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_about');
         this.aboutUsButton.on("pointerup", () => this.showAboutUsPanel());
 
         // How to play button
-        this.howToPlayButton = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_howToPlay");
+        this.howToPlayButton = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_howToPlay");
         this.howToPlayButton.on("pointerup", () => this.showHowToPlayPanel());
 
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy');
+        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy');
         this.btnPlaySoloEasy.on("pointerup", () => this.startSoloGame("Easy"));
 
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium');
+        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium');
         this.btnPlaySoloMedium.on("pointerup", () => this.startSoloGame("Medium"));
 
         // Play Solo Hard button
-        this.btnPlaySoloHard = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard');
+        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2+ 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard');
         this.btnPlaySoloHard.on("pointerup", () => this.startSoloGame("Hard"));
 
 

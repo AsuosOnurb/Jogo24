@@ -10,13 +10,13 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
 
    constructor(scene: Phaser.Scene, x: number, y:number, xScale:number, yScale:number,  text:string|undefined, textStyle:any , texture:string|Phaser.Textures.Texture)
     {
-        super(scene, x * devicePixelRatio  , y * devicePixelRatio , texture);
+        super(scene, x   , y  , texture);
 
  
         // add the button itself to the scene
         scene.add.existing(this);
 
-        this.setScale(xScale * devicePixelRatio , yScale * devicePixelRatio );
+        this.setScale(xScale , yScale  );
 
         // Buttons are interactible by default
         this.setInteractive();

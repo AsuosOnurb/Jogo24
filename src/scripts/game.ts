@@ -14,17 +14,12 @@ const config = {
     parent: 'phaser-game',
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: DEFAULT_WIDTH,
-    height: DEFAULT_HEIGHT
+
+    width: 1920 ,
+    height: 1080
   },
   scene: [PreloadScene, MainMenu, SoloGame],
-  physics: {
-    default: 'arcade',
-    arcade: {
-      debug: false,
-      gravity: { y: 400 }
-    }
-  }
+  
 }
 
 window.addEventListener('load', () => {

@@ -108,26 +108,26 @@ export default class SoloGame extends Phaser.Scene {
 
         }
 
-        // Add background image 
-        const bgImg = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'blueBackground');
-        bgImg.setScale(1.44, 1.37);
+        // Add background image window
+        const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
+        bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
         // Insert the title image
         const titleImg = this.add.sprite(256, 96, 'smallTitle');
         titleImg.setScale(1, 1);
 
         // Add card background image
-        const cardBG = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'cardBG');
+        const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'cardBG');
 
         // Add the corect/incorrect label backgrounds
-        const correctBG = this.add.sprite(window.innerWidth - 192, window.innerHeight - 400 - 196, 'correctCounter')
-        const wrongBG = this.add.sprite(window.innerWidth - 192, window.innerHeight - 450, 'wrongCounter')
+        const correctBG = this.add.sprite(this.scale.width - 192, this.scale.height - 400 - 196, 'correctCounter')
+        const wrongBG = this.add.sprite(this.scale.width - 192,this.scale.height - 450, 'wrongCounter')
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        const inputBG = this.add.sprite(window.innerWidth / 2, 128, 'inputBar');
+        const inputBG = this.add.sprite(this.scale.width / 2, 128, 'inputBar');
 
         // We might as well, for now, use the input bar as a place for player messages
-        this.textMessage = new BetterText(this, window.innerWidth / 2, 128, "", { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
+        this.textMessage = new BetterText(this, this.scale.width /2, 128, "", { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
         this.textMessage.setOrigin(0.5, 0.5);
 
         // Setup labels 
@@ -138,7 +138,7 @@ export default class SoloGame extends Phaser.Scene {
 
 
 
-        this.textSolution = new BetterText(this, window.innerWidth - 512, 128, "", { fontSize: 32 });
+        this.textSolution = new BetterText(this, this.scale.width - 512, 128, "", { fontSize: 32 });
 
         this.isInstanced = true;
 
@@ -151,9 +151,9 @@ export default class SoloGame extends Phaser.Scene {
     SetupLabels() {
 
 
-        this.textTotalCorrect = new BetterText(this, window.innerWidth - 128, window.innerHeight - 600, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
+        this.textTotalCorrect = new BetterText(this, this.scale.width - 128, this.scale.height - 600, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalCorrect.setOrigin(0.5, 0.5);
-        this.textTotalWrong = new BetterText(this, window.innerWidth - 128, window.innerHeight - 452, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
+        this.textTotalWrong = new BetterText(this, this.scale.width - 128, this.scale.height - 452, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
 
@@ -165,10 +165,10 @@ export default class SoloGame extends Phaser.Scene {
 
         // Setup a button for each number in the card (4 buttons)
         this.numberBtns = [
-            new BetterButton(this, window.innerWidth / 2 - 196, window.innerHeight / 2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 - 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, window.innerWidth / 2 + 196, window.innerHeight / 2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+            new BetterButton(this, this.scale.width / 2 - 196, this.scale.height / 2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+            new BetterButton(this, this.scale.width / 2 + 196, this.scale.height / 2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
 
         ]
 
@@ -179,47 +179,47 @@ export default class SoloGame extends Phaser.Scene {
         }
 
         // This button lets the user reset his attempt at the current card.
-        this.btnReset = new BetterButton(this, window.innerWidth / 2 - 196, window.innerHeight - 128, 0.2, 0.2, "↺", { fontSize: 64 }, "cardBG");
+        this.btnReset = new BetterButton(this, this.scale.width / 2 - 196, this.scale.height - 128, 0.2, 0.2, "↺", { fontSize: 64 }, "cardBG");
         this.btnReset.on("pointerup", () => this.events.emit('ResetButtonClick'));
         this.btnReset.SetDisabled();
 
 
         // 'Backspace' button
-        this.btnBackspace = new BetterButton(this, window.innerWidth / 2 + 196, window.innerHeight - 128, 0.2, 0.2, '🠔', { fontSize: 32 }, "cardBG");
+        this.btnBackspace = new BetterButton(this, this.scale.width / 2 + 196, this.scale.height - 128, 0.2, 0.2, '🠔', { fontSize: 32 }, "cardBG");
         this.btnBackspace.on("pointerup", () => this.events.emit('BackspaceButtonClick'));
         this.btnBackspace.SetDisabled();
 
 
 
         // Addition operation button
-        this.btnOperationAdd = new BetterButton(this, window.innerWidth - 256, window.innerHeight - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_addition");
+        this.btnOperationAdd = new BetterButton(this, this.scale.width - 256, this.scale.height - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_addition");
         this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "addition"));
         this.btnOperationAdd.SetDisabled();
 
 
         // Subtraction operation button
-        this.btnOperationSubtract = new BetterButton(this, window.innerWidth - 96, window.innerHeight - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_subtraction");
+        this.btnOperationSubtract = new BetterButton(this, this.scale.width - 96, this.scale.height - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_subtraction");
         this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "subtraction"));
         this.btnOperationSubtract.SetDisabled();
 
 
 
         // Multiplication operation button
-        this.btnOperationMultiply = new BetterButton(this, window.innerWidth - 256, window.innerHeight - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_multiplication");
+        this.btnOperationMultiply = new BetterButton(this, this.scale.width - 256, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_multiplication");
         this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "multiplication"));
         this.btnOperationMultiply.SetDisabled();
 
 
 
         // Division operation button
-        this.btnOperationDivide = new BetterButton(this, window.innerWidth - 96, window.innerHeight - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_division");
+        this.btnOperationDivide = new BetterButton(this, this.scale.width - 96, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_division");
         this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "division"));
         this.btnOperationDivide.SetDisabled();
 
 
 
         // 'New Card' button
-        this.btnNewCard = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
+        this.btnNewCard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
         this.btnNewCard.setScale(0.6, 0.6);
         this.btnNewCard.on("pointerup", () => this.NewCard());
 
