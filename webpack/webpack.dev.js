@@ -5,7 +5,11 @@ const dev = {
   mode: 'development',
   devtool: 'inline-source-map',
   devServer: {
-    open: true
+    host: '0.0.0.0',
+    port: 8080,
+    disableHostCheck: true,
+    open: true,
+    openPage: 'http://localhost:8080'
   }
 }
 
