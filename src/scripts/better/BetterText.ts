@@ -5,10 +5,6 @@ export default class BetterText extends Phaser.GameObjects.Text
     constructor(scene: Phaser.Scene, x: number, y: number, text: string, style: any )
     {
 
-        if (style.fontSize)
-        {
-            style.fontSize *= devicePixelRatio;
-        }
 
         if (!style.color)
         {
@@ -20,7 +16,7 @@ export default class BetterText extends Phaser.GameObjects.Text
 
         
 
-        super(scene, x * devicePixelRatio , y * devicePixelRatio  , text, style);
+        super(scene, x  , y   , text, style);
 
         
         
