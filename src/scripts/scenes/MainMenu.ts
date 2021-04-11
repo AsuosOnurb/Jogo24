@@ -39,10 +39,11 @@ export default class HelloWorldScene extends Phaser.Scene {
 
         // Add background image 
         const bgImg = this.add.sprite(window.innerWidth / 2, window.innerHeight / 2, 'blueBackground');
-        bgImg.setScale(1.44, 1.37);
+        bgImg.setDisplaySize(this.scale.width, window.innerHeight);
+
 
         // Insert the toon image
-        const toonImg = this.add.sprite(256, window.innerHeight - 283, 'toon');
+        const toonImg = this.add.sprite(window.innerWidth / 2 - 720, window.innerHeight - 283, 'toon');
 
         // Insert the title image
         const titleImg = this.add.sprite(window.innerWidth / 2, 160, 'title');
@@ -83,35 +84,35 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.mainMenuButtonsGroup = this.add.group();
 
         // Tablet mode button
-        this.btnTabletMode =            new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 21 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_tabletMode');
+        this.btnTabletMode = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 21 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_tabletMode');
 
         // Credits button
-        this.btnCredits =               new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
+        this.btnCredits = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
 
         // Top 100 button
-        this.btnLeaderboards =          new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 11 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_top");
+        this.btnLeaderboards = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 11 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_top");
 
         // About the game button
-        this.aboutUsButton =            new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 6 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_about');
+        this.aboutUsButton = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 6 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_about');
         this.aboutUsButton.on("pointerup", () => this.showAboutUsPanel());
 
         // How to play button
-        this.howToPlayButton =          new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_howToPlay");
+        this.howToPlayButton = new BetterButton(this, window.innerWidth - 128, window.innerHeight - 64 - 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_howToPlay");
         this.howToPlayButton.on("pointerup", () => this.showHowToPlayPanel());
 
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy =          new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy');
+        this.btnPlaySoloEasy = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy');
         this.btnPlaySoloEasy.on("pointerup", () => this.startSoloGame("Easy"));
 
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium =        new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium');
+        this.btnPlaySoloMedium = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium');
         this.btnPlaySoloMedium.on("pointerup", () => this.startSoloGame("Medium"));
 
         // Play Solo Hard button
-        this.btnPlaySoloHard =          new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard');
+        this.btnPlaySoloHard = new BetterButton(this, window.innerWidth / 2, window.innerHeight / 2 + 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard');
         this.btnPlaySoloHard.on("pointerup", () => this.startSoloGame("Hard"));
 
 
@@ -128,7 +129,7 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.mainMenuButtonsGroup.add(this.btnPlaySoloMedium); // Add solo medium btn
         this.mainMenuButtonsGroup.add(this.btnPlaySoloHard); // Add solo hard btn
 
-        
+
 
 
 
@@ -157,6 +158,9 @@ export default class HelloWorldScene extends Phaser.Scene {
             gameId.style.width = '100%';
             gameId.style.height = '100%';
         }
+
+        this.scale.refresh();
+
     }
 
     startSoloGame(difficulty: string): void {
@@ -172,6 +176,7 @@ export default class HelloWorldScene extends Phaser.Scene {
             this.scene.start("SoloGame", { difficulty: 3 });
         }
     }
+
 
 
 
