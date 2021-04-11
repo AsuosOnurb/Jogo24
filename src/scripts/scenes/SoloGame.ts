@@ -63,6 +63,10 @@ export default class SoloGame extends Phaser.Scene {
     */
     private numberBtns!: Array<BetterButton>;
 
+    //Timer construction
+    private initialTime!: number;
+    private timedEvent;
+    private timerText;
 
     constructor() {
         super("SoloGame");
@@ -104,6 +108,8 @@ export default class SoloGame extends Phaser.Scene {
             this.events.on('ResetButtonClick', this.HandleButtonClick_Reset, this);
             this.events.on('BackspaceButtonClick', this.HandleButtonClick_Backspace, this);
 
+            //Timer event
+            this.events.on('TimerClick', this.timer_function, this);
 
 
         }
@@ -156,6 +162,8 @@ export default class SoloGame extends Phaser.Scene {
         this.textTotalWrong = new BetterText(this, this.scale.width - 128, this.scale.height - 452, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
+        //Timer text
+        this.timerText = new BetterText(this,256 , window.innerHeight / 2,"",{font: "100px Arial", fill: "#fff",fontStyle: "bold" });
 
 
     }
@@ -275,6 +283,10 @@ export default class SoloGame extends Phaser.Scene {
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
 
+
+        //Timer Initiation
+        //this.timer_function();
+        this.events.emit('TimerClick', this.timer_function, this);
         console.log(this.gameState);
 
     }
@@ -513,6 +525,43 @@ ResetGameState(flagFullReset: boolean = false): void {
             // Fully reset the game. Operation stack is renewd
             this.gameState.operationStack = new OperationsStack;
 }
+
+timer_function(): void {//Timer handler function
+    console.log('create');
+    // 2 minute in seconds
+    this.initialTime = 120;
+
+    this.timerText.setText(this.formatTime(this.initialTime));//Start timer
+
+    // Each 1000 ms call onEvent to update Timer
+    this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+}
+
+formatTime(seconds): string{
+    if(seconds == 120)
+        return `02:00`;
+    // Returns formated time
+    // Minutes Portion
+    var minutes = Math.floor(seconds/60);
+
+    // Seconds Portion
+    var partInSeconds = seconds%60;
+
+
+    if (partInSeconds < 10)//maintain the first 0 of the seconds portion
+        return `0${minutes}:0${partInSeconds}`;
+    else
+        return `0${minutes}:${partInSeconds}`;
+}
+
+onEvent(): void{//Event to update timer each second
+if(this.initialTime>0)
+    this.initialTime -= 1; // One second 
+
+//Update Timer
+this.timerText.setText(this.formatTime(this.initialTime));
+}
+
 
 
 }
