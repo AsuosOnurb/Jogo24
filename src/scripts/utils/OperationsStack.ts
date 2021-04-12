@@ -1,4 +1,5 @@
 
+
 export type Operation = {
     operand1 ,
     operand1BtnIndex: number,
@@ -8,7 +9,7 @@ export type Operation = {
 
     operation: string,
     
-    result
+    result,
 }
 
 export class OperationsStack  {

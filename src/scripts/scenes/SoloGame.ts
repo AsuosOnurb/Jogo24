@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 
-import {create, all} from 'mathjs'
+import { create, all } from 'mathjs'
 const config = {
     number: 'Fraction'
 };
@@ -38,12 +38,12 @@ type GameState = {
 
     operationStack: OperationsStack;
 
-    
+    buttonNumbers: {},
 
     timer_running: boolean;
     current_time: number;
 
-    debug_debuggingCard:boolean;
+    debug_debuggingCard: boolean;
     debug_card: string;
 }
 
@@ -56,7 +56,7 @@ export default class SoloGame extends Phaser.Scene {
     // ===================== UI Objects (text objects, buttons, etc....) ==================
 
     // Text
-    private textTotalWrong!: BetterText // Total wrong counter label
+    private textTotalWrong!: BetterText // Total wrong counter label 
     private textTotalCorrect!: BetterText; // Total correct counter label
     private textMessage!: BetterText; // Displays on the top bar
     private textSolution!: BetterText; // debug only
@@ -111,9 +111,10 @@ export default class SoloGame extends Phaser.Scene {
                 operation: "none",
                 result: -1,
 
-
-                
             },
+
+            buttonNumbers: { 0: -1, 1: -1, 2: -1, 3: -1 },
+
             operationState: OperationState.PickingOperand1,
 
             operationStack: new OperationsStack,
@@ -151,13 +152,13 @@ export default class SoloGame extends Phaser.Scene {
 
         // Add the corect/incorrect label backgrounds
         const correctBG = this.add.sprite(this.scale.width - 192, this.scale.height - 400 - 196, 'correctCounter')
-        const wrongBG = this.add.sprite(this.scale.width - 192,this.scale.height - 450, 'wrongCounter')
+        const wrongBG = this.add.sprite(this.scale.width - 192, this.scale.height - 450, 'wrongCounter')
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
         const inputBG = this.add.sprite(this.scale.width / 2, 128, 'inputBar');
 
         // We might as well, for now, use the input bar as a place for player messages
-        this.textMessage = new BetterText(this, this.scale.width /2, 128, "", { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
+        this.textMessage = new BetterText(this, this.scale.width / 2, 128, "", { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
         this.textMessage.setOrigin(0.5, 0.5);
 
         // Setup labels 
@@ -187,7 +188,7 @@ export default class SoloGame extends Phaser.Scene {
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
         //Timer text
-        this.timerText = new BetterText(this,256 , window.innerHeight / 2,"",{font: "100px Arial", fill: "#fff",fontStyle: "bold" });
+        this.timerText = new BetterText(this, 256, window.innerHeight / 2, "", { font: "100px Arial", fill: "#fff", fontStyle: "bold" });
 
 
     }
@@ -197,17 +198,17 @@ export default class SoloGame extends Phaser.Scene {
 
         // Setup a button for each number in the card (4 buttons)
         this.numberBtns = [
-            new BetterButton(this, this.scale.width / 2 - 196, this.scale.height / 2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, this.scale.width / 2 + 196, this.scale.height / 2, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 196, 0.3, 0.3, "?", { fontSize: 96 }, "cardBG"),
+            new BetterButton(this, this.scale.width / 2 - 196, this.scale.height / 2, 0.3, 0.3, "?", { fontSize: 80 }, "cardBG"),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 196, 0.3, 0.3, "?", { fontSize: 80 }, "cardBG"),
+            new BetterButton(this, this.scale.width / 2 + 196, this.scale.height / 2, 0.3, 0.3, "?", { fontSize: 80 }, "cardBG"),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 196, 0.3, 0.3, "?", { fontSize: 80 }, "cardBG"),
 
         ]
 
         for (let i = 0; i < this.numberBtns.length; i++) {
             // Each button starts disabled
             this.numberBtns[i].SetDisabled();
-            this.numberBtns[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, parseInt(this.numberBtns[i].GetText())));
+            this.numberBtns[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.gameState.buttonNumbers[i]));
         }
 
         // This button lets the user reset his attempt at the current card.
@@ -279,24 +280,25 @@ export default class SoloGame extends Phaser.Scene {
         this.textMessage.setText("");
 
         let generatedCard: string;
-        if (this.gameState.debug_debuggingCard)
-        {
-             generatedCard = this.gameState.debug_card;
-        } else 
-        {
-              generatedCard = CardGenerator.generateCard(this.gameState.difficulty);
+        if (this.gameState.debug_debuggingCard) {
+            generatedCard = this.gameState.debug_card;
+        } else {
+            generatedCard = CardGenerator.generateCard(this.gameState.difficulty);
         }
-       
+
 
         this.gameState.currentCard = generatedCard;
 
-        // Change the current card number buttons
+        // Change the current card number buttons and store the card numbers
         for (let i = 0; i < generatedCard.length; i++) {
             // Set the text of the number button
             this.numberBtns[i].SetText(generatedCard[i]);
 
             // Enable the button
             this.numberBtns[i].SetEnabled();
+
+            // Store the card numbers
+            this.gameState.buttonNumbers[i] = mathJS.fraction(parseInt(generatedCard[i]));
 
         }
 
@@ -316,10 +318,10 @@ export default class SoloGame extends Phaser.Scene {
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
 
 
-        
+
         //Timer Initiation -> 2 minute in seconds
         this.gameState.current_time = 121;
-        if(this.gameState.timer_running == false)
+        if (this.gameState.timer_running == false)
             this.timer_function();
         //this.events.emit('TimerClick', this.timer_function, this);
         console.log(this.gameState);
@@ -337,7 +339,11 @@ export default class SoloGame extends Phaser.Scene {
 
         if (disabledCardCount === 3) {
 
-            if (this.gameState.currentOperation.result === 24) {
+            // Result evaluation Needs to done with exatc arithmetic
+
+            
+
+            if (this.gameState.currentOperation.result.n === 24 && this.gameState.currentOperation.result.d === 1) {
                 console.log(" !!!! PLAYER WON !!!!");
                 this.textMessage.setText("CORRECTO !");
 
@@ -387,7 +393,7 @@ export default class SoloGame extends Phaser.Scene {
 
 
 
-    HandleButtonClick_Number(clickedButtonIndex: number, num: number): void {
+    HandleButtonClick_Number(clickedButtonIndex: number, num): void {
 
         // We decide what happens next based on the current state
         if (this.gameState.operationState == OperationState.PickingOperand1) {
@@ -401,8 +407,11 @@ export default class SoloGame extends Phaser.Scene {
             // Store the index of the button that was clicked
             this.gameState.currentOperation.operand1BtnIndex = clickedButtonIndex;
 
+            // Store the value of the number 
+            this.gameState.buttonNumbers[clickedButtonIndex] = num;
 
-            console.log("Clicked number " + num + " as first operand.");
+
+            // console.log("Clicked number " + num + " as first operand.");
 
             // Then he has to pick an operation
             this.gameState.operationState = OperationState.PickingOperation;
@@ -427,46 +436,74 @@ export default class SoloGame extends Phaser.Scene {
             // Store the index of the button that was clicked
             this.gameState.currentOperation.operand2BtnIndex = clickedButtonIndex;
 
-            console.log("Clicked number " + num + " as second operand.");
+            // Store the value of the number 
+            this.gameState.buttonNumbers[clickedButtonIndex] = num;
 
+            // console.log("Clicked number " + num + " as second operand.");
+
+            let operationResult;
             // Apply the operation to operand 1 and operand 2.
             switch (this.gameState.currentOperation.operation) {
                 case "addition":
                     {
-                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1 + this.gameState.currentOperation.operand2;
+                        operationResult = mathJS.add(
+                            mathJS.fraction(this.gameState.currentOperation.operand1),
+                            mathJS.fraction(this.gameState.currentOperation.operand2
+                            ));
                         break;
                     }
 
                 case "subtraction":
                     {
-                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1 - this.gameState.currentOperation.operand2;
+                        operationResult = mathJS.subtract(
+                            mathJS.fraction(this.gameState.currentOperation.operand1),
+                            mathJS.fraction(this.gameState.currentOperation.operand2));
+
                         break;
                     }
 
                 case "multiplication":
                     {
-                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1 * this.gameState.currentOperation.operand2;
+                        operationResult = mathJS.multiply(
+                            mathJS.fraction(this.gameState.currentOperation.operand1),
+                            mathJS.fraction(this.gameState.currentOperation.operand2));
+
+
                         break;
                     }
 
                 case "division":
                     {
-                        this.gameState.currentOperation.result = this.gameState.currentOperation.operand1 / this.gameState.currentOperation.operand2;
+                        operationResult = mathJS.divide(
+                            mathJS.fraction(this.gameState.currentOperation.operand1),
+                            mathJS.fraction(this.gameState.currentOperation.operand2));
+
+
                         break;
                     }
             }
 
-             // The result is stored/shown in the last picked number button (operand 2 button)
-             this.numberBtns[clickedButtonIndex].SetText(this.gameState.currentOperation.result.toString());
+            this.gameState.currentOperation.result = operationResult;
 
-             console.log("Operation resulted in: " + this.gameState.currentOperation.result.toString() + "\n\n=======================================");
+
+
+
+            // Display as a fraction if the denominator is not 1
+            if (operationResult.d != 1)
+                this.numberBtns[clickedButtonIndex].SetText(operationResult.n.toString() + " / " + operationResult.d.toString());
+            else
+                this.numberBtns[clickedButtonIndex].SetText(operationResult.n.toString());
+
+
+            this.gameState.buttonNumbers[clickedButtonIndex] = operationResult;
+
+
 
             // Here is where we check for the solution
             // If 3 cards are picked/disable and the the result is 24, then the player won.
             this.CheckSolution();
 
 
-            console.log("Player now has to chose the first operand again.");
 
             // This operation is added to the operation stack
             this.gameState.operationStack.Push({
@@ -492,15 +529,15 @@ export default class SoloGame extends Phaser.Scene {
             this.btnOperationMultiply.SetDisabled();
             this.btnOperationDivide.SetDisabled();
 
-            console.log(this.gameState.operationStack);
+            console.log(this.gameState);
+
         }
 
-        console.log(this.gameState);
+
 
     }
 
     HandleButtonClick_Operation(operation: string) {
-        console.log("Operation: " + operation);
         this.gameState.currentOperation.operation = operation;
 
         // Player chose the operation. Now he has to pick the second operan
@@ -540,59 +577,58 @@ export default class SoloGame extends Phaser.Scene {
 
 
 
-ResetGameState(flagFullReset: boolean = false): void {
-    this.gameState.operationState = OperationState.PickingOperand1;
+    ResetGameState(flagFullReset: boolean = false): void {
+        this.gameState.operationState = OperationState.PickingOperand1;
 
-    this.gameState.currentOperation =
-    {
-        operand1: -1,
-        operand1BtnIndex: -1,
-        operand2: -1,
-        operand2BtnIndex: -1,
-        operation: "none",
-        result: -1
-    };
+        this.gameState.currentOperation =
+        {
+            operand1: -1,
+            operand1BtnIndex: -1,
+            operand2: -1,
+            operand2BtnIndex: -1,
+            operation: "none",
+            result: -1
+        };
 
-    if(flagFullReset)
+        if (flagFullReset)
             // Fully reset the game. Operation stack is renewd
             this.gameState.operationStack = new OperationsStack;
-}
+    }
 
-timer_function(): void {//Timer handler function
-    //Only one timer can run at the same time
-    this.gameState.timer_running = true;
-    console.log('create');
+    timer_function(): void {//Timer handler function
+        //Only one timer can run at the same time
+        this.gameState.timer_running = true;
 
-    this.timerText.setText(this.formatTime(this.gameState.current_time));//Start timer
+        this.timerText.setText(this.formatTime(this.gameState.current_time));//Start timer
 
-    // Each 1000 ms call onEvent to update Timer
-    this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.timerEvent, callbackScope: this, loop: true });
-}
+        // Each 1000 ms call onEvent to update Timer
+        this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.timerEvent, callbackScope: this, loop: true });
+    }
 
-formatTime(seconds): string{
-    if(seconds == 121 || seconds == 120)
-        return `02:00`;
-    // Returns formated time
-    // Minutes Portion
-    var minutes = Math.floor(seconds/60);
+    formatTime(seconds): string {
+        if (seconds == 121 || seconds == 120)
+            return `02:00`;
+        // Returns formated time
+        // Minutes Portion
+        var minutes = Math.floor(seconds / 60);
 
-    // Seconds Portion
-    var partInSeconds = seconds%60;
+        // Seconds Portion
+        var partInSeconds = seconds % 60;
 
 
-    if (partInSeconds < 10)//maintain the first 0 of the seconds portion
-        return `0${minutes}:0${partInSeconds}`;
-    else
-        return `0${minutes}:${partInSeconds}`;
-}
+        if (partInSeconds < 10)//maintain the first 0 of the seconds portion
+            return `0${minutes}:0${partInSeconds}`;
+        else
+            return `0${minutes}:${partInSeconds}`;
+    }
 
-timerEvent(): void{//Event to update timer each second
-if(this.gameState.current_time>0)
-    this.gameState.current_time -= 1; // One second 
+    timerEvent(): void {//Event to update timer each second
+        if (this.gameState.current_time > 0)
+            this.gameState.current_time -= 1; // One second 
 
-//Update Timer
-this.timerText.setText(this.formatTime(this.gameState.current_time));
-}
+        //Update Timer
+        this.timerText.setText(this.formatTime(this.gameState.current_time));
+    }
 
 
 
