@@ -28,6 +28,9 @@ type GameState = {
     currentOperation: Operation;
 
     operationStack: OperationsStack;
+
+    timer_running: boolean;
+    current_time: number;
 }
 
 
@@ -64,7 +67,6 @@ export default class SoloGame extends Phaser.Scene {
     private numberBtns!: Array<BetterButton>;
 
     //Timer construction
-    private initialTime!: number;
     private timedEvent;
     private timerText;
 
@@ -77,6 +79,8 @@ export default class SoloGame extends Phaser.Scene {
 
 
         this.gameState = {
+            timer_running: false,
+            current_time: 120,
             difficulty: data.difficulty,
             currentCard: "?  ?  ?  ?",
             totalCorrect: 0,
@@ -97,7 +101,6 @@ export default class SoloGame extends Phaser.Scene {
 
             operationStack: new OperationsStack
 
-
         };
 
         if (!this.isInstanced) {
@@ -109,7 +112,7 @@ export default class SoloGame extends Phaser.Scene {
             this.events.on('BackspaceButtonClick', this.HandleButtonClick_Backspace, this);
 
             //Timer event
-            this.events.on('TimerClick', this.timer_function, this);
+            this.events.on('TimerClick', this.timerEvent, this);
 
 
         }
@@ -284,9 +287,12 @@ export default class SoloGame extends Phaser.Scene {
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
 
 
-        //Timer Initiation
-        //this.timer_function();
-        this.events.emit('TimerClick', this.timer_function, this);
+        
+        //Timer Initiation -> 2 minute in seconds
+        this.gameState.current_time = 121;
+        if(this.gameState.timer_running == false)
+            this.timer_function();
+        //this.events.emit('TimerClick', this.timer_function, this);
         console.log(this.gameState);
 
     }
@@ -527,18 +533,18 @@ ResetGameState(flagFullReset: boolean = false): void {
 }
 
 timer_function(): void {//Timer handler function
+    //Only one timer can run at the same time
+    this.gameState.timer_running = true;
     console.log('create');
-    // 2 minute in seconds
-    this.initialTime = 120;
 
-    this.timerText.setText(this.formatTime(this.initialTime));//Start timer
+    this.timerText.setText(this.formatTime(this.gameState.current_time));//Start timer
 
     // Each 1000 ms call onEvent to update Timer
-    this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.onEvent, callbackScope: this, loop: true });
+    this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.timerEvent, callbackScope: this, loop: true });
 }
 
 formatTime(seconds): string{
-    if(seconds == 120)
+    if(seconds == 121 || seconds == 120)
         return `02:00`;
     // Returns formated time
     // Minutes Portion
@@ -554,12 +560,12 @@ formatTime(seconds): string{
         return `0${minutes}:${partInSeconds}`;
 }
 
-onEvent(): void{//Event to update timer each second
-if(this.initialTime>0)
-    this.initialTime -= 1; // One second 
+timerEvent(): void{//Event to update timer each second
+if(this.gameState.current_time>0)
+    this.gameState.current_time -= 1; // One second 
 
 //Update Timer
-this.timerText.setText(this.formatTime(this.initialTime));
+this.timerText.setText(this.formatTime(this.gameState.current_time));
 }
 
 
