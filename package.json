@@ -56,7 +56,9 @@
     "workbox-webpack-plugin": "^6.0.2"
   },
   "dependencies": {
+    "exact-math": "^2.2.3",
     "expr-eval": "^2.0.2",
+    "mathjs": "^9.3.1",
     "phaser": "^3.53.1"
   }
 }

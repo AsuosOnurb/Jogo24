@@ -1,5 +1,12 @@
 import Phaser from 'phaser'
 
+import {create, all} from 'mathjs'
+const config = {
+    number: 'Fraction'
+};
+const mathJS = create(all, config);
+
+
 import { OperationsStack } from '../utils/OperationsStack'
 import { Operation } from '../utils/OperationsStack'
 
@@ -8,6 +15,8 @@ import BetterText from '../better/BetterText'
 import BetterButton from '../better/BetterButton'
 import CardGenerator from '../utils/CardGenerator'
 import Solutions from '../utils/Solutions'
+
+
 
 
 
@@ -28,6 +37,9 @@ type GameState = {
     currentOperation: Operation;
 
     operationStack: OperationsStack;
+
+    debug_debuggingCard:boolean;
+    debug_card: string;
 }
 
 
@@ -87,12 +99,18 @@ export default class SoloGame extends Phaser.Scene {
                 operand2BtnIndex: -1,
 
                 operation: "none",
-                result: -1
+                result: -1,
+
+
+                
             },
             operationState: OperationState.PickingOperand1,
 
-            operationStack: new OperationsStack
+            operationStack: new OperationsStack,
 
+
+            debug_debuggingCard: data.debugging,
+            debug_card: data.card
 
         };
 
@@ -246,7 +264,15 @@ export default class SoloGame extends Phaser.Scene {
         // Delete the top bar message
         this.textMessage.setText("");
 
-        const generatedCard: string = CardGenerator.generateCard(this.gameState.difficulty);
+        let generatedCard: string;
+        if (this.gameState.debug_debuggingCard)
+        {
+             generatedCard = this.gameState.debug_card;
+        } else 
+        {
+              generatedCard = CardGenerator.generateCard(this.gameState.difficulty);
+        }
+       
 
         this.gameState.currentCard = generatedCard;
 
@@ -382,7 +408,6 @@ export default class SoloGame extends Phaser.Scene {
 
             console.log("Clicked number " + num + " as second operand.");
 
-            // If user is on this state, it means he already picked a first operand and an operation.
             // Apply the operation to operand 1 and operand 2.
             switch (this.gameState.currentOperation.operation) {
                 case "addition":
@@ -410,12 +435,10 @@ export default class SoloGame extends Phaser.Scene {
                     }
             }
 
-            // The result is stored/shown in the last picked number button (operand 2 button)
-            this.numberBtns[clickedButtonIndex].SetText(this.gameState.currentOperation.result.toString());
+             // The result is stored/shown in the last picked number button (operand 2 button)
+             this.numberBtns[clickedButtonIndex].SetText(this.gameState.currentOperation.result.toString());
 
-            console.log("Operation resulted in: " + this.gameState.currentOperation.result.toString() + "\n\n=======================================");
-
-
+             console.log("Operation resulted in: " + this.gameState.currentOperation.result.toString() + "\n\n=======================================");
 
             // Here is where we check for the solution
             // If 3 cards are picked/disable and the the result is 24, then the player won.
