@@ -38,6 +38,11 @@ type GameState = {
 
     operationStack: OperationsStack;
 
+    
+
+    timer_running: boolean;
+    current_time: number;
+
     debug_debuggingCard:boolean;
     debug_card: string;
 }
@@ -75,6 +80,9 @@ export default class SoloGame extends Phaser.Scene {
     */
     private numberBtns!: Array<BetterButton>;
 
+    //Timer construction
+    private timedEvent;
+    private timerText;
 
     constructor() {
         super("SoloGame");
@@ -85,6 +93,8 @@ export default class SoloGame extends Phaser.Scene {
 
 
         this.gameState = {
+            timer_running: false,
+            current_time: 120,
             difficulty: data.difficulty,
             currentCard: "?  ?  ?  ?",
             totalCorrect: 0,
@@ -122,6 +132,8 @@ export default class SoloGame extends Phaser.Scene {
             this.events.on('ResetButtonClick', this.HandleButtonClick_Reset, this);
             this.events.on('BackspaceButtonClick', this.HandleButtonClick_Backspace, this);
 
+            //Timer event
+            this.events.on('TimerClick', this.timerEvent, this);
 
 
         }
@@ -174,6 +186,8 @@ export default class SoloGame extends Phaser.Scene {
         this.textTotalWrong = new BetterText(this, this.scale.width - 128, this.scale.height - 452, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
+        //Timer text
+        this.timerText = new BetterText(this,256 , window.innerHeight / 2,"",{font: "100px Arial", fill: "#fff",fontStyle: "bold" });
 
 
     }
@@ -301,6 +315,13 @@ export default class SoloGame extends Phaser.Scene {
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
 
+
+        
+        //Timer Initiation -> 2 minute in seconds
+        this.gameState.current_time = 121;
+        if(this.gameState.timer_running == false)
+            this.timer_function();
+        //this.events.emit('TimerClick', this.timer_function, this);
         console.log(this.gameState);
 
     }
@@ -536,6 +557,43 @@ ResetGameState(flagFullReset: boolean = false): void {
             // Fully reset the game. Operation stack is renewd
             this.gameState.operationStack = new OperationsStack;
 }
+
+timer_function(): void {//Timer handler function
+    //Only one timer can run at the same time
+    this.gameState.timer_running = true;
+    console.log('create');
+
+    this.timerText.setText(this.formatTime(this.gameState.current_time));//Start timer
+
+    // Each 1000 ms call onEvent to update Timer
+    this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.timerEvent, callbackScope: this, loop: true });
+}
+
+formatTime(seconds): string{
+    if(seconds == 121 || seconds == 120)
+        return `02:00`;
+    // Returns formated time
+    // Minutes Portion
+    var minutes = Math.floor(seconds/60);
+
+    // Seconds Portion
+    var partInSeconds = seconds%60;
+
+
+    if (partInSeconds < 10)//maintain the first 0 of the seconds portion
+        return `0${minutes}:0${partInSeconds}`;
+    else
+        return `0${minutes}:${partInSeconds}`;
+}
+
+timerEvent(): void{//Event to update timer each second
+if(this.gameState.current_time>0)
+    this.gameState.current_time -= 1; // One second 
+
+//Update Timer
+this.timerText.setText(this.formatTime(this.gameState.current_time));
+}
+
 
 
 }
