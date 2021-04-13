@@ -15,9 +15,7 @@ import BetterText from '../better/BetterText'
 import BetterButton from '../better/BetterButton'
 import CardGenerator from '../utils/CardGenerator'
 import Solutions from '../utils/Solutions'
-
-
-
+import CountdownTimer from '../utils/CountdownTimer';
 
 
 enum OperationState {
@@ -40,9 +38,6 @@ type GameState = {
 
     buttonNumbers: {},
 
-    timer_running: boolean;
-    current_time: number;
-
     debug_debuggingCard: boolean;
     debug_card: string;
 }
@@ -51,6 +46,8 @@ type GameState = {
 export default class SoloGame extends Phaser.Scene {
     private isInstanced: boolean = false;
     private gameState!: GameState;
+
+    private countdownTimer: CountdownTimer;
 
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
@@ -80,21 +77,53 @@ export default class SoloGame extends Phaser.Scene {
     */
     private numberBtns!: Array<BetterButton>;
 
-    //Timer construction
-    private timedEvent;
-    private timerText;
+
 
     constructor() {
         super("SoloGame");
 
     }
 
+    preload() {
+        // Add background image window
+        const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
+        bgImg.setDisplaySize(this.scale.width, this.scale.height);
+
+        // Insert the title image
+        const titleImg = this.add.sprite(256, 96, 'smallTitle');
+        titleImg.setScale(1, 1);
+
+        // Add card background image
+        const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'cardBG');
+
+        // Add the corect/incorrect label backgrounds
+        const correctBG = this.add.sprite(this.scale.width - 192, this.scale.height - 400 - 196, 'correctCounter')
+        const wrongBG = this.add.sprite(this.scale.width - 192, this.scale.height - 450, 'wrongCounter')
+
+        // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
+        const inputBG = this.add.sprite(this.scale.width / 2, 128, 'inputBar');
+
+        // We might as well, for now, use the input bar as a place for player messages
+        this.textMessage = new BetterText(this, this.scale.width / 2, 128, "", { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
+        this.textMessage.setOrigin(0.5, 0.5);
+
+        // Setup labels 
+        this.SetupLabels();
+
+        // Setup ALL the buttons
+        this.SetupButtons();
+
+        // Setup the timer with a callback function that disables all buttons once the timer runs out.
+        this.countdownTimer = new CountdownTimer(this, 120, this.DisableAllButtons.bind(this));
+
+
+        this.textSolution = new BetterText(this, this.scale.width - 512, 128, "", { fontSize: 32 });
+    }
+
     init(data) {
 
 
         this.gameState = {
-            timer_running: false,
-            current_time: 120,
             difficulty: data.difficulty,
             currentCard: "?  ?  ?  ?",
             totalCorrect: 0,
@@ -133,44 +162,13 @@ export default class SoloGame extends Phaser.Scene {
             this.events.on('ResetButtonClick', this.HandleButtonClick_Reset, this);
             this.events.on('BackspaceButtonClick', this.HandleButtonClick_Backspace, this);
 
-            //Timer event
-            this.events.on('TimerClick', this.timerEvent, this);
 
 
         }
 
-        // Add background image window
-        const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
-        bgImg.setDisplaySize(this.scale.width, this.scale.height);
-
-        // Insert the title image
-        const titleImg = this.add.sprite(256, 96, 'smallTitle');
-        titleImg.setScale(1, 1);
-
-        // Add card background image
-        const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'cardBG');
-
-        // Add the corect/incorrect label backgrounds
-        const correctBG = this.add.sprite(this.scale.width - 192, this.scale.height - 400 - 196, 'correctCounter')
-        const wrongBG = this.add.sprite(this.scale.width - 192, this.scale.height - 450, 'wrongCounter')
-
-        // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        const inputBG = this.add.sprite(this.scale.width / 2, 128, 'inputBar');
-
-        // We might as well, for now, use the input bar as a place for player messages
-        this.textMessage = new BetterText(this, this.scale.width / 2, 128, "", { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
-        this.textMessage.setOrigin(0.5, 0.5);
-
-        // Setup labels 
-        this.SetupLabels();
-
-        // Setup ALL the buttons
-        this.SetupButtons();
 
 
-
-        this.textSolution = new BetterText(this, this.scale.width - 512, 128, "", { fontSize: 32 });
-
+        // This flag is important. Prevents duplication of event listeners!!
         this.isInstanced = true;
 
     }
@@ -186,10 +184,6 @@ export default class SoloGame extends Phaser.Scene {
         this.textTotalCorrect.setOrigin(0.5, 0.5);
         this.textTotalWrong = new BetterText(this, this.scale.width - 128, this.scale.height - 452, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
-
-        //Timer text
-        this.timerText = new BetterText(this, 256, window.innerHeight / 2, "", { font: "100px Arial", fill: "#fff", fontStyle: "bold" });
-
 
     }
 
@@ -319,11 +313,11 @@ export default class SoloGame extends Phaser.Scene {
 
 
 
-        //Timer Initiation -> 2 minute in seconds
-        this.gameState.current_time = 121;
-        if (this.gameState.timer_running == false)
-            this.timer_function();
-        //this.events.emit('TimerClick', this.timer_function, this);
+        // Start the timer
+        this.countdownTimer.StartCountdown();
+
+
+        // Debug state
         console.log(this.gameState);
 
     }
@@ -341,10 +335,9 @@ export default class SoloGame extends Phaser.Scene {
 
             // Result evaluation Needs to done with exatc arithmetic
 
-            
+
 
             if (this.gameState.currentOperation.result.n === 24 && this.gameState.currentOperation.result.d === 1) {
-                console.log(" !!!! PLAYER WON !!!!");
                 this.textMessage.setText("CORRECTO !");
 
 
@@ -352,13 +345,10 @@ export default class SoloGame extends Phaser.Scene {
                 this.gameState.totalCorrect += 1;
                 this.textTotalCorrect.setText(this.gameState.totalCorrect.toString());
 
-                // We can disable the 'Reset' and 'Backspace' buttons
-                this.btnReset.SetDisabled();
-                this.btnBackspace.SetDisabled();
+                
 
             }
             else {
-                console.log(" WRONG ANSWER ");
                 this.textMessage.setText("INCORRECTO !");
 
                 this.gameState.totalWrong += 1;
@@ -366,9 +356,53 @@ export default class SoloGame extends Phaser.Scene {
 
             }
 
+            // We can disable the 'Reset' and 'Backspace' buttons
+                this.btnReset.SetDisabled();
+                this.btnBackspace.SetDisabled();
+
+
         }
 
 
+    }
+
+    ResetGameState(flagFullReset: boolean = false): void {
+        this.gameState.operationState = OperationState.PickingOperand1;
+
+        this.gameState.currentOperation =
+        {
+            operand1: -1,
+            operand1BtnIndex: -1,
+            operand2: -1,
+            operand2BtnIndex: -1,
+            operation: "none",
+            result: -1
+        };
+
+        if (flagFullReset)
+            // Fully reset the game. Operation stack is renewd
+            this.gameState.operationStack = new OperationsStack;
+    }
+
+
+    DisableAllButtons()
+    {
+        for(let i = 0; i < 4; i++)
+        {
+            this.numberBtns[i].SetDisabled();
+
+        }
+        
+        this.btnReset.SetDisabled();
+        this.btnBackspace.SetDisabled();
+
+        this.btnOperationAdd.SetDisabled();
+        this.btnOperationSubtract.SetDisabled();
+        this.btnOperationMultiply.SetDisabled();
+        this.btnOperationDivide.SetDisabled();
+
+        this.btnNewCard.SetDisabled();
+        
     }
 
 
@@ -411,7 +445,6 @@ export default class SoloGame extends Phaser.Scene {
             this.gameState.buttonNumbers[clickedButtonIndex] = num;
 
 
-            // console.log("Clicked number " + num + " as first operand.");
 
             // Then he has to pick an operation
             this.gameState.operationState = OperationState.PickingOperation;
@@ -439,7 +472,6 @@ export default class SoloGame extends Phaser.Scene {
             // Store the value of the number 
             this.gameState.buttonNumbers[clickedButtonIndex] = num;
 
-            // console.log("Clicked number " + num + " as second operand.");
 
             let operationResult;
             // Apply the operation to operand 1 and operand 2.
@@ -571,64 +603,8 @@ export default class SoloGame extends Phaser.Scene {
         }
     }
 
+    
 
-
-
-
-
-
-    ResetGameState(flagFullReset: boolean = false): void {
-        this.gameState.operationState = OperationState.PickingOperand1;
-
-        this.gameState.currentOperation =
-        {
-            operand1: -1,
-            operand1BtnIndex: -1,
-            operand2: -1,
-            operand2BtnIndex: -1,
-            operation: "none",
-            result: -1
-        };
-
-        if (flagFullReset)
-            // Fully reset the game. Operation stack is renewd
-            this.gameState.operationStack = new OperationsStack;
-    }
-
-    timer_function(): void {//Timer handler function
-        //Only one timer can run at the same time
-        this.gameState.timer_running = true;
-
-        this.timerText.setText(this.formatTime(this.gameState.current_time));//Start timer
-
-        // Each 1000 ms call onEvent to update Timer
-        this.timedEvent = this.time.addEvent({ delay: 1000, callback: this.timerEvent, callbackScope: this, loop: true });
-    }
-
-    formatTime(seconds): string {
-        if (seconds == 121 || seconds == 120)
-            return `02:00`;
-        // Returns formated time
-        // Minutes Portion
-        var minutes = Math.floor(seconds / 60);
-
-        // Seconds Portion
-        var partInSeconds = seconds % 60;
-
-
-        if (partInSeconds < 10)//maintain the first 0 of the seconds portion
-            return `0${minutes}:0${partInSeconds}`;
-        else
-            return `0${minutes}:${partInSeconds}`;
-    }
-
-    timerEvent(): void {//Event to update timer each second
-        if (this.gameState.current_time > 0)
-            this.gameState.current_time -= 1; // One second 
-
-        //Update Timer
-        this.timerText.setText(this.formatTime(this.gameState.current_time));
-    }
 
 
 
