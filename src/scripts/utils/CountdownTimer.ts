@@ -12,7 +12,7 @@ export default class CountdownTimer {
 
     private m_textObject: BetterText;
 
-    private callback;
+    private m_callback;
 
     constructor(scene: Phaser.Scene, startingTime: number, callback) {
 
@@ -25,7 +25,7 @@ export default class CountdownTimer {
 
         this.m_textObject = new BetterText(scene, 256, window.innerHeight / 2, "02:00", { fill: "#fff", fontStyle: "bold", fontSize: 64 });
 
-        this.callback = callback;
+        this.m_callback = callback;
     }
 
     StartCountdown() : void
@@ -53,7 +53,7 @@ export default class CountdownTimer {
             this.m_textObject.setText(this.FormatTime());
         } else 
         {
-            this.callback(this.m_currentScene);
+            this.m_callback(this.m_currentScene);
 
             this.m_isRunning = false;
             this.m_currentScene.time.removeEvent(this.m_timerEvent); // Stop the timer event
