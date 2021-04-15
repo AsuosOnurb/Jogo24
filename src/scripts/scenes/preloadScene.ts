@@ -40,6 +40,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btn_gotoMenu',   'assets/img/solo_game/retmenuBT.png');
 
 
+    this.load.image('clockBG1', 'assets/img/solo_game/relogio.png')
+    this.load.image('clockBG2', 'assets/img/solo_game/relogioN.png')
     this.load.image('correctCounter',   'assets/img/solo_game/assinalaCertos.png');
     this.load.image('wrongCounter',   'assets/img/solo_game/assinalaErrados.png');
     this.load.image('inputBar',   'assets/img/solo_game/barra.png');
@@ -51,6 +53,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btn_subtraction',   'assets/img/solo_game/opSubtracao.png');
     this.load.image('btn_multiplication',   'assets/img/solo_game/opMultiplicacao.png');
     this.load.image('btn_division',   'assets/img/solo_game/opDivisao.png');
+
+    
 
 
 

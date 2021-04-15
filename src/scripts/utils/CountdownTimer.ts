@@ -14,7 +14,7 @@ export default class CountdownTimer {
 
     private m_callback;
 
-    constructor(scene: Phaser.Scene, startingTime: number, callback) {
+    constructor(scene: Phaser.Scene, startingTime: number, callback, textX: number, textY: number, textSize: number) {
 
         this.m_currentScene = scene;
 
@@ -23,7 +23,8 @@ export default class CountdownTimer {
         this.m_INITIAL_TIME = startingTime;
         this.m_currentTime = startingTime;
 
-        this.m_textObject = new BetterText(scene, 256, window.innerHeight / 2, "02:00", { fill: "#fff", fontStyle: "bold", fontSize: 64 });
+        //this.m_textObject = new BetterText(scene, 256, window.innerHeight / 2, "02:00", { fill: "#fff", fontStyle: "bold", fontSize: 64 });
+        this.m_textObject = new BetterText(scene,textX, textY, "02 : 00", { fill: "#fff", fontStyle: "bold", fontSize: textSize });
 
         this.m_callback = callback;
     }
@@ -66,7 +67,7 @@ export default class CountdownTimer {
 
     private FormatTime(): string {
         if (this.m_currentTime == 121 || this.m_currentTime == 120)
-            return `02:00`;
+            return `02 : 00`;
         // Returns formated time
         // Minutes Portion
         var minutes = Math.floor(this.m_currentTime / 60);
@@ -76,8 +77,8 @@ export default class CountdownTimer {
 
 
         if (partInSeconds < 10)//maintain the first 0 of the seconds portion
-            return `0${minutes}:0${partInSeconds}`;
+            return `0${minutes} : 0${partInSeconds}`;
         else
-            return `0${minutes}:${partInSeconds}`;
+            return `0${minutes} : ${partInSeconds}`;
     }
 }
