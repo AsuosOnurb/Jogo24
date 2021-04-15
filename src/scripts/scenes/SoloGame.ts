@@ -118,8 +118,8 @@ export default class SoloGame extends Phaser.Scene {
         this.add.sprite(this.scale.width - 225, this.scale.height / 2 - 230, 'clockBG1');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 120, this.DisableAllButtons.bind(this), this.scale.width - 182, this.scale.height / 2 - 250, 36);
-        
+            new CountdownTimer(this, 120, this.DisableAllButtons.bind(this), this.scale.width - 183, this.scale.height / 2 - 250, 36);
+
 
 
         this.textSolution =
@@ -424,6 +424,7 @@ export default class SoloGame extends Phaser.Scene {
         // Then reset the number buttons
         for (let i = 0; i < 4; i++) {
             this.numberBtns[i].SetText(this.gameState.currentCard[i]);
+            this.gameState.buttonNumbers[i] = parseInt(this.gameState.currentCard[i])
             this.numberBtns[i].SetEnabled();
         }
 
@@ -553,12 +554,17 @@ export default class SoloGame extends Phaser.Scene {
             Could be trting to undo the first picked operand;
         */
         if (this.gameState.m_PlayerState === m_PlayerState.PickingOperation) {
-            
+
             // RE-enable the picked button
             this.numberBtns[this.gameState.currentOperation.operand1BtnIndex].SetEnabled();
 
             // Player picked the operation (and so he has also picked the first operand. This undo will UNDO the first operand)
             this.ResetGameState(false);
+
+            this.btnOperationAdd.SetDisabled();
+            this.btnOperationSubtract.SetDisabled();
+            this.btnOperationMultiply.SetDisabled();
+            this.btnOperationDivide.SetDisabled();
 
         }
 
@@ -588,13 +594,18 @@ export default class SoloGame extends Phaser.Scene {
 
             }
 
-           
+
         }
 
-         // Check if the operation stack is now empty. If it is, then disable some buttons.
-         if (this.gameState.operationStack.IsEmpty()) {
+        // Check if the operation stack is now empty. If it is, then disable some buttons.
+        if (this.gameState.operationStack.IsEmpty()) {
             this.btnReset.SetDisabled();
             this.btnBackspace.SetDisabled();
+
+            this.btnOperationAdd.SetDisabled();
+            this.btnOperationSubtract.SetDisabled();
+            this.btnOperationMultiply.SetDisabled();
+            this.btnOperationDivide.SetDisabled();
         }
 
         console.log("Depois do undo")
