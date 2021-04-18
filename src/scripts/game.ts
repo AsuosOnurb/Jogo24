@@ -3,6 +3,7 @@ import 'phaser'
 import SoloGame from './scenes/SoloGame'
 import MainMenu from './scenes/MainMenu'
 import PreloadScene from './scenes/preloadScene'
+import MultiplayerGame from './scenes/MultiplayerGame'
 
 const DEFAULT_WIDTH = 1920
 const DEFAULT_HEIGHT = 1080
@@ -20,7 +21,7 @@ const config = {
   },
   antialias: true,
   
-  scene: [PreloadScene, MainMenu, SoloGame],
+  scene: [PreloadScene, MainMenu, SoloGame, MultiplayerGame],
   
 }
 

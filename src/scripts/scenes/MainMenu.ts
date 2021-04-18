@@ -2,6 +2,7 @@ import Phaser, { Display, Scale } from 'phaser'
 
 import BetterButton from '../better/BetterButton'
 import BetterText from '../better/BetterText';
+import { Difficulty } from '../utils/CardGenerator';
 
 enum Panels {
     AboutGame,
@@ -69,6 +70,7 @@ export default class HelloWorldScene extends Phaser.Scene {
 
         // Tablet mode button
         this.btnTabletMode = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 21 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_tabletMode');
+        this.btnTabletMode.once('pointerup', () => this.StartMultiplayerGame());
 
         // Credits button
         this.btnCredits = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
@@ -88,16 +90,16 @@ export default class HelloWorldScene extends Phaser.Scene {
 
         // Play Solo Easy button
         this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy');
-        this.btnPlaySoloEasy.on("pointerup", () => this.startSoloGame("Easy"));
+        this.btnPlaySoloEasy.on("pointerup", () => this.StartSoloGame(Difficulty.Easy));
 
 
         // Play Solo Medium button
         this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium');
-        this.btnPlaySoloMedium.on("pointerup", () => this.startSoloGame("Medium"));
+        this.btnPlaySoloMedium.on("pointerup", () => this.StartSoloGame(Difficulty.Medium));
 
         // Play Solo Hard button
         this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard');
-        this.btnPlaySoloHard.on("pointerup", () => this.startSoloGame("Hard"));
+        this.btnPlaySoloHard.on("pointerup", () => this.StartSoloGame(Difficulty.Hard));
 
 
         // =================== Setup the panel group, their images and the close button =================
@@ -128,18 +130,14 @@ export default class HelloWorldScene extends Phaser.Scene {
 
     }
 
-    startSoloGame(difficulty: string): void {
-        console.log(`Starting solo game on ${difficulty} difficulty.`);
+    StartSoloGame(diff: Difficulty): void {
+        console.log(`Starting solo game on ${diff} difficulty.`);
+        this.scene.start("SoloGame", {difficulty: diff});
+    }
 
-        if (difficulty === "Easy") {
-            this.scene.start("SoloGame", { difficulty: 1, debugging: true, card: "4477" })
-        }
-        else if (difficulty === "Medium") {
-            this.scene.start("SoloGame", { difficulty: 2 });
-        }
-        else if (difficulty === "Hard") {
-            this.scene.start("SoloGame", { difficulty: 3 });
-        }
+    StartMultiplayerGame() : void
+    {
+        this.scene.start("MultiplayerGame");
     }
 
 
