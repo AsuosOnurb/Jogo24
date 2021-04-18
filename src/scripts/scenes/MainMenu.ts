@@ -111,7 +111,8 @@ export default class HelloWorldScene extends Phaser.Scene {
         this.btnClosePanel.on('pointerup', () => this.HidePanel());
         
         this.groupPanel = this.add.group([this.imgAboutTheGame, this.imgHowToPlay, this.btnClosePanel]);
-        // this.groupPanel.setVisible(false); // Group starts invisible
+        this.groupPanel.setVisible(false); // Group starts invisible
+        this.isPanelOpen = false;
     }
 
 
