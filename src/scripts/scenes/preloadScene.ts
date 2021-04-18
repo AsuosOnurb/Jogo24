@@ -12,9 +12,12 @@ export default class PreloadScene extends Phaser.Scene {
     */
  
 
-    this.load.image('fullscreenToggle', 'assets/img/fullScreen.png')
+    /* ======================= Assets used globally ============================================= */
+
 
     /* =================================== Main menu assets =================================== */
+    this.load.image('fullscreenToggle', 'assets/img//main_menu/fullScreen.png')
+
     this.load.image('blueBackground',   'assets/img/main_menu/background0.png');
     this.load.image('title',        'assets/img/main_menu/titulo1.png');
     this.load.image('toon',         'assets/img/main_menu/boneco.png');
@@ -29,6 +32,14 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btn_top',        'assets/img/main_menu/topBT.png');
     this.load.image('btn_tabletMode', 'assets/img/main_menu/modotabletBT.png');
     this.load.image('btn_credits',    'assets/img/main_menu/creditosBT.png');
+
+    this.load.image('aboutGame', 'assets/img/main_menu/sobreojogoMC.png')
+    this.load.image('howToPlay', 'assets/img/main_menu/instrucoesMC.png')
+
+
+
+    this.load.image('btn_close', 'assets/img/main_menu/closeBT.png')
+
 
     /* ======================================================================================== */
 
