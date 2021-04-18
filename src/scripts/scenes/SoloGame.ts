@@ -6,13 +6,14 @@ const config = {
 };
 const mathJS = create(all, config);
 
-import { OperationsStack, Operation, PerformOperation, FractionToString } from '../operations/Operations'
+import { OperationsStack, Operation, PerformOperation, FractionToString, OperationToString } from '../operations/Operations'
 
 import BetterText from '../better/BetterText'
 import BetterButton from '../better/BetterButton'
 import CardGenerator from '../utils/CardGenerator'
 import Solutions from '../utils/Solutions'
 import CountdownTimer from '../utils/CountdownTimer';
+import { TextStack } from '../utils/TextStack';
 
 /**
  * At any given moment, the player can either be:
@@ -38,6 +39,8 @@ type GameState = {
     currentOperation: Operation;
     operationStack: OperationsStack;
 
+    solutionTextStack: TextStack;
+
     buttonNumbers: {},
 
     debug_debuggingCard: boolean;
@@ -58,7 +61,7 @@ export default class SoloGame extends Phaser.Scene {
     // Text
     private textTotalWrong!: BetterText // Total wrong counter label 
     private textTotalCorrect!: BetterText; // Total correct counter label
-    private textMessage!: BetterText; // Displays on the top bar
+    private textPlayerSolution!: BetterText; // Displays on the top bar the whole arithmetic expression made by the player
     private textSolution!: BetterText; // debug only
 
     // Buttons
@@ -97,16 +100,16 @@ export default class SoloGame extends Phaser.Scene {
         const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'cardBG');
 
         // Add the corect/incorrect label backgrounds
-        const correctBG = this.add.sprite(this.scale.width - 192, this.scale.height - 400 - 196, 'correctCounter')
-        const wrongBG = this.add.sprite(this.scale.width - 192, this.scale.height - 450, 'wrongCounter')
+        const correctBG = this.add.sprite(this.scale.width / 2 + 680, 128, 'correctCounter')
+        const wrongBG = this.add.sprite(this.scale.width / 2 + 680, 288, 'wrongCounter')
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
         const inputBG = this.add.sprite(this.scale.width / 2, 128, 'inputBar');
 
         // We might as well, for now, use the input bar as a place for player messages
-        this.textMessage = new BetterText(this, this.scale.width / 2, 128, "",
+        this.textPlayerSolution = new BetterText(this, this.scale.width / 2, 128, "",
             { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
-        this.textMessage.setOrigin(0.5, 0.5);
+        this.textPlayerSolution.setOrigin(0.5, 0.5);
 
         // Setup labels 
         this.Setup_Labels();
@@ -115,15 +118,15 @@ export default class SoloGame extends Phaser.Scene {
         this.Setup_Buttons();
 
         // Add the timer background
-        this.add.sprite(this.scale.width - 225, this.scale.height / 2 - 230, 'clockBG1');
+        this.add.sprite(this.scale.width  / 2  - 640, this.scale.height / 2 - 64 , 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 120, this.DisableAllButtons.bind(this), this.scale.width - 183, this.scale.height / 2 - 250, 36);
+            new CountdownTimer(this, 120, this.DisableAllButtons.bind(this), this.scale.width / 2 - 730, this.scale.height / 2 - 10 , 64);
 
 
 
         this.textSolution =
-            new BetterText(this, this.scale.width - 512, 128, "", { fontSize: 32 });
+            new BetterText(this, 32 , 256, "", { fontSize: 32 });
     }
 
     init(data) {
@@ -153,7 +156,8 @@ export default class SoloGame extends Phaser.Scene {
 
             operationStack: new OperationsStack,
 
-
+            solutionTextStack: new TextStack,
+        
             debug_debuggingCard: data.debugging,
             debug_card: data.card
 
@@ -182,9 +186,9 @@ export default class SoloGame extends Phaser.Scene {
     Setup_Labels() {
 
 
-        this.textTotalCorrect = new BetterText(this, this.scale.width - 128, this.scale.height - 598, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
+        this.textTotalCorrect = new BetterText(this, this.scale.width / 2 + 740, 128, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalCorrect.setOrigin(0.5, 0.5);
-        this.textTotalWrong = new BetterText(this, this.scale.width - 128, this.scale.height - 450, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
+        this.textTotalWrong = new BetterText(this, this.scale.width / 2 + 740, 288, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
     }
@@ -228,27 +232,27 @@ export default class SoloGame extends Phaser.Scene {
 
 
         // Addition operation button
-        this.btnOperationAdd = new BetterButton(this, this.scale.width - 256, this.scale.height - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_addition");
+        this.btnOperationAdd = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_addition");
         this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "addition"));
         this.btnOperationAdd.SetDisabled();
 
 
         // Subtraction operation button
-        this.btnOperationSubtract = new BetterButton(this, this.scale.width - 96, this.scale.height - 256, 0.8, 0.8, "", { fontSize: 64 }, "btn_subtraction");
+        this.btnOperationSubtract = new BetterButton(this, this.scale.width  / 2 + 800, this.scale.height  / 2- 64, 1, 1, "", { fontSize: 64 }, "btn_subtraction");
         this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "subtraction"));
         this.btnOperationSubtract.SetDisabled();
 
 
 
         // Multiplication operation button
-        this.btnOperationMultiply = new BetterButton(this, this.scale.width - 256, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_multiplication");
+        this.btnOperationMultiply = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_multiplication");
         this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "multiplication"));
         this.btnOperationMultiply.SetDisabled();
 
 
 
         // Division operation button
-        this.btnOperationDivide = new BetterButton(this, this.scale.width - 96, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_division");
+        this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height  / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
         this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "division"));
         this.btnOperationDivide.SetDisabled();
 
@@ -280,7 +284,7 @@ export default class SoloGame extends Phaser.Scene {
         this.ResetGameState(true);
 
         // Delete the top bar message
-        this.textMessage.setText("");
+        this.textPlayerSolution.setText("");
 
         let generatedCard: string;
         if (this.gameState.debug_debuggingCard) {
@@ -345,7 +349,7 @@ export default class SoloGame extends Phaser.Scene {
 
             if (this.gameState.currentOperation.result.n === 24 &&
                 this.gameState.currentOperation.result.d === 1) {
-                this.textMessage.setText("CORRECTO !");
+                
 
 
                 // Update game state and 'Total correct' text
@@ -353,7 +357,6 @@ export default class SoloGame extends Phaser.Scene {
                 this.textTotalCorrect.setText(this.gameState.totalCorrect.toString());
             }
             else {
-                this.textMessage.setText("INCORRECTO !");
 
                 // Update game state and 'Total incorrect' text
                 this.gameState.totalWrong += 1;
@@ -391,8 +394,12 @@ export default class SoloGame extends Phaser.Scene {
         };
 
         if (flagFullReset)
+        {
             // Fully reset the game. Operation stack is renewd
             this.gameState.operationStack = new OperationsStack;
+            this.gameState.solutionTextStack = new TextStack;
+        }
+            
     }
 
 
@@ -517,6 +524,13 @@ export default class SoloGame extends Phaser.Scene {
                 result: this.gameState.currentOperation.result
 
             });
+
+            
+            // Append the text corresponding to this operation to the already existing one
+            this.textPlayerSolution.setText(
+                this.textPlayerSolution.text + OperationToString(this.gameState.currentOperation)
+            );
+
 
 
             // The operation was completed. Now the player has to pick a new first operand again.

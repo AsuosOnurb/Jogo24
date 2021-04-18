@@ -83,6 +83,29 @@ export function PerformOperation(operationgStr: string, operand1, operand2)
     return operationResult;
 } 
 
+export function OperationToString(operation)
+{
+    let operatorStr = "?";
+        switch (operation.operation) {
+            case "addition":
+                operatorStr = "+";
+                break;
+            case "subtraction":
+                operatorStr = "-";
+                break;
+            case "multiplication":
+                operatorStr = "*";
+                break;
+            case "division":
+                operatorStr = "/";
+                break;
+        }
+
+        return `(${FractionToString(operation.operand1)} ${operatorStr} ${FractionToString(operation.operand2)})`;
+
+
+}
+
 export function FractionToString(fraction)
 {
     if (fraction.d === 1)

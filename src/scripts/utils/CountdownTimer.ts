@@ -44,7 +44,7 @@ export default class CountdownTimer {
             this.m_isRunning = true;
 
             // Make text white
-            this.m_textObject.setFill("#ffff");
+            this.m_textObject.setFill("#fff");
         }
 
 
