@@ -13,7 +13,6 @@ import BetterButton from '../better/BetterButton'
 import CardGenerator, { Difficulty } from '../utils/CardGenerator'
 import Solutions from '../utils/Solutions'
 import CountdownTimer from '../utils/CountdownTimer';
-import { TextStack } from '../utils/TextStack';
 
 /**
  * At any given moment, the player can either be:
@@ -28,7 +27,6 @@ enum m_PlayerState {
 }
 
 type GameState = {
-    difficulty: Difficulty;
 
     currentCard: string; // A string like "1459"
     totalCorrect: integer;
@@ -39,16 +37,13 @@ type GameState = {
     currentOperation: Operation;
     operationStack: OperationsStack;
 
-    solutionTextStack: TextStack;
 
     buttonNumbers: {},
 
-    debug_debuggingCard: boolean;
-    debug_card: string;
 }
 
 
-export default class SoloGame extends Phaser.Scene {
+export default class MultiplayerGame extends Phaser.Scene {
 
     private isInstanced: boolean = false;
 
@@ -58,11 +53,6 @@ export default class SoloGame extends Phaser.Scene {
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
 
-    // Text
-    private textTotalWrong!: BetterText // Total wrong counter label 
-    private textTotalCorrect!: BetterText; // Total correct counter label
-    private textPlayerSolution!: BetterText; // Displays on the top bar the whole arithmetic expression made by the player
-    private textSolution!: BetterText; // debug only
 
     // Buttons
     private btnNewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
@@ -84,7 +74,7 @@ export default class SoloGame extends Phaser.Scene {
     private numberBtns!: Array<BetterButton>;
 
     constructor() {
-        super("SoloGame");
+        super("MultiplayerGame");
     }
 
     preload() {
@@ -92,24 +82,8 @@ export default class SoloGame extends Phaser.Scene {
         const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
-        // Insert the title image
-        const titleImg = this.add.sprite(256, 96, 'smallTitle');
-        titleImg.setScale(1, 1);
-
         // Add card background image
         const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'cardBG');
-
-        // Add the corect/incorrect label backgrounds
-        const correctBG = this.add.sprite(this.scale.width / 2 + 680, 128, 'correctCounter')
-        const wrongBG = this.add.sprite(this.scale.width / 2 + 680, 288, 'wrongCounter')
-
-        // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        const inputBG = this.add.sprite(this.scale.width / 2, 128, 'inputBar');
-
-        // We might as well, for now, use the input bar as a place for player messages
-        this.textPlayerSolution = new BetterText(this, this.scale.width / 2, 128, "",
-            { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
-        this.textPlayerSolution.setOrigin(0.5, 0.5);
 
         // Setup labels 
         this.Setup_Labels();
@@ -117,23 +91,11 @@ export default class SoloGame extends Phaser.Scene {
         // Setup ALL the buttons
         this.Setup_Buttons();
 
-        // Add the timer background
-        this.add.sprite(this.scale.width  / 2  - 640, this.scale.height / 2 - 64 , 'clockBG2');
-        // Setup the timer with a callback function that disables all buttons once the timer runs out.
-        this.countdownTimer =
-            new CountdownTimer(this, 120, this.DisableAllButtons.bind(this), this.scale.width / 2 - 730, this.scale.height / 2 - 10 , 64);
-
-
-
-        this.textSolution =
-            new BetterText(this, 32 , 256, "", { fontSize: 32 });
     }
 
     init(data) {
 
-
         this.gameState = {
-            difficulty: data.difficulty, // This data comes from the main menu
             currentCard: "?  ?  ?  ?",
             totalCorrect: 0,
             totalWrong: 0,
@@ -156,10 +118,6 @@ export default class SoloGame extends Phaser.Scene {
 
             operationStack: new OperationsStack,
 
-            solutionTextStack: new TextStack,
-        
-            debug_debuggingCard: data.debugging,
-            debug_card: data.card
 
         };
 
@@ -186,10 +144,7 @@ export default class SoloGame extends Phaser.Scene {
     Setup_Labels() {
 
 
-        this.textTotalCorrect = new BetterText(this, this.scale.width / 2 + 740, 128, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
-        this.textTotalCorrect.setOrigin(0.5, 0.5);
-        this.textTotalWrong = new BetterText(this, this.scale.width / 2 + 740, 288, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
-        this.textTotalWrong.setOrigin(0.5, 0.5);
+      
 
     }
 
@@ -283,15 +238,10 @@ export default class SoloGame extends Phaser.Scene {
         // We have to reset the game state here
         this.ResetGameState(true);
 
-        // Delete the top bar message
-        this.textPlayerSolution.setText("");
+        
 
         let generatedCard: string;
-        if (this.gameState.debug_debuggingCard) {
-            generatedCard = this.gameState.debug_card;
-        } else {
-            generatedCard = CardGenerator.generateCard(this.gameState.difficulty);
-        }
+        generatedCard = CardGenerator.generateCard(Difficulty.Any);
 
 
         this.gameState.currentCard = generatedCard;
@@ -321,13 +271,13 @@ export default class SoloGame extends Phaser.Scene {
         this.btnOperationMultiply.SetDisabled();
         this.btnOperationDivide.SetDisabled();
 
-        // Update the solution debug text
-        this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(this.gameState.currentCard)}`);
+        //  the solution debug text
+        console.log(`${Solutions.getSolution(this.gameState.currentCard)}`);
 
 
 
         // Start the timer
-        this.countdownTimer.StartCountdown();
+        // this.countdownTimer.StartCountdown();
 
 
         // Debug state
@@ -347,26 +297,7 @@ export default class SoloGame extends Phaser.Scene {
         if (disabledCardCount === 3) {
 
 
-            if (this.gameState.currentOperation.result.n === 24 &&
-                this.gameState.currentOperation.result.d === 1) {
-                
-
-
-                // Update game state and 'Total correct' text
-                this.gameState.totalCorrect += 1;
-                this.textTotalCorrect.setText(this.gameState.totalCorrect.toString());
-            }
-            else {
-
-                // Update game state and 'Total incorrect' text
-                this.gameState.totalWrong += 1;
-                this.textTotalWrong.setText(this.gameState.totalWrong.toString());
-
-            }
-
-            // We can disable the 'Reset' and 'Backspace' buttons
-            this.btnReset.SetDisabled();
-            this.btnBackspace.SetDisabled();
+            
 
 
         }
@@ -397,7 +328,6 @@ export default class SoloGame extends Phaser.Scene {
         {
             // Fully reset the game. Operation stack is renewd
             this.gameState.operationStack = new OperationsStack;
-            this.gameState.solutionTextStack = new TextStack;
         }
             
     }
@@ -526,11 +456,7 @@ export default class SoloGame extends Phaser.Scene {
             });
 
             
-            // Append the text corresponding to this operation to the already existing one
-            this.textPlayerSolution.setText(
-                this.textPlayerSolution.text + OperationToString(this.gameState.currentOperation)
-            );
-
+          
 
 
             // The operation was completed. Now the player has to pick a new first operand again.

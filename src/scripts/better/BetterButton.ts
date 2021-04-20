@@ -5,8 +5,8 @@ import BetterText from './BetterText'
 
 export default class BetterButton extends Phaser.GameObjects.Sprite 
 {
-    private textObject!: BetterText;
-    private isEnabled: boolean;
+    private m_TextObject: BetterText;
+    private m_IsEnabled: boolean;
 
    constructor(scene: Phaser.Scene, x: number, y:number, xScale:number, yScale:number,  text:string|undefined, textStyle:any , texture:string|Phaser.Textures.Texture)
     {
@@ -23,30 +23,31 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
 
         // Set the text
         if (!(text === undefined || textStyle === undefined))
-            this.textObject = new BetterText(scene, x, y, text, textStyle);
+            this.m_TextObject = new BetterText(scene, x, y, text, textStyle);
 
         // offset the text object position
-        this.textObject?.setOrigin(0.5);
+        this.m_TextObject?.setOrigin(0.5);
 
 
     }
 
     SetText(newText: string) : void
     {
-        this.textObject.setText(newText);
+        this.m_TextObject.setText(newText);
     }
 
     GetText(): string
     {
-        return this.textObject.text;
+        return this.m_TextObject.text;
     }
 
     SetEnabled()
     {
         this.setInteractive();
-        this.textObject.setAlpha(1);
+        this.m_TextObject.setAlpha(1);
+
         this.setAlpha(1);
-        this.isEnabled = true;
+        this.m_IsEnabled = true;
 
       
     }
@@ -54,9 +55,9 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
     SetDisabled(): void
     {
         this.disableInteractive();
-        this.textObject.setAlpha(0.3);
+        this.m_TextObject.setAlpha(0.3);
         this.setAlpha(0.3);
-        this.isEnabled = false;
+        this.m_IsEnabled = false;
 
        
         
@@ -64,7 +65,7 @@ export default class BetterButton extends Phaser.GameObjects.Sprite
 
     IsEnabled() : boolean
     {
-        return this.isEnabled;
+        return this.m_IsEnabled;
     }
 
    

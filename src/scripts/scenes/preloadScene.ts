@@ -12,9 +12,12 @@ export default class PreloadScene extends Phaser.Scene {
     */
  
 
-    this.load.image('fullscreenToggle', 'assets/img/fullScreen.png')
+    /* ======================= Assets used globally ============================================= */
+
 
     /* =================================== Main menu assets =================================== */
+    this.load.image('fullscreenToggle', 'assets/img//main_menu/fullScreen.png')
+
     this.load.image('blueBackground',   'assets/img/main_menu/background0.png');
     this.load.image('title',        'assets/img/main_menu/titulo1.png');
     this.load.image('toon',         'assets/img/main_menu/boneco.png');
@@ -30,6 +33,14 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btn_tabletMode', 'assets/img/main_menu/modotabletBT.png');
     this.load.image('btn_credits',    'assets/img/main_menu/creditosBT.png');
 
+    this.load.image('aboutGame', 'assets/img/main_menu/sobreojogoMC.png')
+    this.load.image('howToPlay', 'assets/img/main_menu/instrucoesMC.png')
+
+
+
+    this.load.image('btn_close', 'assets/img/main_menu/closeBT.png')
+
+
     /* ======================================================================================== */
 
 
@@ -40,6 +51,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btn_gotoMenu',   'assets/img/solo_game/retmenuBT.png');
 
 
+    this.load.image('clockBG1', 'assets/img/solo_game/relogio.png')
+    this.load.image('clockBG2', 'assets/img/solo_game/relogioN.png')
     this.load.image('correctCounter',   'assets/img/solo_game/assinalaCertos.png');
     this.load.image('wrongCounter',   'assets/img/solo_game/assinalaErrados.png');
     this.load.image('inputBar',   'assets/img/solo_game/barra.png');
@@ -51,6 +64,8 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btn_subtraction',   'assets/img/solo_game/opSubtracao.png');
     this.load.image('btn_multiplication',   'assets/img/solo_game/opMultiplicacao.png');
     this.load.image('btn_division',   'assets/img/solo_game/opDivisao.png');
+
+    
 
 
 
