@@ -1,5 +1,1 @@
-/.cache
-/dist
-/node_modules
-/.DS_Store
-/krita
+node_modules
