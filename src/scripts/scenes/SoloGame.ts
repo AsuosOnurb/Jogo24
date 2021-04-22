@@ -6,7 +6,7 @@ const config = {
 };
 const mathJS = create(all, config);
 
-import { OperationsStack, Operation, PerformOperation, FractionToString, OperationToString } from '../operations/Operations'
+import { OperationsStack, Operation,  FractionToString, OperationToString  } from '../operations/Operations'
 
 import BetterText from '../better/BetterText'
 import BetterButton from '../better/BetterButton'
@@ -41,7 +41,7 @@ type GameState = {
 
     solutionTextStack: TextStack;
 
-    buttonNumbers: {},
+    buttonNumbers: {}, // And array of 4 operations;
 
     debug_debuggingCard: boolean;
     debug_card: string;
@@ -61,7 +61,7 @@ export default class SoloGame extends Phaser.Scene {
     // Text
     private textTotalWrong!: BetterText // Total wrong counter label 
     private textTotalCorrect!: BetterText; // Total correct counter label
-    private textPlayerSolution!: BetterText; // Displays on the top bar the whole arithmetic expression made by the player
+    private textExpression!: BetterText; // Displays on the top bar the whole arithmetic expression made by the player
     private textSolution!: BetterText; // debug only
 
     // Buttons
@@ -107,9 +107,9 @@ export default class SoloGame extends Phaser.Scene {
         const inputBG = this.add.sprite(this.scale.width / 2, 128, 'inputBar');
 
         // We might as well, for now, use the input bar as a place for player messages
-        this.textPlayerSolution = new BetterText(this, this.scale.width / 2, 128, "",
+        this.textExpression = new BetterText(this, this.scale.width / 2, 128, "",
             { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
-        this.textPlayerSolution.setOrigin(0.5, 0.5);
+        this.textExpression.setOrigin(0.5, 0.5);
 
         // Setup labels 
         this.Setup_Labels();
@@ -118,15 +118,15 @@ export default class SoloGame extends Phaser.Scene {
         this.Setup_Buttons();
 
         // Add the timer background
-        this.add.sprite(this.scale.width  / 2  - 640, this.scale.height / 2 - 64 , 'clockBG2');
+        this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 120, this.DisableAllButtons.bind(this), this.scale.width / 2 - 730, this.scale.height / 2 - 10 , 64);
+            new CountdownTimer(this, 120, this.DisableAllButtons.bind(this), this.scale.width / 2 - 730, this.scale.height / 2 - 10, 64);
 
 
 
         this.textSolution =
-            new BetterText(this, 32 , 256, "", { fontSize: 32 });
+            new BetterText(this, 32, 256, "", { fontSize: 32 });
     }
 
     init(data) {
@@ -139,16 +139,7 @@ export default class SoloGame extends Phaser.Scene {
             totalWrong: 0,
 
             // The current operation starts initialized to some default values
-            currentOperation:
-            {
-                operand1: -1,
-                operand1BtnIndex: -1,
-                operand2: -1,
-                operand2BtnIndex: -1,
-                operation: "none",
-                result: -1,
-
-            },
+            currentOperation: new Operation(),
 
             buttonNumbers: { 0: -1, 1: -1, 2: -1, 3: -1 },
 
@@ -157,7 +148,7 @@ export default class SoloGame extends Phaser.Scene {
             operationStack: new OperationsStack,
 
             solutionTextStack: new TextStack,
-        
+
             debug_debuggingCard: data.debugging,
             debug_card: data.card
 
@@ -199,16 +190,16 @@ export default class SoloGame extends Phaser.Scene {
         // Setup a button for each number in the card (4 buttons)
         this.numberBtns = [
             new BetterButton(this, this.scale.width / 2 - 196, this.scale.height / 2,
-                0.3, 0.3, "?", { fontSize: 80 }, "cardBG"),
+                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 196,
-                0.3, 0.3, "?", { fontSize: 80 }, "cardBG"),
+                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 196, this.scale.height / 2,
-                0.3, 0.3, "?", { fontSize: 80 }, "cardBG"),
+                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 196,
-                0.3, 0.3, "?", { fontSize: 80 }, "cardBG"),
+                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
         ]
 
@@ -238,7 +229,7 @@ export default class SoloGame extends Phaser.Scene {
 
 
         // Subtraction operation button
-        this.btnOperationSubtract = new BetterButton(this, this.scale.width  / 2 + 800, this.scale.height  / 2- 64, 1, 1, "", { fontSize: 64 }, "btn_subtraction");
+        this.btnOperationSubtract = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_subtraction");
         this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "subtraction"));
         this.btnOperationSubtract.SetDisabled();
 
@@ -252,7 +243,7 @@ export default class SoloGame extends Phaser.Scene {
 
 
         // Division operation button
-        this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height  / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
+        this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
         this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "division"));
         this.btnOperationDivide.SetDisabled();
 
@@ -283,8 +274,7 @@ export default class SoloGame extends Phaser.Scene {
         // We have to reset the game state here
         this.ResetGameState(true);
 
-        // Delete the top bar message
-        this.textPlayerSolution.setText("");
+
 
         let generatedCard: string;
         if (this.gameState.debug_debuggingCard) {
@@ -349,7 +339,7 @@ export default class SoloGame extends Phaser.Scene {
 
             if (this.gameState.currentOperation.result.n === 24 &&
                 this.gameState.currentOperation.result.d === 1) {
-                
+
 
 
                 // Update game state and 'Total correct' text
@@ -383,23 +373,14 @@ export default class SoloGame extends Phaser.Scene {
     ResetGameState(flagFullReset: boolean = false): void {
         this.gameState.m_PlayerState = m_PlayerState.PickingOperand1;
 
-        this.gameState.currentOperation =
-        {
-            operand1: -1,
-            operand1BtnIndex: -1,
-            operand2: -1,
-            operand2BtnIndex: -1,
-            operation: "none",
-            result: -1
-        };
+        this.gameState.currentOperation = new Operation();
 
-        if (flagFullReset)
-        {
+        if (flagFullReset) {
             // Fully reset the game. Operation stack is renewd
             this.gameState.operationStack = new OperationsStack;
             this.gameState.solutionTextStack = new TextStack;
         }
-            
+
     }
 
 
@@ -447,25 +428,22 @@ export default class SoloGame extends Phaser.Scene {
      * for accessing the array of number buttons.
      * @param num The number associated with the button (i.e the value/text on the button in the range [1,9])
      */
-    HandleButtonClick_Number(clickedButtonIndex: number, num): void {
+    HandleButtonClick_Number(clickedButtonIndex: number, op: Operation): void {
 
         // We decide what happens next based on the current state
         if (this.gameState.m_PlayerState == m_PlayerState.PickingOperand1) {
 
-            // Disable the number button
-            this.numberBtns[clickedButtonIndex].SetDisabled();
-
             // User is picking the first operand
-            this.gameState.currentOperation.operand1 = num;
+            this.gameState.currentOperation.operand1 = op;
 
             // Store the index of the button that was clicked
             this.gameState.currentOperation.operand1BtnIndex = clickedButtonIndex;
 
-            // Store the value of the number 
-            this.gameState.buttonNumbers[clickedButtonIndex] = num;
-
             // Then he has to pick an operation. Go to the 'Operation Picking' player state
             this.gameState.m_PlayerState = m_PlayerState.PickingOperation;
+
+            // Disable the number button
+            this.numberBtns[clickedButtonIndex].SetDisabled();
 
             // We have to enable the operation buttons 
             this.btnOperationAdd.SetEnabled();
@@ -481,56 +459,40 @@ export default class SoloGame extends Phaser.Scene {
 
         } else if (this.gameState.m_PlayerState == m_PlayerState.PickingOperand2) {
             // User is picking the second operand. 
-            this.gameState.currentOperation.operand2 = num;
+            this.gameState.currentOperation.operand2 = op;
 
             // Store the index of the button that was clicked
             this.gameState.currentOperation.operand2BtnIndex = clickedButtonIndex;
 
             // Store the value of the number 
-            this.gameState.buttonNumbers[clickedButtonIndex] = num;
+            this.gameState.buttonNumbers[clickedButtonIndex] = op;
 
-
-            const operationResult = PerformOperation(
-                this.gameState.currentOperation.operation,
-                this.gameState.currentOperation.operand1,
-                this.gameState.currentOperation.operand2
-            );
-
+            // Do the math on the current operation
+            const operationResult = this.gameState.currentOperation.Calculate();
             this.gameState.currentOperation.result = operationResult;
-
+            console.log(operationResult);
 
             // Display result as a fraction if the denominator is not 1
             if (operationResult.d != 1)
-                this.numberBtns[clickedButtonIndex].SetText(operationResult.n.toString() + " / " + operationResult.d.toString());
+                this.numberBtns[clickedButtonIndex].SetText(operationResult.n.toString() + "/" + operationResult.d.toString());
             else
                 this.numberBtns[clickedButtonIndex].SetText(operationResult.n.toString());
 
-            // Associate the new value to the the button
-            this.gameState.buttonNumbers[clickedButtonIndex] = operationResult;
+           
+
+            this.gameState.operationStack.Push(this.gameState.currentOperation);
+
+
+            // Display the operation to the screen
+            console.log(this.gameState.currentOperation.ToString());
+            this.textExpression.setText(this.gameState.currentOperation.ToString());
 
             // Here is where we check for the solution
             // If 3 cards are picked/disable and the the result is 24, then the player won.
             this.CheckSolution();
 
-            // This operation is added to the operation stack
-            this.gameState.operationStack.Push({
-                operand1: this.gameState.currentOperation.operand1,
-                operand1BtnIndex: this.gameState.currentOperation.operand1BtnIndex,
-
-                operand2: this.gameState.currentOperation.operand2,
-                operand2BtnIndex: this.gameState.currentOperation.operand2BtnIndex,
-
-                operation: this.gameState.currentOperation.operation,
-                result: this.gameState.currentOperation.result
-
-            });
-
-            
-            // Append the text corresponding to this operation to the already existing one
-            this.textPlayerSolution.setText(
-                this.textPlayerSolution.text + OperationToString(this.gameState.currentOperation)
-            );
-
+            // Associate the new value to the the button
+            this.gameState.buttonNumbers[clickedButtonIndex] = this.gameState.currentOperation;
 
 
             // The operation was completed. Now the player has to pick a new first operand again.
@@ -593,9 +555,9 @@ export default class SoloGame extends Phaser.Scene {
                 console.log("Last operation was = ")
                 console.log(lastOp);
                 //this.numberBtns[lastOp.operand1BtnIndex].SetText(lastOp.operand1.toString());
-                this.numberBtns[lastOp.operand1BtnIndex].SetText(FractionToString(lastOp.operand1));
+                this.numberBtns[lastOp.operand1BtnIndex].SetText(OperationToString(lastOp.operand1));
                 this.numberBtns[lastOp.operand1BtnIndex].SetEnabled();
-                this.numberBtns[lastOp.operand2BtnIndex].SetText(FractionToString(lastOp.operand2));
+                this.numberBtns[lastOp.operand2BtnIndex].SetText(OperationToString(lastOp.operand2));
                 this.numberBtns[lastOp.operand2BtnIndex].SetEnabled();
 
                 // Assign the new values to the buttons

@@ -59,6 +59,7 @@ export default class PreloadScene extends Phaser.Scene {
 
 
     this.load.image('cardBG',   'assets/img/solo_game/cardBackground.png');
+    this.load.image('btn_numberBG',   'assets/img/common/numeroBTBG.png');
 
     this.load.image('btn_addition',   'assets/img/solo_game/opAdicao.png');
     this.load.image('btn_subtraction',   'assets/img/solo_game/opSubtracao.png');

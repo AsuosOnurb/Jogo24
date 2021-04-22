@@ -1,4 +1,4 @@
-import { FractionToString, Operation, OperationToString } from "../operations/Operations";
+import { FractionToString, Operation } from "../operations/Operations";
 
 export class TextStack {
 
@@ -6,7 +6,7 @@ export class TextStack {
 
     Push(operation: Operation) {
         
-        this.m_Store.push(OperationToString(operation));
+       //  this.m_Store.push(OperationToString(operation));
     }
 
     /*

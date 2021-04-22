@@ -6,7 +6,7 @@ const config = {
 };
 const mathJS = create(all, config);
 
-import { OperationsStack, Operation, PerformOperation, FractionToString, OperationToString } from '../operations/Operations'
+import { OperationsStack, Operation, FractionToString  } from '../operations/Operations'
 
 import BetterText from '../better/BetterText'
 import BetterButton from '../better/BetterButton'
@@ -101,16 +101,7 @@ export default class MultiplayerGame extends Phaser.Scene {
             totalWrong: 0,
 
             // The current operation starts initialized to some default values
-            currentOperation:
-            {
-                operand1: -1,
-                operand1BtnIndex: -1,
-                operand2: -1,
-                operand2BtnIndex: -1,
-                operation: "none",
-                result: -1,
-
-            },
+            currentOperation: new Operation(),
 
             buttonNumbers: { 0: -1, 1: -1, 2: -1, 3: -1 },
 
@@ -314,15 +305,7 @@ export default class MultiplayerGame extends Phaser.Scene {
     ResetGameState(flagFullReset: boolean = false): void {
         this.gameState.m_PlayerState = m_PlayerState.PickingOperand1;
 
-        this.gameState.currentOperation =
-        {
-            operand1: -1,
-            operand1BtnIndex: -1,
-            operand2: -1,
-            operand2BtnIndex: -1,
-            operation: "none",
-            result: -1
-        };
+        this.gameState.currentOperation = new Operation();
 
         if (flagFullReset)
         {
@@ -420,12 +403,7 @@ export default class MultiplayerGame extends Phaser.Scene {
             this.gameState.buttonNumbers[clickedButtonIndex] = num;
 
 
-            const operationResult = PerformOperation(
-                this.gameState.currentOperation.operation,
-                this.gameState.currentOperation.operand1,
-                this.gameState.currentOperation.operand2
-            );
-
+            const operationResult = this.gameState.currentOperation.Calculate();
             this.gameState.currentOperation.result = operationResult;
 
 
@@ -443,6 +421,7 @@ export default class MultiplayerGame extends Phaser.Scene {
             this.CheckSolution();
 
             // This operation is added to the operation stack
+            /*
             this.gameState.operationStack.Push({
                 operand1: this.gameState.currentOperation.operand1,
                 operand1BtnIndex: this.gameState.currentOperation.operand1BtnIndex,
@@ -451,10 +430,11 @@ export default class MultiplayerGame extends Phaser.Scene {
                 operand2BtnIndex: this.gameState.currentOperation.operand2BtnIndex,
 
                 operation: this.gameState.currentOperation.operation,
-                result: this.gameState.currentOperation.result
+                result: this.gameState.currentOperation.result,
+
 
             });
-
+            */
             
           
 
