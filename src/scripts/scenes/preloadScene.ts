@@ -13,7 +13,8 @@ export default class PreloadScene extends Phaser.Scene {
  
 
     /* ======================= Assets used globally ============================================= */
-
+    this.load.image('btn_undo', 'assets/img/common/voltaratrasBT.png')
+    this.load.image('btn_reset', 'assets/img/common/refreshBT.png')
 
     /* =================================== Main menu assets =================================== */
     this.load.image('fullscreenToggle', 'assets/img//main_menu/fullScreen.png')

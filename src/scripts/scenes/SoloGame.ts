@@ -69,7 +69,7 @@ export default class SoloGame extends Phaser.Scene {
     private btnReset!: BetterButton;           // Resets player input. Lets him try again the current card.
     private btnBackspace!: BetterButton;           // Lets the user delete the last inserted character.
 
-    private btnOperationAdd!: BetterButton;         // Perdorms Addition
+    private btnOperationAdd!: BetterButton;         // Performs Addition
     private btnOperationSubtract!: BetterButton;    // Performs Subtraction
     private btnOperationMultiply!: BetterButton;    // Performs Multiplication
     private btnOperationDivide!: BetterButton;      // Perfroms Division
@@ -210,13 +210,13 @@ export default class SoloGame extends Phaser.Scene {
         }
 
         // This button lets the user reset his attempt at the current card.
-        this.btnReset = new BetterButton(this, this.scale.width / 2 - 196, this.scale.height - 128, 0.2, 0.2, "↺", { fontSize: 64 }, "cardBG");
+        this.btnReset = new BetterButton(this, this.scale.width / 2 - 196, this.scale.height - 128, 1, 1, "", { fontSize: 64 }, "btn_reset");
         this.btnReset.on("pointerup", () => this.events.emit('ResetButtonClick'));
         this.btnReset.SetDisabled();
 
 
         // 'Backspace' button
-        this.btnBackspace = new BetterButton(this, this.scale.width / 2 + 196, this.scale.height - 128, 0.2, 0.2, '🠔', { fontSize: 32 }, "cardBG");
+        this.btnBackspace = new BetterButton(this, this.scale.width / 2 + 196, this.scale.height - 128, 1, 1, "", { fontSize: 32 }, "btn_undo");
         this.btnBackspace.on("pointerup", () => this.events.emit('BackspaceButtonClick'));
         this.btnBackspace.SetDisabled();
 
