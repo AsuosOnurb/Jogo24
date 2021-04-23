@@ -1,6 +1,6 @@
-import * as solutionsJson from './solutions_map.json'
+import Map from './solutions_map.json'
 
-export default class Solutions  {
+export class Solutions  {
 
     constructor()
     {
@@ -8,7 +8,7 @@ export default class Solutions  {
 
     static getSolution(card: string): string
     {
-        return solutionsJson[card];
+        return Map.solutions[card];
     }
 
     

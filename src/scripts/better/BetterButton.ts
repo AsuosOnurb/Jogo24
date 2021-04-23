@@ -1,9 +1,9 @@
 import Phaser from 'phaser'
-import BetterText from './BetterText'
+import {BetterText} from './BetterText'
 
 
 
-export default class BetterButton extends Phaser.GameObjects.Sprite 
+export  class BetterButton extends Phaser.GameObjects.Sprite 
 {
     private m_TextObject: BetterText;
     private m_IsEnabled: boolean;

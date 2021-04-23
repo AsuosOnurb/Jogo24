@@ -1,5 +1,5 @@
 // import * as diffJson from "~/scenes/dificulty_map.json"
-import * as diffJson from './dificulty_map.json'
+import Map from './dificulty_map.json'
 import {RandomInt} from '../utils/Utils'
 
 export enum Difficulty {
@@ -9,30 +9,30 @@ export enum Difficulty {
     Any
 };
 
-export default class CardGenerator {
+export  class CardGenerator {
     constructor() {
-
+        console.log(Map.diff_map);
     }
 
     static generateCard(difficulty: Difficulty): string {
         let cardList;
         switch (difficulty) {
             case Difficulty.Easy:
-                cardList = diffJson[1];
-                console.log("Generated a Easy card");
+                cardList = Map.diff_map["1"];
+                console.log("Generated an Easy card");
 
                 break;
             case Difficulty.Medium:
-                cardList = diffJson[2];
+                cardList = Map.diff_map["2"];
                 console.log("Generated a Medium card");
 
                 break;
             case Difficulty.Hard:
-                cardList = diffJson[3];
+                cardList = Map.diff_map["3"];
                 console.log("Generated a Hard card");
                 break;
             case Difficulty.Any:
-                cardList = diffJson[RandomInt(1,3)];
+                cardList = Map.diff_map[RandomInt(1,3)];
             default:
                 break;
         }

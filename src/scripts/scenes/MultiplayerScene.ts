@@ -8,11 +8,10 @@ const mathJS = create(all, config);
 
 import { OperationsStack, Operation, FractionToString  } from '../operations/Operations'
 
-import BetterText from '../better/BetterText'
-import BetterButton from '../better/BetterButton'
-import CardGenerator, { Difficulty } from '../utils/CardGenerator'
-import Solutions from '../utils/Solutions'
-import CountdownTimer from '../utils/CountdownTimer';
+import {BetterButton} from '../better/BetterButton'
+import {CardGenerator,  Difficulty } from '../utils/CardGenerator'
+import {Solutions} from '../utils/Solutions'
+import {CountdownTimer} from '../utils/CountdownTimer';
 
 /**
  * At any given moment, the player can either be:
@@ -43,7 +42,7 @@ type GameState = {
 }
 
 
-export default class MultiplayerGame extends Phaser.Scene {
+export  class MultiplayerScene extends Phaser.Scene {
 
     private isInstanced: boolean = false;
 

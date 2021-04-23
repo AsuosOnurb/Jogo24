@@ -50,15 +50,10 @@ export class Operation {
 
         } 
 
-        
-
-       
-
         return this.result;
-
     }
 
-    ToString() {
+    ToString() : string {
 
 
         let operand1Str;
@@ -78,35 +73,62 @@ export class Operation {
             operand2Str = this.operand2.ToString();
         }
 
-        let operatorStr = "?";
         switch (this.operation) {
             case "addition":
-                operatorStr = "+";
-                break;
+                return `(${operand1Str} + ${operand2Str})`; 
             case "subtraction":
-                operatorStr = "-";
-                break;
+                return `(${operand1Str} - ${operand2Str})`;
             case "multiplication":
-                operatorStr = "*";
-                break;
+                return `${operand1Str}x${operand2Str}`; // Multiplication doesnt need Parentheses
             case "division":
-                operatorStr = "/";
-                break;
+                return `${operand1Str}/${operand2Str}`; // division doesnt need Parentheses
+            default:
+                return "";
         }
-
-
-        return `(${operand1Str} ${operatorStr} ${operand2Str})`;
-
     }
+
+    SetOperand1(operand1, operand1Index: number) : void
+    {
+        this.operand1 = operand1;
+        this.operand1BtnIndex = operand1Index;
+    }
+
+    SetOperand2(operand2, operand2Index: number) : void
+    {
+        this.operand2 = operand2;
+        this.operand2BtnIndex = operand2Index;
+    }
+
+    SetOperator(operator: string)
+    {
+        this.operation = operator;
+    }
+
+   
 };
 
+export function OperandToString(operand) : string
+{
+    return OperationToString(operand);
+}
 
 export function OperationToString(operation)
 {
+
     if (IsFraction(operation))
+    {
         return FractionToString(operation);
+
+    }
+    
     else 
-        return operation.result.toString();
+    {
+        if (operation.result.d != 1)
+            return `${operation.result.n}/${operation.result.d}`;
+        else
+            return `${operation.result.n}`;
+
+    }
 }
 
 export function FractionToString(fraction) {

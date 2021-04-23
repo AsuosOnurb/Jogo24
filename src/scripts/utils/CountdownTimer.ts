@@ -1,6 +1,6 @@
-import BetterText from "../better/BetterText";
+import {BetterText} from "../better/BetterText";
 
-export default class CountdownTimer {
+export class CountdownTimer {
 
     private m_currentScene: Phaser.Scene;
 
