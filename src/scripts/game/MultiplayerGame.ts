@@ -18,7 +18,7 @@ enum PlayerState {
 
 export class MultiplayerGame {
 
-    private Difficulty: Difficulty;
+    public readonly Difficulty: Difficulty;
     private m_CurrentCard: string;
 
     private m_TotalCorrect: number;
@@ -33,8 +33,9 @@ export class MultiplayerGame {
 
 
 
-    constructor() {
+    constructor(difficulty: Difficulty) {
 
+        this.Difficulty = difficulty;
         this.m_CurrentCard = "????";
 
         this.m_TotalCorrect = 0;

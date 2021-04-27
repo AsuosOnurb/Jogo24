@@ -55,7 +55,7 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('clockBG2', 'assets/img/solo_game/relogioN.png')
     this.load.image('correctCounter',   'assets/img/solo_game/assinalaCertos.png');
     this.load.image('wrongCounter',   'assets/img/solo_game/assinalaErrados.png');
-    this.load.image('inputBar',   'assets/img/solo_game/barra.png');
+    this.load.image('inputBar',   'assets/img/common/barra.png');
 
 
     this.load.image('cardBG',   'assets/img/solo_game/cardBackground.png');

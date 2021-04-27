@@ -68,5 +68,13 @@ export  class BetterButton extends Phaser.GameObjects.Sprite
         return this.m_IsEnabled;
     }
 
+    SetAngle(degrees) : BetterButton 
+    {
+        this.setAngle(degrees);
+        this.m_TextObject.setAngle(degrees);
+
+        return this;
+    }
+
    
 }

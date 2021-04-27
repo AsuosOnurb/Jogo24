@@ -7,6 +7,7 @@ import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../utils/Solutions'
 import { CountdownTimer } from '../utils/CountdownTimer';
 import { MultiplayerGame } from '../game/MultiplayerGame';
+import { Difficulty } from '../utils/CardGenerator';
 
 
 export class MultiplayerScene extends Phaser.Scene {
@@ -36,8 +37,28 @@ export class MultiplayerScene extends Phaser.Scene {
     private m_DifficultyButtons: Array<BetterButton>;
     private m_Tween_ShowDifficultyPanel;
 
+    /* =========================== Expression Bars Group ======================= */
+    /**
+     * This mode has 4 bars where the arithemtic expressions are displayed.
+     * These bars will ahve to be updated at the same time (their text will be the same)
+     * Things get easier if they are in an array.
+     * The array will be an array of BetterButtons, although the bars wont act as buttons.
+     */
+    private m_Array_ExpressionBars: Array<BetterButton>
+
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
+
+    /*
+        In this game mode, the card will have to flip vertically to accomodate its reading from different angles.
+        We create a group that contains all its elements (the card background, the numbers, the new card button).
+        When the card 'flips', its actually the group that flips.
+    */
+    private m_Group_CardGroup: Phaser.GameObjects.Group;
+    private m_Image_CardBG: Phaser.GameObjects.Image;
+    private m_CardButtons: Array<BetterButton>;
+    private m_Btn_NewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
+
 
     // Text
     private textTotalWrong!: BetterText // Total wrong counter label 
@@ -47,7 +68,6 @@ export class MultiplayerScene extends Phaser.Scene {
 
     // Buttons
     private m_PlayerButtons: Array<BetterButton>; // The array that holds the 4 coloured player buttons
-    private m_BtnNewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
 
     private btnOperationAdd!: BetterButton;         // Performs Addition
     private btnOperationSubtract!: BetterButton;    // Performs Subtraction
@@ -56,13 +76,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
     private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
 
-    /*
-     Card Buttons.
-     These buttons are changed everytime we generate a new card. 
-     Each button is associated with one of the 4 numbers.
-    */
-    private m_CardButtons: Array<BetterButton>;
-
+    
     constructor() {
         super("MultiplayerGame");
     }
@@ -77,6 +91,13 @@ export class MultiplayerScene extends Phaser.Scene {
         // Add background image window
         const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
+
+        // Main Menu button
+        this.btnGotoMenu = new BetterButton(this, this.scale.width - 384, 128, 0.5, 0.5, "", { fontSize: 64 }, 'btn_gotoMenu');
+        this.btnGotoMenu.setScale(0.8, 0.8);
+        this.btnGotoMenu.on("pointerup", () => {
+            this.scene.start("MainMenu");
+        });
 
         // Add card background image
         // const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'cardBG');
@@ -95,19 +116,16 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
 
-        // this.textSolution =
-        // new BetterText(this, 32, 256, "", { fontSize: 32 });
+        this.textSolution = new BetterText(this, 32, 256, "", { fontSize: 32 });
 
-        // Setup the "Choose difficulty panel"
 
-        this.m_GameState = new MultiplayerGame();
 
         /**
          * Register event handlers/listeners only if the scene hasn't been started before.
          */
         if (!this.isInstanced) {
 
-            this.events.on('DifficultyButtonClick', this.DifficultyButtonClick, this);
+            this.events.on('DifficultyButtonClick', this.HandleDifficultyButtonClick, this);
             this.events.on('PlayerButtonClick', this.HandleButtonClick_Player, this);
             this.events.on('NumberButtonClick', this.HandleButtonClick_Number, this);
             this.events.on('OperationButtonClick', this.HandleButtonClick_Operation, this);
@@ -117,92 +135,11 @@ export class MultiplayerScene extends Phaser.Scene {
 
         }
 
-        this.Show_StartPanel    ();
-        //this.Setup_DifficultyPanel();
-        // this.Show_DifficultyPanel();
+        this.Start();
     }
 
 
 
-    Setup_Buttons() {
-
-        // Setup the 4 coloured player buttons
-        this.m_PlayerButtons = [
-            new BetterButton(this, 128, 128,
-                1, 1, "", {}, "btn_player1"),
-
-            new BetterButton(this, this.scale.width - 128, 128,
-                1, 1, "", {}, "btn_player2"),
-
-            new BetterButton(this, 128, this.scale.height - 128,
-                1, 1, "", {}, "btn_player3"),
-
-            new BetterButton(this, this.scale.width - 128, this.scale.height - 128,
-                1, 1, "", {}, "btn_player4")
-        ];
-
-        for (let i = 0; i < 4; i++) {
-            this.m_PlayerButtons[i].IsEnabled();
-            this.m_PlayerButtons[i].on('pointerup', () => this.events.emit('PlayerButtonClick', i));
-        }
-
-        // Setup a button for each number in the card (4 buttons)
-        this.m_CardButtons = [
-            new BetterButton(this, this.scale.width / 2 - 196, this.scale.height / 2,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
-
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 196,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
-
-            new BetterButton(this, this.scale.width / 2 + 196, this.scale.height / 2,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
-
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 196,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG")
-
-        ]
-
-        for (let i = 0; i < this.m_CardButtons.length; i++) {
-            // Each button starts disabled
-            this.m_CardButtons[i].SetDisabled();
-            this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.m_GameState.GetNumbers()[i]));
-        }
-
-
-
-        // Addition operation button
-        this.btnOperationAdd = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_addition");
-        this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "addition"));
-        this.btnOperationAdd.SetDisabled();
-
-        // Subtraction operation button
-        this.btnOperationSubtract = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_subtraction");
-        this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "subtraction"));
-        this.btnOperationSubtract.SetDisabled();
-
-        // Multiplication operation button
-        this.btnOperationMultiply = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_multiplication");
-        this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "multiplication"));
-        this.btnOperationMultiply.SetDisabled();
-
-        // Division operation button
-        this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
-        this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "division"));
-        this.btnOperationDivide.SetDisabled();
-
-        // 'New Card' button
-        this.m_BtnNewCard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
-        this.m_BtnNewCard.setScale(0.6, 0.6);
-        this.m_BtnNewCard.on("pointerup", () => this.NewCard());
-
-        // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, this.scale.width - 384, 128, 0.5, 0.5, "", { fontSize: 64 }, 'btn_gotoMenu');
-        this.btnGotoMenu.setScale(0.8, 0.8);
-        this.btnGotoMenu.on("pointerup", () => {
-            this.scene.start("MainMenu");
-        });
-
-    }
 
     NewCard(): void {
 
@@ -281,7 +218,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.btnOperationSubtract.SetDisabled();
         this.btnOperationMultiply.SetDisabled();
         this.btnOperationDivide.SetDisabled();
-        this.m_BtnNewCard.SetDisabled();
+        this.m_Btn_NewCard.SetDisabled();
     }
 
     HandleButtonClick_Player(clickedButtonIndex: number): void {
@@ -361,10 +298,11 @@ export class MultiplayerScene extends Phaser.Scene {
 
     /* ============================= Instructions Panel ========================= */
 
-    Show_StartPanel() {
+    Start() {
+
+        // Show the rules / instructions 
         this.m_ImageText_Rules = this.add.image(this.scale.width / 2, this.scale.height / 2, 'textImage_rules')
         this.m_ImageText_Rules
-
 
         this.input.on('pointerup', () => {
 
@@ -380,22 +318,12 @@ export class MultiplayerScene extends Phaser.Scene {
                 }
             );
 
-
             // Then show the difficuly panel
             this.Show_DifficultyPanel();
 
-
-
         });
 
-
-
     }
-
-    Hide_InstructionsPanel() {
-        this.m_ImageText_Rules.setVisible(false);
-    }
-
 
 
     /* ================================ Difficulty Panel ======================= */
@@ -432,23 +360,155 @@ export class MultiplayerScene extends Phaser.Scene {
             delay: 500,
         });
 
-       
+
 
     }
 
-    Hide_DifficultyPanel() {
 
-        // this.m_Tween_HideDifficultyPanel.play();
+
+    HandleDifficultyButtonClick(clickedButtonIndex: number) {
+        // Hide the difficulty panel
         this.m_Group_SelectDifficultyPanel.setVisible(false);
 
-    }
-
-
-    DifficultyButtonClick(clickedButtonIndex: number) {
-        this.Hide_DifficultyPanel();
         // The Difficulty was chosen. Time to start the game.
+        let diff: Difficulty;
+        switch (clickedButtonIndex) {
+            case 0:
+                diff = Difficulty.Easy;
+                break;
+
+            case 1:
+                diff = Difficulty.Medium;
+
+                break;
+
+            case 2:
+                diff = Difficulty.Hard;
+
+                break;
+
+            case 3:
+                diff = Difficulty.Any;
+
+                break;
+
+            default:
+                diff = Difficulty.Easy; // This should never happen though.
+                break;
+        }
+
+        this.m_GameState = new MultiplayerGame(diff);
+
+
+        // Setup the GUI's initial state
+        this.Setup_GUI();
     }
 
 
+    Setup_GUI() {
+
+
+        /* ======================= Setting up the static elements (static images, static labels, etc...) =============== */
+        this.m_Group_CardGroup = this.add.group();
+
+        // Setup the game card group
+        this.m_Image_CardBG = this.add.image(this.scale.width / 2, this.scale.height / 2 + 80   , 'cardBG');
+        this.m_Group_CardGroup.add(this.m_Image_CardBG);
+
+
+        // Setup a button for each number in the card (4 buttons)
+        this.m_CardButtons = [
+            new BetterButton(this, this.scale.width / 2 - 196, this.m_Image_CardBG.y,
+                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+
+            new BetterButton(this, this.scale.width / 2,  this.m_Image_CardBG.y - 196,
+                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+
+            new BetterButton(this, this.scale.width / 2 + 196,  this.m_Image_CardBG.y,
+                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y+ 196,
+                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG")
+
+        ]
+
+        for (let i = 0; i < this.m_CardButtons.length; i++) {
+            // Each button starts disabled
+            this.m_CardButtons[i].SetDisabled();
+            this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.m_GameState.GetNumbers()[i]));
+
+            // Add each one to the grouo
+            this.m_Group_CardGroup.add(this.m_CardButtons[i]);
+        }
+
+        // 'New Card' button
+        this.m_Btn_NewCard = new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
+        this.m_Btn_NewCard.setScale(0.6, 0.6);
+        this.m_Btn_NewCard.on("pointerup", () => this.NewCard());
+        this.m_Group_CardGroup.add(this.m_Btn_NewCard);
+
+
+
+        /* =========================== Setting up the other buttons ============================= */
+
+        // Setup the 4 coloured player buttons
+        this.m_PlayerButtons = [
+            new BetterButton(this, 128, 128,
+                1, 1, "", {}, "btn_player1"),
+
+            new BetterButton(this, this.scale.width - 128, 128,
+                1, 1, "", {}, "btn_player2"),
+
+            new BetterButton(this, 128, this.scale.height - 128,
+                1, 1, "", {}, "btn_player3"),
+
+            new BetterButton(this, this.scale.width - 128, this.scale.height - 128,
+                1, 1, "", {}, "btn_player4")
+        ];
+
+        for (let i = 0; i < 4; i++) {
+            this.m_PlayerButtons[i].IsEnabled();
+            this.m_PlayerButtons[i].on('pointerup', () => this.events.emit('PlayerButtonClick', i));
+        }
+
+        
+
+
+
+        // Addition operation button
+        this.btnOperationAdd = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_addition");
+        this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "addition"));
+        this.btnOperationAdd.SetDisabled();
+
+        // Subtraction operation button
+        this.btnOperationSubtract = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_subtraction");
+        this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "subtraction"));
+        this.btnOperationSubtract.SetDisabled();
+
+        // Multiplication operation button
+        this.btnOperationMultiply = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_multiplication");
+        this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "multiplication"));
+        this.btnOperationMultiply.SetDisabled();
+
+        // Division operation button
+        this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
+        this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "division"));
+        this.btnOperationDivide.SetDisabled();
+
+
+        /* ================== Setup the expression bars ==================== */
+        this.m_Array_ExpressionBars = [
+            new BetterButton(this, this.scale.width / 2 - 390,  this.m_Image_CardBG.y, 0.9, 0.8, "TEXTO AQUI", {fontSize: 32}, 'inputBar').SetAngle(-90),
+            new BetterButton(this, this.scale.width / 2 ,  this.m_Image_CardBG.y - 390, 0.9, 0.8, "TEXTO AQUI", {fontSize: 32}, 'inputBar'),
+            new BetterButton(this, this.scale.width / 2 + 390, this.m_Image_CardBG.y , 0.9, 0.8, "TEXTO AQUI", {fontSize: 32}, 'inputBar').SetAngle(90),
+            new BetterButton(this, this.scale.width / 2,  this.m_Image_CardBG.y  + 390, 0.9, 0.8, "TEXTO AQUI", {fontSize: 32}, 'inputBar').SetAngle(180)
+
+        ];
+        console.log(this.m_Array_ExpressionBars)
+        
+        
+
+
+    }
 
 }
