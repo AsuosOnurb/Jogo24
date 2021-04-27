@@ -93,7 +93,7 @@ export class MultiplayerScene extends Phaser.Scene {
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, this.scale.width - 384, 128, 0.5, 0.5, "", { fontSize: 64 }, 'btn_gotoMenu');
+        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 96, 0.3, 0.3, "", { fontSize: 64 }, 'btn_gotoMenu');
         this.btnGotoMenu.setScale(0.8, 0.8);
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
@@ -505,7 +505,15 @@ export class MultiplayerScene extends Phaser.Scene {
 
         ];
         console.log(this.m_Array_ExpressionBars)
+
+        // Move the main menu button to the side (just a bit)
         
+        this.tweens.add({
+            targets: this.btnGotoMenu,
+            x: this.scale.width / 2 - 256,
+            repeat: 0,
+            ease: 'Power1'
+        });
         
 
 
