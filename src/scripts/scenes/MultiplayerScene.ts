@@ -23,6 +23,7 @@ export class MultiplayerScene extends Phaser.Scene {
         This panel is actually just composed of the single image. No Phaser group is being used.
     */
     private m_ImageText_Rules: Phaser.GameObjects.Image;
+    private m_Tween_ShowRulesPanel;
 
 
     /* ================================= Difficulty Panel ========================== */
@@ -33,6 +34,7 @@ export class MultiplayerScene extends Phaser.Scene {
     private m_Group_SelectDifficultyPanel: Phaser.GameObjects.Group;
     private m_Label_PickADifficulty: BetterText;
     private m_DifficultyButtons: Array<BetterButton>;
+    private m_Tween_ShowDifficultyPanel;
 
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
