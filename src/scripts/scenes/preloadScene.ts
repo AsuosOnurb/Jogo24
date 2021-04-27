@@ -42,7 +42,6 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_close', 'assets/img/main_menu/closeBT.png')
 
 
-    /* ======================================================================================== */
 
 
     /* =================================== Solo game assets =================================== */
@@ -67,9 +66,16 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_multiplication',   'assets/img/solo_game/opMultiplicacao.png');
     this.load.image('btn_division',   'assets/img/solo_game/opDivisao.png');
 
+    /* =================================== Multiplayer game assets ============================== */
     
+    this.load.image('btn_allDifficulties', 'assets/img/multiplayer_game/todosBT.png');
+    this.load.image('textImage_rules', 'assets/img/multiplayer_game/textoi.png')
+    this.load.image('textImage_pickDiff', 'assets/img/multiplayer_game/textoi2.png')
 
-
+    this.load.image('btn_player1', 'assets/img/multiplayer_game/btt1.png');
+    this.load.image('btn_player2', 'assets/img/multiplayer_game/btt2.png');
+    this.load.image('btn_player3', 'assets/img/multiplayer_game/btt3.png');
+    this.load.image('btn_player4', 'assets/img/multiplayer_game/btt4.png');
 
   }
 
