@@ -31,6 +31,7 @@ export  class BetterButton extends Phaser.GameObjects.Sprite
 
     }
 
+
     SetText(newText: string) : void
     {
         this.m_TextObject.setText(newText);
@@ -41,26 +42,23 @@ export  class BetterButton extends Phaser.GameObjects.Sprite
         return this.m_TextObject.text;
     }
 
-    SetEnabled()
+    SetEnabled(alpha: number = 1.0)
     {
         this.setInteractive();
-        this.m_TextObject.setAlpha(1);
+        this.m_TextObject.setAlpha(alpha);
 
-        this.setAlpha(1);
+        this.setAlpha(alpha);
         this.m_IsEnabled = true;
 
       
     }
 
-    SetDisabled(): void
+    SetDisabled(alpha: number = 0.3): void
     {
         this.disableInteractive();
-        this.m_TextObject.setAlpha(0.3);
-        this.setAlpha(0.3);
+        this.m_TextObject.setAlpha(alpha);
+        this.setAlpha(alpha);
         this.m_IsEnabled = false;
-
-       
-        
     }
 
     IsEnabled() : boolean
@@ -76,5 +74,16 @@ export  class BetterButton extends Phaser.GameObjects.Sprite
         return this;
     }
 
+    SetScale(x, y) : void 
+    {
+        this.setScale(x,y);
+        this.m_TextObject.setScale(x, y);
+    }
+
+    FlipY(flip: boolean) : void 
+    {
+        this.setFlipY(flip);
+        this.m_TextObject.setFlipY(flip);
+    }
    
 }

@@ -5,7 +5,6 @@ import Phaser from 'phaser'
 import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../utils/Solutions'
-import { CountdownTimer } from '../utils/CountdownTimer';
 import { MultiplayerGame } from '../game/MultiplayerGame';
 import { Difficulty } from '../utils/CardGenerator';
 
@@ -15,7 +14,6 @@ export class MultiplayerScene extends Phaser.Scene {
     private isInstanced: boolean = false;
 
     private m_GameState: MultiplayerGame;
-    private countdownTimer: CountdownTimer;
 
 
 
@@ -61,13 +59,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
     // Text
-    private textTotalWrong!: BetterText // Total wrong counter label 
-    private textTotalCorrect!: BetterText; // Total correct counter label
-    private textExpression!: BetterText; // Displays on the top bar the whole arithmetic expression made by the player
     private textSolution!: BetterText; // debug only
 
     // Buttons
-    private m_PlayerButtons: Array<BetterButton>; // The array that holds the 4 coloured player buttons
+    private m_Array_PlayerButtons: Array<BetterButton>; // The array that holds the 4 coloured player buttons
 
     private btnOperationAdd!: BetterButton;         // Performs Addition
     private btnOperationSubtract!: BetterButton;    // Performs Subtraction
@@ -99,26 +94,9 @@ export class MultiplayerScene extends Phaser.Scene {
             this.scene.start("MainMenu");
         });
 
-        // Add card background image
-        // const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'cardBG');
 
-        // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        // const inputBG = this.add.sprite(this.scale.width / 2, 128, 'inputBar');
-
-        // We might as well, for now, use the input bar as a place for player messages
-        // this.textExpression = new BetterText(this, this.scale.width / 2, 128, "",
-        // { fontSize: 48, color: "#ffffff", fontStyle: "bold", align: "center" });
-        // this.textExpression.setOrigin(0.5, 0.5);
-
-
-        // Setup ALL the buttons
-        // this.Setup_Buttons();
-
-
-
-        this.textSolution = new BetterText(this, 32, 256, "", { fontSize: 32 });
-
-
+        // Debug solutution label
+        this.textSolution = new BetterText(this, 96, 256, "", { fontSize: 32 });
 
         /**
          * Register event handlers/listeners only if the scene hasn't been started before.
@@ -135,7 +113,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         }
 
-        this.Start();
+        this.Setup();
     }
 
 
@@ -151,9 +129,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
             // Set the text of the number button
             this.m_CardButtons[i].SetText(generatedCard[i]);
-
-            // Enable the button
-            this.m_CardButtons[i].SetEnabled();
+            this.m_CardButtons[i].SetDisabled(1.0);
         }
 
 
@@ -164,13 +140,16 @@ export class MultiplayerScene extends Phaser.Scene {
         this.btnOperationDivide.SetDisabled();
 
         // Update the solution debug text
-        this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(generatedCard)}`);
+        this.textSolution.setText(`Solução: ${Solutions.getSolution(generatedCard)}`);
 
-        // Clear the expression text
-        this.textExpression.setText("");
+        // Clear the text from expression bars
+        for (let i = 0; i < 4; i++)
+            this.m_Array_ExpressionBars[i].SetText("");
 
-        // Start the timer
-        this.countdownTimer.StartCountdown();
+        // Enable the 4 colored player buttons
+        for (let i = 0; i < 4; i++)
+            this.m_Array_PlayerButtons[i].SetEnabled();
+
     }
 
     CheckSolution(): void {
@@ -188,23 +167,25 @@ export class MultiplayerScene extends Phaser.Scene {
         if (disabledCardCount === 3) {
 
             if (this.m_GameState.IsCardWon()) {
-                // Update game state and 'Total correct' text
-                let totalCorrect = this.m_GameState.IncrTotalCorrect();
-                this.textTotalCorrect.setText(totalCorrect.toString());
+
+                // Add one point to the current player
+                const newPlayerScore = this.m_GameState.AwardCurrentPlayer();
+                this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(newPlayerScore.toString());
+
+                // Make the button "APPEAR" enabled
+                this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].setAlpha(1);
+
+
             }
             else {
-                // Update game state and 'Total incorrect' text
-                let totalWrong = this.m_GameState.IncrTotalWrong();
-                this.textTotalWrong.setText(totalWrong.toString());
+                //Subtract one point from the current player score
+                const newPlayerScore = this.m_GameState.PunishCurrentPlayer();
+                this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(newPlayerScore.toString());
             }
 
 
 
-            /*
-             TODO: Maybe also pause the timer here?
-             At this stage the player either failed or won the card answer. Since he has to pick a new card, maybe we should not
-             be counting time.
-            */
+           
         }
     }
 
@@ -226,15 +207,44 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // The colored player button was clicked. Disable it and all other right away
         for (let i = 0; i < 4; i++) {
-            this.m_PlayerButtons[i].SetDisabled();
+            this.m_Array_PlayerButtons[i].SetDisabled();
         }
+
+        // Enable the card buttons
+        for(let i = 0; i < 4; i++)
+            this.m_CardButtons[i].SetEnabled();
+
+         // Redraw Card
+         this.RedrawCard(clickedButtonIndex);
+       
     }
 
+    RedrawCard(clickedButtonIndex: number) : void 
+    {
+        if (clickedButtonIndex === 0 || clickedButtonIndex === 1)
+        {
+           this.m_Btn_NewCard.setFlipY(true);
 
+           for(let i = 0; i < 4; i++)
+            this.m_CardButtons[i].FlipY(true);
+            
+        } else 
+        {
+            this.m_Btn_NewCard.setFlipY(false);
+
+
+           for(let i = 0; i < 4; i++)
+               this.m_CardButtons[i].FlipY(false);
+            
+
+        }
+       
+    }
 
     HandleButtonClick_Number(clickedButtonIndex: number, operand): void {
 
         if (this.m_GameState.IsPickingOperand1()) {
+
             this.m_GameState.GetCurrentOperation().SetOperand1(operand, clickedButtonIndex);
             this.m_GameState.NextPlayerState();
 
@@ -252,7 +262,6 @@ export class MultiplayerScene extends Phaser.Scene {
 
             this.m_GameState.GetCurrentOperation().SetOperand2(operand, clickedButtonIndex);
 
-
             // Do the math on the current operation
             const operationResult = this.m_GameState.PerformCurrentOperation();
 
@@ -263,8 +272,9 @@ export class MultiplayerScene extends Phaser.Scene {
                 this.m_CardButtons[clickedButtonIndex].SetText(operationResult.n.toString());
 
 
-            // Display the operation to the screen
-            this.textExpression.setText(this.m_GameState.GetCurrentOperation().ToString());
+            // Display the operation to all the bars
+            for(let i = 0; i < 4; i++)
+                this.m_Array_ExpressionBars[i].SetText(this.m_GameState.GetCurrentOperation().ToString());
 
             // Here is where we check for the solution
             // If 3 cards are picked/disable and the the result is 24, then the player won.
@@ -294,11 +304,9 @@ export class MultiplayerScene extends Phaser.Scene {
     }
 
 
-
-
     /* ============================= Instructions Panel ========================= */
 
-    Start() {
+    Setup() {
 
         // Show the rules / instructions 
         this.m_ImageText_Rules = this.add.image(this.scale.width / 2, this.scale.height / 2, 'textImage_rules')
@@ -359,11 +367,7 @@ export class MultiplayerScene extends Phaser.Scene {
             duration: 1000,
             delay: 500,
         });
-
-
-
     }
-
 
 
     HandleDifficultyButtonClick(clickedButtonIndex: number) {
@@ -413,7 +417,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Setup the game card group
         this.m_Image_CardBG = this.add.image(this.scale.width / 2, this.scale.height / 2 + 80   , 'cardBG');
-        this.m_Group_CardGroup.add(this.m_Image_CardBG);
+        //this.m_Group_CardGroup.add(this.m_Image_CardBG);
 
 
         // Setup a button for each number in the card (4 buttons)
@@ -434,7 +438,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         for (let i = 0; i < this.m_CardButtons.length; i++) {
             // Each button starts disabled
-            this.m_CardButtons[i].SetDisabled();
+            this.m_CardButtons[i].SetDisabled(1.0);
             this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.m_GameState.GetNumbers()[i]));
 
             // Add each one to the grouo
@@ -447,33 +451,27 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_Btn_NewCard.on("pointerup", () => this.NewCard());
         this.m_Group_CardGroup.add(this.m_Btn_NewCard);
 
-
-
         /* =========================== Setting up the other buttons ============================= */
 
         // Setup the 4 coloured player buttons
-        this.m_PlayerButtons = [
+        this.m_Array_PlayerButtons = [
             new BetterButton(this, 128, 128,
-                1, 1, "", {}, "btn_player1"),
+                1, 1, "", {fontSize: 128}, "btn_player1"),
 
             new BetterButton(this, this.scale.width - 128, 128,
-                1, 1, "", {}, "btn_player2"),
+                1, 1, "", {fontSize: 128}, "btn_player2"),
 
             new BetterButton(this, 128, this.scale.height - 128,
-                1, 1, "", {}, "btn_player3"),
+                1, 1, "", {fontSize: 128}, "btn_player3"),
 
             new BetterButton(this, this.scale.width - 128, this.scale.height - 128,
-                1, 1, "", {}, "btn_player4")
+                1, 1, "", {fontSize: 128}, "btn_player4")
         ];
 
         for (let i = 0; i < 4; i++) {
-            this.m_PlayerButtons[i].IsEnabled();
-            this.m_PlayerButtons[i].on('pointerup', () => this.events.emit('PlayerButtonClick', i));
+            this.m_Array_PlayerButtons[i].SetDisabled();
+            this.m_Array_PlayerButtons[i].on('pointerup', () => this.events.emit('PlayerButtonClick', i));
         }
-
-        
-
-
 
         // Addition operation button
         this.btnOperationAdd = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_addition");
@@ -498,11 +496,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ================== Setup the expression bars ==================== */
         this.m_Array_ExpressionBars = [
-            new BetterButton(this, this.scale.width / 2 - 390,  this.m_Image_CardBG.y, 0.9, 0.8, "TEXTO AQUI", {fontSize: 32}, 'inputBar').SetAngle(-90),
-            new BetterButton(this, this.scale.width / 2 ,  this.m_Image_CardBG.y - 390, 0.9, 0.8, "TEXTO AQUI", {fontSize: 32}, 'inputBar'),
-            new BetterButton(this, this.scale.width / 2 + 390, this.m_Image_CardBG.y , 0.9, 0.8, "TEXTO AQUI", {fontSize: 32}, 'inputBar').SetAngle(90),
-            new BetterButton(this, this.scale.width / 2,  this.m_Image_CardBG.y  + 390, 0.9, 0.8, "TEXTO AQUI", {fontSize: 32}, 'inputBar').SetAngle(180)
-
+            new BetterButton(this, this.scale.width / 2 - 390,  this.m_Image_CardBG.y, 0.9, 0.8, "", {fontSize: 48, color:"#ffffff"}, 'inputBar').SetAngle(-90),
+            new BetterButton(this, this.scale.width / 2 ,  this.m_Image_CardBG.y - 390, 0.9, 0.8, "", {fontSize: 48 , color:"#ffffff"}, 'inputBar'),
+            new BetterButton(this, this.scale.width / 2 + 390, this.m_Image_CardBG.y , 0.9, 0.8, "", {fontSize: 48, color:"#ffffff"}, 'inputBar').SetAngle(90),
+            new BetterButton(this, this.scale.width / 2,  this.m_Image_CardBG.y  + 390, 0.9, 0.8, "", {fontSize: 48, color:"#ffffff"}, 'inputBar').SetAngle(180)
         ];
         console.log(this.m_Array_ExpressionBars)
 
@@ -514,9 +511,10 @@ export class MultiplayerScene extends Phaser.Scene {
             repeat: 0,
             ease: 'Power1'
         });
-        
-
-
     }
+
+
+
+  
 
 }

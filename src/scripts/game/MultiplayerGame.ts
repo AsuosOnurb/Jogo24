@@ -16,6 +16,26 @@ enum PlayerState {
     PickingOperand2 = 3
 };
 
+class Player {
+    private m_Score: number;
+
+    constructor() {
+        this.m_Score = 0;
+    }
+
+    GetScore(): number {
+        return this.m_Score;
+    }
+
+    AddPoint(): void {
+        this.m_Score += 1;
+    }
+
+    SubtractPoint(): void {
+        this.m_Score -= 1;
+    }
+}
+
 export class MultiplayerGame {
 
     public readonly Difficulty: Difficulty;
@@ -24,6 +44,7 @@ export class MultiplayerGame {
     private m_TotalCorrect: number;
     private m_TotalWrong: number;
 
+    private m_Players: Array<Player>;
     private m_CurrentPlayer: number; // numbers [0,1,2,3]
     private m_PlayerState: PlayerState;
 
@@ -41,6 +62,13 @@ export class MultiplayerGame {
         this.m_TotalCorrect = 0;
         this.m_TotalWrong = 0;
 
+        this.m_Players = [
+            new Player(),
+            new Player(),
+            new Player(),
+            new Player(),
+        ];
+        this.m_CurrentPlayer = 0;
         this.m_PlayerState = PlayerState.PickingOperand1;
 
         this.m_Numbers = {};
@@ -142,6 +170,16 @@ export class MultiplayerGame {
 
     }
 
+    AwardCurrentPlayer(): number {
+        this.m_Players[this.m_CurrentPlayer].AddPoint();
+        return this.m_Players[this.m_CurrentPlayer].GetScore();
+    }
+
+    PunishCurrentPlayer(): number {
+        this.m_Players[this.m_CurrentPlayer].SubtractPoint();
+        return this.m_Players[this.m_CurrentPlayer].GetScore();
+    }
+
 
     IncrTotalCorrect(): number {
         this.m_TotalCorrect += 1;
@@ -204,6 +242,7 @@ export class MultiplayerGame {
     GetCurrentOperation(): Operation {
         return this.CurrentOperation;
     }
+
 
 
 
