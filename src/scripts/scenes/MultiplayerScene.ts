@@ -22,7 +22,6 @@ export class MultiplayerScene extends Phaser.Scene {
         This panel is actually just composed of the single image. No Phaser group is being used.
     */
     private m_ImageText_Rules: Phaser.GameObjects.Image;
-    private m_Tween_ShowRulesPanel;
 
 
     /* ================================= Difficulty Panel ========================== */
@@ -31,7 +30,7 @@ export class MultiplayerScene extends Phaser.Scene {
      * A phaser group object containing all the other objects that compose the "Choose difficulty" panel.
      */
     private m_Group_SelectDifficultyPanel: Phaser.GameObjects.Group;
-    private m_Label_PickADifficulty: BetterText;
+    private m_ImageText_PickADifficulty: Phaser.GameObjects.Image;
     private m_DifficultyButtons: Array<BetterButton>;
     private m_Tween_ShowDifficultyPanel;
 
@@ -89,7 +88,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Main Menu button
         this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 96, 0.3, 0.3, "", { fontSize: 64 }, 'btn_gotoMenu');
-        this.btnGotoMenu.setScale(0.8, 0.8);
+        this.btnGotoMenu.setScale(0.6, 0.6);
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
@@ -150,6 +149,8 @@ export class MultiplayerScene extends Phaser.Scene {
         for (let i = 0; i < 4; i++)
             this.m_Array_PlayerButtons[i].SetEnabled();
 
+
+
     }
 
     CheckSolution(): void {
@@ -182,6 +183,9 @@ export class MultiplayerScene extends Phaser.Scene {
                 const newPlayerScore = this.m_GameState.PunishCurrentPlayer();
                 this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(newPlayerScore.toString());
             }
+
+            // Allow players to generate new cards
+            this.m_Btn_NewCard.SetEnabled();
 
 
 
@@ -216,6 +220,9 @@ export class MultiplayerScene extends Phaser.Scene {
 
          // Redraw Card
          this.RedrawCard(clickedButtonIndex);
+
+        // Prevent player from getting a new card
+        this.m_Btn_NewCard.SetDisabled();
        
     }
 
@@ -341,9 +348,9 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_Group_SelectDifficultyPanel = this.add.group();
 
         // The label
-        this.m_Label_PickADifficulty = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 384, "Escolhe o Nível", { fontSize: 64, color: "#ffffff" });
-        this.m_Label_PickADifficulty.setAlpha(0);
-        this.m_Group_SelectDifficultyPanel.add(this.m_Label_PickADifficulty);
+        this.m_ImageText_PickADifficulty = this.add.image(this.scale.width / 2, 200, 'textImage_pickDiff');
+        this.m_ImageText_PickADifficulty.setAlpha(0);
+        this.m_Group_SelectDifficultyPanel.add(this.m_ImageText_PickADifficulty);
 
 
         // Setup the diff buttons

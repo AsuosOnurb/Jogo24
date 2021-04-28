@@ -83,7 +83,10 @@ export  class BetterButton extends Phaser.GameObjects.Sprite
     FlipY(flip: boolean) : void 
     {
         this.setFlipY(flip);
+        this.setFlipX(flip);
+
         this.m_TextObject.setFlipY(flip);
+        this.m_TextObject.setFlipX(flip);
     }
    
 }
