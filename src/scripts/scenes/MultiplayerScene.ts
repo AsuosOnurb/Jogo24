@@ -95,7 +95,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
         // Debug solutution label
-        this.textSolution = new BetterText(this, 96, 256, "", { fontSize: 32 });
+        this.textSolution = new BetterText(this, 128, 256, "", { fontSize: 32 });
 
         /**
          * Register event handlers/listeners only if the scene hasn't been started before.
