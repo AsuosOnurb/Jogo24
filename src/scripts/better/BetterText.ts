@@ -1,6 +1,6 @@
 import Phaser from 'phaser'
 
-export default class BetterText extends Phaser.GameObjects.Text 
+export  class BetterText extends Phaser.GameObjects.Text 
 {
     constructor(scene: Phaser.Scene, x: number, y: number, text: string, style: any )
     {
@@ -17,8 +17,8 @@ export default class BetterText extends Phaser.GameObjects.Text
         
 
         super(scene, x  , y   , text, style);
-
         
+        this.setOrigin(0.5, 0.5);
         
         scene.add.existing(this);
     }

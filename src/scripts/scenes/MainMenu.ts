@@ -1,7 +1,7 @@
 import Phaser, { Display, Scale } from 'phaser'
 
-import BetterButton from '../better/BetterButton'
-import BetterText from '../better/BetterText';
+import {BetterButton} from '../better/BetterButton'
+import {BetterText} from '../better/BetterText';
 import { Difficulty } from '../utils/CardGenerator';
 
 enum Panels {
@@ -10,7 +10,7 @@ enum Panels {
     AboutUs
 };
 
-export default class HelloWorldScene extends Phaser.Scene {
+export  class MainMenuScene extends Phaser.Scene {
 
     private mainMenuButtonsGroup!: Phaser.GameObjects.Group; // Contains all the buttons in the main menu
     private btnAboutGame!: BetterButton;

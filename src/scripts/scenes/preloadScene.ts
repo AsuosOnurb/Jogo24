@@ -1,4 +1,4 @@
-export default class PreloadScene extends Phaser.Scene {
+export  class PreloadScene extends Phaser.Scene {
   constructor() {
     super({ key: 'PreloadScene' })
   }
@@ -13,7 +13,8 @@ export default class PreloadScene extends Phaser.Scene {
  
 
     /* ======================= Assets used globally ============================================= */
-
+    this.load.image('btn_undo', 'assets/img/common/voltaratrasBT.png')
+    this.load.image('btn_reset', 'assets/img/common/refreshBT.png')
 
     /* =================================== Main menu assets =================================== */
     this.load.image('fullscreenToggle', 'assets/img//main_menu/fullScreen.png')
@@ -41,7 +42,6 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btn_close', 'assets/img/main_menu/closeBT.png')
 
 
-    /* ======================================================================================== */
 
 
     /* =================================== Solo game assets =================================== */
@@ -55,7 +55,7 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('clockBG2', 'assets/img/solo_game/relogioN.png')
     this.load.image('correctCounter',   'assets/img/solo_game/assinalaCertos.png');
     this.load.image('wrongCounter',   'assets/img/solo_game/assinalaErrados.png');
-    this.load.image('inputBar',   'assets/img/solo_game/barra.png');
+    this.load.image('inputBar',   'assets/img/common/barra.png');
 
 
     this.load.image('cardBG',   'assets/img/solo_game/cardBackground.png');
@@ -66,27 +66,20 @@ export default class PreloadScene extends Phaser.Scene {
     this.load.image('btn_multiplication',   'assets/img/solo_game/opMultiplicacao.png');
     this.load.image('btn_division',   'assets/img/solo_game/opDivisao.png');
 
+    /* =================================== Multiplayer game assets ============================== */
     
+    this.load.image('btn_allDifficulties', 'assets/img/multiplayer_game/todosBT.png');
+    this.load.image('textImage_rules', 'assets/img/multiplayer_game/textoi.png')
+    this.load.image('textImage_pickDiff', 'assets/img/multiplayer_game/textoi2.png')
 
-
+    this.load.image('btn_player1', 'assets/img/multiplayer_game/btt1.png');
+    this.load.image('btn_player2', 'assets/img/multiplayer_game/btt2.png');
+    this.load.image('btn_player3', 'assets/img/multiplayer_game/btt3.png');
+    this.load.image('btn_player4', 'assets/img/multiplayer_game/btt4.png');
 
   }
 
   create() {
     this.scene.start('MainMenu')
-
-    /**
-     * This is how you would dynamically import the mainScene class (with code splitting),
-     * add the mainScene to the Scene Manager
-     * and start the scene.
-     * The name of the chunk would be 'mainScene.chunk.js
-     * Find more about code splitting here: https://webpack.js.org/guides/code-splitting/
-     */
-    // let someCondition = true
-    // if (someCondition)
-    //   import(/* webpackChunkName: "mainScene" */ './mainScene').then(mainScene => {
-    //     this.scene.add('MainScene', mainScene.default, true)
-    //   })
-    // else console.log('The mainScene class will not even be loaded by the browser')
   }
 }
