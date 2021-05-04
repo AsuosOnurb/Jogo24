@@ -2,7 +2,7 @@ import Phaser, { Display, Scale } from 'phaser'
 
 import {BetterButton} from '../better/BetterButton'
 import {BetterText} from '../better/BetterText';
-import { Difficulty } from '../utils/CardGenerator';
+import { Difficulty } from '../game/CardGenerator';
 
 enum Panels {
     AboutGame,
@@ -77,6 +77,7 @@ export  class MainMenuScene extends Phaser.Scene {
 
         // Top 100 button
         this.btnLeaderboards = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 11 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_top");
+        this.btnLeaderboards.on('pointerup', () => this.StartRankingScene());
 
         // About the game button
         this.btnAboutGame = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 6 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_about');
@@ -138,6 +139,12 @@ export  class MainMenuScene extends Phaser.Scene {
     StartMultiplayerGame() : void
     {
         this.scene.start("MultiplayerGame");
+    }
+
+    StartRankingScene() : void 
+    {
+        console.log("Here");
+        this.scene.start("RankingScene", {param1: "JustAString"});
     }
 
 

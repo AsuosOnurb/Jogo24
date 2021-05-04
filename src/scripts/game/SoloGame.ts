@@ -6,8 +6,8 @@ const mathJS = create(all, config);
 
 
 
-import { Operation, OperationsStack } from "../operations/Operations";
-import {CardGenerator,  Difficulty } from "../utils/CardGenerator";
+import { Operation, OperationsStack } from "./Operations";
+import {CardGenerator,  Difficulty } from "./CardGenerator";
 
 enum PlayerState {
     PickingOperand1 = 1,

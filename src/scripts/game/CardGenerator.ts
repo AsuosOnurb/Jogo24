@@ -1,6 +1,6 @@
 // import * as diffJson from "~/scenes/dificulty_map.json"
 import Map from './dificulty_map.json'
-import {RandomInt} from '../utils/Utils'
+import {RandomInt} from './Utils'
 
 export enum Difficulty {
     Easy,

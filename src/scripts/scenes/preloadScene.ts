@@ -13,15 +13,17 @@ export  class PreloadScene extends Phaser.Scene {
  
 
     /* ======================= Assets used globally ============================================= */
+    this.load.image('blueBackground',   'assets/img/common/background0.png');
     this.load.image('btn_undo', 'assets/img/common/voltaratrasBT.png')
     this.load.image('btn_reset', 'assets/img/common/refreshBT.png')
+
+    this.load.image('title',        'assets/img/common/titulo1.png');
+    this.load.image('toon',         'assets/img/common/boneco.png');
 
     /* =================================== Main menu assets =================================== */
     this.load.image('fullscreenToggle', 'assets/img//main_menu/fullScreen.png')
 
-    this.load.image('blueBackground',   'assets/img/main_menu/background0.png');
-    this.load.image('title',        'assets/img/main_menu/titulo1.png');
-    this.load.image('toon',         'assets/img/main_menu/boneco.png');
+   
 
     this.load.image('btn_easy',     'assets/img/main_menu/facilBT.png');
     this.load.image('btn_medium',   'assets/img/main_menu/medioBT.png');
@@ -76,6 +78,9 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_player2', 'assets/img/multiplayer_game/btt2.png');
     this.load.image('btn_player3', 'assets/img/multiplayer_game/btt3.png');
     this.load.image('btn_player4', 'assets/img/multiplayer_game/btt4.png');
+
+    /* ========================== Ranking scene ==================================== */
+    this.load.image('sliderThumb', 'assets/img/common/numeroBTBG.png');
 
   }
 

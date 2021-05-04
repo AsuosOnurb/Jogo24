@@ -4,9 +4,9 @@ import Phaser from 'phaser'
 
 import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
-import { Solutions } from '../utils/Solutions'
+import { Solutions } from '../game/Solutions'
 import { MultiplayerGame } from '../game/MultiplayerGame';
-import { Difficulty } from '../utils/CardGenerator';
+import { Difficulty } from '../game/CardGenerator';
 
 
 export class MultiplayerScene extends Phaser.Scene {
