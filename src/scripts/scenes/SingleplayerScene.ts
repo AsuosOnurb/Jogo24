@@ -7,13 +7,12 @@ const config = {
 const mathJS = create(all, config);
 
 
-import { OperandToString, OperationToString } from '../game/Operations'
+import { OperationToString } from '../game/Operations'
 import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../game/Solutions'
 import { CountdownTimer } from '../game/CountdownTimer'
 import { SoloGame } from '../game/SoloGame';
-import { CardGenerator } from '../game/CardGenerator';
 
 
 export class SingleplayerScene extends Phaser.Scene {

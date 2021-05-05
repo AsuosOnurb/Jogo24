@@ -1,16 +1,29 @@
+import { UserInfo } from "./UserInfo";
 
 
 export class BackendConnection {
 
-
-    private m_UserInfo;
+    private static Instance: BackendConnection;
     private pontuacao;
     private pontuacaoGlobal;
 
 
-    constructor ()
+    private constructor ()
     {
         
+    }
+
+    GetInstance()  : BackendConnection
+    {
+        if (!BackendConnection.Instance)
+            BackendConnection.Instance = new BackendConnection();
+
+        return BackendConnection.Instance;
+    }
+
+    GetUserInfoInstance() : UserInfo 
+    {
+        return UserInfo.GetInstance();
     }
 
     /**
@@ -29,15 +42,16 @@ export class BackendConnection {
                 crossDomain: true,
                 cache: false,
 
-                success: function (response) {
+                success: (response) =>  {
                     if (response != "false") {
 
-                        this.m_UserInfo.user = response.split(",")[0];                               // username
-                        this.m_UserInfo.firstName = response.split(",")[1];                          // primeiro nome do aluno
-                        this.m_UserInfo.escola = response.split(",")[2];                             // codigo da escola
-                        this.m_UserInfo.turma = response.split(",")[3];
+                        UserInfo.SetUser(response.split(",")[0]);                               // username
+                         UserInfo.SetFirstName(response.split(",")[1]);                                 // username
+                         UserInfo.SetSchool(response.split(",")[2]);                                 // username
+                         UserInfo.SetClass(response.split(",")[3]);                                 // username
 
-                        this.m_UserInfo.setLocalData();
+
+                        UserInfo.SetLocalData();
 
                         scene.scene.stop();
                         scene.scene.resume("startScene");
@@ -49,8 +63,8 @@ export class BackendConnection {
                     }
 
                 },
-                error: function (response) {
-                    this.m_UserInfo.user = "";
+                error:  (response) => {
+                    UserInfo.SetUser('');
                     alert("Falha de ligação, por favor verifique a sua conexão")
                 }
             })

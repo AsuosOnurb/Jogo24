@@ -41,4 +41,4 @@ const config = {
 
 var game = new Phaser.Game(config);
 
-var userInfo = new UserInfo();
+var userInfo = UserInfo.GetInstance();

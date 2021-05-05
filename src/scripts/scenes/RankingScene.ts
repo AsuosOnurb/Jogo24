@@ -10,7 +10,6 @@ export class RankingScene extends Phaser.Scene {
     private lastclick;
 
     private m_Data; // The data object that comes from the main menu
-    private m_UserInfo: UserInfo;
     private m_Backend: BackendConnection;
 
     private array;
@@ -19,7 +18,7 @@ export class RankingScene extends Phaser.Scene {
     private pontos;
     private escola;
     private turma;
-    private m_dataCalendario;
+    private dataC;
 
     private ano;
     private dificil;
@@ -99,6 +98,8 @@ export class RankingScene extends Phaser.Scene {
             'rows': 15
         }
         this.m_AlignGrid = new AlignGrid(this.game, gridConfig);
+        console.log("Crreated align grid.");
+        console.log(this.m_AlignGrid);
 
         var d = new Date();
         var m = d.getMonth();
@@ -121,16 +122,16 @@ export class RankingScene extends Phaser.Scene {
         var scrollMode = 0; // 0:vertical, 1:horizontal
 
         console.log("======== PRINTING SCEN PLUGIN ====");
-        console.log(this.plugins.plugins)
+        console.log(this.plugins.scenePlugins)
         this.table = this.rexUI.add.gridTable({
-            x: 1138,
-            y: 686,
+            x: 128,
+            y: 128,
             width: 1575,
             height: 706,
 
             scrollMode: scrollMode,
 
-            background: this.rexUI.add.roundRectangle(0, 0, 20, 10, 10, 0xFFFF00).setAlpha(0.2),
+            background: this.rexUI.add.roundRectangle(0, 0, 8, 10, 10, 0xe7a738),
 
             table: {
                 cellWidth: 50,
@@ -148,8 +149,8 @@ export class RankingScene extends Phaser.Scene {
 
 
             slider: {
-                track: this.rexUI.add.roundRectangle(0, 0, 20, 10, 10, 0x260e04),
-                thumb: this.add.image(0, 0, "sliderThumb").setScale(0.7),
+                track: this.rexUI.add.roundRectangle(0, 0, 18, 10, 10, 0x260e04),
+                thumb: this.add.image(0, 0, "sliderThumb").setScale(0.4),
             },
             space: {
                 left: 10,
@@ -208,14 +209,10 @@ export class RankingScene extends Phaser.Scene {
 
         this.m_AlignGrid.placeAt(7, 8, this.table);
 
-        this.title = this.add.image(0, 0, 'title');
-        this.title.setScale(0.7);
-        this.m_AlignGrid.placeAtIndex(37, this.title);
+        this.m_AlignGrid.showNumbers();
+        
 
-        this.topTitle = this.add.image(0, 0, 'toon');
-        this.topTitle.setScale(1.3);
-        this.topTitle.setOrigin(0.7, 0);
-        this.m_AlignGrid.placeAtIndex(26, this.topTitle);
+       
 
 
         this.container = this.rexUI.add.roundRectangle(0, 0, 200, 700, 0, 0xFFFF00).setAlpha(0.2);
@@ -317,7 +314,7 @@ export class RankingScene extends Phaser.Scene {
                         scene.df = new Date().toISOString().slice(0, 10)
                     }
 
-                    this.m_Backend.updateTOP(scene.di, scene.df, this.m_UserInfo.turma, this.m_UserInfo.escola, scene.flag, scene.dificulty, scene);
+                    this.m_Backend.updateTOP(scene.di, scene.df, UserInfo.GetClass(), UserInfo.GetSchool(), scene.flag, scene.dificulty, scene);
                 });
 
                 let tmp = xx.slice(2, 4) + "-" + yy.slice(2, 4);
@@ -378,7 +375,7 @@ export class RankingScene extends Phaser.Scene {
             this.normal_icon.setFillStyle('0xffffff');
             this.easy_icon.setFillStyle('0x000000');
             this.dificulty = 1;
-            this.m_Backend.updateTOP(this.di, this.df, this.m_UserInfo.GetClass(), this.m_UserInfo.GetSchool(), this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
 
         });
 
@@ -390,7 +387,7 @@ export class RankingScene extends Phaser.Scene {
             this.normal_icon.setFillStyle('0x000000');
             this.easy_icon.setFillStyle('0xffffff');
             this.dificulty = 2;
-            this.m_Backend.updateTOP(this.di, this.df, this.m_UserInfo.GetClass(), this.m_UserInfo.GetSchool(), this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
         });
 
         this.dificil.setInteractive({ useHandCursor: true });
@@ -400,7 +397,7 @@ export class RankingScene extends Phaser.Scene {
             this.normal_icon.setFillStyle('0xffffff');
             this.easy_icon.setFillStyle('0xffffff');
             this.dificulty = 3;
-            this.m_Backend.updateTOP(this.di, this.df,this.m_UserInfo.GetClass(), this.m_UserInfo.GetSchool(), this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df,UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
         });
 
         this.filtro = new BetterText(this, 0,0, "Filtro", { fontSize: 25, color: '#403217' });
@@ -450,7 +447,7 @@ export class RankingScene extends Phaser.Scene {
             this.turma_icon.setFillStyle('0xffffff');
 
             this.flag = 2;
-            this.m_Backend.updateTOP(this.di, this.df, this.m_UserInfo.GetClass(), this.m_UserInfo.GetSchool(), this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
 
         });
 
@@ -465,7 +462,7 @@ export class RankingScene extends Phaser.Scene {
             this.turma_icon.setFillStyle('0xffffff');
 
             this.flag = 1;
-            this.m_Backend.updateTOP(this.di, this.df, this.m_UserInfo.GetClass(), this.m_UserInfo.GetSchool, this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass(), UserInfo.GetSchool, this.flag, this.dificulty, this);
         });
         this.turma_filtro.setInteractive({ useHandCursor: true });
         this.turma_filtro.input.hitArea.setTo(-50, -5, this.turma_filtro.width + 60, this.turma_filtro.height);
@@ -479,12 +476,14 @@ export class RankingScene extends Phaser.Scene {
 
             this.flag = 0;
 
-            this.m_Backend.updateTOP(this.di, this.df, this.m_UserInfo.GetClass, this.m_UserInfo.GetSchool, this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass, UserInfo.GetSchool, this.flag, this.dificulty, this);
         });
 
         this.todos_icon.setFillStyle('0x000000');
         this.easy_icon.setFillStyle('0x000000');
-        if (this.m_UserInfo.GetUser() == '') {
+
+
+        if (UserInfo.GetUser() == '') {
             this.filtro.visible = false;
             this.turma_filtro.visible = false;
             this.turma_icon.visible = false;
@@ -499,14 +498,13 @@ export class RankingScene extends Phaser.Scene {
 
 
         this.events.on('transitionstart', (fromScene, duration) => {
-            this.title.y += this.scale.height;
 
             this.table.y += this.scale.height;
             this.jogador.y += this.scale.height;
             this.pontos.y += this.scale.height;
             this.escola.y += this.scale.height;
             this.turma.y += this.scale.height;
-            this.m_dataCalendario.y += this.scale.height;
+            this.dataC.y += this.scale.height;
             this.dropdown.y += this.scale.height;
             this.ano.y += this.scale.height;
             this.dificil.y += this.scale.height;
@@ -524,11 +522,17 @@ export class RankingScene extends Phaser.Scene {
             this.todos.y += this.scale.height;
             this.todos_icon.y += this.scale.height;
             this.container.y += this.scale.height;
-            this.topTitle.y += this.scale.height;
 
             this.tweens.add({
                 delay: 1000,
-                targets: [this.table, this.title, this.jogador, this.pontos, this.escola, this.turma, this.m_dataCalendario, this.dropdown, this.ano, this.dificil, this.hard_icon, this.normal, this.normal_icon, this.facil, this.easy_icon, this.dificuldade, this.filtro, this.turma_filtro, this.turma_icon, this.escola_filtro, this.escola_icon, this.todos, this.todos_icon, this.container, this.topTitle],
+                targets: [this.table,  this.jogador, 
+                                this.pontos, this.escola, this.turma, 
+                                this.dataC, this.dropdown, this.ano, 
+                                this.dificil, this.hard_icon, this.normal, 
+                                this.normal_icon, this.facil, this.easy_icon, 
+                                this.dificuldade, this.filtro, this.turma_filtro, 
+                                this.turma_icon, this.escola_filtro, this.escola_icon, 
+                                this.todos, this.todos_icon, this.container],
                 durantion: 5000,
                 y: '-=' + this.scale.height,
                 ease: 'Power2',
@@ -536,8 +540,7 @@ export class RankingScene extends Phaser.Scene {
 
         }, this);
 
-
-        this.pontos = new BetterText(this, 0, 0, 'Jogador',   {fontSize: 40, color: '#403217' });
+        this.jogador = new BetterText(this, 0, 0, 'Jogador', { fontFamily: 'myfont3', fontSize: 40, color: '#403217' });
 
         this.pontos = new BetterText(this, 0, 0, 'Pontos',   {fontSize: 40, color: '#403217' });
 
@@ -545,7 +548,7 @@ export class RankingScene extends Phaser.Scene {
 
         this.turma = new BetterText(this, 0, 0, 'Turma',   {fontSize: 40, color: '#403217' });
 
-        this.m_dataCalendario = new BetterText(this, 0, 0, 'Data',   {fontSize: 40, color: '#403217' });
+        this.dataC = new BetterText(this, 0, 0, 'Data',   {fontSize: 40, color: '#403217' });
 
 
 
@@ -554,7 +557,7 @@ export class RankingScene extends Phaser.Scene {
         this.m_AlignGrid.placeAtIndex(79, this.pontos);
         this.m_AlignGrid.placeAtIndex(82, this.escola);
         this.m_AlignGrid.placeAtIndex(85, this.turma);
-        this.m_AlignGrid.placeAtIndex(87, this.m_dataCalendario);
+        this.m_AlignGrid.placeAtIndex(87, this.dataC);
 
     }
 

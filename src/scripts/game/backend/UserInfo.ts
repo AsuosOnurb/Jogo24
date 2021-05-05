@@ -1,18 +1,27 @@
 export class UserInfo
 {
-    private m_User: string;
-    private m_FirstName: string;
-    private m_Class: string;
-    private m_School: string;
+    private static Instance: UserInfo;
+    private static m_User: string;
+    private static m_FirstName: string;
+    private static m_Class: string;
+    private static m_School: string;
 
-/**
-     * Create inicial loginInfo
-     */
-    constructor() {
-        this.m_User = '';
-        this.m_FirstName = '';
-        this.m_Class = '';
-        this.m_School = '';
+
+    private  constructor() {
+        UserInfo.SetUser('');
+        UserInfo.SetFirstName('');
+        UserInfo.SetClass('');
+        UserInfo.SetSchool('');
+    }
+
+    static GetInstance() : UserInfo 
+    {
+        if (!UserInfo.Instance)
+        {
+            UserInfo.Instance = new UserInfo();
+        }
+        
+        return UserInfo.Instance
     }
 
     // sessionStorage format:
@@ -40,15 +49,15 @@ export class UserInfo
     /**
      * Set browser's sessionstorage accordingly to the current class data
      */
-    SetLocalData(){
+    static SetLocalData(){
         
         if(typeof(Storage) === "undefined") {
             return;
         }
         
         let storeInfo = {
-            'user': this.m_User, 'firstName': this.m_FirstName,
-            'turma': this.m_Class, 'escola': this.m_School};
+            'user': UserInfo.GetUser(), 'firstName': UserInfo.GetFirstName(),
+            'turma': UserInfo.GetClass(), 'escola': UserInfo.GetSchool()};
 
 
         let info = JSON.stringify(storeInfo);
@@ -60,11 +69,11 @@ export class UserInfo
      * Delete user login info
      */
     Logout() {
-        this.m_User = '';
-        this.m_FirstName = '';
-        this.m_Class = '';
-        this.m_School = '';
-        this.SetLocalData();
+        UserInfo.SetUser('');
+        UserInfo.SetFirstName('');
+        UserInfo.SetClass('');
+        UserInfo.SetSchool('');
+        UserInfo.SetLocalData();
     }
 
 
@@ -75,37 +84,57 @@ export class UserInfo
      */
     ParseData(data) {
         if(data['user']){ // returns false if undefined/null
-            this.m_User = data['user'];
+            UserInfo.SetUser(data['user']);
         }
         if (data['firstName']) { // returns false if undefined/null
-            this.m_FirstName = data['firstName'];
+            UserInfo.SetFirstName(data['firstName']);
         }
         if (data['turma']) { // returns false if undefined/null
-            this.m_Class = data['turma'];
+            UserInfo.SetClass(data['turma']);
         }
         if (data['escola']) { // returns false if undefined/null
-            this.m_School = data['escola'];
+            UserInfo.SetSchool(data['escola']);
         }
         
     }
 
-    GetUser() : string
+    static GetUser() : string
     {
         return this.m_User;
     }
 
-    GetFirstName() : string
+    static SetUser(user: string) : void 
+    {
+        this.m_User = user;
+    }
+
+    static GetFirstName() : string
     {
         return this.m_FirstName;
     }
 
-    GetClass() : string
+    static SetFirstName(fname: string) : void
+    {
+        this.m_FirstName = fname;
+    }
+
+    static  GetClass() : string
     {
         return this.m_Class;
     }
 
-    GetSchool() : string
+    static SetClass(turma: string) : void
+    {
+        this.m_Class = turma;
+    }
+
+    static GetSchool() : string
     {
         return this.m_School;
+    }
+    
+    static SetSchool(school: string) : void 
+    {
+        this.m_School = school;
     }
 }
