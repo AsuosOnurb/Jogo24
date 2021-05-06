@@ -92,6 +92,10 @@ export class RankingScene extends Phaser.Scene {
         this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
 
+        // Title imge96
+        this.title = this.add.image(this.scale.width / 2, 112, 'title');
+        this.title.setScale(0.6, 0.6);
+
         const gridConfig = {
             'scene': this,
             'cols': 15,
@@ -124,10 +128,10 @@ export class RankingScene extends Phaser.Scene {
         console.log('======== PRINTING SCEN PLUGIN ====');
         console.log(this.plugins.scenePlugins)
         this.table = this.rexUI.add.gridTable({
-            x: 870,
+            x: 848,
             y: this.scale.height / 2 + 64,
 
-            width: 1480,
+            width: 1560,
             height: 768,
 
             scrollMode: scrollMode,
@@ -217,13 +221,14 @@ export class RankingScene extends Phaser.Scene {
 
         this.container = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe7a738);
         this.m_AlignGrid.placeAtIndex(133, this.container);
+        this.container.x += 32
         this.container.y -= 10;
 
         this.lastclick;
 
         this.dropdown = this.rexUI.add.gridTable({
-            x: 1911,
-            y: 490,
+            x: 1750,
+            y: 400,
             width: 180,
             height: 250,
 
@@ -333,39 +338,44 @@ export class RankingScene extends Phaser.Scene {
 
         this.ano = new BetterText(this, 0, 0, 'Ano letivo', {fontSize: 25, color: '#403217', align: 'center' });
         this.m_AlignGrid.placeAtIndex(58, this.ano);
-        //this.ano.x += 64
+        this.ano.x += 32
         //this.ano.y -= 40
 
         /* Radio button: hard diff */
-
         this.dificil = new BetterText(this, 0, 0, 'Dificil', {fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(134, this.dificil);
-        this.dificil.x -= 72;
+        this.m_AlignGrid.placeAtIndex(178, this.dificil);
+        this.dificil.x += 32;
 
         this.hard_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(133, this.hard_icon);
+        this.m_AlignGrid.placeAtIndex(178, this.hard_icon);
+        this.hard_icon.x -= 32
 
 
         /* Radio button: Normal Diff */
         this.normal = new BetterText(this, 0, 0, 'Normal',{ fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(134, this.normal);
-        this.normal.y += 35
-        this.normal.x -= 64
+        this.m_AlignGrid.placeAtIndex(178, this.normal);
+        this.normal.x += 32;
+        this.normal.y += 35;
+        
 
         this.normal_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(133, this.normal_icon);
-        this.normal_icon.y += 35
+        this.m_AlignGrid.placeAtIndex(178, this.normal_icon);
+        this.normal_icon.x -= 32;
+        this.normal_icon.y += 35;
 
         /* Radio button: Easy diff */
         this.facil = new BetterText(this, 0, 0, 'Fácil', {fontSize: 25, color: '#000000', align: 'left' });
-        this.facil.setOrigin(2.2, 0.5);
-        this.m_AlignGrid.placeAtIndex(149, this.facil);
+        this.m_AlignGrid.placeAtIndex(193, this.facil);
+        this.facil.x += 32
 
         this.easy_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(148, this.easy_icon);
+        this.m_AlignGrid.placeAtIndex(193, this.easy_icon);
+        this.easy_icon.x -= 32
 
         this.dificuldade = new BetterText(this, 0, 0, 'Dificuldade', {fontSize: 25, color: '#403217', align:'center' });
-        this.m_AlignGrid.placeAtIndex(118, this.dificuldade);
+        this.m_AlignGrid.placeAtIndex(163, this.dificuldade);
+        this.dificuldade.x += 32
+        this.dificuldade.y += 32
 
 
         this.facil.setInteractive({ useHandCursor: true });
@@ -558,7 +568,7 @@ export class RankingScene extends Phaser.Scene {
         this.m_AlignGrid.placeAtIndex(69, this.turma);
         this.m_AlignGrid.placeAtIndex(71, this.dataC);
 
-        this.m_AlignGrid.showNumbers();
+        // this.m_AlignGrid.showNumbers();
 
 
     }
