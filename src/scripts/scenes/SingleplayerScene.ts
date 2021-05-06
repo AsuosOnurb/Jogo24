@@ -336,11 +336,12 @@ export class SingleplayerScene extends Phaser.Scene {
             const operationResult = this.m_GameState.PerformCurrentOperation();
 
             // Display result as a fraction if the denominator is not 1
+            /*
             if (operationResult.d != 1)
                 this.m_CardButtons[clickedButtonIndex].SetText(operationResult.n.toString() + "/" + operationResult.d.toString());
             else
                 this.m_CardButtons[clickedButtonIndex].SetText(operationResult.n.toString());
-
+            */
 
             // Display the operation to the screen
             this.textExpression.setText(this.m_GameState.GetCurrentOperation().ToString());

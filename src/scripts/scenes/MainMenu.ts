@@ -110,7 +110,7 @@ export  class MainMenuScene extends Phaser.Scene {
         this.imgAboutTheGame = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'aboutGame');
         this.imgAboutTheGame.setScale(1.5);
 
-        this.btnClosePanel = new BetterButton(this, this.scale.width / 2 + 400, this.scale.height / 2 - 200, 0.8, 0.8, "", undefined, 'btn_close');
+        this.btnClosePanel = new BetterButton(this, this.scale.width / 2 + 400, this.scale.height / 2 - 200, 0.8, 0.8, "", {}, 'btn_close');
         this.btnClosePanel.on('pointerup', () => this.HidePanel());
         
         this.groupPanel = this.add.group([this.imgAboutTheGame, this.imgHowToPlay, this.btnClosePanel]);

@@ -54,7 +54,7 @@ export class RankingScene extends Phaser.Scene {
 
     private title: Phaser.GameObjects.Image;
     private topTitle: Phaser.GameObjects.Image;
-    private btn_back: BetterButton;
+    private m_btn_BackToMenu: BetterButton;
     private rexUI;
 
 
@@ -80,10 +80,6 @@ export class RankingScene extends Phaser.Scene {
 
         /* Get data passed from the main menu scene */
         this.array = data;
-        console.log('==== Entered Ranking Scene =====');
-        console.log(this.array);
-
-        
     }
 
     create() {
@@ -102,8 +98,6 @@ export class RankingScene extends Phaser.Scene {
             'rows': 15
         }
         this.m_AlignGrid = new AlignGrid(this.game, gridConfig);
-        console.log('Crreated align grid.');
-        console.log(this.m_AlignGrid);
 
         var d = new Date();
         var m = d.getMonth();
@@ -125,8 +119,6 @@ export class RankingScene extends Phaser.Scene {
         //TABLE
         var scrollMode = 0; // 0:vertical, 1:horizontal
 
-        console.log('======== PRINTING SCEN PLUGIN ====');
-        console.log(this.plugins.scenePlugins)
         this.table = this.rexUI.add.gridTable({
             x: 848,
             y: this.scale.height / 2 + 64,
@@ -136,7 +128,7 @@ export class RankingScene extends Phaser.Scene {
 
             scrollMode: scrollMode,
 
-            background: this.rexUI.add.roundRectangle(-100, 0, 8, 10, 10, 0xe7a738),
+            background: this.rexUI.add.roundRectangle(-100, 0, 8, 10, 10, 0xe79946),
 
             table: {
                 cellWidth: 50,
@@ -202,7 +194,7 @@ export class RankingScene extends Phaser.Scene {
                         height: height,
 
                         orientation: 'top-to-bottom',
-                        text: scene.add.text(50, 50, item.name, { fontFamily: 'myfont2', fontSize: 21, color: '#000000', align: 'center' }),
+                        text: scene.add.text(50, 50, item.name, {fontSize: 21, color: '#000000', align: 'center' }),
                         align: 'center',
                     });
 
@@ -212,14 +204,12 @@ export class RankingScene extends Phaser.Scene {
         })
             .layout()
 
-        // this.m_AlignGrid.placeAt(7, 8, this.table);
-
         
+        // Setup the "Back" button
+        this.Setup_Button_Back()
 
-       
 
-
-        this.container = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe7a738);
+        this.container = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe79946);
         this.m_AlignGrid.placeAtIndex(133, this.container);
         this.container.x += 32
         this.container.y -= 10;
@@ -543,7 +533,7 @@ export class RankingScene extends Phaser.Scene {
                                 this.dificuldade, this.filtro, this.turma_filtro, 
                                 this.turma_icon, this.escola_filtro, this.escola_icon, 
                                 this.todos, this.todos_icon, this.container],
-                durantion: 5000,
+                duration: 5000,
                 y: '-=' + this.scale.height,
                 ease: 'Power2',
             });
@@ -617,6 +607,14 @@ export class RankingScene extends Phaser.Scene {
 
 
 
+    /**
+     *  Sets up the "Go back to menu" button.
+     **/
+    Setup_Button_Back() : void 
+    {
+        this.m_btn_BackToMenu = new BetterButton(this, 96, 96, 0.6, 0.6, '', {}, 'btn_gotoMenu');
+        this.m_btn_BackToMenu.on('pointerup', () => this.scene.start('MainMenu'));
+    }
 
 
 
