@@ -25,7 +25,7 @@ export class RankingScene extends Phaser.Scene {
     private hard_icon;
     private normal;
     private normal_icon;
-    private facil;
+    private facil: BetterText;
     private easy_icon;
     private dificuldade;
 
@@ -59,7 +59,7 @@ export class RankingScene extends Phaser.Scene {
 
 
     constructor() {
-        super("RankingScene");
+        super('RankingScene');
     }
 
 
@@ -80,7 +80,7 @@ export class RankingScene extends Phaser.Scene {
 
         /* Get data passed from the main menu scene */
         this.array = data;
-        console.log("==== Entered Ranking Scene =====");
+        console.log('==== Entered Ranking Scene =====');
         console.log(this.array);
 
         
@@ -98,7 +98,7 @@ export class RankingScene extends Phaser.Scene {
             'rows': 15
         }
         this.m_AlignGrid = new AlignGrid(this.game, gridConfig);
-        console.log("Crreated align grid.");
+        console.log('Crreated align grid.');
         console.log(this.m_AlignGrid);
 
         var d = new Date();
@@ -113,25 +113,26 @@ export class RankingScene extends Phaser.Scene {
             var y = n;
         }
 
-        this.di = x + "-09-01";
-        this.df = y + "-08-31";
+        this.di = x + '-09-01';
+        this.df = y + '-08-31';
         this.dificulty = 1;
         this.flag = 2;
 
         //TABLE
         var scrollMode = 0; // 0:vertical, 1:horizontal
 
-        console.log("======== PRINTING SCEN PLUGIN ====");
+        console.log('======== PRINTING SCEN PLUGIN ====');
         console.log(this.plugins.scenePlugins)
         this.table = this.rexUI.add.gridTable({
-            x: 128,
-            y: 128,
-            width: 1575,
-            height: 706,
+            x: 870,
+            y: this.scale.height / 2 + 64,
+
+            width: 1480,
+            height: 768,
 
             scrollMode: scrollMode,
 
-            background: this.rexUI.add.roundRectangle(0, 0, 8, 10, 10, 0xe7a738),
+            background: this.rexUI.add.roundRectangle(-100, 0, 8, 10, 10, 0xe7a738),
 
             table: {
                 cellWidth: 50,
@@ -150,7 +151,7 @@ export class RankingScene extends Phaser.Scene {
 
             slider: {
                 track: this.rexUI.add.roundRectangle(0, 0, 18, 10, 10, 0x260e04),
-                thumb: this.add.image(0, 0, "sliderThumb").setScale(0.4),
+                thumb: this.add.image(0, 0, 'sliderThumb').setScale(0.3),
             },
             space: {
                 left: 10,
@@ -197,7 +198,7 @@ export class RankingScene extends Phaser.Scene {
                         height: height,
 
                         orientation: 'top-to-bottom',
-                        text: scene.add.text(50, 50, item.name, { fontFamily: "myfont2", fontSize: 21, color: '#000000', align: 'center' }),
+                        text: scene.add.text(50, 50, item.name, { fontFamily: 'myfont2', fontSize: 21, color: '#000000', align: 'center' }),
                         align: 'center',
                     });
 
@@ -207,17 +208,16 @@ export class RankingScene extends Phaser.Scene {
         })
             .layout()
 
-        this.m_AlignGrid.placeAt(7, 8, this.table);
+        // this.m_AlignGrid.placeAt(7, 8, this.table);
 
-        this.m_AlignGrid.showNumbers();
         
 
        
 
 
-        this.container = this.rexUI.add.roundRectangle(0, 0, 200, 700, 0, 0xFFFF00).setAlpha(0.2);
-        this.container.setOrigin(0.15, 0.5);
+        this.container = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe7a738);
         this.m_AlignGrid.placeAtIndex(133, this.container);
+        this.container.y -= 10;
 
         this.lastclick;
 
@@ -273,7 +273,7 @@ export class RankingScene extends Phaser.Scene {
 
                         orientation: 0,
                         icon: scene.add.circle(0, 50, 10).setFillStyle('0xffffff'),
-                        text: scene.add.text(50, 50, item, { fontFamily: "myfont2", fontSize: 25, color: '#000000', align: 'center' }),
+                        text: scene.add.text(50, 50, item, { fontFamily: 'myfont2', fontSize: 25, color: '#000000', align: 'center' }),
                         align: 'center',
                         space: {
                             icon: 20,
@@ -304,20 +304,20 @@ export class RankingScene extends Phaser.Scene {
                     }
                     scene.lastclick = cellContainer.getElement('icon').setFillStyle('0x000000');
 
-                    if (cellContainer.getElement('text')._text != "Todos") {
-                        scene.di = "20" + cellContainer.getElement('text')._text.split('-')[0] + "-9-1";
-                        scene.df = "20" + cellContainer.getElement('text')._text.split('-')[1] + "-8-31";
+                    if (cellContainer.getElement('text')._text != 'Todos') {
+                        scene.di = '20' + cellContainer.getElement('text')._text.split('-')[0] + '-9-1';
+                        scene.df = '20' + cellContainer.getElement('text')._text.split('-')[1] + '-8-31';
 
                     }
                     else {
-                        scene.di = "2015-09-01"
+                        scene.di = '2015-09-01'
                         scene.df = new Date().toISOString().slice(0, 10)
                     }
 
                     this.m_Backend.updateTOP(scene.di, scene.df, UserInfo.GetClass(), UserInfo.GetSchool(), scene.flag, scene.dificulty, scene);
                 });
 
-                let tmp = xx.slice(2, 4) + "-" + yy.slice(2, 4);
+                let tmp = xx.slice(2, 4) + '-' + yy.slice(2, 4);
                 if (cellContainer.getElement('text')._text == tmp) {
                     scene.lastclick = cellContainer.getElement('icon').setFillStyle('0x000000');
                 }
@@ -331,40 +331,40 @@ export class RankingScene extends Phaser.Scene {
             .layout()
 
 
-        this.ano = new BetterText(this, 0, 0, "Ano letivo", {fontSize: 25, color: '#403217' });
-        this.m_AlignGrid.placeAtIndex(73, this.ano);
+        this.ano = new BetterText(this, 0, 0, 'Ano letivo', {fontSize: 25, color: '#403217', align: 'center' });
+        this.m_AlignGrid.placeAtIndex(58, this.ano);
+        //this.ano.x += 64
+        //this.ano.y -= 40
 
+        /* Radio button: hard diff */
 
-        this.dificil = new BetterText(this, 0, 0, "Dificil", {fontSize: 25, color: '#000000', align: 'center' });
-        this.m_AlignGrid.placeAtIndex(133, this.dificil);
-
+        this.dificil = new BetterText(this, 0, 0, 'Dificil', {fontSize: 25, color: '#000000', align: 'left' });
+        this.m_AlignGrid.placeAtIndex(134, this.dificil);
+        this.dificil.x -= 72;
 
         this.hard_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.hard_icon.setOrigin(0.5, 1.2);
         this.m_AlignGrid.placeAtIndex(133, this.hard_icon);
 
 
-        this.normal = new BetterText(this, 0, 0, 'Normal',{ fontSize: 25, color: '#000000', align: 'center' });
-        this.normal.setOrigin(-0.37, -0.45);
-        this.m_AlignGrid.placeAtIndex(133, this.normal);
-
+        /* Radio button: Normal Diff */
+        this.normal = new BetterText(this, 0, 0, 'Normal',{ fontSize: 25, color: '#000000', align: 'left' });
+        this.m_AlignGrid.placeAtIndex(134, this.normal);
+        this.normal.y += 35
+        this.normal.x -= 64
 
         this.normal_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.normal_icon.setOrigin(0.5, -1.2);
         this.m_AlignGrid.placeAtIndex(133, this.normal_icon);
+        this.normal_icon.y += 35
 
-
-        this.facil = new BetterText(this, 0, 0, 'Fácil', {fontSize: 25, color: '#000000', align: 'center' });
-        this.facil.setOrigin(-0.55, -1.8);
-        this.m_AlignGrid.placeAtIndex(133, this.facil);
-
+        /* Radio button: Easy diff */
+        this.facil = new BetterText(this, 0, 0, 'Fácil', {fontSize: 25, color: '#000000', align: 'left' });
+        this.facil.setOrigin(2.2, 0.5);
+        this.m_AlignGrid.placeAtIndex(149, this.facil);
 
         this.easy_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.easy_icon.setOrigin(0.5, -3.7);
-        this.m_AlignGrid.placeAtIndex(133, this.easy_icon);
+        this.m_AlignGrid.placeAtIndex(148, this.easy_icon);
 
-        this.dificuldade = new BetterText(this, 0, 0, "Dificuldade", {fontSize: 25, color: '#403217' });
-        this.dificuldade.setOrigin(0, 0);
+        this.dificuldade = new BetterText(this, 0, 0, 'Dificuldade', {fontSize: 25, color: '#403217', align:'center' });
         this.m_AlignGrid.placeAtIndex(118, this.dificuldade);
 
 
@@ -400,13 +400,13 @@ export class RankingScene extends Phaser.Scene {
             this.m_Backend.updateTOP(this.di, this.df,UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
         });
 
-        this.filtro = new BetterText(this, 0,0, "Filtro", { fontSize: 25, color: '#403217' });
+        this.filtro = new BetterText(this, 0,0, 'Filtro', { fontSize: 25, color: '#403217' });
         this.filtro.setOrigin(0, 0.5);
         this.m_AlignGrid.placeAtIndex(163.3, this.filtro);
 
 
 
-        this.turma_filtro = new BetterText(this, 0,0, "Turma", {fontSize: 25, color: '#000000', align: 'left' });
+        this.turma_filtro = new BetterText(this, 0,0, 'Turma', {fontSize: 25, color: '#000000', align: 'left' });
         this.turma_filtro.setOrigin(-0.5, -1.3);
         this.m_AlignGrid.placeAtIndex(178, this.turma_filtro);
         this.turma_icon = this.add.circle(0, 0, 10,0xffffff);
@@ -416,7 +416,7 @@ export class RankingScene extends Phaser.Scene {
 
 
         
-        this.escola_filtro = new BetterText(this, 0, 0, "Escola", { fontSize: 25, color: '#000000', align: 'left' });
+        this.escola_filtro = new BetterText(this, 0, 0, 'Escola', { fontSize: 25, color: '#000000', align: 'left' });
 
         this.escola_filtro.setOrigin(-0.45, -0.05);
         this.m_AlignGrid.placeAtIndex(178, this.escola_filtro);
@@ -425,7 +425,7 @@ export class RankingScene extends Phaser.Scene {
         this.escola_icon.setOrigin(0.5, -0.5);
         this.m_AlignGrid.placeAtIndex(178, this.escola_icon);
 
-        this.todos = new BetterText(this, 0, 0, "Todos", {fontSize: 25, color: '#000000', align: 'left' });
+        this.todos = new BetterText(this, 0, 0, 'Todos', {fontSize: 25, color: '#000000', align: 'left' });
 
 
         this.todos.setOrigin(-0.5, 1.4);
@@ -552,19 +552,21 @@ export class RankingScene extends Phaser.Scene {
 
 
 
-        this.m_AlignGrid.placeAtIndex(77, this.jogador);
-        this.m_AlignGrid.placeAtIndex(79, this.pontos);
-        this.m_AlignGrid.placeAtIndex(79, this.pontos);
-        this.m_AlignGrid.placeAtIndex(82, this.escola);
-        this.m_AlignGrid.placeAtIndex(85, this.turma);
-        this.m_AlignGrid.placeAtIndex(87, this.dataC);
+        this.m_AlignGrid.placeAtIndex(61, this.jogador);
+        this.m_AlignGrid.placeAtIndex(63, this.pontos);
+        this.m_AlignGrid.placeAtIndex(66, this.escola);
+        this.m_AlignGrid.placeAtIndex(69, this.turma);
+        this.m_AlignGrid.placeAtIndex(71, this.dataC);
+
+        this.m_AlignGrid.showNumbers();
+
 
     }
 
     CreateItems(count) {
         var data =  new Array<object> ();
         for (var i = 0; i < count; i++) {
-            if (this.array[i] != "") {
+            if (this.array[i] != '') {
                 data.push({
                     name: this.array[i],
                 });
@@ -590,15 +592,15 @@ export class RankingScene extends Phaser.Scene {
             var x = n - 1;
             var y = n;
         }
-        let di = x + "-09-01";
-        let df = y + "-08-31";
+        let di = x + '-09-01';
+        let df = y + '-08-31';
         let j = 15;
         for (let i = 2015; i < y; i++) {
 
-            data.push("" + j.toString() + "-" + (j + 1).toString());
+            data.push('' + j.toString() + '-' + (j + 1).toString());
             j++;
         }
-        data.push("Todos");
+        data.push('Todos');
         data = data.reverse();
         return data;
     }
