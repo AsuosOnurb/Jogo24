@@ -155,7 +155,7 @@ export class RankingScene extends Phaser.Scene {
 
             slider: {
                 track: this.rexUI.add.roundRectangle(0, 0, 18, 10, 10, 0x260e04),
-                thumb: this.add.image(0, 0, 'sliderThumb').setScale(0.3),
+                thumb: this.rexUI.add.roundRectangle(0, 0, 32, 32, 13, 0xc85c02),
             },
             space: {
                 left: 10,
@@ -251,7 +251,7 @@ export class RankingScene extends Phaser.Scene {
 
             slider: {
                 track: this.rexUI.add.roundRectangle(0, 0, 10, 10, 10, 0x260e04),
-                thumb: this.rexUI.add.roundRectangle(0, 0, 0, 0, 13, 0x7b5e57),
+                thumb: this.rexUI.add.roundRectangle(0, 0, 32, 32, 13, 0xc85c02),
             },
             space: {
                 left: 20,
