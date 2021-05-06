@@ -69,8 +69,9 @@ export class MultiplayerScene extends Phaser.Scene {
     private btnOperationDivide!: BetterButton;      // Perfroms Division
 
     private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
+    private imageDifficulty: Phaser.GameObjects.Image; // The image that displays the current game difficulty
 
-    
+
     constructor() {
         super("MultiplayerGame");
     }
@@ -189,7 +190,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
 
-           
+
         }
     }
 
@@ -209,43 +210,44 @@ export class MultiplayerScene extends Phaser.Scene {
     HandleButtonClick_Player(clickedButtonIndex: number): void {
         this.m_GameState.SetCurrentPlayer(clickedButtonIndex);
 
-        // The colored player button was clicked. Disable it and all other right away
+        // The colored player button was clicked. Disable all others right away
         for (let i = 0; i < 4; i++) {
-            this.m_Array_PlayerButtons[i].SetDisabled();
+            if (clickedButtonIndex != i)
+                this.m_Array_PlayerButtons[i].SetDisabled();
+
+            // Disable the clicked button, but still make it clearly visible
+            this.m_Array_PlayerButtons[clickedButtonIndex].SetDisabled(1.0);
         }
 
         // Enable the card buttons
-        for(let i = 0; i < 4; i++)
+        for (let i = 0; i < 4; i++)
             this.m_CardButtons[i].SetEnabled();
 
-         // Redraw Card
-         this.RedrawCard(clickedButtonIndex);
+        // Redraw Card
+        this.RedrawCard(clickedButtonIndex);
 
         // Prevent player from getting a new card
         this.m_Btn_NewCard.SetDisabled();
-       
+
     }
 
-    RedrawCard(clickedButtonIndex: number) : void 
-    {
-        if (clickedButtonIndex === 0 || clickedButtonIndex === 1)
-        {
-           this.m_Btn_NewCard.setFlipY(true);
+    RedrawCard(clickedButtonIndex: number): void {
+        if (clickedButtonIndex === 0 || clickedButtonIndex === 1) {
+            this.m_Btn_NewCard.setFlipY(true);
 
-           for(let i = 0; i < 4; i++)
-            this.m_CardButtons[i].FlipY(true);
-            
-        } else 
-        {
+            for (let i = 0; i < 4; i++)
+                this.m_CardButtons[i].FlipY(true);
+
+        } else {
             this.m_Btn_NewCard.setFlipY(false);
 
 
-           for(let i = 0; i < 4; i++)
-               this.m_CardButtons[i].FlipY(false);
-            
+            for (let i = 0; i < 4; i++)
+                this.m_CardButtons[i].FlipY(false);
+
 
         }
-       
+
     }
 
     HandleButtonClick_Number(clickedButtonIndex: number, operand): void {
@@ -280,7 +282,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
             // Display the operation to all the bars
-            for(let i = 0; i < 4; i++)
+            for (let i = 0; i < 4; i++)
                 this.m_Array_ExpressionBars[i].SetText(this.m_GameState.GetCurrentOperation().ToString());
 
             // Here is where we check for the solution
@@ -423,7 +425,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_Group_CardGroup = this.add.group();
 
         // Setup the game card group
-        this.m_Image_CardBG = this.add.image(this.scale.width / 2, this.scale.height / 2 + 80   , 'cardBG');
+        this.m_Image_CardBG = this.add.image(this.scale.width / 2, this.scale.height / 2 + 80, 'cardBG');
         //this.m_Group_CardGroup.add(this.m_Image_CardBG);
 
 
@@ -432,13 +434,13 @@ export class MultiplayerScene extends Phaser.Scene {
             new BetterButton(this, this.scale.width / 2 - 196, this.m_Image_CardBG.y,
                 1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2,  this.m_Image_CardBG.y - 196,
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 196,
                 1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2 + 196,  this.m_Image_CardBG.y,
+            new BetterButton(this, this.scale.width / 2 + 196, this.m_Image_CardBG.y,
                 1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y+ 196,
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 196,
                 1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG")
 
         ]
@@ -463,16 +465,16 @@ export class MultiplayerScene extends Phaser.Scene {
         // Setup the 4 coloured player buttons
         this.m_Array_PlayerButtons = [
             new BetterButton(this, 128, 128,
-                1, 1, "", {fontSize: 128}, "btn_player1"),
+                1, 1, "", { fontSize: 128 }, "btn_player1"),
 
             new BetterButton(this, this.scale.width - 128, 128,
-                1, 1, "", {fontSize: 128}, "btn_player2"),
+                1, 1, "", { fontSize: 128 }, "btn_player2"),
 
             new BetterButton(this, 128, this.scale.height - 128,
-                1, 1, "", {fontSize: 128}, "btn_player3"),
+                1, 1, "", { fontSize: 128 }, "btn_player3"),
 
             new BetterButton(this, this.scale.width - 128, this.scale.height - 128,
-                1, 1, "", {fontSize: 128}, "btn_player4")
+                1, 1, "", { fontSize: 128 }, "btn_player4")
         ];
 
         for (let i = 0; i < 4; i++) {
@@ -503,25 +505,57 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ================== Setup the expression bars ==================== */
         this.m_Array_ExpressionBars = [
-            new BetterButton(this, this.scale.width / 2 - 390,  this.m_Image_CardBG.y, 0.9, 0.8, "", {fontSize: 48, color:"#ffffff"}, 'inputBar').SetAngle(-90),
-            new BetterButton(this, this.scale.width / 2 ,  this.m_Image_CardBG.y - 390, 0.9, 0.8, "", {fontSize: 48 , color:"#ffffff"}, 'inputBar'),
-            new BetterButton(this, this.scale.width / 2 + 390, this.m_Image_CardBG.y , 0.9, 0.8, "", {fontSize: 48, color:"#ffffff"}, 'inputBar').SetAngle(90),
-            new BetterButton(this, this.scale.width / 2,  this.m_Image_CardBG.y  + 390, 0.9, 0.8, "", {fontSize: 48, color:"#ffffff"}, 'inputBar').SetAngle(180)
+            new BetterButton(this, this.scale.width / 2 - 390, this.m_Image_CardBG.y, 0.9, 0.8, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(-90),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 390, 0.9, 0.8, "", { fontSize: 48, color: "#ffffff" }, 'inputBar'),
+            new BetterButton(this, this.scale.width / 2 + 390, this.m_Image_CardBG.y, 0.9, 0.8, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(90),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 390, 0.9, 0.8, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(180)
         ];
+
+        // And make them all un-interactible
+        this.m_Array_ExpressionBars.forEach((b) => { b.SetDisabled(1.0) })
         console.log(this.m_Array_ExpressionBars)
 
+
+        /* ============================Main menu button ================ */
         // Move the main menu button to the side (just a bit)
-        
         this.tweens.add({
             targets: this.btnGotoMenu,
             x: this.scale.width / 2 - 256,
             repeat: 0,
             ease: 'Power1'
         });
+
+        /* ==================== Difficulty image ================ */
+        // Show an image on the top of the page that displays the difficulty of the current card
+        switch (this.m_GameState.Difficulty) {
+            case Difficulty.Any:
+                this.imageDifficulty = this.add.image(this.scale.width / 2, -96, 'btn_allDifficulties');
+                break;
+
+            case Difficulty.Easy:
+                this.imageDifficulty = this.add.image(this.scale.width / 2, -96, 'btn_easy');
+                break;
+
+            case Difficulty.Medium:
+                this.imageDifficulty = this.add.image(this.scale.width / 2, -96, 'btn_medium');
+                break;
+
+            case Difficulty.Hard:
+                this.imageDifficulty = this.add.image(this.scale.width / 2, -96, 'btn_hard');
+                break;
+        }
+        this.imageDifficulty.setScale(0.8)
+        this.tweens.add({
+            targets: this.imageDifficulty,
+            y: 96,
+            repeat: 0,
+            ease: 'Power1'
+        });
+    
     }
 
 
 
-  
+
 
 }
