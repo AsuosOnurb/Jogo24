@@ -254,6 +254,14 @@ export class SingleplayerGame {
 
         }
     }
+    
+    IsPickingOperator () : boolean
+    {
+        return this.m_PlayerState === PlayerState.PickingOperator1 || 
+                this.m_PlayerState === PlayerState.PickingMiddleOperator || 
+                this.m_PlayerState === PlayerState.PickingOtherExpressionOperator ||
+                this.m_PlayerState === PlayerState.PickingLastOperator;
+    }
 }
 
 

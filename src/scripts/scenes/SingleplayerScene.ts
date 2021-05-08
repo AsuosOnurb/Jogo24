@@ -49,7 +49,7 @@ export class SingleplayerScene extends Phaser.Scene {
      Each button is associated with one of the 4 numbers.
     */
     private m_CardButtons: Array<BetterButton>;
-
+    private m_BtnUsed: Array<Boolean>;
     constructor() {
         super("SoloGame");
     }
@@ -148,10 +148,12 @@ export class SingleplayerScene extends Phaser.Scene {
 
         ]
 
+        this.m_BtnUsed = new Array<Boolean>();
         for (let i = 0; i < this.m_CardButtons.length; i++) {
             // Each button starts disabled
             this.m_CardButtons[i].SetDisabled();
             this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i));
+            this.m_BtnUsed[i] = false;
         }
 
         // This button lets the user reset his attempt at the current card.
@@ -261,6 +263,14 @@ export class SingleplayerScene extends Phaser.Scene {
        const stringRep =  this.m_GameState.NewNumber(this.m_CardButtons[clickedButtonIndex].GetText());
        this.textExpression.setText(stringRep)
        console.log(this.m_GameState.GetPlayerState());
+
+       // Mark button as used
+       this.m_BtnUsed[clickedButtonIndex] = true;
+
+       // DIsable number buttons if player is selecting an operator
+       if (this.m_GameState.IsPickingOperator())
+        this.DisableNumberButtons();
+       
     }
 
     HandleButtonClick_Operation(operation: string) {
@@ -268,6 +278,9 @@ export class SingleplayerScene extends Phaser.Scene {
       const stringRep =  this.m_GameState.NewOperation(operation);
       this.textExpression.setText(stringRep);
       console.log(this.m_GameState.GetPlayerState());
+
+      // Enable card buttons
+      this.EnableNumberButtons();
 
     }
 
@@ -285,4 +298,20 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
+    EnableNumberButtons() 
+    {
+        for(let i = 0; i < 4; i++)
+        {
+            if (this.m_BtnUsed[i] === false)
+                this.m_CardButtons[i].SetEnabled();
+        }
+    }
+
+    DisableNumberButtons()
+    {
+        for(let i = 0; i < 4; i++)
+        {
+            this.m_CardButtons[i].SetDisabled();
+        }
+    }
 }
