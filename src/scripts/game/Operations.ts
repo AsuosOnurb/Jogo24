@@ -1,229 +1,225 @@
 
-import { create, all } from 'mathjs'
-const config = {
-    number: 'Fraction'
+
+enum Operator {
+    Addition, Subtraction, Multiplication, Division, None
 };
-const mathJS = create(all, config);
 
 export class Operation {
-    public operand1: Operation | any;
-    public operand1BtnIndex: number;
-    public operand2: Operation | any;
-    public operand2BtnIndex: number;
+    private operand1: Operation | any;
+    private operand2: Operation | any;
+    private operator: Operator;
 
-    public operation: string;
-    public result;
+    private middleOperator: Operator;
+
+    private otherExpressionOperand1: Operation | any;
+    private otherExpressionOperand2: Operation | any;
+    private otherExpressionOperator: Operator;
 
     public stringExpression: string;
 
+    constructor() {
+        this.operand1 = undefined;
+        this.operator = Operator.None,
+            this.operand2 = undefined;
 
-    constructor ()
-    {
-        this.operation = "IDENTITY";
+
+        this.middleOperator = Operator.None,
+
+            this.otherExpressionOperand1 = undefined;
+        this.otherExpressionOperator = Operator.None;
+        this.otherExpressionOperand2 = undefined;
+
+        this.stringExpression = "NONE";
     }
 
-
-    Calculate() {
-
-
-        if (IsFraction(this.operand1) && IsFraction(this.operand2)) {
-            // op1 fraction,   op2 fraction
-
-            this.result = Operate_Fractions(this.operand1, this.operation, this.operand2);
-        }
-        else if (IsFraction(this.operand1) && !IsFraction(this.operand2))
-        {
-            // op1 fraction,    op2 operation
-            this.result = Operate_FractionOperation(this.operand1, this.operation, this.operand2);
-        }
-
-        else if (!IsFraction(this.operand1) && !IsFraction(this.operand2))
-        {
-             // op1 operation,   op2 operation
-            this.result = Operate_Operations(this.operand1, this.operation, this.operand2);
-
-        } 
-        else if (!IsFraction(this.operand1) && IsFraction(this.operand2))
-        {
-            // op1 operation,   op2 fraction
-            this.result = Operate_OperationFraction(this.operand1, this.operation, this.operand2);
-
-        } 
-
-        return this.result;
-    }
-
-    ToString() : string {
+    ToString(): string {
 
 
         let operand1Str;
         let operand2Str;
+        let operatorStr;
 
-        if (IsFraction(this.operand1)) {
-            operand1Str = this.operand1.toString();
-        }
-        else if (this.operand1 instanceof Operation) {
+        if (this.operand1 instanceof Operation)
             operand1Str = this.operand1.ToString();
-        }
-
-        if (IsFraction(this.operand2)) {
-            operand2Str = this.operand2.toString();
-        }
-        else {
-            operand2Str = this.operand2.ToString();
-        }
-
-        switch (this.operation) {
-            case "addition":
-                return `(${operand1Str} + ${operand2Str})`; 
-            case "subtraction":
-                return `(${operand1Str} - ${operand2Str})`;
-            case "multiplication":
-                return `${operand1Str}x${operand2Str}`; // Multiplication doesnt need Parentheses
-            case "division":
-                return `${operand1Str}/${operand2Str}`; // division doesnt need Parentheses
-            default:
-                return "";
-        }
-    }
-
-    SetOperand1(operand1, operand1Index: number) : void
-    {
-        this.operand1 = operand1;
-        this.operand1BtnIndex = operand1Index;
-    }
-
-    SetOperand2(operand2, operand2Index: number) : void
-    {
-        this.operand2 = operand2;
-        this.operand2BtnIndex = operand2Index;
-    }
-
-    SetOperator(operator: string)
-    {
-        this.operation = operator;
-    }
-
-   
-};
-
-export function OperandToString(operand) : string
-{
-    return OperationToString(operand);
-}
-
-export function OperationToString(operation)
-{
-
-    if (IsFraction(operation))
-    {
-        return FractionToString(operation);
-
-    }
-    
-    else 
-    {
-        if (operation.result.d != 1)
-            return `${operation.result.n}/${operation.result.d}`;
         else
-            return `${operation.result.n}`;
-
-    }
-}
-
-export function FractionToString(fraction) {
-    if (fraction.d === 1) {
-        return fraction.n.toString();
-    } else {
-        return `${fraction.n.toString()} / ${fraction.d.toString()}`;
-    }
-}
-
-export class OperationsStack {
-
-    private _Store: Operation[] = [];
-
-    Push(val: Operation): void {
-        this._Store.push(val);
-    }
-
-    Pop(): Operation | undefined {
-        return this._Store.pop()
-    }
+            operand1Str = this.operand1.toString();
 
 
-    IsEmpty(): boolean {
-        return this._Store.length === 0;
-    }
+        if (this.operand2 instanceof Operation)
+            operand2Str = this.operand2.ToString();
+        else
+            operand2Str = this.operand2.toString();
 
-}
 
-function IsFraction(obj): boolean {
-    return obj.n != undefined && obj.d != undefined;
-}
-
-function Operate_Fractions(op1, operation, op2)
-{
-    let res;
-    switch (operation) {
-        case "addition":
-            {
-                res = mathJS.add(
-                    mathJS.fraction(op1),
-                    mathJS.fraction(op2)
-                );
+        switch (this.operator) {
+            case Operator.Addition:
+                operatorStr = "+";
                 break;
-            }
 
-        case "subtraction":
-            {
-                res = mathJS.subtract(
-                    mathJS.fraction(op1),
-                    mathJS.fraction(op2)
-                );
-
+            case Operator.Subtraction:
+                operatorStr = "-";
                 break;
-            }
 
-        case "multiplication":
-            {
-                res = mathJS.multiply(
-                    mathJS.fraction(op1),
-                    mathJS.fraction(op2)
-                );
-
-
+            case Operator.Multiplication:
+                operatorStr = "*";
                 break;
-            }
 
-        case "division":
-            {
-                res = mathJS.divide(
-                    mathJS.fraction(op1),
-                    mathJS.fraction(op2)
-                );
+            case Operator.Division:
+                operatorStr = "/";
                 break;
-            }
+        }
+
+        //// Second part of the expression
+        let otherExpressionOperand1Str;
+        let otherExpressionOperand2Str;
+        let otherExpressionOperatorStr;
+
+        if (this.otherExpressionOperand1 instanceof Operation)
+            otherExpressionOperand1Str = this.otherExpressionOperand1.ToString();
+        else
+            otherExpressionOperand1Str = this.otherExpressionOperand1.toString();
+
+
+        if (this.otherExpressionOperand2 instanceof Operation)
+            otherExpressionOperand2Str = this.otherExpressionOperand2.ToString();
+        else
+            otherExpressionOperand2Str = this.otherExpressionOperand2.toString();
+
+        switch (this.otherExpressionOperator) {
+            case Operator.Addition:
+                otherExpressionOperatorStr = "+";
+                break;
+
+            case Operator.Subtraction:
+                otherExpressionOperatorStr = "-";
+                break;
+
+            case Operator.Multiplication:
+                otherExpressionOperatorStr = "*";
+                break;
+
+            case Operator.Division:
+                otherExpressionOperatorStr = "/";
+                break;
+        }
+
+        let middleOperatorStr;
+        // Finaly, the middle operator
+        switch (this.middleOperator) {
+            case Operator.Addition:
+                middleOperatorStr = "+";
+                break;
+
+            case Operator.Subtraction:
+                middleOperatorStr = "-";
+                break;
+
+            case Operator.Multiplication:
+                middleOperatorStr = "*";
+                break;
+
+            case Operator.Division:
+                middleOperatorStr = "/";
+                break;
+        }
+
+        /// Return the final string representation of the arithmetic expression
+
+
+        if (otherExpressionOperand1Str === undefined)
+            return `${operand1Str} ${operatorStr} ${operand2Str}`;
+
+        else if (this.otherExpressionOperator == undefined)
+            return `(${operand1Str} ${operatorStr} ${operand2Str}) ? (${otherExpressionOperand1Str}`;
+
+        else if (this.otherExpressionOperand2 == undefined)
+            return `(${operand1Str} ${operatorStr} ${operand2Str}) ? (${otherExpressionOperand1Str} ${otherExpressionOperatorStr}`;
+        
+        else if (this.middleOperator == undefined)
+            return `(${operand1Str} ${operatorStr} ${operand2Str}) ? (${otherExpressionOperand1Str} ${otherExpressionOperatorStr})`;
+        
+        else 
+            return `(${operand1Str} ${operatorStr} ${operand2Str}) ${middleOperatorStr} (${otherExpressionOperand1Str} ${otherExpressionOperatorStr})`;
+    }   
+
+    SetOperand1(operand1): void {
+        this.operand1 = operand1;
     }
 
-    return res;
-}
+    SetOperand2(operand2): void {
+        this.operand2 = operand2;
+    }
 
-function Operate_Operations(op1: Operation, operation: string, op2:Operation) 
-{
-    return Operate_Fractions(op1.result, operation, op2.result);
-}
+    SetOperator(operator: string) {
+        switch (operator) {
+            case "addition":
+                this.operator = Operator.Addition;
+                break;
+            case "subtraction":
+                this.operator = Operator.Subtraction;
+                break;
+            case "multiplication":
+                this.operator = Operator.Multiplication;
+                break;
+            case "division":
+                this.operator = Operator.Division;
+                break;
+            default:
+                break;
+        }
+    }
 
-function Operate_OperationFraction(op1: Operation, operation: string, op2)
-{
-    return Operate_Fractions(op1.result, operation, op2);
-}
+    SetOtherExpressionOperand1(operand1): void {
+        this.otherExpressionOperand1 = operand1;
+    }
 
-function Operate_FractionOperation(op1, operation: string, op2: Operation)
-{
-    return Operate_Fractions(op1, operation, op2.result);
+    SetOtherExpressionOperand2(operand2): void {
+        this.otherExpressionOperand2 = operand2;
+    }
 
-}
+    SetOtherExpressionOperator(operator: string) {
+        switch (operator) {
+            case "addition":
+                this.otherExpressionOperator = Operator.Addition;
+                break;
+            case "subtraction":
+                this.otherExpressionOperator = Operator.Subtraction;
+                break;
+            case "multiplication":
+                this.otherExpressionOperator = Operator.Multiplication;
+                break;
+            case "division":
+                this.otherExpressionOperator = Operator.Division;
+                break;
+            default:
+                break;
+        }
+    }
+
+    SetMiddleOperator(operator: string) {
+        switch (operator) {
+            case "addition":
+                this.middleOperator = Operator.Addition;
+                break;
+            case "subtraction":
+                this.middleOperator = Operator.Subtraction;
+                break;
+            case "multiplication":
+                this.middleOperator = Operator.Multiplication;
+                break;
+            case "division":
+                this.middleOperator = Operator.Division;
+                break;
+            default:
+                break;
+        }
+    }
+
+    AppendToString(str: string) : string 
+    {
+        this.stringExpression = `${this.stringExpression}${str}`;
+        return this.stringExpression;
+    }
 
 
-
+};

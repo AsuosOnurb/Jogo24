@@ -254,7 +254,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         if (this.m_GameState.IsPickingOperand1()) {
 
-            this.m_GameState.GetCurrentOperation().SetOperand1(operand, clickedButtonIndex);
+            // this.m_GameState.GetCurrentOperation().SetOperand1(operand, clickedButtonIndex);
             this.m_GameState.NextPlayerState();
 
             // Disable the number button
@@ -269,16 +269,11 @@ export class MultiplayerScene extends Phaser.Scene {
         }
         else {
 
-            this.m_GameState.GetCurrentOperation().SetOperand2(operand, clickedButtonIndex);
+          
 
-            // Do the math on the current operation
-            const operationResult = this.m_GameState.PerformCurrentOperation();
+            
 
-            // Display result as a fraction if the denominator is not 1
-            if (operationResult.d != 1)
-                this.m_CardButtons[clickedButtonIndex].SetText(operationResult.n.toString() + "/" + operationResult.d.toString());
-            else
-                this.m_CardButtons[clickedButtonIndex].SetText(operationResult.n.toString());
+          
 
 
             // Display the operation to all the bars
