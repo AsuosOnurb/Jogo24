@@ -39,7 +39,8 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
         // Define some events for when the mouse is over, out of the button for some pretty effects.
         // Also setup some effect where the button 'gets pressed' when it is clicked.
-        this.m_RandomHoverAngle = RandomInt(-6, 6); // The amount of degrees the button performs when it is being hovered.
+        const randomAngles = [- 6, -5, -4, 4, 5, 6];
+        this.m_RandomHoverAngle = randomAngles[Math.floor(Math.random() * randomAngles.length)]// The amount of degrees the button performs when it is being hovered.
         this.SetupPointerHoverEffect();
         this.SetupPointerOutEffect();
         // this.SetupPointerPressEffect();

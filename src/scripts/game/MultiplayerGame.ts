@@ -6,8 +6,9 @@ const mathJS = create(all, config);
 
 
 
-import { Operation, OperationsStack } from './Operations'
+import { Operation } from './Operations'
 import { CardGenerator, Difficulty } from "./CardGenerator";
+import { OperationsStack } from './OperationStack';
 
 
 enum PlayerState {
@@ -77,19 +78,7 @@ export class MultiplayerGame {
 
     }
 
-    PerformCurrentOperation() {
-        let operationResult = this.CurrentOperation.Calculate();
-
-        // The operation was fully performed. Add it to the stack
-        this.m_OperationsStack.Push(this.CurrentOperation);
-
-        // The second operand button holds the result of the operation
-        this.m_Numbers[this.CurrentOperation.operand2BtnIndex] = this.CurrentOperation;
-
-
-
-        return operationResult;
-    }
+   
 
     NewCard(): string {
         this.m_CurrentCard = CardGenerator.generateCard(this.Difficulty);
@@ -166,8 +155,8 @@ export class MultiplayerGame {
     }
 
     IsCardWon(): boolean {
-        return (this.CurrentOperation.result.n === 24 && this.CurrentOperation.result.d === 1);
-
+        // return (this.CurrentOperation.result.n === 24 && this.CurrentOperation.result.d === 1);
+        return true
     }
 
     AwardCurrentPlayer(): number {
@@ -213,9 +202,7 @@ export class MultiplayerGame {
             return undefined;
 
         this.CurrentOperation = lastOperation;
-        // Update Numbers to the last operation results
-        this.m_Numbers[lastOperation.operand1BtnIndex] = lastOperation.operand1;
-        this.m_Numbers[lastOperation.operand2BtnIndex] = lastOperation.operand2;
+        
 
 
         return lastOperation;

@@ -7,12 +7,11 @@ const config = {
 const mathJS = create(all, config);
 
 
-import { OperationToString } from '../game/Operations'
 import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../game/Solutions'
 import { CountdownTimer } from '../game/CountdownTimer'
-import { SoloGame } from '../game/SoloGame';
+import {SingleplayerGame} from '../game/SingleplayerGame'
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -20,7 +19,7 @@ export class SingleplayerScene extends Phaser.Scene {
     private isInstanced: boolean = false;
 
     private m_Data; // The data object that comes from the main menu
-    private m_GameState: SoloGame;
+    private m_GameState: SingleplayerGame;
     private countdownTimer: CountdownTimer;
 
 
@@ -50,7 +49,7 @@ export class SingleplayerScene extends Phaser.Scene {
      Each button is associated with one of the 4 numbers.
     */
     private m_CardButtons: Array<BetterButton>;
-
+    private m_BtnUsed: Array<Boolean>;
     constructor() {
         super("SoloGame");
     }
@@ -98,7 +97,7 @@ export class SingleplayerScene extends Phaser.Scene {
     init(data) {
 
         this.m_Data = data;
-        this.m_GameState = new SoloGame(this.m_Data.difficulty);
+        this.m_GameState = new SingleplayerGame(this.m_Data.difficulty);
 
         /**
          * Register event handlers/listeners onyl if the scene hasn't been started before.
@@ -149,10 +148,12 @@ export class SingleplayerScene extends Phaser.Scene {
 
         ]
 
+        this.m_BtnUsed = new Array<Boolean>();
         for (let i = 0; i < this.m_CardButtons.length; i++) {
             // Each button starts disabled
             this.m_CardButtons[i].SetDisabled();
-            this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.m_GameState.GetNumbers()[i]));
+            this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i));
+            this.m_BtnUsed[i] = false;
         }
 
         // This button lets the user reset his attempt at the current card.
@@ -167,23 +168,19 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Addition operation button
         this.btnOperationAdd = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_addition");
-        this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "addition"));
-        this.btnOperationAdd.SetDisabled();
+        this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "+"));
 
         // Subtraction operation button
         this.btnOperationSubtract = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_subtraction");
-        this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "subtraction"));
-        this.btnOperationSubtract.SetDisabled();
+        this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "-"));
 
         // Multiplication operation button
         this.btnOperationMultiply = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_multiplication");
-        this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "multiplication"));
-        this.btnOperationMultiply.SetDisabled();
+        this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "*"));
 
         // Division operation button
         this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
-        this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "division"));
-        this.btnOperationDivide.SetDisabled();
+        this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "/"));
 
         // 'New Card' button
         this.m_BtnNewCard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
@@ -220,12 +217,9 @@ export class SingleplayerScene extends Phaser.Scene {
         // Disable 'Backspace' button
         this.m_BtnUndo.SetDisabled();
 
-        // Disable Operation buttons
-        this.btnOperationAdd.SetDisabled();
-        this.btnOperationSubtract.SetDisabled();
-        this.btnOperationMultiply.SetDisabled();
-        this.btnOperationDivide.SetDisabled();
 
+
+    
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(generatedCard)}`);
 
@@ -237,41 +231,7 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
     CheckSolution(): void {
-        // Check if we have 3 disabled/picked numbers.
-        let disabledCardCount = 0;
-        for (let i = 0; i < 4; i++) {
-            if (!this.m_CardButtons[i].IsEnabled())
-                disabledCardCount += 1;
-        }
-
-        /*
-            If 3 numbers are disabled, then the player is at the last operation.
-            In that case, then we have to check if the player won or not.
-        */
-        if (disabledCardCount === 3) {
-
-            if (this.m_GameState.IsCardWon()) {
-                // Update game state and 'Total correct' text
-                let totalCorrect = this.m_GameState.IncrTotalCorrect();
-                this.textTotalCorrect.setText(totalCorrect.toString());
-            }
-            else {
-                // Update game state and 'Total incorrect' text
-                let totalWrong = this.m_GameState.IncrTotalWrong();
-                this.textTotalWrong.setText(totalWrong.toString());
-            }
-
-
-            // We can disable the 'Reset' and 'Backspace' buttons
-            this.m_BtnReset.SetDisabled();
-            this.m_BtnUndo.SetDisabled();
-
-            /*
-             TODO: Maybe also pause the timer here?
-             At this stage the player either failed or won the card answer. Since he has to pick a new card, maybe we should not
-             be counting time.
-            */
-        }
+        
     }
 
     DisableAllButtons() {
@@ -281,96 +241,47 @@ export class SingleplayerScene extends Phaser.Scene {
         this.m_BtnReset.SetDisabled();
         this.m_BtnUndo.SetDisabled();
 
+        /*
         this.btnOperationAdd.SetDisabled();
         this.btnOperationSubtract.SetDisabled();
         this.btnOperationMultiply.SetDisabled();
         this.btnOperationDivide.SetDisabled();
+        */
         this.m_BtnNewCard.SetDisabled();
     }
 
     // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
     HandleButtonClick_Reset(): void {
 
-        this.m_GameState.ResetState();
-
-
-        // Then reset the number buttons
-        let currentCard = this.m_GameState.GetCurrentCard();
-        for (let i = 0; i < 4; i++) {
-            this.m_CardButtons[i].SetText(currentCard[i]);
-            this.m_CardButtons[i].SetEnabled();
-        }
-
-        // Disable the 'Reset' and 'Backspace' button
-        this.m_BtnUndo.SetDisabled();
-        this.m_BtnReset.SetDisabled();
     }
 
-    HandleButtonClick_Number(clickedButtonIndex: number, operand): void {
+    HandleButtonClick_Number(clickedButtonIndex: number): void {
+        console.log(`Cicked number ${this.m_CardButtons[clickedButtonIndex].GetText()}`);
 
-        if (this.m_GameState.IsPickingOperand1()) {
-            this.m_GameState.GetCurrentOperation().SetOperand1(operand, clickedButtonIndex);
-            this.m_GameState.NextPlayerState();
+        this.m_CardButtons[clickedButtonIndex].SetDisabled();
+        // Register new number on the current operation
+       const stringRep =  this.m_GameState.NewNumber(this.m_CardButtons[clickedButtonIndex].GetText());
+       this.textExpression.setText(stringRep)
+       console.log(this.m_GameState.GetPlayerState());
 
-            // Disable the number button
-            this.m_CardButtons[clickedButtonIndex].SetDisabled();
+       // Mark button as used
+       this.m_BtnUsed[clickedButtonIndex] = true;
 
-            // We have to enable the operation buttons 
-            this.btnOperationAdd.SetEnabled();
-            this.btnOperationSubtract.SetEnabled();
-            this.btnOperationMultiply.SetEnabled();
-            this.btnOperationDivide.SetEnabled();
-
-            // Enable 'Backspace' button
-            this.m_BtnUndo.SetEnabled();
-
-            // Enable 'Reset' button
-            this.m_BtnReset.SetEnabled();
-        }
-        else {
-
-            this.m_GameState.GetCurrentOperation().SetOperand2(operand, clickedButtonIndex);
-
-
-            // Do the math on the current operation
-            const operationResult = this.m_GameState.PerformCurrentOperation();
-
-            // Display result as a fraction if the denominator is not 1
-            /*
-            if (operationResult.d != 1)
-                this.m_CardButtons[clickedButtonIndex].SetText(operationResult.n.toString() + "/" + operationResult.d.toString());
-            else
-                this.m_CardButtons[clickedButtonIndex].SetText(operationResult.n.toString());
-            */
-
-            // Display the operation to the screen
-            this.textExpression.setText(this.m_GameState.GetCurrentOperation().ToString());
-
-            // Here is where we check for the solution
-            // If 3 cards are picked/disable and the the result is 24, then the player won.
-            this.CheckSolution();
-
-
-            // The operation was completed. Now the player has to pick a new first operand again.
-            this.m_GameState.ResetOperationState();
-
-            // Operation buttons can be disabled
-            this.btnOperationAdd.SetDisabled();
-            this.btnOperationSubtract.SetDisabled();
-            this.btnOperationMultiply.SetDisabled();
-            this.btnOperationDivide.SetDisabled();
-
-
-        }
-
+       // DIsable number buttons if player is selecting an operator
+       if (this.m_GameState.IsPickingOperator())
+        this.DisableNumberButtons();
+       
     }
 
     HandleButtonClick_Operation(operation: string) {
-        // Update the current operation
-        this.m_GameState.GetCurrentOperation().SetOperator(operation);
 
-        // Player chose the operation. Now he has to pick the second operand
-        this.m_GameState.SetPickingOperand2();
+      const stringRep =  this.m_GameState.NewOperation(operation);
+      this.textExpression.setText(stringRep);
+      console.log(this.m_GameState.GetPlayerState());
+
+      // Enable card buttons
+      this.EnableNumberButtons();
+
     }
 
     /**
@@ -381,59 +292,26 @@ export class SingleplayerScene extends Phaser.Scene {
     HandleButtonClick_Undo(): void {
 
 
-        if (this.m_GameState.IsPickingOperand1()) {
-            /* 
-                The user has not yet picked the first operand.
-                The fact that he pressed 'Undo' means that he wants to go back to the previous operation. 
-                We pop the top-most operation on the stack to revert to those values.
-            */
-            let lastOperation = this.m_GameState.RevertToLastOperation();
-            if (lastOperation === undefined)
-                return;
-
-            // We have to change the buttons to the previous numbers and enable them
-            this.m_CardButtons[lastOperation.operand1BtnIndex].SetText(OperationToString(lastOperation.operand1));
-            this.m_CardButtons[lastOperation.operand1BtnIndex].SetEnabled();
-
-            this.m_CardButtons[lastOperation.operand2BtnIndex].SetText(OperationToString(lastOperation.operand2));
-            this.m_CardButtons[lastOperation.operand2BtnIndex].SetEnabled();
-
-            // Update the text expression bar
-            console.log(this.m_GameState.GetCurrentOperation())
-            this.textExpression.setText(this.m_GameState.GetCurrentOperation().ToString());
-        }
-        else {
-            /*
-                Player already picked the first operand. 
-                If he pressed 'Undo', that means he wants to re-chose the first operand.
-                That means reseting the operation state.
-            */
-
-            // Re-enable the number buttons that were used
-            const currentOperation = this.m_GameState.GetCurrentOperation();
-            this.m_CardButtons[currentOperation.operand1BtnIndex].SetEnabled();
-
-            // Reset the operation state
-            this.m_GameState.ResetOperationState();
-
-            this.textExpression.setText("");
-        }
-
-        // Check if the operation stack is now empty. If it is, then disable some buttons.
-        if (this.m_GameState.IsOperationStackEmpty()) {
-            this.m_BtnReset.SetDisabled();
-            this.m_BtnUndo.SetDisabled();
-
-            this.btnOperationAdd.SetDisabled();
-            this.btnOperationSubtract.SetDisabled();
-            this.btnOperationMultiply.SetDisabled();
-            this.btnOperationDivide.SetDisabled();
-
-            this.textExpression.setText("");
-        }
+      
 
 
 
     }
 
+    EnableNumberButtons() 
+    {
+        for(let i = 0; i < 4; i++)
+        {
+            if (this.m_BtnUsed[i] === false)
+                this.m_CardButtons[i].SetEnabled();
+        }
+    }
+
+    DisableNumberButtons()
+    {
+        for(let i = 0; i < 4; i++)
+        {
+            this.m_CardButtons[i].SetDisabled();
+        }
+    }
 }
