@@ -11,6 +11,8 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     private m_OriginalScaleX: number;
     private m_OriginalScaleY: number;
 
+    private m_YoYoTween: Phaser.Tweens.Tween;
+
     /**
      *  We want buttons to be fun! When the mouse hovers over them, they grow with a small angle 
      **/
@@ -44,6 +46,11 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.SetupPointerHoverEffect();
         this.SetupPointerOutEffect();
         // this.SetupPointerPressEffect();
+
+
+        // Add tween effect when user lifts the button
+        this.SetUpPointerUpEffect()
+        this.on('pointerup', () => this.m_YoYoTween.play());
     }
 
 
@@ -125,5 +132,20 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
             this.setScale(this.m_OriginalScaleX, this.m_OriginalScaleY);
         });
     }
+
+    SetUpPointerUpEffect(): void {
+        this.m_YoYoTween = this.scene.tweens.add({
+            targets: this,
+            props: {
+                scale : 0.8,
+            },
+            ease: 'Power1',
+            duration: 100,
+            yoyo: true,
+            paused: true,
+        });
+    }
+
+
 }
 

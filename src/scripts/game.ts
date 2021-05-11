@@ -7,7 +7,8 @@ import { RankingScene } from './scenes/RankingScene'
 import { PreloadScene } from './scenes/preloadScene'
 
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js'
-import { UserInfo } from './game/backend/UserInfo'
+import { PlayerData } from './game/backend/PlayerData'
+import { LoginData } from './game/backend/LoginData'
 
 
 const config = {
@@ -40,5 +41,4 @@ const config = {
 
 
 var game = new Phaser.Game(config);
-
-var userInfo = UserInfo.GetInstance();
+var userLoginData = LoginData.GetInstance();

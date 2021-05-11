@@ -1,4 +1,4 @@
-import { UserInfo } from "./UserInfo";
+import { LoginData } from "./LoginData";
 
 
 export class BackendConnection {
@@ -21,9 +21,9 @@ export class BackendConnection {
         return BackendConnection.Instance;
     }
 
-    GetUserInfoInstance() : UserInfo 
+    GetUserInfoInstance() : LoginData 
     {
-        return UserInfo.GetInstance();
+        return LoginData.GetInstance();
     }
 
     /**
@@ -45,13 +45,13 @@ export class BackendConnection {
                 success: (response) =>  {
                     if (response != "false") {
 
-                        UserInfo.SetUser(response.split(",")[0]);                               // username
-                         UserInfo.SetFirstName(response.split(",")[1]);                                 // username
-                         UserInfo.SetSchool(response.split(",")[2]);                                 // username
-                         UserInfo.SetClass(response.split(",")[3]);                                 // username
+                        LoginData.SetUser(response.split(",")[0]);                               // username
+                        LoginData.SetFirstName(response.split(",")[1]);                                 // username
+                        LoginData.SetSchool(response.split(",")[2]);                                 // username
+                        LoginData.SetClass(response.split(",")[3]);                                 // username
 
 
-                        UserInfo.SetLocalData();
+                        LoginData.SetLocalData();
 
                         scene.scene.stop();
                         scene.scene.resume("startScene");
@@ -64,7 +64,7 @@ export class BackendConnection {
 
                 },
                 error:  (response) => {
-                    UserInfo.SetUser('');
+                    LoginData.SetUser('');
                     alert("Falha de ligação, por favor verifique a sua conexão")
                 }
             })

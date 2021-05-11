@@ -3,7 +3,7 @@ import { AlignGrid } from '../better/AlignGrid';
 import { BetterButton } from '../better/BetterButton';
 import { BetterText } from '../better/BetterText';
 import {BackendConnection} from '../game/backend/BackendConnection';
-import { UserInfo } from '../game/backend/UserInfo';
+import { LoginData } from '../game/backend/LoginData';
 
 export class RankingScene extends Phaser.Scene {
 
@@ -309,7 +309,7 @@ export class RankingScene extends Phaser.Scene {
                         scene.df = new Date().toISOString().slice(0, 10)
                     }
 
-                    this.m_Backend.updateTOP(scene.di, scene.df, UserInfo.GetClass(), UserInfo.GetSchool(), scene.flag, scene.dificulty, scene);
+                    this.m_Backend.updateTOP(scene.di, scene.df, LoginData.GetClass(), LoginData.GetSchool(), scene.flag, scene.dificulty, scene);
                 });
 
                 let tmp = xx.slice(2, 4) + '-' + yy.slice(2, 4);
@@ -375,7 +375,7 @@ export class RankingScene extends Phaser.Scene {
             this.normal_icon.setFillStyle('0xffffff');
             this.easy_icon.setFillStyle('0x000000');
             this.dificulty = 1;
-            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty, this);
 
         });
 
@@ -387,7 +387,7 @@ export class RankingScene extends Phaser.Scene {
             this.normal_icon.setFillStyle('0x000000');
             this.easy_icon.setFillStyle('0xffffff');
             this.dificulty = 2;
-            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty, this);
         });
 
         this.dificil.setInteractive({ useHandCursor: true });
@@ -397,7 +397,7 @@ export class RankingScene extends Phaser.Scene {
             this.normal_icon.setFillStyle('0xffffff');
             this.easy_icon.setFillStyle('0xffffff');
             this.dificulty = 3;
-            this.m_Backend.updateTOP(this.di, this.df,UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df,LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty, this);
         });
 
         this.filtro = new BetterText(this, 0,0, 'Filtro', { fontSize: 25, color: '#403217' });
@@ -447,7 +447,7 @@ export class RankingScene extends Phaser.Scene {
             this.turma_icon.setFillStyle('0xffffff');
 
             this.flag = 2;
-            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass(), UserInfo.GetSchool(), this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty, this);
 
         });
 
@@ -462,7 +462,7 @@ export class RankingScene extends Phaser.Scene {
             this.turma_icon.setFillStyle('0xffffff');
 
             this.flag = 1;
-            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass(), UserInfo.GetSchool, this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool, this.flag, this.dificulty, this);
         });
         this.turma_filtro.setInteractive({ useHandCursor: true });
         this.turma_filtro.input.hitArea.setTo(-50, -5, this.turma_filtro.width + 60, this.turma_filtro.height);
@@ -476,14 +476,14 @@ export class RankingScene extends Phaser.Scene {
 
             this.flag = 0;
 
-            this.m_Backend.updateTOP(this.di, this.df, UserInfo.GetClass, UserInfo.GetSchool, this.flag, this.dificulty, this);
+            this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass, LoginData.GetSchool, this.flag, this.dificulty, this);
         });
 
         this.todos_icon.setFillStyle('0x000000');
         this.easy_icon.setFillStyle('0x000000');
 
 
-        if (UserInfo.GetUser() == '') {
+        if (LoginData.GetUser() == '') {
             this.filtro.visible = false;
             this.turma_filtro.visible = false;
             this.turma_icon.visible = false;

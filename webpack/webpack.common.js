@@ -5,7 +5,7 @@ const { InjectManifest } = require('workbox-webpack-plugin')
 const webpack = require('webpack')
 
 module.exports = {
-  entry: ['./src/scripts/game.ts', './webpack/credits.js'],
+  entry: ['./src/scripts/game.ts'],
   output: {
     path: path.resolve(__dirname, '../dist'),
     filename: '[name].bundle.js',
@@ -31,7 +31,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProgressPlugin(),
-    new HtmlWebpackPlugin({ gameName: 'My Phaser Game', template: 'src/index.html' }),
+    new HtmlWebpackPlugin({ gameName: 'Jogo do 24', template: 'src/index.html' }),
     new CopyWebpackPlugin({
       patterns: [
         { from: 'src/assets', to: 'assets' },

@@ -1,6 +1,6 @@
-export class UserInfo
+export class LoginData
 {
-    private static Instance: UserInfo;
+    private static Instance: LoginData;
     private static m_User: string;
     private static m_FirstName: string;
     private static m_Class: string;
@@ -8,20 +8,20 @@ export class UserInfo
 
 
     private  constructor() {
-        UserInfo.SetUser('');
-        UserInfo.SetFirstName('');
-        UserInfo.SetClass('');
-        UserInfo.SetSchool('');
+        LoginData.SetUser('');
+        LoginData.SetFirstName('');
+        LoginData.SetClass('');
+        LoginData.SetSchool('');
     }
 
-    static GetInstance() : UserInfo 
+    static GetInstance() : LoginData 
     {
-        if (!UserInfo.Instance)
+        if (!LoginData.Instance)
         {
-            UserInfo.Instance = new UserInfo();
+            LoginData.Instance = new LoginData();
         }
         
-        return UserInfo.Instance
+        return LoginData.Instance
     }
 
     // sessionStorage format:
@@ -56,8 +56,8 @@ export class UserInfo
         }
         
         let storeInfo = {
-            'user': UserInfo.GetUser(), 'firstName': UserInfo.GetFirstName(),
-            'turma': UserInfo.GetClass(), 'escola': UserInfo.GetSchool()};
+            'user': LoginData.GetUser(), 'firstName': LoginData.GetFirstName(),
+            'turma': LoginData.GetClass(), 'escola': LoginData.GetSchool()};
 
 
         let info = JSON.stringify(storeInfo);
@@ -69,11 +69,11 @@ export class UserInfo
      * Delete user login info
      */
     Logout() {
-        UserInfo.SetUser('');
-        UserInfo.SetFirstName('');
-        UserInfo.SetClass('');
-        UserInfo.SetSchool('');
-        UserInfo.SetLocalData();
+        LoginData.SetUser('');
+        LoginData.SetFirstName('');
+        LoginData.SetClass('');
+        LoginData.SetSchool('');
+        LoginData.SetLocalData();
     }
 
 
@@ -84,16 +84,16 @@ export class UserInfo
      */
     ParseData(data) {
         if(data['user']){ // returns false if undefined/null
-            UserInfo.SetUser(data['user']);
+            LoginData.SetUser(data['user']);
         }
         if (data['firstName']) { // returns false if undefined/null
-            UserInfo.SetFirstName(data['firstName']);
+            LoginData.SetFirstName(data['firstName']);
         }
         if (data['turma']) { // returns false if undefined/null
-            UserInfo.SetClass(data['turma']);
+            LoginData.SetClass(data['turma']);
         }
         if (data['escola']) { // returns false if undefined/null
-            UserInfo.SetSchool(data['escola']);
+            LoginData.SetSchool(data['escola']);
         }
         
     }

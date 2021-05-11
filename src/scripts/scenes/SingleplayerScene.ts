@@ -12,6 +12,7 @@ import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../game/Solutions'
 import { CountdownTimer } from '../game/CountdownTimer'
 import {SingleplayerGame} from '../game/SingleplayerGame'
+import { LoginData } from '../game/backend/LoginData';
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -88,7 +89,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 120, this.DisableAllButtons.bind(this), 320, this.scale.height / 2 + 20, 64);
+            new CountdownTimer(this, 20, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64);
 
         this.textSolution =
             new BetterText(this, 32, 256, "", { fontSize: 32 });
@@ -232,22 +233,35 @@ export class SingleplayerScene extends Phaser.Scene {
 
     CheckSolution(): void {
         
+        const isSolutionCorrect: boolean = true;
+
+        if (isSolutionCorrect)
+            this.SavePlayerData(true); // Register a win
+        else 
+            this.SavePlayerData(false); // Register a loss
     }
 
-    DisableAllButtons() {
+    /**
+     * Activated when the countdown timer rings (reaches zero).
+     * Activates only once during the whole game.
+     */
+    NoTimeLeft() {
         for (let i = 0; i < 4; i++)
             this.m_CardButtons[i].SetDisabled();
 
         this.m_BtnReset.SetDisabled();
         this.m_BtnUndo.SetDisabled();
-
-        /*
+        
         this.btnOperationAdd.SetDisabled();
         this.btnOperationSubtract.SetDisabled();
         this.btnOperationMultiply.SetDisabled();
         this.btnOperationDivide.SetDisabled();
-        */
+        
+
         this.m_BtnNewCard.SetDisabled();
+
+        // Save player data
+        this.SavePlayerData(false); // Register another loss
     }
 
     // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
@@ -292,10 +306,6 @@ export class SingleplayerScene extends Phaser.Scene {
     HandleButtonClick_Undo(): void {
 
 
-      
-
-
-
     }
 
     EnableNumberButtons() 
@@ -313,5 +323,17 @@ export class SingleplayerScene extends Phaser.Scene {
         {
             this.m_CardButtons[i].SetDisabled();
         }
+    }
+
+    SavePlayerData(playerWon: boolean) : void 
+    {
+        if (playerWon)
+            // UserInfo.IncrementWins();
+            console.log("save win")
+        else 
+            // UserInfo.IncrementLosses();
+            console.log("save loss")
+
+       //  UserInfo.SaveLocalData();
     }
 }
