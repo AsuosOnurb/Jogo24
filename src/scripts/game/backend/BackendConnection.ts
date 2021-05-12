@@ -1,28 +1,26 @@
 import { LoginData } from "./LoginData";
 
+import * as $ from 'jquery';
 
 export class BackendConnection {
 
     private static Instance: BackendConnection;
-    private pontuacao;
-    private pontuacaoGlobal;
+    private mPontuacao;
+    private mPontuacaoGlobal;
 
 
-    private constructor ()
-    {
-        
+    private constructor() {
+
     }
 
-    GetInstance()  : BackendConnection
-    {
+    GetInstance(): BackendConnection {
         if (!BackendConnection.Instance)
             BackendConnection.Instance = new BackendConnection();
 
         return BackendConnection.Instance;
     }
 
-    GetUserInfoInstance() : LoginData 
-    {
+    GetUserInfoInstance(): LoginData {
         return LoginData.GetInstance();
     }
 
@@ -32,7 +30,7 @@ export class BackendConnection {
      * @param {string} password Password to try to login with
      * @param {Phaser.Scene} scene scope in with the login is being made
      */
-    login(username, password, scene) {
+    Login(username, password) {
 
         $.ajax
             ({
@@ -42,7 +40,7 @@ export class BackendConnection {
                 crossDomain: true,
                 cache: false,
 
-                success: (response) =>  {
+                success: (response) => {
                     if (response != "false") {
 
                         LoginData.SetUser(response.split(",")[0]);                               // username
@@ -50,20 +48,11 @@ export class BackendConnection {
                         LoginData.SetSchool(response.split(",")[2]);                                 // username
                         LoginData.SetClass(response.split(",")[3]);                                 // username
 
-
                         LoginData.SetLocalData();
-
-                        scene.scene.stop();
-                        scene.scene.resume("startScene");
-                    }
-                    else {
-                        // alert("Utilizador ou Password Errados");
-                        scene.loginErrorMsg.visible = true;
-                        return -1;
                     }
 
                 },
-                error:  (response) => {
+                error: (response) => {
                     LoginData.SetUser('');
                     alert("Falha de ligação, por favor verifique a sua conexão")
                 }
@@ -75,7 +64,7 @@ export class BackendConnection {
     /**
      * Check if there is an active session
      */
-    sessionVerify() {
+    SessionVerify() {
         $.ajax
             ({
                 type: "POST",
@@ -84,26 +73,26 @@ export class BackendConnection {
                 cache: false,
                 success: function (response) {
                     if (response != "not") {
-                        this.m_UserInfo.user = response.split(",")[0];                               // username
-                        this.m_UserInfo.firstName = response.split(",")[1];                          // primeiro nome do aluno
-                        this.m_UserInfo.escola = response.split(",")[2];                             // codigo da escola
-                        this.m_UserInfo.turma = response.split(",")[3];                              // turma do aluno
-                        this.m_UserInfo.setLocalData();
+                        LoginData.SetUser(response.split(",")[0]);
+                        LoginData.SetFirstName(response.split(",")[1]);
+                        LoginData.SetSchool(response.split(",")[2]);
+                        LoginData.SetClass(response.split(",")[3]);
+                        LoginData.SetLocalData();
                     }
                     else {
-                        this.m_UserInfo.user = "";
+                        LoginData.SetUser("");
                         return;
 
                     }
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    this.m_UserInfo.user = "";
+                    LoginData.SetUser("");
                     alert("Falha de ligação, por favor verifique a sua conexão")
                 }
             })
     }
 
-    destroySession() {
+    DestroySession() {
         $.ajax
             ({
                 type: "POST",
@@ -111,10 +100,10 @@ export class BackendConnection {
                 data: "action=des",
                 cache: false,
                 success: function (response) {
-                    this.m_UserInfo.logout();
+                    LoginData.Logout();
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    this.m_UserInfo.user = "";
+                    LoginData.SetUser("");
                     alert("Falha de ligação, por favor verifique a sua conexão")
                 }
             })
@@ -126,13 +115,16 @@ export class BackendConnection {
      * @param {string} password Password to try to login with
      * @param {Phaser.Scene} scene scope in with the login is being made
      */
-    getTOP(di, df, globalCodTurma, globalCodEscola, tipoTOP, scene) {
+    GetTOP(di, df, globalCodTurma, globalCodEscola, tipoTOP, scene) {
         var data;
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df + "&mturma=" + globalCodTurma + "&mescola=" + globalCodEscola + "&flag=2" + "&tip=" + tipoTOP + "&tC=trapbeeTOP",
+                data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df + "&mturma=" + globalCodTurma +
+                    "&mescola=" + globalCodEscola +
+                    "&flag=2" + "&tip=" + tipoTOP +
+                    "&tC=trapbeeTOP",
                 crossDomain: true,
                 cache: false,
                 success: function (response) {
@@ -184,13 +176,17 @@ export class BackendConnection {
     }
 
 
-    updateTOP(di, df, globalCodTurma, globalCodEscola, flag, tipoTOP, scene) {
-        var data;
+    static UpdateTOP(di, df, globalCodTurma, globalCodEscola, flag, tipoTOP) {
+        let data;
+        let success: boolean = false;
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df + "&mturma=" + globalCodTurma + "&mescola=" + globalCodEscola + "&flag=" + flag + "&tip=" + tipoTOP + "&tC=trapbeeTOP",
+                data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df +
+                    "&mturma=" + globalCodTurma +
+                    "&mescola=" + globalCodEscola +
+                    "&flag=" + flag + "&tip=" + tipoTOP + "&tC=trapbeeTOP",
                 crossDomain: true,
                 cache: false,
                 success: function (response) {
@@ -221,30 +217,32 @@ export class BackendConnection {
                         });
 
                     }
-                    if (data.length < 4) {
-                        scene.table.setItems([]);
-                    }
-                    else {
-                        scene.table.setItems(data);
-                    }
-                    scene.table.refresh();
+                 
+                    success = true;
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     data = [];
                     alert("Falha de ligação, por favor verifique a sua conexão");
+                    success = false;
                 }
             })
+
+            return {success, data};
     }
 
 
 
-    verificaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTOP, scene) {
+    VerificaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTOP, scene) {
 
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=maximoGlobal&codAl=" + username + "&codTurma=" + globalCodTurma + "&codEscola=" + globalCodEscola + "&pont=" + pontuacao + "&tip=" + tipoTOP + "&t=trapbeeHypatia&tC=trapbeeTOP",
+                data: "action=maximoGlobal&codAl=" + username +
+                    "&codTurma=" + globalCodTurma +
+                    "&codEscola=" + globalCodEscola +
+                    "&pont=" + pontuacao + "&tip=" + tipoTOP +
+                    "&t=trapbeeHypatia&tC=trapbeeTOP",
                 crossDomain: true,
                 cache: false,
                 success: function (response) {
@@ -258,7 +256,7 @@ export class BackendConnection {
                     scene.endText = scene.add.text(0, 0, '', { fontStyle: 'bold', fontSize: 40, color: '#463516', wordWrap: { width: 700, useAdvancedWrap: true }, align: 'center' });
                     scene.endText.setOrigin(0.4, 0.5);
                     scene.aGrid.placeAtIndex(136, scene.endText);
- 
+
                     pontuacao = parseFloat(pontuacao);
 
                     if (pontuacao > 0 && scene.ended == 1) {
@@ -267,7 +265,7 @@ export class BackendConnection {
                         scene.endText2.setOrigin(0.4, 0.5);
                         scene.aGrid.placeAtIndex(220, scene.endText2);
 
-                        if (this.m_UserInfo.user != '') {
+                        if (LoginData.GetUser() != '') {
                             if (data[0] > pontuacao && pontuacao > 0) {
                                 if (data[3] > pontuacao) {//top global
                                     scene.endText2 = scene.endText2.setText(username + ", conseguiste um novo record ABSOLUTO! Com " + pontuacao + " pontos. Vê o teu resultado no TOP 100 absoluto.");
@@ -310,10 +308,10 @@ export class BackendConnection {
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     if (scene.ended == 1) {
-                        scene.endText = scene.add.text(0, 0, 'Erro de ligação', { fontFamily: 'myfont2', fontSize: 40, color: '#463516' });
+                        scene.endText = scene.add.text(0, 0, 'Erro de ligação', { fontSize: 40, color: '#463516' });
                         scene.endText.setOrigin(0.5, 0.5);
                         scene.aGrid.placeAtIndex(157, scene.endText);
-                        scene.endText2 = scene.add.text(0, 0, 'Verifica o estado da ligação á internet', { fontFamily: 'myfont2', fontSize: 40, color: '#463516' });
+                        scene.endText2 = scene.add.text(0, 0, 'Verifica o estado da ligação á internet', { fontSize: 40, color: '#463516' });
                         scene.endText2.setOrigin(0.45, 0.5);
                         scene.aGrid.placeAtIndex(220, scene.endText2);
                     }
@@ -324,13 +322,18 @@ export class BackendConnection {
     }
 
 
-    gravaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTop) {
+    GravaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTop) {
 
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=insereA&musername=" + username + "&mturma=" + globalCodTurma + "&mescola=" + globalCodEscola + "&mpontuacao=" + pontuacao + "&mtipo=" + tipoTop + "&t=trapbeeHypatia&tC=trapbeeTOP",
+                data: "action=insereA&musername=" + username +
+                    "&mturma=" + globalCodTurma +
+                    "&mescola=" + globalCodEscola +
+                    "&mpontuacao=" + pontuacao +
+                    "&mtipo=" + tipoTop +
+                    "&t=trapbeeHypatia&tC=trapbeeTOP",
                 crossDomain: true,
                 cache: false,
                 success: function (response) {
@@ -343,23 +346,28 @@ export class BackendConnection {
 
 
 
-    getRecords(username, globalCodTurma, globalCodEscola, tipoTOP, scene) {
+    GetRecords(username, globalCodTurma, globalCodEscola, tipoTOP, scene) {
 
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=maximoGlobal&codAl=" + username + "&codTurma=" + globalCodTurma + "&codEscola=" + globalCodEscola + "&pont=" + 0 + "&tip=" + tipoTOP + "&t=trapbeeHypatia&tC=trapbeeTOP",
+                data: "action=maximoGlobal&codAl=" + username +
+                    "&codTurma=" + globalCodTurma +
+                    "&codEscola=" + globalCodEscola +
+                    "&pont=" + 0 +
+                    "&tip=" + tipoTOP +
+                    "&t=trapbeeHypatia&tC=trapbeeTOP",
                 crossDomain: true,
                 cache: false,
-                success: function (response) {
+                success: (response) => {
 
-                    this.pontuacao = parseFloat(response.split("vlMin4=")[1]);               //melhor resultado pessoal
+                    this.mPontuacao = parseFloat(response.split("vlMin4=")[1]);               //melhor resultado pessoal
 
-                    this.pontuacaoGlobal = parseFloat(response.split("vlMin1=")[1].split("&")[0]); //minimo global - TOP 100 
+                    this.mPontuacaoGlobal = parseFloat(response.split("vlMin1=")[1].split("&")[0]); //minimo global - TOP 100 
 
 
-                    if (response.split("vlMin4=")[1] <= (response.split("vlMin1=")[1].split("&")[0]) && this.pontuacao > 0) {
+                    if (response.split("vlMin4=")[1] <= (response.split("vlMin1=")[1].split("&")[0]) && this.mPontuacao > 0) {
                         scene.recordTOP.visible = true;
                         scene.record.visible = false;
 

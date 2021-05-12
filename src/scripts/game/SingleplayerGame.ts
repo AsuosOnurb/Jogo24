@@ -206,7 +206,7 @@ export class SingleplayerGame {
 
             case PlayerState.PickingLastOperator:
                 this.m_PlayerState = PlayerState.PickingLastOperand;
-                return (this.CurrentString += op);
+                return (this.CurrentString += ` ${op} `);
 
 
 

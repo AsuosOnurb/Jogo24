@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import Phaser, { Game } from 'phaser'
 import { RandomInt } from '../game/Utils';
 import { BetterText } from './BetterText'
 
@@ -8,26 +8,33 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     private m_TextObject: BetterText;
     private m_IsEnabled: boolean;
 
-    private m_OriginalScaleX: number;
-    private m_OriginalScaleY: number;
-
-    private m_YoYoTween: Phaser.Tweens.Tween;
+    private m_OriginalScale: number;
 
     /**
-     *  We want buttons to be fun! When the mouse hovers over them, they grow with a small angle 
+     * Tween animation that triggers everytime the mouse/pointer enters/hovers the button.
+     */
+    private m_Tween_ButtonHover:  Phaser.Tweens.Tween;
+
+    /**
+     * Tween animation that triggers everytime the mouse/pointer exits/(stops hovering) the button.
+     */
+    private m_Tween_ButtonOut:  Phaser.Tweens.Tween;
+    private m_Tween_ButtonPress: Phaser.Tweens.Tween;
+
+    /**
+     *  Tween animation that triggers everytime the button is pressed
      **/
     private m_RandomHoverAngle: number;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, xScale: number, yScale: number, text: string | undefined, textStyle: any, texture: string | Phaser.Textures.Texture) {
+    constructor(scene: Phaser.Scene, x: number, y: number, xScale: number, yScale: number, text: string | undefined, textStyle: any, texture: string | Phaser.Textures.Texture, optionalAngle?: number | undefined) {
         super(scene, x, y, texture);
 
 
         // add the button itself to the scene
         scene.add.existing(this);
 
-        this.m_OriginalScaleX = xScale;
-        this.m_OriginalScaleY = yScale;
         this.setScale(xScale, yScale);
+        this.m_OriginalScale = this.scale;
 
         // Set the text
         if (!(text === undefined || textStyle === undefined))
@@ -41,16 +48,27 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
         // Define some events for when the mouse is over, out of the button for some pretty effects.
         // Also setup some effect where the button 'gets pressed' when it is clicked.
-        const randomAngles = [- 6, -5, -4, 4, 5, 6];
-        this.m_RandomHoverAngle = randomAngles[Math.floor(Math.random() * randomAngles.length)]// The amount of degrees the button performs when it is being hovered.
-        this.SetupPointerHoverEffect();
-        this.SetupPointerOutEffect();
-        // this.SetupPointerPressEffect();
+        if (optionalAngle === undefined)
+        {
+            const randomAngles = [- 6, -5, -4, 4, 5, 6];
+            this.m_RandomHoverAngle = randomAngles[Math.floor(Math.random() * randomAngles.length)]// The amount of degrees the button performs when it is being hovered.
+        }
+        else 
+        {
+            this.m_RandomHoverAngle = optionalAngle;
+        }
+       
+        
+        // Setup tween animations
+        
+        if (!scene.game.device.input.touch)
+        {
+            this.SetupButtonHoverAnimation(); 
+            this.SetupButtonOutAnimation();
+        }
+        this.SetupButtonPressAnimation()
 
-
-        // Add tween effect when user lifts the button
-        this.SetUpPointerUpEffect()
-        this.on('pointerup', () => this.m_YoYoTween.play());
+        
     }
 
 
@@ -103,47 +121,62 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.m_TextObject.setFlipX(flip);
     }
 
-    SetupPointerHoverEffect(): void {
 
-        this.on('pointerover', () => {
+    SetupButtonOutAnimation(): void {
 
-            this.angle += this.m_RandomHoverAngle;
-            this.scaleX += 0.1;
-            this.scaleY += 0.1;
-        });
-    }
-
-    SetupPointerOutEffect(): void {
-        this.on('pointerout', () => {
-            this.angle -= this.m_RandomHoverAngle;
-            this.scaleX -= 0.1;
-            this.scaleY -= 0.1;
-        });
-
-    }
-
-    SetupPointerPressEffect(): void {
-        this.on('pointerdown', () => {
-            this.scaleX -= 0.1;
-            this.scaleY -= 0.1;
-        });
-
-        this.on('pointerup', () => {
-            this.setScale(this.m_OriginalScaleX, this.m_OriginalScaleY);
-        });
-    }
-
-    SetUpPointerUpEffect(): void {
-        this.m_YoYoTween = this.scene.tweens.add({
+        this.m_Tween_ButtonOut = this.scene.tweens.add({
             targets: this,
             props: {
-                scale : 0.8,
+                scale: this.m_OriginalScale,
+                angle: 0
+
+            },
+            ease: 'Power1',
+            duration: 70,
+            paused: true
+        });
+
+        this.on('pointerout', () => this.m_Tween_ButtonOut.play());
+
+    }
+
+    SetupButtonHoverAnimation(): void {
+
+        this.m_Tween_ButtonHover = this.scene.tweens.add({
+            targets: this,
+            props: {
+                scale: this.m_OriginalScale + 0.2,
+                angle: this.m_RandomHoverAngle
+            },
+            ease: 'Power1',
+            duration: 70,
+            paused: true
+
+        });
+
+        this.on('pointerover', () => this.m_Tween_ButtonHover.play());
+
+    }
+
+    SetupButtonPressAnimation(): void {
+
+        this.m_Tween_ButtonPress = this.scene.tweens.add({
+            targets: this,
+            props: {
+                scale : 0.6,
             },
             ease: 'Power1',
             duration: 100,
-            yoyo: true,
             paused: true,
+            yoyo: true,
         });
+
+        this.on('pointerup', () => {
+            this.SetDisabled(1);
+            this.m_Tween_ButtonPress.play();
+            this.SetEnabled(1);
+        });
+
     }
 
 

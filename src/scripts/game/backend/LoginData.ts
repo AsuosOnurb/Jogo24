@@ -68,7 +68,7 @@ export class LoginData
     /**
      * Delete user login info
      */
-    Logout() {
+    static Logout() {
         LoginData.SetUser('');
         LoginData.SetFirstName('');
         LoginData.SetClass('');
@@ -82,7 +82,7 @@ export class LoginData
      * Parse retrieve data from browser's sessionstorage
      * @param {JSON} data - retrieved data in Json format
      */
-    ParseData(data) {
+    ParseData(data: JSON) {
         if(data['user']){ // returns false if undefined/null
             LoginData.SetUser(data['user']);
         }

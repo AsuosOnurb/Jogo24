@@ -90,16 +90,16 @@ export  class MainMenuScene extends Phaser.Scene {
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy');
+        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy', 0);
         this.btnPlaySoloEasy.on("pointerup", () => this.StartSoloGame(Difficulty.Easy));
 
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium');
+        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium', 0);
         this.btnPlaySoloMedium.on("pointerup", () => this.StartSoloGame(Difficulty.Medium));
 
         // Play Solo Hard button
-        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard');
+        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard', 0);
         this.btnPlaySoloHard.on("pointerup", () => this.StartSoloGame(Difficulty.Hard));
 
 

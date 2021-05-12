@@ -89,7 +89,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 20, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64);
+            new CountdownTimer(this, 90, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64);
 
         this.textSolution =
             new BetterText(this, 32, 256, "", { fontSize: 32 });
@@ -184,13 +184,11 @@ export class SingleplayerScene extends Phaser.Scene {
         this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "/"));
 
         // 'New Card' button
-        this.m_BtnNewCard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
-        this.m_BtnNewCard.setScale(0.6, 0.6);
+        this.m_BtnNewCard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 0.6, 0.6, "", { fontSize: 32 }, "btn_playCard");
         this.m_BtnNewCard.on("pointerup", () => this.NewCard());
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, 96, this.scale.height - 96, 0.5, 0.5, "", { fontSize: 64 }, 'btn_gotoMenu');
-        this.btnGotoMenu.setScale(0.8, 0.8);
+        this.btnGotoMenu = new BetterButton(this, 96, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, 'btn_gotoMenu');
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
