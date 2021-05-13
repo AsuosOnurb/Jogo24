@@ -10,7 +10,8 @@
     "bundle": "npm run build",
     "serve": "serve dist",
     "format": "prettier --check src/scripts/**",
-    "format:write": "prettier --write src/scripts/**"
+    "format:write": "prettier --write src/scripts/**",
+    "heroku-postbuild": "webpack -p"
   },
   "keywords": [
     "Phaser",
@@ -57,6 +58,7 @@
     "workbox-webpack-plugin": "^6.0.2"
   },
   "dependencies": {
+    "express": "^4.17.1",
     "jquery": "^3.6.0",
     "mathjs": "^9.3.2",
     "phaser": "^3.53.1",
