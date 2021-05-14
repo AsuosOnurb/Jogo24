@@ -6,6 +6,9 @@ import { BetterText } from './BetterText'
 
 
 export class BetterButton extends Phaser.GameObjects.Sprite {
+
+    private mCurrentScene: Phaser.Scene;
+
     private m_TextObject: BetterText;
     private m_IsEnabled: boolean;
 
@@ -30,7 +33,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     constructor(scene: Phaser.Scene, x: number, y: number, xScale: number, yScale: number, text: string | undefined, textStyle: any, texture: string | Phaser.Textures.Texture, optionalAngle?: number | undefined) {
         super(scene, x, y, texture);
 
-
+        this.mCurrentScene = scene;
         // add the button itself to the scene
         scene.add.existing(this);
 
@@ -125,7 +128,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
     SetupButtonOutAnimation(): void {
 
-        this.m_Tween_ButtonOut = this.scene.tweens.add({
+        this.m_Tween_ButtonOut = this.mCurrentScene.tweens.add({
             targets: this,
             props: {
                 scale: this.m_OriginalScale,
@@ -143,7 +146,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
     SetupButtonHoverAnimation(): void {
 
-        this.m_Tween_ButtonHover = this.scene.tweens.add({
+        this.m_Tween_ButtonHover = this.mCurrentScene.tweens.add({
             targets: this,
             props: {
                 scale: this.m_OriginalScale + 0.2,
@@ -161,13 +164,13 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
     SetupButtonPressAnimation(): void {
 
-        this.m_Tween_ButtonPress = this.scene.tweens.add({
+        this.m_Tween_ButtonPress = this.mCurrentScene.tweens.add({
             targets: this,
             props: {
                 scale : 0.8
             },
             ease: 'Power1',
-            duration: 120,
+            duration: 70,
             paused: true,
             yoyo: true,
         });
@@ -185,6 +188,50 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     {
         this.setVisible(false);
         this.m_TextObject.setVisible(true);
+    }
+
+    SetTextColor(hexcolor: string) : void 
+    {
+        this.m_TextObject.setColor(hexcolor);
+    }
+
+    PlayCorrectExpressionTween() : void 
+    {
+        
+
+        /*
+        this.scene.tweens.add({
+            targets: this,
+            props: {
+                y: {value: 64, duration: 150, ease:"Bounce.easeInOut", yoyo:true}
+            },
+            
+        });*/
+
+        this.scene.tweens.add({
+            targets: [this, this.m_TextObject],
+            y: this.mCurrentScene.scale.height / 2,
+            scale: 2,
+            duration: 1000,
+            ease: 'Elastic.InOut',
+            easeParams: [ 1.5, 0.5 ],
+            delay: 0,
+            yoyo: true
+        });
+    }
+
+    PlayIncorrectExpressionTween() : void 
+    {
+        this.scene.tweens.add({
+            targets: [this, this.m_TextObject],
+            y: this.y + 64,
+            scale: 1.4,
+            duration: 250,
+            ease: 'Elastic.InOut',
+            easeParams: [ 2, 2 ],
+            delay: 0,
+            yoyo: true
+        });
     }
 
 
