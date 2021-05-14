@@ -1,12 +1,5 @@
 import Phaser from 'phaser'
 
-import { create, all } from 'mathjs'
-const config = {
-    number: 'Fraction'
-};
-const mathJS = create(all, config);
-
-
 import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../game/Solutions'
@@ -117,8 +110,6 @@ export class SingleplayerScene extends Phaser.Scene {
         }
     }
 
-
-
     Setup_Labels() {
 
 
@@ -227,7 +218,7 @@ export class SingleplayerScene extends Phaser.Scene {
         // Reset game state
         this.m_GameState.ResetState();
         this.m_GameState.SetCard(generatedCard);
-        console.log(this.m_GameState);
+        // console.log(this.m_GameState);
 
 
         // Start the timer
@@ -267,15 +258,12 @@ export class SingleplayerScene extends Phaser.Scene {
         this.SavePlayerData(false); // Register another loss
     }
 
-    // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
-    HandleButtonClick_Reset(): void {
-
-    }
+    
 
     HandleButtonClick_Number(clickedButtonIndex: number): void {
 
         const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
-        console.log("Picked number " + String(pickedNumber));
+        // console.log("Picked number " + String(pickedNumber));
 
 
         // Disbale the number we just picked if it is the first operand
@@ -297,6 +285,39 @@ export class SingleplayerScene extends Phaser.Scene {
             // Update the button text if the button we just clicked was the 2nd operand
             const expression = this.m_GameState.CompleteOperation();
             this.m_CardButtons[clickedButtonIndex].SetText(expression);
+
+
+            /*
+                We can also check if this is the last available/enabled button.
+                If it is, then it means we now must check if the solution is correct
+            */
+           let usedCount = 0;
+            for(let i = 0; i < 4; i++)
+                if(this.m_BtnUsed[i] === true)
+                    usedCount++;
+
+            
+            if (usedCount === 3) {
+                const won: boolean = this.m_GameState.CheckSolution(expression);
+
+                if (won) {
+                    this.m_GameState.IncrTotalCorrect();
+                    console.log("Player won")
+                    this.ShowPlayerWon(expression);
+                }
+
+                else {
+                    this.m_GameState.IncrTotalWrong();
+                    console.log("Player lost")
+                    this.ShowPlayerLost(expression);
+
+                }
+
+                // Disable all numbers and operations
+                this.DisableNumberButtons();
+                this.DisableOperationButtons()
+            }
+
         }
 
         this.m_GameState.NextState();
@@ -306,8 +327,8 @@ export class SingleplayerScene extends Phaser.Scene {
         if (this.m_GameState.IsPickingOperator())
             this.DisableNumberButtons();
 
-        console.log(this.m_GameState.StateToString());
-        console.log(this.m_GameState);
+        //console.log(this.m_GameState.StateToString());
+        //console.log(this.m_GameState);
 
     }
 
@@ -318,11 +339,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Enable card buttons
         this.EnableNumberButtons();
-
-        console.log(this.m_GameState.StateToString());
-        console.log(this.m_GameState);
-
-
     }
 
     /**
@@ -332,8 +348,27 @@ export class SingleplayerScene extends Phaser.Scene {
      */
     HandleButtonClick_Undo(): void {
 
+    }
+
+    // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
+    HandleButtonClick_Reset(): void {
 
     }
+
+
+    ShowPlayerWon(expression: string) : void 
+    {
+        this.textExpression.setText(expression);
+        this.textExpression.setColor("green");
+    }
+
+    ShowPlayerLost(expression: string) : void 
+    {
+        this.textExpression.setText(expression);
+        this.textExpression.setColor("red");
+
+    }
+
 
     EnableNumberButtons() {
         for (let i = 0; i < 4; i++) {
@@ -346,6 +381,14 @@ export class SingleplayerScene extends Phaser.Scene {
         for (let i = 0; i < 4; i++) {
             this.m_CardButtons[i].SetDisabled();
         }
+    }
+    
+    DisableOperationButtons() : void 
+    {
+        this.btnOperationAdd.SetDisabled();
+        this.btnOperationSubtract.SetDisabled();
+        this.btnOperationDivide.SetDisabled();
+        this.btnOperationMultiply.SetDisabled();
     }
 
     SavePlayerData(playerWon: boolean): void {

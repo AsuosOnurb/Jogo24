@@ -58,6 +58,7 @@
     "workbox-webpack-plugin": "^6.0.2"
   },
   "dependencies": {
+    "exact-math": "^2.2.3",
     "express": "^4.17.1",
     "jquery": "^3.6.0",
     "mathjs": "^9.3.2",

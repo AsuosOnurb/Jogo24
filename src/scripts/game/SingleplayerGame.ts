@@ -3,6 +3,9 @@
 import { Operation } from "./Operations";
 import { CardGenerator, Difficulty } from "./CardGenerator";
 import { OperationsStack } from "./OperationStack";
+import { evaluate } from 'mathjs'
+import { IsNumeric } from "./Utils";
+
 
 export enum PlayerState {
     PickingOperand1,
@@ -55,8 +58,7 @@ export class SingleplayerGame {
         return this.mCurrentCard;
     }
 
-    AddOperand(operand: string) : void 
-    {
+    AddOperand(operand: string): void {
         switch (this.m_PlayerState) {
             case PlayerState.PickingOperand1:
                 this.mOperand1 = operand;
@@ -67,18 +69,34 @@ export class SingleplayerGame {
         }
     }
 
-    AddOperator(operator: string) : void 
-    {
+    AddOperator(operator: string): void {
         this.mOperator = operator;
     }
 
-    CompleteOperation() : string 
-    {
-        return `(${this.mOperand1} ${this.mOperator} ${this.mOperand2})`;
+    CompleteOperation(): string {
+
+        if (IsNumeric(this.mOperand1) && IsNumeric(this.mOperand2)) {
+            return `${this.mOperand1} ${this.mOperator} ${this.mOperand2}`;
+        }
+        else if (IsNumeric(this.mOperand1) && !IsNumeric(this.mOperand2)) {
+            return `${this.mOperand1} ${this.mOperator} (${this.mOperand2})`;
+
+        } else if (!IsNumeric(this.mOperand1) && IsNumeric(this.mOperand2)) {
+            return `(${this.mOperand1}) ${this.mOperator} ${this.mOperand2}`;
+        }
+        else if (!IsNumeric(this.mOperand1) && !IsNumeric(this.mOperand2)) {
+            return `(${this.mOperand1}) ${this.mOperator} (${this.mOperand2})`;
+        }
+
+        return "ERROR";
     }
 
-    GetCurrentState() : PlayerState 
-    {
+    CheckSolution(expression: string): boolean {
+        const val = evaluate(expression);
+        return val === 24;
+    }
+
+    GetCurrentState(): PlayerState {
         return this.m_PlayerState;
     }
 
@@ -108,7 +126,7 @@ export class SingleplayerGame {
     ResetState(): void {
         // Player has to pick the first operand
         this.m_PlayerState = PlayerState.PickingOperand1;
-        this.mOperand1 = this.mOperand2 = this.mOperator =  "";
+        this.mOperand1 = this.mOperand2 = this.mOperator = "";
     }
 
 
@@ -141,8 +159,7 @@ export class SingleplayerGame {
         return this.mTotalWrong;
     }
 
-    SetCard(card: string) : void
-    {
+    SetCard(card: string): void {
         this.mCurrentCard = card;
     }
 
