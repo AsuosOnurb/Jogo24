@@ -164,18 +164,16 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.m_Tween_ButtonPress = this.scene.tweens.add({
             targets: this,
             props: {
-                scale : 0.6,
+                scale : this.scale * 0.7,
             },
             ease: 'Power1',
-            duration: 100,
+            duration: 120,
             paused: true,
             yoyo: true,
         });
 
         this.on('pointerup', () => {
-            this.SetDisabled(1);
             this.m_Tween_ButtonPress.play();
-            this.SetEnabled(1);
         });
 
     }

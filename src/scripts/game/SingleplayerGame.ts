@@ -4,39 +4,26 @@ import { Operation } from "./Operations";
 import { CardGenerator, Difficulty } from "./CardGenerator";
 import { OperationsStack } from "./OperationStack";
 
-enum PlayerState {
+export enum PlayerState {
     PickingOperand1,
-    PickingOperator1,
+    PickingOperator,
     PickingOperand2,
-
-    CrossRoads,
-    PickingMiddleOperator,
-
-    PickingOtherExpressionOperand1,
-    PickingOtherExpressionOperand2,
-    PickingOtherExpressionOperator,
-
-
-    PickingLastOperator,
-    PickingLastOperand,
-
-    Done
-
-
-
 }
 
 export class SingleplayerGame {
 
-    public readonly Difficulty: Difficulty;
-    private m_CurrentCard: string;
+    public readonly mDifficulty: Difficulty;
+    private mCurrentCard: string;
 
-    private m_TotalCorrect: number;
-    private m_TotalWrong: number;
+    private mTotalCorrect: number;
+    private mTotalWrong: number;
 
     private m_PlayerState: PlayerState;
 
-    private CurrentString: string;
+    private mOperand1: string;
+    private mOperand2: string;
+    private mOperator: string;
+
 
 
     /**
@@ -48,87 +35,68 @@ export class SingleplayerGame {
     constructor(diff: Difficulty) {
 
         // Assign the difficulty
-        this.Difficulty = diff;
+        this.mDifficulty = diff;
 
         // Generate a card based on the difficulty
-        this.m_CurrentCard = "????";
+        this.mCurrentCard = "????";
 
-        this.m_TotalCorrect = 0;
-        this.m_TotalWrong = 0;
+        this.mTotalCorrect = 0;
+        this.mTotalWrong = 0;
 
         this.m_PlayerState = PlayerState.PickingOperand1;
 
-        this.CurrentString = ""
-
     }
-
 
 
     NewCard(): string {
-        this.m_CurrentCard = CardGenerator.generateCard(this.Difficulty);
+        this.mCurrentCard = CardGenerator.generateCard(this.mDifficulty);
         this.ResetState();
 
-        return this.m_CurrentCard;
+        return this.mCurrentCard;
     }
 
-    /*
-    NextPlayerState(): void {
+    AddOperand(operand: string) : void 
+    {
         switch (this.m_PlayerState) {
             case PlayerState.PickingOperand1:
-                this.m_PlayerState = PlayerState.PickingOperation;
-                console.log("Player is now on PickingOperation");
+                this.mOperand1 = operand;
                 break;
-
-            case PlayerState.PickingOperation:
-                this.m_PlayerState = PlayerState.PickingOperand2;
-                console.log("Player is now on PickingOperand2");
-
-                break;
-
             case PlayerState.PickingOperand2:
-                this.m_PlayerState = PlayerState.PickingOperand1;
-                console.log("Player is now on PickingOperand1");
-
-                break;
+                this.mOperand2 = operand;
+                break
         }
-
     }
-    */
 
-    /*
-    PreviousPlayerState(): void {
+    AddOperator(operator: string) : void 
+    {
+        this.mOperator = operator;
+    }
+
+    CompleteOperation() : string 
+    {
+        return `(${this.mOperand1} ${this.mOperator} ${this.mOperand2})`;
+    }
+
+    GetCurrentState() : PlayerState 
+    {
+        return this.m_PlayerState;
+    }
+
+    NextState(): void {
         switch (this.m_PlayerState) {
-            case PlayerState.PickingOperation:
-                this.m_PlayerState = PlayerState.PickingOperand1;
-                console.log("Player is now on PickingOperan1");
-
+            case PlayerState.PickingOperand1:
+                this.m_PlayerState = PlayerState.PickingOperator;
                 break;
-
             case PlayerState.PickingOperand2:
-                this.m_PlayerState = PlayerState.PickingOperation;
-                console.log("Player is now on PickingOperation");
-
+                this.m_PlayerState = PlayerState.PickingOperand1;
+                break;
+            case PlayerState.PickingOperator:
+                this.m_PlayerState = PlayerState.PickingOperand2;
                 break;
             default:
                 break;
         }
     }
-    */
-
-
-    IncrTotalCorrect(): number {
-        this.m_TotalCorrect += 1;
-        return this.m_TotalCorrect;
-    }
-
-    IncrTotalWrong(): number {
-        this.m_TotalWrong += 1;
-        return this.m_TotalWrong;
-    }
-
-
-
-
 
     /**
      * Resets the game state to one where the player is:
@@ -140,82 +108,11 @@ export class SingleplayerGame {
     ResetState(): void {
         // Player has to pick the first operand
         this.m_PlayerState = PlayerState.PickingOperand1;
-
-        this.CurrentString = "";
-
-
+        this.mOperand1 = this.mOperand2 = this.mOperator =  "";
     }
 
-    NewNumber(num: string): string {
 
-        switch (this.m_PlayerState) {
-            case PlayerState.PickingOperand1:
-                this.m_PlayerState = PlayerState.PickingOperator1;
-                return (this.CurrentString += num);
-
-            case PlayerState.PickingOperand2:
-                this.m_PlayerState = PlayerState.CrossRoads;
-                return (this.CurrentString += num);
-
-            case PlayerState.CrossRoads:
-                this.m_PlayerState = PlayerState.PickingOtherExpressionOperator;
-                return (this.CurrentString = ` (${this.CurrentString}) ? (${num}`);
-
-            case PlayerState.PickingOtherExpressionOperand2:
-                this.m_PlayerState = PlayerState.PickingMiddleOperator;
-                return (this.CurrentString += `${num})`);
-
-            case PlayerState.PickingOtherExpressionOperand1:
-                this.m_PlayerState = PlayerState.PickingLastOperator;
-                this.CurrentString = `(${this.CurrentString} ${num})`;
-                return this.CurrentString;
-
-            case PlayerState.PickingLastOperand:
-                this.m_PlayerState = PlayerState.Done;
-                return (this.CurrentString += num);
-            default:
-                break;
-        }
-
-        return "";
-
-    }
-
-    NewOperation(op: string): string {
-        switch (this.m_PlayerState) {
-            case PlayerState.PickingOperator1:
-                this.m_PlayerState = PlayerState.PickingOperand2;
-                return (this.CurrentString += ` ${op} `);
-
-            case PlayerState.PickingOtherExpressionOperator:
-                this.m_PlayerState = PlayerState.PickingOtherExpressionOperand2;
-                return (this.CurrentString += ` ${op} `);
-
-            case PlayerState.PickingMiddleOperator:
-                this.m_PlayerState = PlayerState.Done;
-
-                const splits = this.CurrentString.split('?')
-                console.log(splits);
-                this.CurrentString = splits[0] + op + splits[1];
-                return this.CurrentString;
-
-            case PlayerState.CrossRoads:
-                this.m_PlayerState = PlayerState.PickingOtherExpressionOperand1;
-                this.CurrentString = `(${this.CurrentString}) ${op}`;
-                return this.CurrentString;
-
-            case PlayerState.PickingLastOperator:
-                this.m_PlayerState = PlayerState.PickingLastOperand;
-                return (this.CurrentString += ` ${op} `);
-
-
-
-        }
-
-        return this.CurrentString;
-    }
-
-    GetPlayerState(): string {
+    StateToString(): string {
         switch (this.m_PlayerState) {
             case PlayerState.PickingOperand1:
                 return "Picking operand 1";
@@ -223,45 +120,32 @@ export class SingleplayerGame {
             case PlayerState.PickingOperand2:
                 return "Picking operand 2";
 
-            case PlayerState.PickingOperator1:
-                return "Picking operator 1";
-
-            case PlayerState.PickingOtherExpressionOperand1:
-                return "Picking other operand 1";
-
-            case PlayerState.PickingOtherExpressionOperand2:
-                return "Picking other operand 2";
-
-            case PlayerState.PickingOtherExpressionOperator:
-                return "Picking other operator";
-
-            case PlayerState.PickingMiddleOperator:
-                return "Picking middle operator";
-
-            case PlayerState.CrossRoads:
-                return "At crossroads";
-
-            case PlayerState.PickingLastOperand:
-                return "Picking last operand";
-
-                case PlayerState.PickingLastOperator:
-                    return "Picking last operator";
-
-            case PlayerState.Done:
-                return "Done";
-            default:
-                return ""
+            case PlayerState.PickingOperator:
+                return "Picking operator ";
 
         }
     }
-    
-    IsPickingOperator () : boolean
-    {
-        return this.m_PlayerState === PlayerState.PickingOperator1 || 
-                this.m_PlayerState === PlayerState.PickingMiddleOperator || 
-                this.m_PlayerState === PlayerState.PickingOtherExpressionOperator ||
-                this.m_PlayerState === PlayerState.PickingLastOperator;
+
+    IsPickingOperator(): boolean {
+        return this.m_PlayerState === PlayerState.PickingOperator;
     }
+
+
+    IncrTotalCorrect(): number {
+        this.mTotalCorrect += 1;
+        return this.mTotalCorrect;
+    }
+
+    IncrTotalWrong(): number {
+        this.mTotalWrong += 1;
+        return this.mTotalWrong;
+    }
+
+    SetCard(card: string) : void
+    {
+        this.mCurrentCard = card;
+    }
+
 }
 
 

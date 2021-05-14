@@ -11,8 +11,7 @@ import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../game/Solutions'
 import { CountdownTimer } from '../game/CountdownTimer'
-import {SingleplayerGame} from '../game/SingleplayerGame'
-import { LoginData } from '../game/backend/LoginData';
+import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -33,7 +32,7 @@ export class SingleplayerScene extends Phaser.Scene {
     private textSolution!: BetterText; // debug only
 
     // Buttons
-    private m_BtnNewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
+    private mBtn_NewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
     private m_BtnReset!: BetterButton;           // Resets player input. Lets him try again the current card.
     private m_BtnUndo!: BetterButton;           // Lets the user delete the last inserted character.
 
@@ -132,6 +131,15 @@ export class SingleplayerScene extends Phaser.Scene {
 
     Setup_Buttons() {
 
+        // 'New Card' button
+        this.mBtn_NewCard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 0.6, 0.6, "", { fontSize: 32 }, "btn_playCard");
+        this.mBtn_NewCard.on("pointerup", () => this.NewCard());
+
+        // Main Menu button
+        this.btnGotoMenu = new BetterButton(this, 96, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, 'btn_gotoMenu');
+        this.btnGotoMenu.on("pointerup", () => {
+            this.scene.start("MainMenu");
+        });
 
         // Setup a button for each number in the card (4 buttons)
         this.m_CardButtons = [
@@ -183,22 +191,13 @@ export class SingleplayerScene extends Phaser.Scene {
         this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
         this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "/"));
 
-        // 'New Card' button
-        this.m_BtnNewCard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 0.6, 0.6, "", { fontSize: 32 }, "btn_playCard");
-        this.m_BtnNewCard.on("pointerup", () => this.NewCard());
 
-        // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, 96, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, 'btn_gotoMenu');
-        this.btnGotoMenu.on("pointerup", () => {
-            this.scene.start("MainMenu");
-        });
 
     }
 
     NewCard(): void {
 
         let generatedCard = this.m_GameState.NewCard();
-
 
         // Change the current card number buttons and store the card numbers
         for (let i = 0; i < generatedCard.length; i++) {
@@ -208,6 +207,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Enable the button
             this.m_CardButtons[i].SetEnabled();
+
+            // Mark all number buttons as "un-used"
+            this.m_BtnUsed[i] = false;
         }
 
         // Disable 'Reset' button
@@ -216,26 +218,29 @@ export class SingleplayerScene extends Phaser.Scene {
         // Disable 'Backspace' button
         this.m_BtnUndo.SetDisabled();
 
-
-
-    
         // Update the solution debug text
         this.textSolution.setText(`[DEBUG] Solução: ${Solutions.getSolution(generatedCard)}`);
 
         // Clear the expression text
         this.textExpression.setText("");
 
+        // Reset game state
+        this.m_GameState.ResetState();
+        this.m_GameState.SetCard(generatedCard);
+        console.log(this.m_GameState);
+
+
         // Start the timer
         this.countdownTimer.StartCountdown();
     }
 
     CheckSolution(): void {
-        
+
         const isSolutionCorrect: boolean = true;
 
         if (isSolutionCorrect)
             this.SavePlayerData(true); // Register a win
-        else 
+        else
             this.SavePlayerData(false); // Register a loss
     }
 
@@ -249,14 +254,14 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.m_BtnReset.SetDisabled();
         this.m_BtnUndo.SetDisabled();
-        
+
         this.btnOperationAdd.SetDisabled();
         this.btnOperationSubtract.SetDisabled();
         this.btnOperationMultiply.SetDisabled();
         this.btnOperationDivide.SetDisabled();
-        
 
-        this.m_BtnNewCard.SetDisabled();
+
+        this.mBtn_NewCard.SetDisabled();
 
         // Save player data
         this.SavePlayerData(false); // Register another loss
@@ -268,31 +273,55 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
     HandleButtonClick_Number(clickedButtonIndex: number): void {
-        console.log(`Cicked number ${this.m_CardButtons[clickedButtonIndex].GetText()}`);
 
-        this.m_CardButtons[clickedButtonIndex].SetDisabled();
+        const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
+        console.log("Picked number " + String(pickedNumber));
+
+
+        // Disbale the number we just picked if it is the first operand
+        if (this.m_GameState.GetCurrentState() === PlayerState.PickingOperand1) {
+            this.m_CardButtons[clickedButtonIndex].SetDisabled();
+
+            // Also mark it as used, so that it doesnt get enabled again.
+            this.m_BtnUsed[clickedButtonIndex] = true;
+        }
+
+
         // Register new number on the current operation
-       const stringRep =  this.m_GameState.NewNumber(this.m_CardButtons[clickedButtonIndex].GetText());
-       this.textExpression.setText(stringRep)
-       console.log(this.m_GameState.GetPlayerState());
+        this.m_GameState.AddOperand(pickedNumber);
 
-       // Mark button as used
-       this.m_BtnUsed[clickedButtonIndex] = true;
 
-       // DIsable number buttons if player is selecting an operator
-       if (this.m_GameState.IsPickingOperator())
-        this.DisableNumberButtons();
-       
+
+        const state = this.m_GameState.GetCurrentState();
+        if (state === PlayerState.PickingOperand2) {
+            // Update the button text if the button we just clicked was the 2nd operand
+            const expression = this.m_GameState.CompleteOperation();
+            this.m_CardButtons[clickedButtonIndex].SetText(expression);
+        }
+
+        this.m_GameState.NextState();
+
+
+        // Disable all the number buttons if player is selecting an operator
+        if (this.m_GameState.IsPickingOperator())
+            this.DisableNumberButtons();
+
+        console.log(this.m_GameState.StateToString());
+        console.log(this.m_GameState);
+
     }
 
-    HandleButtonClick_Operation(operation: string) {
+    HandleButtonClick_Operation(operator: string) {
 
-      const stringRep =  this.m_GameState.NewOperation(operation);
-      this.textExpression.setText(stringRep);
-      console.log(this.m_GameState.GetPlayerState());
+        this.m_GameState.AddOperator(operator);
+        this.m_GameState.NextState();
 
-      // Enable card buttons
-      this.EnableNumberButtons();
+        // Enable card buttons
+        this.EnableNumberButtons();
+
+        console.log(this.m_GameState.StateToString());
+        console.log(this.m_GameState);
+
 
     }
 
@@ -306,32 +335,27 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    EnableNumberButtons() 
-    {
-        for(let i = 0; i < 4; i++)
-        {
+    EnableNumberButtons() {
+        for (let i = 0; i < 4; i++) {
             if (this.m_BtnUsed[i] === false)
                 this.m_CardButtons[i].SetEnabled();
         }
     }
 
-    DisableNumberButtons()
-    {
-        for(let i = 0; i < 4; i++)
-        {
+    DisableNumberButtons() {
+        for (let i = 0; i < 4; i++) {
             this.m_CardButtons[i].SetDisabled();
         }
     }
 
-    SavePlayerData(playerWon: boolean) : void 
-    {
+    SavePlayerData(playerWon: boolean): void {
         if (playerWon)
             // UserInfo.IncrementWins();
             console.log("save win")
-        else 
+        else
             // UserInfo.IncrementLosses();
             console.log("save loss")
 
-       //  UserInfo.SaveLocalData();
+        //  UserInfo.SaveLocalData();
     }
 }
