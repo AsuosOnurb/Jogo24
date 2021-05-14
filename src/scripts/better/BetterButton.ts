@@ -44,11 +44,13 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         if (!(text === undefined || textStyle === undefined))
             this.m_TextObject = new BetterText(scene, x, y, text, textStyle);
 
+
         // offset the text object position
         this.m_TextObject?.setOrigin(0.5);
 
         // Buttons are interactible by default
         this.SetEnabled();
+
 
         // Define some events for when the mouse is over, out of the button for some pretty effects.
         // Also setup some effect where the button 'gets pressed' when it is clicked.
@@ -64,20 +66,31 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
        
         
         // Setup tween animations
-        
+        /*
         if (!scene.game.device.input.touch)
         {
             this.SetupButtonHoverAnimation(); 
             this.SetupButtonOutAnimation();
-        }
+        }*/
         this.SetupButtonPressAnimation()
 
         
     }
 
+    SetText(newtext: string)  :void 
+    {
+        this.m_TextObject.setText(newtext);
+    }
 
-    SetText(newText: string): void {
+    NumberButtonSetText(newText: string): void {
+
         this.m_TextObject.setText(newText);
+        let size = 128 / (newText.length * 0.4)
+
+        if (size < 38)
+            size = 38;
+
+        this.m_TextObject.setFontSize(size);
     }
 
     GetText(): string {
@@ -165,9 +178,9 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     SetupButtonPressAnimation(): void {
 
         this.m_Tween_ButtonPress = this.mCurrentScene.tweens.add({
-            targets: this,
+            targets: [this, this.m_TextObject],
             props: {
-                scale : 0.8
+                scale : this.m_OriginalScale -0.2
             },
             ease: 'Power1',
             duration: 70,
@@ -235,5 +248,9 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     }
 
 
+    SetFontSize(size) : void 
+    {
+        this.m_TextObject.setFontSize(size);
+    }
 
 }

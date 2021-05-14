@@ -55,6 +55,8 @@ export class SingleplayerGame {
         this.mCurrentCard = CardGenerator.generateCard(this.mDifficulty);
         this.ResetState();
 
+        
+
         return this.mCurrentCard;
     }
 
@@ -76,13 +78,13 @@ export class SingleplayerGame {
     CompleteOperation(): string {
 
         if (IsNumeric(this.mOperand1) && IsNumeric(this.mOperand2)) {
-            return `${this.mOperand1} ${this.mOperator} ${this.mOperand2}`;
+            return `${this.mOperand1}${this.mOperator}${this.mOperand2}`;
         }
         else if (IsNumeric(this.mOperand1) && !IsNumeric(this.mOperand2)) {
-            return `${this.mOperand1} ${this.mOperator} (${this.mOperand2})`;
+            return `${this.mOperand1}${this.mOperator}(${this.mOperand2})`;
 
         } else if (!IsNumeric(this.mOperand1) && IsNumeric(this.mOperand2)) {
-            return `(${this.mOperand1}) ${this.mOperator} ${this.mOperand2}`;
+            return `(${this.mOperand1})${this.mOperator}${this.mOperand2}`;
         }
         else if (!IsNumeric(this.mOperand1) && !IsNumeric(this.mOperand2)) {
             return `(${this.mOperand1}) ${this.mOperator} (${this.mOperand2})`;
@@ -92,7 +94,7 @@ export class SingleplayerGame {
     }
 
     CheckSolution(expression: string): boolean {
-        const val = evaluate(expression);
+        const val = evaluate(expression.replaceAll("x", "*"));
         return val === 24;
     }
 
@@ -106,7 +108,7 @@ export class SingleplayerGame {
                 this.m_PlayerState = PlayerState.PickingOperator;
                 break;
             case PlayerState.PickingOperand2:
-                this.m_PlayerState = PlayerState.PickingOperand1;
+                this.ResetState();
                 break;
             case PlayerState.PickingOperator:
                 this.m_PlayerState = PlayerState.PickingOperand2;
@@ -171,6 +173,16 @@ export class SingleplayerGame {
     GetTotalWrong() : number 
     {
         return this.mTotalWrong;
+    }
+
+    GetCurrentExpression() : string 
+    {
+        return `${this.mOperand1}${this.mOperator}${this.mOperand2}`;
+    }
+
+    GetCurrentCard () :string 
+    {
+        return this.mCurrentCard;
     }
 
 }

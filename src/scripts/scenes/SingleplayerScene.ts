@@ -59,7 +59,8 @@ export class SingleplayerScene extends Phaser.Scene {
         titleImg.setScale(1, 1);
 
         // Add card background image
-        const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'cardBG');
+        const cardBG = this.add.sprite(this.scale.width / 2, this.scale.height / 2 , 'cardBG');
+        cardBG.setScale(1.15);
 
         // Add the corect/incorrect label backgrounds
         const correctBG = this.add.sprite(this.scale.width / 2 + 680, 128, 'correctCounter')
@@ -85,7 +86,7 @@ export class SingleplayerScene extends Phaser.Scene {
             new BetterText(this, 256, 256, "", { fontSize: 32 });
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128, 1, 1, '', { fontSize: 48 }, 'inputBar', 0);
+        this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontSize: 48 }, 'inputBar', 0);
         this.mExpressionBar.SetDisabled(1);
     }
 
@@ -129,24 +130,24 @@ export class SingleplayerScene extends Phaser.Scene {
         this.mBtn_NewCard.on("pointerup", () => this.NewCard());
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, 96, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, 'btn_gotoMenu');
+        this.btnGotoMenu = new BetterButton(this, 96, this.scale.height - 96, 0.7, 0.7, "", {  }, 'btn_gotoMenu');
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
 
         // Setup a button for each number in the card (4 buttons)
         this.m_CardButtons = [
-            new BetterButton(this, this.scale.width / 2 - 196, this.scale.height / 2,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+            new BetterButton(this, this.scale.width / 2 - 204, this.scale.height / 2,
+                1.4, 1.4, "?", { fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 196,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 204,
+                1.4, 1.4, "?", { fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2 + 196, this.scale.height / 2,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+            new BetterButton(this, this.scale.width / 2 + 204, this.scale.height / 2,
+                1.4, 1.4, "?", { fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 196,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 204,
+                1.4, 1.4, "?", { fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
         ]
 
@@ -159,12 +160,12 @@ export class SingleplayerScene extends Phaser.Scene {
         }
 
         // This button lets the user reset his attempt at the current card.
-        this.m_BtnReset = new BetterButton(this, this.scale.width / 2 - 196, this.scale.height - 96, 1, 1, "", { fontSize: 64 }, "btn_reset");
+        this.m_BtnReset = new BetterButton(this, this.scale.width / 2 - 196, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_reset");
         this.m_BtnReset.on("pointerup", () => this.events.emit('ResetButtonClick'));
         this.m_BtnReset.SetDisabled();
 
         // 'Backspace' button
-        this.m_BtnUndo = new BetterButton(this, this.scale.width / 2 + 196, this.scale.height - 96, 1, 1, "", { fontSize: 32 }, "btn_undo");
+        this.m_BtnUndo = new BetterButton(this, this.scale.width / 2 + 196, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 32 }, "btn_undo");
         this.m_BtnUndo.on("pointerup", () => this.events.emit('UndoButtonClick'));
         this.m_BtnUndo.SetDisabled();
 
@@ -178,7 +179,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Multiplication operation button
         this.btnOperationMultiply = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_multiplication");
-        this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "*"));
+        this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "x"));
 
         // Division operation button
         this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
@@ -204,6 +205,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Mark all number buttons as "un-used"
             this.m_BtnUsed[i] = false;
+
+            // Reset number buttons font size
+            this.m_CardButtons[i].SetFontSize(128);
+
         }
 
         // Disable 'Reset' button
@@ -222,6 +227,9 @@ export class SingleplayerScene extends Phaser.Scene {
         this.m_GameState.ResetState();
         this.m_GameState.SetCard(generatedCard);
         // console.log(this.m_GameState);
+
+        // Reset expression bar text color
+        this.mExpressionBar.SetTextColor("0xffffff");
 
 
         // Start the timer
@@ -268,6 +276,9 @@ export class SingleplayerScene extends Phaser.Scene {
         const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
         // console.log("Picked number " + String(pickedNumber));
 
+        
+        // Enable reset btn
+        this.m_BtnReset.SetEnabled();
 
         // Disbale the number we just picked if it is the first operand
         if (this.m_GameState.GetCurrentState() === PlayerState.PickingOperand1) {
@@ -290,7 +301,10 @@ export class SingleplayerScene extends Phaser.Scene {
         if (state === PlayerState.PickingOperand2) {
             // Update the button text if the button we just clicked was the 2nd operand
             const expression = this.m_GameState.CompleteOperation();
-            this.m_CardButtons[clickedButtonIndex].SetText(expression);
+            this.m_CardButtons[clickedButtonIndex].NumberButtonSetText(expression);
+
+              // Set the text on the expression bar
+            this.mExpressionBar.SetText(expression);
 
 
             /*
@@ -308,13 +322,11 @@ export class SingleplayerScene extends Phaser.Scene {
 
                 if (won) {
                     this.m_GameState.IncrTotalCorrect();
-                    console.log("Player won")
                     this.ShowPlayerWon(expression);
                 }
 
                 else {
                     this.m_GameState.IncrTotalWrong();
-                    console.log("Player lost")
                     this.ShowPlayerLost(expression);
 
                 }
@@ -322,9 +334,16 @@ export class SingleplayerScene extends Phaser.Scene {
                 // Disable all numbers and operations
                 this.DisableNumberButtons();
                 this.DisableOperationButtons()
+                this.m_BtnReset.SetDisabled();
             }
 
+        }else 
+        {
+             // Set the text on the expression bar
+             this.mExpressionBar.SetText(pickedNumber);
         }
+
+      
 
         this.m_GameState.NextState();
 
@@ -348,6 +367,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Disable operation buttons
         this.DisableOperationButtons();
+        this.mExpressionBar.SetText(`${this.mExpressionBar.GetText()}${operator}`);
+
     }
 
     /**
@@ -361,6 +382,17 @@ export class SingleplayerScene extends Phaser.Scene {
 
     // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
     HandleButtonClick_Reset(): void {
+        // Reset game state
+        this.m_GameState.ResetState();
+
+        this.DisableOperationButtons();
+
+        this.EnableNumberButtons();
+        this.ResetNumberButtons();
+
+        // Clean expression bar
+        this.mExpressionBar.SetText("");
+
 
     }
 
@@ -408,6 +440,19 @@ export class SingleplayerScene extends Phaser.Scene {
         this.btnOperationMultiply.SetDisabled();
     }
 
+    ResetNumberButtons() : void 
+    {
+        for(let i = 0; i < 4; i++)
+        {
+            this.m_CardButtons[i].SetText(this.m_GameState.GetCurrentCard()[i])
+            this.m_CardButtons[i].SetFontSize(128);
+            this.m_CardButtons[i].SetEnabled();
+            this.m_BtnUsed[i] = false;
+        }
+
+
+    }
+
     SavePlayerData(playerWon: boolean): void {
         if (playerWon)
             // UserInfo.IncrementWins();
@@ -418,5 +463,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
         //  UserInfo.SaveLocalData();
     }
+    
 
 }
