@@ -7,6 +7,7 @@ import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../game/Solutions'
 import { MultiplayerGame } from '../game/MultiplayerGame';
 import { Difficulty } from '../game/CardGenerator';
+import { Minicard } from '../better/Minicard';
 
 
 export class MultiplayerScene extends Phaser.Scene {
@@ -43,6 +44,9 @@ export class MultiplayerScene extends Phaser.Scene {
      */
     private m_Array_ExpressionBars: Array<BetterButton>
 
+    /* ============================  The 2 mini cards ======================= */
+    private mMinicard1: Minicard;
+    private mMinicard2: Minicard;
 
     // ===================== UI Objects (text objects, buttons, etc....) ==================
 
@@ -88,8 +92,7 @@ export class MultiplayerScene extends Phaser.Scene {
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 96, 0.3, 0.3, "", { fontSize: 64 }, 'btn_gotoMenu');
-        this.btnGotoMenu.setScale(0.6, 0.6);
+        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 96, 0.6, 0.6, "", { fontSize: 64 }, 'btn_gotoMenu');
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
@@ -352,10 +355,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Setup the diff buttons
         this.m_DifficultyButtons = [
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 192, 1, 1, "", {}, 'btn_easy'),
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 1, 1, "", {}, 'btn_medium'),
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1, 1, "", {}, 'btn_hard'),
-            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 384, 1, 1, "", {}, 'btn_allDifficulties'),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 192, 1, 1, "", {}, 'btn_easy', 0),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 1, 1, "", {}, 'btn_medium', 0),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1, 1, "", {}, 'btn_hard', 0),
+            new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 384, 1, 1, "", {}, 'btn_allDifficulties', 0),
         ];
 
         for (let i = 0; i < 4; i++) {
@@ -442,7 +445,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         for (let i = 0; i < this.m_CardButtons.length; i++) {
             // Each button starts disabled
-            this.m_CardButtons[i].SetDisabled(1.0);
+            this.m_CardButtons[i].SetDisabled();
             this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.m_GameState.GetNumbers()[i]));
 
             // Add each one to the grouo
@@ -450,8 +453,7 @@ export class MultiplayerScene extends Phaser.Scene {
         }
 
         // 'New Card' button
-        this.m_Btn_NewCard = new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y, 0.3, 0.3, "", { fontSize: 32 }, "btn_playCard");
-        this.m_Btn_NewCard.setScale(0.6, 0.6);
+        this.m_Btn_NewCard = new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y, 0.6, 0.6, "", { fontSize: 32 }, "btn_playCard");
         this.m_Btn_NewCard.on("pointerup", () => this.NewCard());
         this.m_Group_CardGroup.add(this.m_Btn_NewCard);
 
@@ -460,16 +462,16 @@ export class MultiplayerScene extends Phaser.Scene {
         // Setup the 4 coloured player buttons
         this.m_Array_PlayerButtons = [
             new BetterButton(this, 128, 128,
-                1, 1, "", { fontSize: 128 }, "btn_player1"),
+                0.8, 0.8, "", { fontSize: 128 }, "btn_player1"),
 
             new BetterButton(this, this.scale.width - 128, 128,
-                1, 1, "", { fontSize: 128 }, "btn_player2"),
+                0.8, 0.8, "", { fontSize: 128 }, "btn_player2"),
 
             new BetterButton(this, 128, this.scale.height - 128,
-                1, 1, "", { fontSize: 128 }, "btn_player3"),
+                0.8, 0.8, "", { fontSize: 128 }, "btn_player3"),
 
             new BetterButton(this, this.scale.width - 128, this.scale.height - 128,
-                1, 1, "", { fontSize: 128 }, "btn_player4")
+                0.8, 0.8, "", { fontSize: 128 }, "btn_player4")
         ];
 
         for (let i = 0; i < 4; i++) {
@@ -510,6 +512,11 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_Array_ExpressionBars.forEach((b) => { b.SetDisabled(1.0) })
         console.log(this.m_Array_ExpressionBars)
 
+
+        /* ============================ Setup the 2 mini cards ===================== */
+        this.mMinicard1 = new Minicard(this, 384, 128, this.m_GameState.GetCurrentCard());
+        this.mMinicard2 = new Minicard(this, this.scale.width - 384, 128, this.m_GameState.GetCurrentCard());
+        
 
         /* ============================Main menu button ================ */
         // Move the main menu button to the side (just a bit)

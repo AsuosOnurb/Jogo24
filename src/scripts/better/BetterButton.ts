@@ -1,3 +1,4 @@
+  
 import Phaser, { Game } from 'phaser'
 import { RandomInt } from '../game/Utils';
 import { BetterText } from './BetterText'
@@ -179,6 +180,14 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
     }
 
+    /**
+     * Hides the button image, but keeps the text visible.
+     */
+    HideShape()
+    {
+        this.setVisible(false);
+        this.m_TextObject.setVisible(true);
+    }
+
 
 }
-
