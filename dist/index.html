@@ -1,0 +1,61 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=YES,viewport-fit=cover"/><meta http-equiv="X-UA-Compatible" content="ie=edge"/><meta name="theme-color" content="#000000"/><link rel="manifest" href="./manifest.json"/><meta name="mobile-web-app-capable" content="yes"/><meta name="apple-mobile-web-app-capable" content="yes"/><meta name="application-name" content="Jogo do 24"/><meta name="apple-mobile-web-app-title" content="Jogo do 24"/><meta name="msapplication-starturl" content="./"/><link rel="icon" type="image/png" sizes="192x192" href="./icons/icons-192.png"/><link rel="apple-touch-icon" type="image/png" sizes="192x192" href="./icons/icons-192.png"/><link rel="icon" type="image/png" sizes="512x512" href="./icons/icons-512.png"/><link rel="apple-touch-icon" type="image/png" sizes="512x512" href="./icons/icons-512.png"/><link rel="shortcut icon" href="./favicon.ico" type="image/x-icon"/><title>Jogo do 24</title><style>html,
+      body {
+        height: 100%;
+        margin: 0;
+        background-color: white;
+      }
+
+    
+      .plsrotate{
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+      }
+
+      .phone {
+        height: 80px;
+        width: 160px;
+        border: 3px solid black;
+        border-radius: 10px;
+        animation: rotate 1.5s ease-in-out infinite alternate;
+        display: none; 
+      }
+      
+      .message {
+        color: black;
+        font-size: 1em;
+        margin-top: 60px;
+        display: none;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      @keyframes rotate {
+        0% {
+          transform: rotate(0deg)
+        }
+        50% {
+          transform: rotate(-90deg)
+        }
+        100% {
+          transform: rotate(-90deg)
+        }
+      }
+      
+      @media only screen and (max-device-width: 1024px) and (orientation: portrait) {
+        .phone, .message {
+          display: block;
+        }
+        .plsrotate {
+          display: flex;
+        }
+        
+      }
+
+      @font-face {
+        font-family: Vertiky;
+        src: url('../assets/fonts/vertiky/vertiky.otf');
+        font-weight: 400;
+        font-weight: normal;
+		  }</style><noscript>Please enable javascript to continue using this application.</noscript><script defer="defer" src="vendors.a7b21ef6a586758c6374.bundle.js"></script><script defer="defer" src="main.278a356c85ffd70b24e1.bundle.js"></script></head><body><div style="font-family:Vertiky; position: absolute; left:-1000px; visibility:hidden;">.</div><div class="plsrotate"><div class="phone"></div><div class="message">Por favor rode o dispositivo</div></div><div id="phaser-game"></div></body></html>
