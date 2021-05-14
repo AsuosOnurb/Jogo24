@@ -30,7 +30,7 @@ export class BackendConnection {
      * @param {string} password Password to try to login with
      * @param {Phaser.Scene} scene scope in with the login is being made
      */
-    Login(username, password) {
+    static Login(username, password) {
 
         $.ajax
             ({
@@ -64,7 +64,7 @@ export class BackendConnection {
     /**
      * Check if there is an active session
      */
-    SessionVerify() {
+    static SessionVerify() {
         $.ajax
             ({
                 type: "POST",

@@ -22,4 +22,6 @@ export  class BetterText extends Phaser.GameObjects.Text
         
         scene.add.existing(this);
     }
+
+    
 }

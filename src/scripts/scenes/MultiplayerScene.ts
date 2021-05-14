@@ -153,6 +153,10 @@ export class MultiplayerScene extends Phaser.Scene {
         for (let i = 0; i < 4; i++)
             this.m_Array_PlayerButtons[i].SetEnabled();
 
+        // Add the text to the mini cards
+        this.mMinicard1.SetCard(generatedCard);
+        this.mMinicard2.SetCard(generatedCard);
+
 
 
     }
@@ -216,7 +220,10 @@ export class MultiplayerScene extends Phaser.Scene {
         // The colored player button was clicked. Disable all others right away
         for (let i = 0; i < 4; i++) {
             if (clickedButtonIndex != i)
+            {
                 this.m_Array_PlayerButtons[i].SetDisabled();
+
+            }
 
             // Disable the clicked button, but still make it clearly visible
             this.m_Array_PlayerButtons[clickedButtonIndex].SetDisabled(1.0);
@@ -231,6 +238,12 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Prevent player from getting a new card
         this.m_Btn_NewCard.SetDisabled();
+
+
+        this.RedrawMiniCards(clickedButtonIndex);
+        
+
+       
 
     }
 
@@ -251,6 +264,31 @@ export class MultiplayerScene extends Phaser.Scene {
 
         }
 
+    }
+
+    RedrawMiniCards(clickedButtonIndex: number) : void 
+    {
+         // Flip the card according to the new current player
+         if (clickedButtonIndex == 0 || clickedButtonIndex == 1)
+         {
+             // Top player is  playing.
+             // Put minicards on the bottom 
+             this.mMinicard1.SetPosition(384, this.scale.height - 128);
+             this.mMinicard1.FlipForBottom();
+
+             this.mMinicard2.SetPosition(this.scale.width - 384, this.scale.height - 128);
+             this.mMinicard2.FlipForBottom();
+ 
+         } else 
+         {
+             // Bottom player is  playing.
+             // Put minicards on the top 
+             this.mMinicard1.SetPosition(384, 128);
+             this.mMinicard1.FlipForTop();
+
+             this.mMinicard2.SetPosition(this.scale.width -  384, 128);
+             this.mMinicard2.FlipForTop();
+         }
     }
 
     HandleButtonClick_Number(clickedButtonIndex: number, operand): void {
@@ -430,16 +468,16 @@ export class MultiplayerScene extends Phaser.Scene {
         // Setup a button for each number in the card (4 buttons)
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 196, this.m_Image_CardBG.y,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1, 1, "", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 196,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1, 1, "", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 196, this.m_Image_CardBG.y,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1, 1, "", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 196,
-                1, 1, "?", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG")
+                1, 1, "", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG")
 
         ]
 
@@ -510,12 +548,8 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // And make them all un-interactible
         this.m_Array_ExpressionBars.forEach((b) => { b.SetDisabled(1.0) })
-        console.log(this.m_Array_ExpressionBars)
 
 
-        /* ============================ Setup the 2 mini cards ===================== */
-        this.mMinicard1 = new Minicard(this, 384, 128, this.m_GameState.GetCurrentCard());
-        this.mMinicard2 = new Minicard(this, this.scale.width - 384, 128, this.m_GameState.GetCurrentCard());
         
 
         /* ============================Main menu button ================ */
@@ -553,6 +587,14 @@ export class MultiplayerScene extends Phaser.Scene {
             repeat: 0,
             ease: 'Power1'
         });
+
+
+        /* ============ Setup minicards =========== */
+        this.mMinicard1 = new Minicard(this, 384,128, '    ');
+        this.mMinicard2 = new Minicard(this, this.scale.width - 384,128, '    ');
+
+        
+
     
     }
 
