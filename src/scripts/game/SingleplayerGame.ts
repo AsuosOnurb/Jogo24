@@ -163,6 +163,16 @@ export class SingleplayerGame {
         this.mCurrentCard = card;
     }
 
+    GetTotalCorrect() : number 
+    {
+        return this.mTotalCorrect;
+    }
+
+    GetTotalWrong() : number 
+    {
+        return this.mTotalWrong;
+    }
+
 }
 
 

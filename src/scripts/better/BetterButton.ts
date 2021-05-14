@@ -164,7 +164,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.m_Tween_ButtonPress = this.scene.tweens.add({
             targets: this,
             props: {
-                scale : this.scale * 0.7,
+                scale : 0.8
             },
             ease: 'Power1',
             duration: 120,

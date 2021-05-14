@@ -272,6 +272,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Also mark it as used, so that it doesnt get enabled again.
             this.m_BtnUsed[clickedButtonIndex] = true;
+
+            // Also enable the operation buttons
+            this.EnableOperationButtons();
         }
 
 
@@ -339,6 +342,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Enable card buttons
         this.EnableNumberButtons();
+
+        // Disable operation buttons
+        this.DisableOperationButtons();
     }
 
     /**
@@ -360,12 +366,15 @@ export class SingleplayerScene extends Phaser.Scene {
     {
         this.textExpression.setText(expression);
         this.textExpression.setColor("green");
+        this.textTotalCorrect.setText(this.m_GameState.GetTotalCorrect().toString());
     }
 
     ShowPlayerLost(expression: string) : void 
     {
         this.textExpression.setText(expression);
         this.textExpression.setColor("red");
+        this.textTotalWrong.setText(this.m_GameState.GetTotalWrong().toString());
+
 
     }
 
@@ -383,6 +392,13 @@ export class SingleplayerScene extends Phaser.Scene {
         }
     }
     
+    EnableOperationButtons() : void 
+    {
+        this.btnOperationAdd.SetEnabled();
+        this.btnOperationSubtract.SetEnabled();
+        this.btnOperationDivide.SetEnabled();
+        this.btnOperationMultiply.SetEnabled();
+    }
     DisableOperationButtons() : void 
     {
         this.btnOperationAdd.SetDisabled();
