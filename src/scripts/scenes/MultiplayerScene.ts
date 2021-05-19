@@ -318,8 +318,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
             // Display the operation to all the bars
+            /*
             for (let i = 0; i < 4; i++)
                 this.m_Array_ExpressionBars[i].SetText(this.m_GameState.GetCurrentOperation().ToString());
+                */
 
             // Here is where we check for the solution
             // If 3 cards are picked/disable and the the result is 24, then the player won.
@@ -342,7 +344,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
     HandleButtonClick_Operation(operation: string) {
         // Update the current operation
-        this.m_GameState.GetCurrentOperation().SetOperator(operation);
+        //this.m_GameState.GetCurrentOperation().SetOperator(operation);
 
         // Player chose the operation. Now he has to pick the second operand
         this.m_GameState.SetPickingOperand2();

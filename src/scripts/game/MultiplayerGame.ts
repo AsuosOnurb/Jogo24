@@ -8,7 +8,6 @@ const mathJS = create(all, config);
 
 import { Operation } from './Operations'
 import { CardGenerator, Difficulty } from "./CardGenerator";
-import { OperationsStack } from './OperationStack';
 
 
 enum PlayerState {
@@ -51,7 +50,7 @@ export class MultiplayerGame {
 
     private m_Numbers;
     private CurrentOperation: Operation;
-    private m_OperationsStack: OperationsStack;
+   //  private m_OperationsStack: OperationsStack;
 
 
 
@@ -73,8 +72,8 @@ export class MultiplayerGame {
         this.m_PlayerState = PlayerState.PickingOperand1;
 
         this.m_Numbers = {};
-        this.CurrentOperation = new Operation();
-        this.m_OperationsStack = new OperationsStack();
+        //this.CurrentOperation = new Operation();
+        // this.m_OperationsStack = new OperationsStack();
 
     }
 
@@ -96,14 +95,14 @@ export class MultiplayerGame {
     }
 
     ResetOperationState(): void {
-        this.CurrentOperation = new Operation();
+        //this.CurrentOperation = new Operation();
         this.m_PlayerState = PlayerState.PickingOperand1;
     }
 
     ResetState(): void {
         this.m_PlayerState = PlayerState.PickingOperand1;
-        this.CurrentOperation = new Operation();
-        this.m_OperationsStack = new OperationsStack();
+        //this.CurrentOperation = new Operation();
+        // this.m_OperationsStack = new OperationsStack();
 
         // Reset the values stored in Numbers
         for (let i = 0; i < 4; i++)
@@ -193,9 +192,11 @@ export class MultiplayerGame {
     }
 
     IsOperationStackEmpty(): boolean {
-        return this.m_OperationsStack.IsEmpty();
+        //return this.m_OperationsStack.IsEmpty();
+        return true;
     }
 
+    /*
     RevertToLastOperation(): Operation | undefined {
         let lastOperation = this.m_OperationsStack.Pop();
         if (!lastOperation)
@@ -206,7 +207,7 @@ export class MultiplayerGame {
 
 
         return lastOperation;
-    }
+    }*/
 
 
     // ============= Getters & Setters =============

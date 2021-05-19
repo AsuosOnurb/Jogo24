@@ -1,4 +1,4 @@
-  
+
 import Phaser, { Game } from 'phaser'
 import { RandomInt } from '../game/Utils';
 import { BetterText } from './BetterText'
@@ -17,12 +17,12 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     /**
      * Tween animation that triggers everytime the mouse/pointer enters/hovers the button.
      */
-    private m_Tween_ButtonHover:  Phaser.Tweens.Tween;
+    private m_Tween_ButtonHover: Phaser.Tweens.Tween;
 
     /**
      * Tween animation that triggers everytime the mouse/pointer exits/(stops hovering) the button.
      */
-    private m_Tween_ButtonOut:  Phaser.Tweens.Tween;
+    private m_Tween_ButtonOut: Phaser.Tweens.Tween;
     private m_Tween_ButtonPress: Phaser.Tweens.Tween;
 
     /**
@@ -54,17 +54,15 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
         // Define some events for when the mouse is over, out of the button for some pretty effects.
         // Also setup some effect where the button 'gets pressed' when it is clicked.
-        if (optionalAngle === undefined)
-        {
+        if (optionalAngle === undefined) {
             const randomAngles = [- 6, -5, -4, 4, 5, 6];
             this.m_RandomHoverAngle = randomAngles[Math.floor(Math.random() * randomAngles.length)]// The amount of degrees the button performs when it is being hovered.
         }
-        else 
-        {
+        else {
             this.m_RandomHoverAngle = optionalAngle;
         }
-       
-        
+
+
         // Setup tween animations
         /*
         if (!scene.game.device.input.touch)
@@ -74,23 +72,17 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         }*/
         this.SetupButtonPressAnimation()
 
-        
+
     }
 
-    SetText(newtext: string)  :void 
-    {
+    SetText(newtext: string): void {
         this.m_TextObject.setText(newtext);
     }
 
     NumberButtonSetText(newText: string): void {
 
         this.m_TextObject.setText(newText);
-        let size = 128 / (newText.length * 0.4)
-
-        if (size < 38)
-            size = 38;
-
-        this.m_TextObject.setFontSize(size);
+        this.UpdateFontSize();
     }
 
     GetText(): string {
@@ -180,7 +172,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.m_Tween_ButtonPress = this.mCurrentScene.tweens.add({
             targets: [this, this.m_TextObject],
             props: {
-                scale : this.m_OriginalScale -0.2
+                scale: this.m_OriginalScale - 0.2
             },
             ease: 'Power1',
             duration: 70,
@@ -197,20 +189,17 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     /**
      * Hides the button image, but keeps the text visible.
      */
-    HideShape()
-    {
+    HideShape() {
         this.setVisible(false);
         this.m_TextObject.setVisible(true);
     }
 
-    SetTextColor(hexcolor: string) : void 
-    {
+    SetTextColor(hexcolor: string): void {
         this.m_TextObject.setColor(hexcolor);
     }
 
-    PlayCorrectExpressionTween() : void 
-    {
-        
+    PlayCorrectExpressionTween(): void {
+
 
         /*
         this.scene.tweens.add({
@@ -227,30 +216,46 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
             scale: 2,
             duration: 1000,
             ease: 'Elastic.InOut',
-            easeParams: [ 1.5, 0.5 ],
+            easeParams: [1.5, 0.5],
             delay: 0,
             yoyo: true
         });
     }
 
-    PlayIncorrectExpressionTween() : void 
-    {
+    PlayIncorrectExpressionTween(): void {
         this.scene.tweens.add({
             targets: [this, this.m_TextObject],
             y: this.y + 64,
             scale: 1.4,
             duration: 250,
             ease: 'Elastic.InOut',
-            easeParams: [ 2, 2 ],
+            easeParams: [2, 2],
             delay: 0,
             yoyo: true
         });
     }
 
-
     SetFontSize(size) : void 
     {
         this.m_TextObject.setFontSize(size);
+
+    }
+
+    private UpdateFontSize(): void {
+
+        let calculatedSize = 0;
+        
+        if (this.m_TextObject.text.length === 1 || this.m_TextObject.text.length === 0)
+            calculatedSize = 128;
+        else 
+            calculatedSize = 128 / (this.m_TextObject.text.length * 0.4)
+
+        if (calculatedSize < 38)
+            calculatedSize = 38;
+
+        console.log(calculatedSize);
+
+        this.m_TextObject.setFontSize(calculatedSize);
     }
 
 }

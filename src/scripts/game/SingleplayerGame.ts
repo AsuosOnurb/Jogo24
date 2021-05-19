@@ -2,9 +2,10 @@
 
 import { Operation } from "./Operations";
 import { CardGenerator, Difficulty } from "./CardGenerator";
-import { OperationsStack } from "./OperationStack";
 import { evaluate } from 'mathjs'
 import { IsNumeric } from "./Utils";
+import { Stack } from '../game/Stack'
+
 
 
 export enum PlayerState {
@@ -23,9 +24,9 @@ export class SingleplayerGame {
 
     private m_PlayerState: PlayerState;
 
-    private mOperand1: string;
-    private mOperand2: string;
-    private mOperator: string;
+   
+     private mOperationStack: Stack<Operation>;
+     private mCurrentOperation: Operation;
 
 
 
@@ -48,49 +49,60 @@ export class SingleplayerGame {
 
         this.m_PlayerState = PlayerState.PickingOperand1;
 
+        this.mOperationStack = new Stack<Operation>();
+        this.mCurrentOperation = new Operation();
+
+
     }
 
 
     NewCard(): string {
         this.mCurrentCard = CardGenerator.generateCard(this.mDifficulty);
-        this.ResetState();
+        this.ResetOperationState();
 
         
 
         return this.mCurrentCard;
     }
 
-    AddOperand(operand: string): void {
-        switch (this.m_PlayerState) {
-            case PlayerState.PickingOperand1:
-                this.mOperand1 = operand;
-                break;
-            case PlayerState.PickingOperand2:
-                this.mOperand2 = operand;
-                break
-        }
+ 
+    PushCurrentOperation() 
+    {
+        console.log("Pushing new operation");
+        console.log(this.mCurrentOperation);
+        this.mOperationStack.push(this.mCurrentOperation);
     }
 
-    AddOperator(operator: string): void {
-        this.mOperator = operator;
+    RevertToLastOperation() : Operation | undefined
+    {
+        let lastOp = this.mOperationStack.pop();
+
+        if (!lastOp)
+            return undefined;
+        
+        this.mCurrentOperation = lastOp;
+        return lastOp;
+
     }
+
 
     CompleteOperation(): string {
-
-        if (IsNumeric(this.mOperand1) && IsNumeric(this.mOperand2)) {
-            return `${this.mOperand1}${this.mOperator}${this.mOperand2}`;
+        if (IsNumeric(this.mCurrentOperation.operand1) && IsNumeric(this.mCurrentOperation.operand2)) {
+            this.mCurrentOperation.expression = `${this.mCurrentOperation.operand1}${this.mCurrentOperation.operator}${this.mCurrentOperation.operand2}`;
         }
-        else if (IsNumeric(this.mOperand1) && !IsNumeric(this.mOperand2)) {
-            return `${this.mOperand1}${this.mOperator}(${this.mOperand2})`;
+        else if (IsNumeric(this.mCurrentOperation.operand1) && !IsNumeric(this.mCurrentOperation.operand2)) {
+            this.mCurrentOperation.expression = `${this.mCurrentOperation.operand1}${this.mCurrentOperation.operator}(${this.mCurrentOperation.operand2})`;
 
-        } else if (!IsNumeric(this.mOperand1) && IsNumeric(this.mOperand2)) {
-            return `(${this.mOperand1})${this.mOperator}${this.mOperand2}`;
+        } else if (!IsNumeric(this.mCurrentOperation.operand1) && IsNumeric(this.mCurrentOperation.operand2)) {
+            this.mCurrentOperation.expression = `(${this.mCurrentOperation.operand1})${this.mCurrentOperation.operator}${this.mCurrentOperation.operand2}`;
         }
-        else if (!IsNumeric(this.mOperand1) && !IsNumeric(this.mOperand2)) {
-            return `(${this.mOperand1}) ${this.mOperator} (${this.mOperand2})`;
+        else if (!IsNumeric(this.mCurrentOperation.operand1) && !IsNumeric(this.mCurrentOperation.operand2)) {
+            this.mCurrentOperation.expression = `(${this.mCurrentOperation.operand1})${this.mCurrentOperation.operator}(${this.mCurrentOperation.operand2})`;
         }
+        else 
+        this.mCurrentOperation.expression = "ERROR";
 
-        return "ERROR";
+        return this.mCurrentOperation.expression;
     }
 
     CheckSolution(expression: string): boolean {
@@ -108,7 +120,7 @@ export class SingleplayerGame {
                 this.m_PlayerState = PlayerState.PickingOperator;
                 break;
             case PlayerState.PickingOperand2:
-                this.ResetState();
+                this.ResetOperationState();
                 break;
             case PlayerState.PickingOperator:
                 this.m_PlayerState = PlayerState.PickingOperand2;
@@ -116,6 +128,8 @@ export class SingleplayerGame {
             default:
                 break;
         }
+
+        console.log(`We are now on state ${this.StateToString()}`);
     }
 
     /**
@@ -125,10 +139,16 @@ export class SingleplayerGame {
      * 3 - A whole new stack of operations is created (previous one is reset).
      * 4 - A new arithmetic expression is created.
      */
-    ResetState(): void {
+    ResetOperationState(): void {
         // Player has to pick the first operand
         this.m_PlayerState = PlayerState.PickingOperand1;
-        this.mOperand1 = this.mOperand2 = this.mOperator = "";
+        this.mCurrentOperation = new Operation();
+        //this.mCurrentOperation.operand1 = this.mCurrentOperation.operand2 = this.mCurrentOperation.operator = "";
+    }
+
+    ResetOperationStack() : void 
+    {
+        this.mOperationStack = new Stack<Operation>();
     }
 
 
@@ -149,7 +169,16 @@ export class SingleplayerGame {
     IsPickingOperator(): boolean {
         return this.m_PlayerState === PlayerState.PickingOperator;
     }
+    
+    IsPickingOperand1() : boolean 
+    {
+        return this.m_PlayerState === PlayerState.PickingOperand1;
+    }
 
+    IsPickingOperand2() : boolean 
+    {
+        return this.m_PlayerState === PlayerState.PickingOperand2;
+    }
 
     IncrTotalCorrect(): number {
         this.mTotalCorrect += 1;
@@ -177,13 +206,41 @@ export class SingleplayerGame {
 
     GetCurrentExpression() : string 
     {
-        return `${this.mOperand1}${this.mOperator}${this.mOperand2}`;
+        return `${this.mCurrentOperation.operand1}${this.mCurrentOperation.operator}${this.mCurrentOperation.operand2}`;
     }
 
     GetCurrentCard () :string 
     {
         return this.mCurrentCard;
     }
+
+    SetOperand1(operand, index) : void 
+    {
+        this.mCurrentOperation.operand1 = operand;
+        this.mCurrentOperation.operand1BtnIndex = index;
+    }
+
+    SetOperand2(operand, index) : void 
+    {
+        this.mCurrentOperation.operand2 = operand;
+        this.mCurrentOperation.operand2BtnIndex = index;
+    }
+
+    SetOperator(operator: string) : void 
+    {
+        this.mCurrentOperation.operator = operator;
+    }
+
+    SetExpression(expression:string) : void 
+    {
+        this.mCurrentOperation.expression = expression;
+    }
+
+    IsStackEmpty() : boolean
+    {
+        return this.mOperationStack.isEmpty();
+    }
+
 
 }
 
