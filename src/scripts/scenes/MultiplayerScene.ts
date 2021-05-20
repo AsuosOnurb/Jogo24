@@ -5,9 +5,10 @@ import Phaser from 'phaser'
 import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../game/Solutions'
-import { MultiplayerGame } from '../game/MultiplayerGame';
+import { MultiplayerGame, PlayerState } from '../game/MultiplayerGame';
 import { Difficulty } from '../game/CardGenerator';
 import { Minicard } from '../better/Minicard';
+import { ValueOfExpression } from '../game/Utils';
 
 
 export class MultiplayerScene extends Phaser.Scene {
@@ -58,6 +59,7 @@ export class MultiplayerScene extends Phaser.Scene {
     private m_Group_CardGroup: Phaser.GameObjects.Group;
     private m_Image_CardBG: Phaser.GameObjects.Image;
     private m_CardButtons: Array<BetterButton>;
+    private m_BtnUsed: Array<Boolean>;
     private m_Btn_NewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
 
 
@@ -131,8 +133,10 @@ export class MultiplayerScene extends Phaser.Scene {
         for (let i = 0; i < generatedCard.length; i++) {
 
             // Set the text of the number button
-            this.m_CardButtons[i].SetText(generatedCard[i]);
-            this.m_CardButtons[i].SetDisabled(1.0);
+            this.m_CardButtons[i].NumberButtonSetText(generatedCard[i]);
+            this.m_CardButtons[i].SetDisabled();
+
+            this.m_BtnUsed[i] = false;
         }
 
 
@@ -161,45 +165,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
     }
 
-    CheckSolution(): void {
-        // Check if we have 3 disabled/picked numbers.
-        let disabledCardCount = 0;
-        for (let i = 0; i < 4; i++) {
-            if (!this.m_CardButtons[i].IsEnabled())
-                disabledCardCount += 1;
-        }
-
-        /*
-            If 3 numbers are disabled, then the player is at the last operation.
-            In that case, then we have to check if the player won or not.
-        */
-        if (disabledCardCount === 3) {
-
-            if (this.m_GameState.IsCardWon()) {
-
-                // Add one point to the current player
-                const newPlayerScore = this.m_GameState.AwardCurrentPlayer();
-                this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(newPlayerScore.toString());
-
-                // Make the button "APPEAR" enabled
-                this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].setAlpha(1);
-
-
-            }
-            else {
-                //Subtract one point from the current player score
-                const newPlayerScore = this.m_GameState.PunishCurrentPlayer();
-                this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(newPlayerScore.toString());
-            }
-
-            // Allow players to generate new cards
-            this.m_Btn_NewCard.SetEnabled();
-
-
-
-
-        }
-    }
+   
 
     DisableAllButtons() {
         for (let i = 0; i < 4; i++)
@@ -291,63 +257,103 @@ export class MultiplayerScene extends Phaser.Scene {
          }
     }
 
-    HandleButtonClick_Number(clickedButtonIndex: number, operand): void {
+    HandleButtonClick_Number(clickedButtonIndex: number): void {
+        console.log("Clicked button " + clickedButtonIndex.toString());
 
-        if (this.m_GameState.IsPickingOperand1()) {
+        const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
+        const state = this.m_GameState.GetCurrentState();
 
-            // this.m_GameState.GetCurrentOperation().SetOperand1(operand, clickedButtonIndex);
-            this.m_GameState.NextPlayerState();
 
-            // Disable the number button
+        if (this.m_GameState.GetCurrentState() === PlayerState.PickingOperand1) {
+
             this.m_CardButtons[clickedButtonIndex].SetDisabled();
 
-            // We have to enable the operation buttons 
-            this.btnOperationAdd.SetEnabled();
-            this.btnOperationSubtract.SetEnabled();
-            this.btnOperationMultiply.SetEnabled();
-            this.btnOperationDivide.SetEnabled();
+            // Mark it as used, so that it doesnt get enabled again.
+            this.m_BtnUsed[clickedButtonIndex] = true;
 
-        }
-        else {
+            // Also enable the operation buttons
+            this.EnableOperationButtons();
 
-          
+            // Update current operation
+            this.m_GameState.SetOperand1(pickedNumber, clickedButtonIndex);
 
-            
+            // Update the expression bars
+            this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => {
+                exprBar.SetText(pickedNumber)
+            });
 
-          
+            this.m_GameState.NextState();
 
 
-            // Display the operation to all the bars
+        } else if (state === PlayerState.PickingOperand2) {
+
+            this.m_GameState.SetOperand2(pickedNumber, clickedButtonIndex);
+
+            // Update the button text if the button we just clicked was the 2nd operand
+            const expression = this.m_GameState.CompleteOperation();
+
+            this.m_CardButtons[clickedButtonIndex].NumberButtonSetText(expression);
+
+            // Update the expression bars
+            this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => {
+                exprBar.SetText(expression)
+            });
+
             /*
+                We can also check if this is the last available/enabled button.
+                If it is, then it means we now must check if the solution is correct
+            */
+            let usedCount = 0;
             for (let i = 0; i < 4; i++)
-                this.m_Array_ExpressionBars[i].SetText(this.m_GameState.GetCurrentOperation().ToString());
-                */
-
-            // Here is where we check for the solution
-            // If 3 cards are picked/disable and the the result is 24, then the player won.
-            this.CheckSolution();
+                if (this.m_BtnUsed[i] === true)
+                    usedCount++;
 
 
-            // The operation was completed. Now the player has to pick a new first operand again.
-            this.m_GameState.ResetOperationState();
+            if (usedCount === 3) {
+                const won: boolean = this.m_GameState.CheckSolution(expression);
 
-            // Operation buttons can be disabled
-            this.btnOperationAdd.SetDisabled();
-            this.btnOperationSubtract.SetDisabled();
-            this.btnOperationMultiply.SetDisabled();
-            this.btnOperationDivide.SetDisabled();
+                if (won) {
+                    this.m_GameState.IncrTotalCorrect();
+                    this.ShowPlayerWon(expression);
+                }
 
+                else {
+                    this.m_GameState.IncrTotalWrong();
+                    this.ShowPlayerLost(expression);
 
+                }
+
+                // Disable all numbers and operations
+                this.DisableNumberButtons();
+                this.DisableOperationButtons()
+               
+            }
+
+            // Push the operation 
+            this.m_GameState.PushCurrentOperation();
+            this.m_GameState.ResetOperationState()
         }
+
+        console.log(`Current state: ${this.m_GameState.StateToString()}`);
 
     }
 
-    HandleButtonClick_Operation(operation: string) {
-        // Update the current operation
-        //this.m_GameState.GetCurrentOperation().SetOperator(operation);
+    HandleButtonClick_Operation(operator: string) {
+        this.m_GameState.SetOperator(operator);
+        this.m_GameState.NextState();
 
-        // Player chose the operation. Now he has to pick the second operand
-        this.m_GameState.SetPickingOperand2();
+        // Enable card buttons
+        this.EnableNumberButtons();
+
+        // Disable operation buttons
+        this.DisableOperationButtons();
+
+        // Update the expression bars
+        this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => 
+        {
+            exprBar.SetText(`${exprBar.GetText()}${operator}`);
+        });
+        
     }
 
 
@@ -468,25 +474,28 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
         // Setup a button for each number in the card (4 buttons)
+        this.m_BtnUsed = new Array<Boolean>();
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 196, this.m_Image_CardBG.y,
-                1, 1, "", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "", { fontSize: 128,  color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 196,
-                1, 1, "", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "", { fontSize: 128,  color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 196, this.m_Image_CardBG.y,
-                1, 1, "", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "", { fontSize: 128,  color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 196,
-                1, 1, "", { fontSize: 75, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG")
+                1.4, 1.4, "", { fontSize: 128,  color: "#05b8ff" }, "btn_numberBG")
 
         ]
 
         for (let i = 0; i < this.m_CardButtons.length; i++) {
             // Each button starts disabled
             this.m_CardButtons[i].SetDisabled();
-            this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i, this.m_GameState.GetNumbers()[i]));
+            this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i));
+
+            this.m_BtnUsed[i] = false;
 
             // Add each one to the grouo
             this.m_Group_CardGroup.add(this.m_CardButtons[i]);
@@ -521,22 +530,22 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Addition operation button
         this.btnOperationAdd = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_addition");
-        this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "addition"));
+        this.btnOperationAdd.on("pointerup", () => this.events.emit('OperationButtonClick', "+"));
         this.btnOperationAdd.SetDisabled();
 
         // Subtraction operation button
         this.btnOperationSubtract = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 - 64, 1, 1, "", { fontSize: 64 }, "btn_subtraction");
-        this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "subtraction"));
+        this.btnOperationSubtract.on("pointerup", () => this.events.emit('OperationButtonClick', "-"));
         this.btnOperationSubtract.SetDisabled();
 
         // Multiplication operation button
         this.btnOperationMultiply = new BetterButton(this, this.scale.width / 2 + 580, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_multiplication");
-        this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "multiplication"));
+        this.btnOperationMultiply.on("pointerup", () => this.events.emit('OperationButtonClick', "x"));
         this.btnOperationMultiply.SetDisabled();
 
         // Division operation button
         this.btnOperationDivide = new BetterButton(this, this.scale.width / 2 + 800, this.scale.height / 2 + 160, 1, 1, "", { fontSize: 64 }, "btn_division");
-        this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "division"));
+        this.btnOperationDivide.on("pointerup", () => this.events.emit('OperationButtonClick', "/"));
         this.btnOperationDivide.SetDisabled();
 
 
@@ -565,7 +574,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ==================== Difficulty image ================ */
         // Show an image on the top of the page that displays the difficulty of the current card
-        switch (this.m_GameState.Difficulty) {
+        switch (this.m_GameState.mDifficulty) {
             case Difficulty.Any:
                 this.imageDifficulty = this.add.image(this.scale.width / 2, -96, 'btn_allDifficulties');
                 break;
@@ -600,6 +609,61 @@ export class MultiplayerScene extends Phaser.Scene {
     
     }
 
+
+    EnableNumberButtons() : void 
+    {
+        for (let i = 0; i < 4; i++) {
+            if (this.m_BtnUsed[i] === false)
+                this.m_CardButtons[i].SetEnabled();
+        }
+    }
+
+    DisableNumberButtons() : void 
+    {
+        this.m_CardButtons.forEach( (button: BetterButton) => {
+            button.SetDisabled();
+        });
+    }
+
+    EnableOperationButtons() : void 
+    {
+        this.btnOperationAdd.SetEnabled();
+        this.btnOperationSubtract.SetEnabled();
+        this.btnOperationMultiply.SetEnabled();
+        this.btnOperationDivide.SetEnabled();
+    }
+
+    DisableOperationButtons() : void 
+    {
+        this.btnOperationAdd.SetDisabled();
+        this.btnOperationSubtract.SetDisabled();
+        this.btnOperationMultiply.SetDisabled();
+        this.btnOperationDivide.SetDisabled();
+    }
+
+    ShowPlayerWon(expression: string): void {
+
+        this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => {
+            exprBar.SetText(expression + ` = ${24}`);
+            exprBar.SetTextColor("#00ff1a");
+
+            this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
+        });
+        
+    }
+
+    ShowPlayerLost(expression: string): void {
+        this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => {
+            exprBar.SetText(expression + ` = ${ValueOfExpression(expression)}`);
+            exprBar.SetTextColor("#ff2600");
+
+            this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
+
+        });
+       
+
+
+    }
 
 
 
