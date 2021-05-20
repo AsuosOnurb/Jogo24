@@ -134,7 +134,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
             // Set the text of the number button
             this.m_CardButtons[i].NumberButtonSetText(generatedCard[i]);
-            this.m_CardButtons[i].SetDisabled();
+            this.m_CardButtons[i].SetDisabled(0.7);
 
             this.m_BtnUsed[i] = false;
         }
@@ -160,6 +160,13 @@ export class MultiplayerScene extends Phaser.Scene {
         // Add the text to the mini cards
         this.mMinicard1.SetCard(generatedCard);
         this.mMinicard2.SetCard(generatedCard);
+
+        // Reset expression bars
+        this.m_Array_ExpressionBars.forEach((exprBar) => 
+        {
+            exprBar.SetText("");
+            exprBar.SetTextColor("#ffffff");
+        });
 
 
 
@@ -326,6 +333,7 @@ export class MultiplayerScene extends Phaser.Scene {
                 // Disable all numbers and operations
                 this.DisableNumberButtons();
                 this.DisableOperationButtons()
+                this.m_Btn_NewCard.SetEnabled(); // PLayers have to pick a new cards
                
             }
 
