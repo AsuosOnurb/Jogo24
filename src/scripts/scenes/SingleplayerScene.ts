@@ -84,7 +84,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 90, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64);
+            new CountdownTimer(this, 90, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontSize: 32 });

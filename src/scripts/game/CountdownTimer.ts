@@ -1,4 +1,4 @@
-import {BetterText} from "../better/BetterText";
+import { BetterText } from "../better/BetterText";
 
 export class CountdownTimer {
 
@@ -14,7 +14,7 @@ export class CountdownTimer {
 
     private m_callback;
 
-    constructor(scene: Phaser.Scene, startingTime: number, callback, textX: number, textY: number, textSize: number) {
+    constructor(scene: Phaser.Scene, startingTime: number, callback, textX: number, textY: number, textSize: number, optionalInitialText: string | undefined) {
 
         this.m_currentScene = scene;
 
@@ -25,7 +25,11 @@ export class CountdownTimer {
 
         //this.m_textObject = new BetterText(scene, 256, window.innerHeight / 2, "02:00", { fill: "#fff", fontStyle: "bold", fontSize: 64 });
         this.m_textObject = new BetterText(scene, textX, textY, "", { fill: "#fff", fontStyle: "bold", fontSize: textSize });
-        this.m_textObject.setText(this.FormatTime());
+
+        if (optionalInitialText)
+            this.m_textObject.setText(optionalInitialText);
+        else
+            this.m_textObject.setText(this.FormatTime());
 
         this.m_callback = callback;
     }
@@ -49,6 +53,12 @@ export class CountdownTimer {
 
 
 
+    }
+
+    StopCountdown(): void {
+        if (this.m_isRunning) {
+            this.m_timerEvent.paused = true;
+        }
     }
 
     private Tick(): void {
@@ -89,5 +99,12 @@ export class CountdownTimer {
             return `0${minutes} : 0${partInSeconds}`;
         else
             return `0${minutes} : ${partInSeconds}`;
+    }
+
+    Reset(): void {
+        this.m_isRunning = false;
+        this.m_currentTime = this.m_INITIAL_TIME
+        this.m_textObject.setText(this.FormatTime());
+        this.m_textObject.setFill("#fff");
     }
 }

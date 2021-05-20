@@ -9,6 +9,8 @@ import { MultiplayerGame, PlayerState } from '../game/MultiplayerGame';
 import { Difficulty } from '../game/CardGenerator';
 import { Minicard } from '../better/Minicard';
 import { ValueOfExpression } from '../game/Utils';
+import { CountdownTimer } from '../game/CountdownTimer';
+import { expr } from 'jquery';
 
 
 export class MultiplayerScene extends Phaser.Scene {
@@ -76,6 +78,9 @@ export class MultiplayerScene extends Phaser.Scene {
 
     private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
     private imageDifficulty: Phaser.GameObjects.Image; // The image that displays the current game difficulty
+
+    private mCountDownTimer: CountdownTimer;
+    private mCountdownTimerImage: Phaser.GameObjects.Image;
 
 
     constructor() {
@@ -162,17 +167,19 @@ export class MultiplayerScene extends Phaser.Scene {
         this.mMinicard2.SetCard(generatedCard);
 
         // Reset expression bars
-        this.m_Array_ExpressionBars.forEach((exprBar) => 
-        {
+        this.m_Array_ExpressionBars.forEach((exprBar) => {
             exprBar.SetText("");
             exprBar.SetTextColor("#ffffff");
         });
 
 
+        this.mCountDownTimer.Reset();
+
+
 
     }
 
-   
+
 
     DisableAllButtons() {
         for (let i = 0; i < 4; i++)
@@ -192,8 +199,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // The colored player button was clicked. Disable all others right away
         for (let i = 0; i < 4; i++) {
-            if (clickedButtonIndex != i)
-            {
+            if (clickedButtonIndex != i) {
                 this.m_Array_PlayerButtons[i].SetDisabled();
 
             }
@@ -214,9 +220,12 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
         this.RedrawMiniCards(clickedButtonIndex);
-        
 
-       
+        // Start counting time
+        this.mCountDownTimer.StartCountdown();
+
+
+
 
     }
 
@@ -239,29 +248,26 @@ export class MultiplayerScene extends Phaser.Scene {
 
     }
 
-    RedrawMiniCards(clickedButtonIndex: number) : void 
-    {
-         // Flip the card according to the new current player
-         if (clickedButtonIndex == 0 || clickedButtonIndex == 1)
-         {
-             // Top player is  playing.
-             // Put minicards on the bottom 
-             this.mMinicard1.SetPosition(384, this.scale.height - 128);
-             this.mMinicard1.FlipForBottom();
+    RedrawMiniCards(clickedButtonIndex: number): void {
+        // Flip the card according to the new current player
+        if (clickedButtonIndex == 0 || clickedButtonIndex == 1) {
+            // Top player is  playing.
+            // Put minicards on the bottom 
+            this.mMinicard1.SetPosition(384, this.scale.height - 128);
+            this.mMinicard1.FlipForBottom();
 
-             this.mMinicard2.SetPosition(this.scale.width - 384, this.scale.height - 128);
-             this.mMinicard2.FlipForBottom();
- 
-         } else 
-         {
-             // Bottom player is  playing.
-             // Put minicards on the top 
-             this.mMinicard1.SetPosition(384, 128);
-             this.mMinicard1.FlipForTop();
+            this.mMinicard2.SetPosition(this.scale.width - 384, this.scale.height - 128);
+            this.mMinicard2.FlipForBottom();
 
-             this.mMinicard2.SetPosition(this.scale.width -  384, 128);
-             this.mMinicard2.FlipForTop();
-         }
+        } else {
+            // Bottom player is  playing.
+            // Put minicards on the top 
+            this.mMinicard1.SetPosition(384, 128);
+            this.mMinicard1.FlipForTop();
+
+            this.mMinicard2.SetPosition(this.scale.width - 384, 128);
+            this.mMinicard2.FlipForTop();
+        }
     }
 
     HandleButtonClick_Number(clickedButtonIndex: number): void {
@@ -334,7 +340,10 @@ export class MultiplayerScene extends Phaser.Scene {
                 this.DisableNumberButtons();
                 this.DisableOperationButtons()
                 this.m_Btn_NewCard.SetEnabled(); // PLayers have to pick a new cards
-               
+
+                // Stop time counter
+                this.mCountDownTimer.StopCountdown();
+
             }
 
             // Push the operation 
@@ -357,11 +366,10 @@ export class MultiplayerScene extends Phaser.Scene {
         this.DisableOperationButtons();
 
         // Update the expression bars
-        this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => 
-        {
+        this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => {
             exprBar.SetText(`${exprBar.GetText()}${operator}`);
         });
-        
+
     }
 
 
@@ -485,16 +493,16 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_BtnUsed = new Array<Boolean>();
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 196, this.m_Image_CardBG.y,
-                1.4, 1.4, "", { fontSize: 128,  color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 196,
-                1.4, 1.4, "", { fontSize: 128,  color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 196, this.m_Image_CardBG.y,
-                1.4, 1.4, "", { fontSize: 128,  color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 196,
-                1.4, 1.4, "", { fontSize: 128,  color: "#05b8ff" }, "btn_numberBG")
+                1.4, 1.4, "", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG")
 
         ]
 
@@ -519,16 +527,16 @@ export class MultiplayerScene extends Phaser.Scene {
         // Setup the 4 coloured player buttons
         this.m_Array_PlayerButtons = [
             new BetterButton(this, 128, 128,
-                0.8, 0.8, "", { fontSize: 128 }, "btn_player1"),
+                0.8, 0.8, "", { fontSize: 96 }, "btn_player1"),
 
             new BetterButton(this, this.scale.width - 128, 128,
-                0.8, 0.8, "", { fontSize: 128 }, "btn_player2"),
+                0.8, 0.8, "", { fontSize: 96 }, "btn_player2"),
 
             new BetterButton(this, 128, this.scale.height - 128,
-                0.8, 0.8, "", { fontSize: 128 }, "btn_player3"),
+                0.8, 0.8, "", { fontSize: 96 }, "btn_player3"),
 
             new BetterButton(this, this.scale.width - 128, this.scale.height - 128,
-                0.8, 0.8, "", { fontSize: 128 }, "btn_player4")
+                0.8, 0.8, "", { fontSize: 96 }, "btn_player4")
         ];
 
         for (let i = 0; i < 4; i++) {
@@ -569,7 +577,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_Array_ExpressionBars.forEach((b) => { b.SetDisabled(1.0) })
 
 
-        
+
 
         /* ============================Main menu button ================ */
         // Move the main menu button to the side (just a bit)
@@ -609,40 +617,41 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
         /* ============ Setup minicards =========== */
-        this.mMinicard1 = new Minicard(this, 384,128, '    ');
-        this.mMinicard2 = new Minicard(this, this.scale.width - 384,128, '    ');
+        this.mMinicard1 = new Minicard(this, 384, 128, '    ');
+        this.mMinicard2 = new Minicard(this, this.scale.width - 384, 128, '    ');
 
-        
 
-    
+        // Setup the countdown timer
+        this.mCountdownTimerImage = this.add.image(256, this.scale.height / 2, "clockBG1");
+        this.mCountDownTimer = new CountdownTimer(this, 12, this.NoTimeLeft.bind(this), 256 + 94, this.scale.height / 2, 40, "00 : 12");
+
+
+
+
     }
 
 
-    EnableNumberButtons() : void 
-    {
+    EnableNumberButtons(): void {
         for (let i = 0; i < 4; i++) {
             if (this.m_BtnUsed[i] === false)
                 this.m_CardButtons[i].SetEnabled();
         }
     }
 
-    DisableNumberButtons() : void 
-    {
-        this.m_CardButtons.forEach( (button: BetterButton) => {
+    DisableNumberButtons(): void {
+        this.m_CardButtons.forEach((button: BetterButton) => {
             button.SetDisabled();
         });
     }
 
-    EnableOperationButtons() : void 
-    {
+    EnableOperationButtons(): void {
         this.btnOperationAdd.SetEnabled();
         this.btnOperationSubtract.SetEnabled();
         this.btnOperationMultiply.SetEnabled();
         this.btnOperationDivide.SetEnabled();
     }
 
-    DisableOperationButtons() : void 
-    {
+    DisableOperationButtons(): void {
         this.btnOperationAdd.SetDisabled();
         this.btnOperationSubtract.SetDisabled();
         this.btnOperationMultiply.SetDisabled();
@@ -655,9 +664,11 @@ export class MultiplayerScene extends Phaser.Scene {
             exprBar.SetText(expression + ` = ${24}`);
             exprBar.SetTextColor("#00ff1a");
 
-            this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
         });
-        
+
+        this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
+
+
     }
 
     ShowPlayerLost(expression: string): void {
@@ -665,14 +676,38 @@ export class MultiplayerScene extends Phaser.Scene {
             exprBar.SetText(expression + ` = ${ValueOfExpression(expression)}`);
             exprBar.SetTextColor("#ff2600");
 
-            this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
 
         });
-       
+
+        this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
+
+
 
 
     }
 
+    /**
+     * Activated when the countdown timer rings (reaches zero).
+     * Activates only once each round.
+     */
+    NoTimeLeft() {
+        this.DisableNumberButtons();
+        this.DisableOperationButtons();
+
+        this.m_Array_ExpressionBars.forEach((exprBar) => 
+        {
+            exprBar.SetTextColor("#ff2600");
+        }) ;
+
+        this.m_GameState.PunishCurrentPlayer();
+        this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
+
+        this.m_Btn_NewCard.SetEnabled();
+
+
+
+
+    }
 
 
 
