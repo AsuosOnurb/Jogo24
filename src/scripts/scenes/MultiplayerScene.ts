@@ -99,7 +99,7 @@ export class MultiplayerScene extends Phaser.Scene {
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 96, 0.6, 0.6, "", { fontSize: 64 }, 'btn_gotoMenu');
+        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 70, 0.5, 0.5, "", { fontSize: 64 }, 'btn_gotoMenu');
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
@@ -485,24 +485,24 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_Group_CardGroup = this.add.group();
 
         // Setup the game card group
-        this.m_Image_CardBG = this.add.image(this.scale.width / 2, this.scale.height / 2 + 80, 'cardBG');
-        //this.m_Group_CardGroup.add(this.m_Image_CardBG);
+        this.m_Image_CardBG = this.add.image(this.scale.width / 2, this.scale.height / 2 + 60, 'cardBG');
+        this.m_Image_CardBG.setScale(1.1);
 
 
         // Setup a button for each number in the card (4 buttons)
         this.m_BtnUsed = new Array<Boolean>();
         this.m_CardButtons = [
-            new BetterButton(this, this.scale.width / 2 - 196, this.m_Image_CardBG.y,
-                1.4, 1.4, "", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
+            new BetterButton(this, this.scale.width / 2 - 204, this.m_Image_CardBG.y,
+                1.4, 1.4, "?", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 196,
-                1.4, 1.4, "", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 204,
+                1.4, 1.4, "?", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2 + 196, this.m_Image_CardBG.y,
-                1.4, 1.4, "", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
+            new BetterButton(this, this.scale.width / 2 + 204, this.m_Image_CardBG.y,
+                1.4, 1.4, "?", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
 
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 196,
-                1.4, 1.4, "", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG")
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 204,
+                1.4, 1.4, "?", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG")
 
         ]
 
@@ -567,10 +567,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ================== Setup the expression bars ==================== */
         this.m_Array_ExpressionBars = [
-            new BetterButton(this, this.scale.width / 2 - 390, this.m_Image_CardBG.y, 0.9, 0.8, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(-90),
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 390, 0.9, 0.8, "", { fontSize: 48, color: "#ffffff" }, 'inputBar'),
-            new BetterButton(this, this.scale.width / 2 + 390, this.m_Image_CardBG.y, 0.9, 0.8, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(90),
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 390, 0.9, 0.8, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(180)
+            new BetterButton(this, this.scale.width / 2 - 440, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(-90),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 416, 0.9, 0.7, "", { fontSize: 48, color: "#ffffff" }, 'inputBar'),
+            new BetterButton(this, this.scale.width / 2 + 440, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(90),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 416, 0.9, 0.7, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(180)
         ];
 
         // And make them all un-interactible
@@ -607,10 +607,10 @@ export class MultiplayerScene extends Phaser.Scene {
                 this.imageDifficulty = this.add.image(this.scale.width / 2, -96, 'btn_hard');
                 break;
         }
-        this.imageDifficulty.setScale(0.8)
+        this.imageDifficulty.setScale(0.7)
         this.tweens.add({
             targets: this.imageDifficulty,
-            y: 96,
+            y: 70,
             repeat: 0,
             ease: 'Power1'
         });
@@ -622,8 +622,8 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
         // Setup the countdown timer
-        this.mCountdownTimerImage = this.add.image(256, this.scale.height / 2, "clockBG1");
-        this.mCountDownTimer = new CountdownTimer(this, 12, this.NoTimeLeft.bind(this), 256 + 94, this.scale.height / 2, 40, "00 : 12");
+        this.mCountdownTimerImage = this.add.image(256 - 32, this.scale.height / 2, "clockBG1");
+        this.mCountDownTimer = new CountdownTimer(this, 12, this.NoTimeLeft.bind(this), 256 + 60, this.scale.height / 2, 40, "00 : 12");
 
 
 
