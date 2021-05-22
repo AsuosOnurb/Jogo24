@@ -23,6 +23,8 @@ export  class MainMenuScene extends Phaser.Scene {
     private btnPlaySoloMedium!: BetterButton;
     private btnPlaySoloHard!: BetterButton;
 
+    private btnFullscreenToggle: BetterButton;
+
 
     /* ========== "How to play" , "About the game"  and "Credits" panels =======*/
     private isPanelOpen: boolean;   // Is any panel open or not
@@ -48,18 +50,7 @@ export  class MainMenuScene extends Phaser.Scene {
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
 
-        // Add fullscreen toggle icon
-        const fullScreenIcon = this.add.sprite(this.scale.width - 128, 128, 'fullscreenToggle');
-        fullScreenIcon.setScale(0.1, 0.1);
-        fullScreenIcon.setInteractive().on("pointerup", () => {
-
-            if (this.scale.isFullscreen)
-                this.scale.stopFullscreen();
-            else
-                this.scale.startFullscreen();
-
-        })
-
+        
         // Insert the toon image
         const toonImg = this.add.sprite(this.scale.width / 2 - 720, this.scale.height - 283, 'toon');
 
@@ -70,57 +61,65 @@ export  class MainMenuScene extends Phaser.Scene {
         // ============================ Setup Main Menu Buttons ======================== //
 
         // Tablet mode button
-        this.btnTabletMode = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 21 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_tabletMode');
+        this.btnTabletMode = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 21 * 32, 0.8, 0.8, "", {}, 'btn_tabletMode');
         this.btnTabletMode.once('pointerup', () => this.StartMultiplayerGame());
 
-        
+        // Fullscreen button
+        this.btnFullscreenToggle = new BetterButton(this, this.scale.width - 128, 128, 0.8, 0.8, "", {}, this.scale.isFullscreen ? "fullscreenOff" : "fullscreenOn");
+        this.btnFullscreenToggle.on('pointerup', () => this.ToggleFullscreen());
 
         // Top 100 button
-        this.btnLeaderboards = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 11 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_top");
+        this.btnLeaderboards = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 11 * 32, 0.8, 0.8, "", {}, "btn_top");
         this.btnLeaderboards.on('pointerup', () => this.StartRankingScene());
 
         // About the game button
-        this.btnAboutGame = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 6 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_about');
+        this.btnAboutGame = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 6 * 32, 0.8, 0.8, "", {}, 'btn_about');
         this.btnAboutGame.on("pointerup", () => this.ShowPanel(Panels.AboutGame));
 
         // How to play button
-        this.howToPlayButton = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_howToPlay");
+        this.howToPlayButton = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 32, 0.8, 0.8, "", {}, "btn_howToPlay");
         this.howToPlayButton.on("pointerup", () => this.ShowPanel(Panels.HowToPlay));
 
         // Credits button
-        this.btnCredits = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
+        this.btnCredits = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 16 * 32, 0.8, 0.8, "", {}, "btn_credits");
         this.btnCredits.on('pointerup', () => this.ShowPanel(Panels.Credits));
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 16, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_easy', 0);
+        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 16, 1.2, 1.2, "", {}, 'btn_easy', 0);
         this.btnPlaySoloEasy.on("pointerup", () => this.StartSoloGame(Difficulty.Easy));
 
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_medium', 0);
+        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1.2, 1.2, "", {},'btn_medium', 0);
         this.btnPlaySoloMedium.on("pointerup", () => this.StartSoloGame(Difficulty.Medium));
 
         // Play Solo Hard button
-        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 384, 1.2, 1.2, "", { fontSize: 32, fontFamily: "bold" }, 'btn_hard', 0);
+        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 384, 1.2, 1.2, "", {}, 'btn_hard', 0);
         this.btnPlaySoloHard.on("pointerup", () => this.StartSoloGame(Difficulty.Hard));
 
 
         // =================== Setup the panel group, their images and the close button =================
         this.imgHowToPlay = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'howToPlay');
         this.imgHowToPlay.setScale(1.5);
+        this.imgHowToPlay.setAlpha(0);
 
         this.imgAboutTheGame = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'aboutGame');
         this.imgAboutTheGame.setScale(1.5);
+        this.imgAboutTheGame.setAlpha(0);
+
 
         this.imgCredits = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'credits');
         this.imgCredits.setScale(1.5);
+        this.imgCredits.setAlpha(0);
+
 
         this.btnClosePanel = new BetterButton(this, this.scale.width / 2 + 400, this.scale.height / 2 - 200, 0.8, 0.8, "", {}, 'btn_close');
         this.btnClosePanel.on('pointerup', () => this.HidePanel());
+        this.btnClosePanel.setAlpha(0);
         
         this.groupPanel = this.add.group([this.imgAboutTheGame, this.imgHowToPlay, this.imgCredits, this.btnClosePanel]);
-        this.groupPanel.setVisible(false); // Group starts invisible
+        this.groupPanel.setAlpha(0);
         this.isPanelOpen = false;
     }
 
@@ -149,7 +148,6 @@ export  class MainMenuScene extends Phaser.Scene {
 
     StartRankingScene() : void 
     {
-        console.log("Here");
         this.scene.start("RankingScene", {param1: "JustAString"});
     }
 
@@ -160,24 +158,23 @@ export  class MainMenuScene extends Phaser.Scene {
         {
             switch (panelName) {
                 case Panels.AboutGame:
-                    this.groupPanel.setVisible(true);
+                    //this.groupPanel.setVisible(true);
+                    this.PlayTween_ShowPanel(Panels.AboutGame)
 
-                    this.imgHowToPlay.setVisible(false);
-                    this.imgCredits.setVisible(false);
+                  
                     break;
 
                 case Panels.HowToPlay:
-                    this.groupPanel.setVisible(true);
+                    this.PlayTween_ShowPanel(Panels.HowToPlay)
 
-                    this.imgAboutTheGame.setVisible(false);
-                    this.imgCredits.setVisible(false);
+
                     break
 
                 case Panels.Credits:
-                    this.groupPanel.setVisible(true);
+                    this.PlayTween_ShowPanel(Panels.Credits)
 
-                    this.imgHowToPlay.setVisible(false);
-                    this.imgAboutTheGame.setVisible(false);
+
+                  
                 default:
                     break;
             }
@@ -189,7 +186,61 @@ export  class MainMenuScene extends Phaser.Scene {
 
     HidePanel(): void {
         this.isPanelOpen = false;
-        this.groupPanel.setVisible(false);
+        this.PlayTween_HidePanel();
+    }
+
+
+    private ToggleFullscreen() : void 
+    {
+        if (this.scale.isFullscreen)
+        {
+
+            this.scale.stopFullscreen();
+            this.btnFullscreenToggle.SetImage('fullscreenOn');
+        }
+        else
+        {
+            this.scale.startFullscreen();
+            this.btnFullscreenToggle.SetImage('fullscreenOff');
+        }
+    }
+
+    private PlayTween_ShowPanel(panel: Panels) : void 
+    {
+        let targetImage: Phaser.GameObjects.Image;
+        if (panel === Panels.AboutGame)
+            targetImage = this.imgAboutTheGame;
+        else if (panel === Panels.Credits)
+            targetImage = this.imgCredits;
+        else 
+            targetImage = this.imgHowToPlay;
+
+        this.tweens.add({
+            targets: [this.groupPanel, targetImage],
+            alpha: 1,
+            scale: 1.5,
+            ease: 'Power1',
+            duration: 500
+        });
+
+        this.tweens.add({
+            targets: this.btnClosePanel,
+            alpha: 1,
+            ease: 'Power1',
+            duration: 500
+        });
+    }
+
+    private PlayTween_HidePanel() : void 
+    {
+
+        this.tweens.add({
+            targets: [this.imgAboutTheGame, this.imgCredits, this.imgHowToPlay, this.btnClosePanel],
+            alpha: 0,
+            scale: 0.4,
+            ease: 'Power1',
+            duration: 100
+        });
     }
 
 

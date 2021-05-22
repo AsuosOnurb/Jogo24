@@ -566,9 +566,9 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ================== Setup the expression bars ==================== */
         this.m_Array_ExpressionBars = [
-            new BetterButton(this, this.scale.width / 2 - 440, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(-90),
+            new BetterButton(this, this.scale.width / 2 - 420, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(-90),
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 416, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar'),
-            new BetterButton(this, this.scale.width / 2 + 440, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(90),
+            new BetterButton(this, this.scale.width / 2 + 420, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(90),
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 416, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(180)
         ];
 

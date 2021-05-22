@@ -241,6 +241,13 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
     }
 
+
+    SetImage(imageName: string) : void 
+    {
+        this.setTexture(imageName);
+    }
+
+
     private UpdateFontSize(): void {
 
         let calculatedSize = 0;
