@@ -215,6 +215,7 @@ export  class MainMenuScene extends Phaser.Scene {
         else 
             targetImage = this.imgHowToPlay;
 
+        // Make the image appear
         this.tweens.add({
             targets: [this.groupPanel, targetImage],
             alpha: 1,
@@ -223,6 +224,7 @@ export  class MainMenuScene extends Phaser.Scene {
             duration: 500
         });
 
+        // make the close button appear
         this.tweens.add({
             targets: this.btnClosePanel,
             alpha: 1,
