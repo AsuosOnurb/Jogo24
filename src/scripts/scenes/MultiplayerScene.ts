@@ -169,7 +169,7 @@ export class MultiplayerScene extends Phaser.Scene {
         // Reset expression bars
         this.m_Array_ExpressionBars.forEach((exprBar) => {
             exprBar.SetText("");
-            exprBar.SetTextColor("#ffffff");
+            exprBar.SetTextColor("#FFFFFF");
         });
 
 
@@ -492,16 +492,16 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_BtnUsed = new Array<Boolean>();
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 204, this.m_Image_CardBG.y,
-                1.4, 1.4, "?", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 204,
-                1.4, 1.4, "?", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 204, this.m_Image_CardBG.y,
-                1.4, 1.4, "?", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 204,
-                1.4, 1.4, "?", { fontSize: 128, color: "#05b8ff" }, "btn_numberBG")
+                1.4, 1.4, "?", { fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG")
 
         ]
 
@@ -566,10 +566,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ================== Setup the expression bars ==================== */
         this.m_Array_ExpressionBars = [
-            new BetterButton(this, this.scale.width / 2 - 440, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(-90),
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 416, 0.9, 0.7, "", { fontSize: 48, color: "#ffffff" }, 'inputBar'),
-            new BetterButton(this, this.scale.width / 2 + 440, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(90),
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 416, 0.9, 0.7, "", { fontSize: 48, color: "#ffffff" }, 'inputBar').SetAngle(180)
+            new BetterButton(this, this.scale.width / 2 - 440, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(-90),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 416, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar'),
+            new BetterButton(this, this.scale.width / 2 + 440, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(90),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 416, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(180)
         ];
 
         // And make them all un-interactible

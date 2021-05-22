@@ -95,7 +95,7 @@ export class SingleplayerScene extends Phaser.Scene {
             new BetterText(this, 256, 256, "", { fontSize: 32 });
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontSize: 48 }, 'inputBar', 0);
+        this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontSize: 48, fill:'#FFFFFF'}, 'inputBar', 0);
         this.mExpressionBar.SetDisabled(1);
 
 
@@ -177,6 +177,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.m_BtnUsed = new Array<Boolean>();
         for (let i = 0; i < this.m_CardButtons.length; i++) {
+            this.m_CardButtons[i].SetTextColor("#ffffff")
+
             // Each button starts disabled
             this.m_CardButtons[i].SetDisabled();
             this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i));
@@ -253,7 +255,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.m_GameState.SetCard(generatedCard);
 
         // Reset expression bar text color
-        this.mExpressionBar.SetTextColor("0xffffff");
+        this.mExpressionBar.SetTextColor("#FFFFFF");
 
 
         // Start the timer

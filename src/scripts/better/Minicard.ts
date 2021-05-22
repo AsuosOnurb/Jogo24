@@ -13,10 +13,10 @@ export class Minicard extends Phaser.GameObjects.Image
         scene.add.existing(this)
 
         this.mButtons = new Array<BetterText>();
-        this.mButtons[0] =  new BetterText(scene, x - 54, y, cardString[0], {fontSize: 48});
-        this.mButtons[1] =  new BetterText(scene, x, y -54 , cardString[1], {fontSize: 48});
-        this.mButtons[2] =  new BetterText(scene, x +54, y, cardString[2], {fontSize: 48});
-        this.mButtons[3] =  new BetterText(scene, x, y +54, cardString[3], {fontSize: 48});
+        this.mButtons[0] =  new BetterText(scene, x - 54, y, cardString[0], {fontSize: 48, fill:'#4e2400'});
+        this.mButtons[1] =  new BetterText(scene, x, y -54 , cardString[1], {fontSize: 48, fill:'#4e2400'});
+        this.mButtons[2] =  new BetterText(scene, x +54, y, cardString[2], {fontSize: 48, fill:'#4e2400'});
+        this.mButtons[3] =  new BetterText(scene, x, y +54, cardString[3], {fontSize: 48, fill:'#4e2400'});
 
         // Mini cards start flipped by default
         this.FlipForTop()
