@@ -73,6 +73,11 @@ export class SingleplayerGame {
         this.mOperationStack.push(this.mCurrentOperation);
     }
 
+    PeekCurrentOperation() : Operation
+    {
+        return this.mCurrentOperation;
+    }
+
     RevertToLastOperation() : Operation | undefined
     {
         let lastOp = this.mOperationStack.pop();
@@ -110,7 +115,7 @@ export class SingleplayerGame {
         return val === 24;
     }
 
-    GetCurrentState(): PlayerState {
+    GetCurrentPlayerState(): PlayerState {
         return this.m_PlayerState;
     }
 
@@ -239,6 +244,11 @@ export class SingleplayerGame {
     IsStackEmpty() : boolean
     {
         return this.mOperationStack.isEmpty();
+    }
+
+    SetPlayerState(state: PlayerState)
+    {
+        this.m_PlayerState = state;
     }
 
 

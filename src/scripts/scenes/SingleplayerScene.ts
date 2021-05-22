@@ -7,6 +7,8 @@ import { CountdownTimer } from '../game/CountdownTimer'
 import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../game/Utils'
 import { LoginData } from '../game/backend/LoginData'
+import { Operation } from '../game/Operations'
+import { timers } from 'jquery'
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -87,7 +89,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 40, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 120, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontSize: 32 });
@@ -102,12 +104,12 @@ export class SingleplayerScene extends Phaser.Scene {
         this.mImgLoginWarning.setScale(1.5)
         this.mImgLoginWarning.setAlpha(0);
 
-        this.mTextLoginWarning = new BetterText(this, this.scale.width/2, this.scale.height/2 - 32,
+        this.mTextLoginWarning = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 32,
             "\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com",
-            {fontSize:35, align:'center'});
+            { fontSize: 35, align: 'center' });
         this.mTextLoginWarning.setColor("#4e2400");
         this.mTextLoginWarning.setAlpha(0);
-        
+
     }
 
     init(data) {
@@ -301,8 +303,10 @@ export class SingleplayerScene extends Phaser.Scene {
     */
     HandleButtonClick_Number(clickedButtonIndex: number): void {
 
+
+
         const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
-        const state = this.m_GameState.GetCurrentState();
+        const state = this.m_GameState.GetCurrentPlayerState();
 
         // Enable reset btn
         this.m_BtnReset.SetEnabled();
@@ -310,9 +314,9 @@ export class SingleplayerScene extends Phaser.Scene {
         // Enable undo btn
         this.m_BtnUndo.SetEnabled();
 
-        if (this.m_GameState.GetCurrentState() === PlayerState.PickingOperand1) {
+        if (this.m_GameState.GetCurrentPlayerState() === PlayerState.PickingOperand1) {
 
-            this.m_CardButtons[clickedButtonIndex].SetDisabled();
+            // this.m_CardButtons[clickedButtonIndex].SetDisabled();
 
             // Mark it as used, so that it doesnt get enabled again.
             this.m_BtnUsed[clickedButtonIndex] = true;
@@ -325,6 +329,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Update the expression text
             this.mExpressionBar.SetText(pickedNumber);
+
+            // Disable the number buttons
+            this.DisableNumberButtons();
 
             this.m_GameState.NextState();
 
@@ -403,7 +410,8 @@ export class SingleplayerScene extends Phaser.Scene {
      */
     HandleButtonClick_Undo(): void {
 
-        if (this.m_GameState.IsPickingOperand1()) {
+        const currentPlayerState: PlayerState = this.m_GameState.GetCurrentPlayerState()
+        if (currentPlayerState === PlayerState.PickingOperand1) {
             /* 
                The user has not yet picked the first operand.
                The fact that he pressed 'Undo' means that he wants to go back to the previous operation. 
@@ -431,8 +439,65 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Update the text expression bar
             this.mExpressionBar.SetText("");
-        } else {
 
+        } else if (currentPlayerState === PlayerState.PickingOperator) {
+            /*
+                Player picked the first operand, and now he is supposed to be picking the operator.
+                But he wants to go back, so he can re-select the first operand.
+
+                This means we have to:
+                1 - Re-enable the number buttons
+                2 - Also mark the button of the number as being un-used
+                2 - Disable the operator buttons
+                3 - Erase the number/text from the expression bar (make it empty)
+                4 - Set the current state to be PickingOperand1
+            */
+
+             // Enable number buttons
+            let currentOperation: Operation = this.m_GameState.PeekCurrentOperation();
+            console.log("Undoing the picking of the first operand:")
+            console.log(currentOperation);
+            this.m_BtnUsed[currentOperation.operand1BtnIndex] = false;
+
+             this.EnableNumberButtons();
+
+            // Disable operation buttons
+            this.DisableOperationButtons()
+
+            // Erase number from expression bar
+            this.mExpressionBar.SetText("");
+
+            // Set the new state to PickingOperand1
+            this.m_GameState.SetPlayerState(PlayerState.PickingOperand1);
+        }
+        else if (currentPlayerState === PlayerState.PickingOperand2)
+        {
+            /*
+                Player picked the operator, but now we wants to go back and select a different one.
+
+                This means we have to:
+                1 - Disable the number buttons
+                2 - Enable the operator buttons
+                3 - Change the expression bar text (remove the current operator)
+                4 - Set the current player state as being PickingOperator
+            */
+
+                // Disable the numbers
+                this.DisableNumberButtons()
+
+                // Enable operators
+                this.EnableOperationButtons();
+
+                // Change the expression on the bar (remove the last character, which corresponds to the operator symbol)
+                const currentText = this.mExpressionBar.GetText();
+                const substring = currentText.substring(0, currentText.length-1);
+                console.log(`..${substring}..`)
+                this.mExpressionBar.SetText(substring);
+
+                // Change the current state
+                this.m_GameState.SetPlayerState(PlayerState.PickingOperator);
+
+                // Enable undo button
         }
 
 
@@ -440,11 +505,12 @@ export class SingleplayerScene extends Phaser.Scene {
         console.log(`Current state: ${this.m_GameState.StateToString()}`);
 
         // Disable the undo button if the stack is empty
+        /*
         if (this.m_GameState.IsStackEmpty()) {
             this.m_BtnUndo.SetDisabled();
             this.m_BtnReset.SetDisabled();
 
-        }
+        }*/
 
 
     }
@@ -532,7 +598,7 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
     ShowPleaseLoginWarning(): void {
-        
+
 
         this.tweens.add(
             {
@@ -551,13 +617,13 @@ export class SingleplayerScene extends Phaser.Scene {
         // Hide the other buttons
         this.tweens.add(
             {
-                targets: [this.btnOperationAdd, 
-                            this.btnOperationSubtract, 
-                            this.btnOperationMultiply, 
-                            this.btnOperationDivide,
-                            this.m_BtnReset,
-                            this.m_BtnUndo,
-                            this.mExpressionBar],
+                targets: [this.btnOperationAdd,
+                this.btnOperationSubtract,
+                this.btnOperationMultiply,
+                this.btnOperationDivide,
+                this.m_BtnReset,
+                this.m_BtnUndo,
+                this.mExpressionBar],
                 alpha: 0.0,
 
                 duration: 500,
@@ -568,7 +634,7 @@ export class SingleplayerScene extends Phaser.Scene {
         // Move the home button to the center the other buttons
         this.tweens.add(
             {
-                targets: this.btnGotoMenu, 
+                targets: this.btnGotoMenu,
                 x: this.scale.width / 2,
                 y: this.scale.height - 64,
                 duration: 1500,
@@ -576,7 +642,7 @@ export class SingleplayerScene extends Phaser.Scene {
             }
         );
 
-        
+
     }
 
 
