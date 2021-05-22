@@ -379,7 +379,6 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Show the rules / instructions 
         this.m_ImageText_Rules = this.add.image(this.scale.width / 2, this.scale.height / 2, 'textImage_rules')
-        this.m_ImageText_Rules
 
         this.input.on('pointerup', () => {
 

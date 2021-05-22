@@ -6,6 +6,7 @@ import { Solutions } from '../game/Solutions'
 import { CountdownTimer } from '../game/CountdownTimer'
 import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../game/Utils'
+import { LoginData } from '../game/backend/LoginData'
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -39,6 +40,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
     private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
 
+    // The final warning image that appears if the user is not logged in
+    private mImgLoginWarning: Phaser.GameObjects.Image;
+    private mTextLoginWarning: BetterText;
+
 
 
 
@@ -54,6 +59,7 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
     preload() {
+
         // Add background image window
         const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
@@ -71,9 +77,6 @@ export class SingleplayerScene extends Phaser.Scene {
         const wrongBG = this.add.sprite(this.scale.width / 2 + 680, 288, 'wrongCounter')
 
 
-
-
-
         // Setup labels 
         this.Setup_Labels();
 
@@ -84,7 +87,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 90, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 40, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontSize: 32 });
@@ -93,6 +96,18 @@ export class SingleplayerScene extends Phaser.Scene {
         this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontSize: 48 }, 'inputBar', 0);
         this.mExpressionBar.SetDisabled(1);
 
+
+        // Login warning
+        this.mImgLoginWarning = this.add.sprite(this.scale.width / 2, this.scale.height / 2, "gameEndBGg");
+        this.mImgLoginWarning.setScale(1.5)
+        this.mImgLoginWarning.setAlpha(0);
+
+        this.mTextLoginWarning = new BetterText(this, this.scale.width/2, this.scale.height/2 - 32,
+            "\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com",
+            {fontSize:35, align:'center'});
+        this.mTextLoginWarning.setColor("#4e2400");
+        this.mTextLoginWarning.setAlpha(0);
+        
     }
 
     init(data) {
@@ -274,6 +289,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Save player data
         this.SavePlayerData(false); // Register another loss
+
+        //if (!LoginData.IsLoggedIn())
+        if (true)
+            this.ShowPleaseLoginWarning();
     }
 
 
@@ -421,8 +440,7 @@ export class SingleplayerScene extends Phaser.Scene {
         console.log(`Current state: ${this.m_GameState.StateToString()}`);
 
         // Disable the undo button if the stack is empty
-        if (this.m_GameState.IsStackEmpty())
-        {
+        if (this.m_GameState.IsStackEmpty()) {
             this.m_BtnUndo.SetDisabled();
             this.m_BtnReset.SetDisabled();
 
@@ -511,6 +529,54 @@ export class SingleplayerScene extends Phaser.Scene {
             console.log("save loss")
 
         //  UserInfo.SaveLocalData();
+    }
+
+    ShowPleaseLoginWarning(): void {
+        
+
+        this.tweens.add(
+            {
+                targets: [this.mImgLoginWarning, this.mTextLoginWarning],
+                alpha: 1.0,
+                scale: 1.6,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        // Clear the artithmetic expression text
+        this.mExpressionBar.SetText("");
+
+        // Hide the other buttons
+        this.tweens.add(
+            {
+                targets: [this.btnOperationAdd, 
+                            this.btnOperationSubtract, 
+                            this.btnOperationMultiply, 
+                            this.btnOperationDivide,
+                            this.m_BtnReset,
+                            this.m_BtnUndo,
+                            this.mExpressionBar],
+                alpha: 0.0,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        // Move the home button to the center the other buttons
+        this.tweens.add(
+            {
+                targets: this.btnGotoMenu, 
+                x: this.scale.width / 2,
+                y: this.scale.height - 64,
+                duration: 1500,
+                ease: 'Power1'
+            }
+        );
+
+        
     }
 
 

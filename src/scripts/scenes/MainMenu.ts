@@ -7,7 +7,7 @@ import { Difficulty } from '../game/CardGenerator';
 enum Panels {
     AboutGame,
     HowToPlay,
-    AboutUs
+    Credits
 };
 
 export  class MainMenuScene extends Phaser.Scene {
@@ -24,12 +24,13 @@ export  class MainMenuScene extends Phaser.Scene {
     private btnPlaySoloHard!: BetterButton;
 
 
-    /* ========== "How to play" and "About the game" panels =======*/
+    /* ========== "How to play" , "About the game"  and "Credits" panels =======*/
     private isPanelOpen: boolean;   // Is any panel open or not
     private btnClosePanel: BetterButton;
     private groupPanel: Phaser.GameObjects.Group;
     private imgHowToPlay: Phaser.GameObjects.Image;
     private imgAboutTheGame: Phaser.GameObjects.Image;
+    private imgCredits: Phaser.GameObjects.Image;
 
 
 
@@ -72,8 +73,7 @@ export  class MainMenuScene extends Phaser.Scene {
         this.btnTabletMode = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 21 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, 'btn_tabletMode');
         this.btnTabletMode.once('pointerup', () => this.StartMultiplayerGame());
 
-        // Credits button
-        this.btnCredits = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
+        
 
         // Top 100 button
         this.btnLeaderboards = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 11 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_top");
@@ -87,6 +87,9 @@ export  class MainMenuScene extends Phaser.Scene {
         this.howToPlayButton = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_howToPlay");
         this.howToPlayButton.on("pointerup", () => this.ShowPanel(Panels.HowToPlay));
 
+        // Credits button
+        this.btnCredits = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 16 * 32, 0.8, 0.8, "", { fontSize: 16, fontFamily: "bold" }, "btn_credits");
+        this.btnCredits.on('pointerup', () => this.ShowPanel(Panels.Credits));
 
 
         // Play Solo Easy button
@@ -104,16 +107,19 @@ export  class MainMenuScene extends Phaser.Scene {
 
 
         // =================== Setup the panel group, their images and the close button =================
-        // How to play Group
         this.imgHowToPlay = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'howToPlay');
         this.imgHowToPlay.setScale(1.5);
+
         this.imgAboutTheGame = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'aboutGame');
         this.imgAboutTheGame.setScale(1.5);
+
+        this.imgCredits = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'credits');
+        this.imgCredits.setScale(1.5);
 
         this.btnClosePanel = new BetterButton(this, this.scale.width / 2 + 400, this.scale.height / 2 - 200, 0.8, 0.8, "", {}, 'btn_close');
         this.btnClosePanel.on('pointerup', () => this.HidePanel());
         
-        this.groupPanel = this.add.group([this.imgAboutTheGame, this.imgHowToPlay, this.btnClosePanel]);
+        this.groupPanel = this.add.group([this.imgAboutTheGame, this.imgHowToPlay, this.imgCredits, this.btnClosePanel]);
         this.groupPanel.setVisible(false); // Group starts invisible
         this.isPanelOpen = false;
     }
@@ -155,12 +161,23 @@ export  class MainMenuScene extends Phaser.Scene {
             switch (panelName) {
                 case Panels.AboutGame:
                     this.groupPanel.setVisible(true);
+
                     this.imgHowToPlay.setVisible(false);
+                    this.imgCredits.setVisible(false);
                     break;
+
                 case Panels.HowToPlay:
                     this.groupPanel.setVisible(true);
+
                     this.imgAboutTheGame.setVisible(false);
+                    this.imgCredits.setVisible(false);
                     break
+
+                case Panels.Credits:
+                    this.groupPanel.setVisible(true);
+
+                    this.imgHowToPlay.setVisible(false);
+                    this.imgAboutTheGame.setVisible(false);
                 default:
                     break;
             }

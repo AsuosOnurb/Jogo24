@@ -23,7 +23,8 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('toon',         'assets/img/common/boneco.png');
 
     /* =================================== Main menu assets =================================== */
-    this.load.image('fullscreenToggle', 'assets/img//main_menu/fullScreen.png')
+    this.load.image('fullscreenOn', 'assets/img/main_menu/fullscreenBT-1.png')
+    this.load.image('fullscreenOff', 'assets/img/main_menu/fullscreenBT-2.png')
 
    
 
@@ -40,6 +41,7 @@ export  class PreloadScene extends Phaser.Scene {
 
     this.load.image('aboutGame', 'assets/img/main_menu/sobreojogoMC.png')
     this.load.image('howToPlay', 'assets/img/main_menu/instrucoesMC.png')
+    this.load.image('credits','assets/img/main_menu/creditosMC.png' )
 
 
 
@@ -69,6 +71,9 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_subtraction',   'assets/img/solo_game/opSubtracao.png');
     this.load.image('btn_multiplication',   'assets/img/solo_game/opMultiplicacao.png');
     this.load.image('btn_division',   'assets/img/solo_game/opDivisao.png');
+
+    this.load.image('gameEndBGg', 'assets/img/solo_game/finalDoJogo.png');
+  
 
     /* =================================== Multiplayer game assets ============================== */
     
