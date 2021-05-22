@@ -101,16 +101,16 @@ export  class MainMenuScene extends Phaser.Scene {
 
         // =================== Setup the panel group, their images and the close button =================
         this.imgHowToPlay = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'howToPlay');
-        this.imgHowToPlay.setScale(1.5);
+        this.imgHowToPlay.setScale(0.4);
         this.imgHowToPlay.setAlpha(0);
 
         this.imgAboutTheGame = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'aboutGame');
-        this.imgAboutTheGame.setScale(1.5);
+        this.imgAboutTheGame.setScale(0.4);
         this.imgAboutTheGame.setAlpha(0);
 
 
         this.imgCredits = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'credits');
-        this.imgCredits.setScale(1.5);
+        this.imgCredits.setScale(0.4);
         this.imgCredits.setAlpha(0);
 
 
