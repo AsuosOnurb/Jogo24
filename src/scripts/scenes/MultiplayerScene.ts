@@ -356,7 +356,8 @@ export class MultiplayerScene extends Phaser.Scene {
     }
 
     HandleButtonClick_Operation(operator: string) {
-        this.m_GameState.SetOperator(operator);
+
+        const mostRecentExpression: string = this.m_GameState.SetOperator(operator);
         this.m_GameState.NextState();
 
         // Enable card buttons
@@ -367,7 +368,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Update the expression bars
         this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => {
-            exprBar.SetText(`${exprBar.GetText()}${operator}`);
+            exprBar.SetText(mostRecentExpression);
         });
 
     }

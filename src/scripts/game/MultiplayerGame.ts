@@ -261,9 +261,18 @@ export class MultiplayerGame {
         this.mCurrentOperation.operand2BtnIndex = index;
     }
 
-    SetOperator(operator: string) : void 
+    SetOperator(operator: string) : string 
     {
         this.mCurrentOperation.operator = operator;
+        
+        // We can also return, here, the most recent expression string.
+        // If the first operand is just a single number, then we dont need a parentheses around it.
+        // If it a more complex expression, then we put partentheses around it.
+
+        if (IsNumeric(this.mCurrentOperation.operand1))
+            return `${this.mCurrentOperation.operand1}${operator}`;
+        else
+            return `(${this.mCurrentOperation.operand1})${operator}`;
     }
 
     SetExpression(expression:string) : void 

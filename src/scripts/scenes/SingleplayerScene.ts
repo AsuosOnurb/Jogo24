@@ -393,7 +393,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
     HandleButtonClick_Operation(operator: string) {
 
-        this.m_GameState.SetOperator(operator);
+        const mostRecentExpression: string = this.m_GameState.SetOperator(operator);
         this.m_GameState.NextState();
 
         // Enable card buttons
@@ -401,8 +401,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Disable operation buttons
         this.DisableOperationButtons();
-        this.mExpressionBar.SetText(`${this.mExpressionBar.GetText()}${operator}`);
-
+        //this.mExpressionBar.SetText(`(${this.mExpressionBar.GetText()})${operator}`);
+        this.mExpressionBar.SetText(mostRecentExpression);
     }
 
     /**
