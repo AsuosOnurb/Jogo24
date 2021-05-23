@@ -6,7 +6,7 @@ import { Solutions } from '../game/Solutions'
 import { CountdownTimer } from '../game/CountdownTimer'
 import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../game/Utils'
-import { LoginData } from '../game/backend/LoginData'
+import { LoginData } from '../backend/LoginData'
 import { Operation } from '../game/Operations'
 import { timers } from 'jquery'
 

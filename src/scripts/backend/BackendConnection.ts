@@ -43,10 +43,10 @@ export class BackendConnection {
                 success: (response) => {
                     if (response != "false") {
 
-                        LoginData.SetUser(response.split(",")[0]);                               // username
-                        LoginData.SetFirstName(response.split(",")[1]);                                 // username
-                        LoginData.SetSchool(response.split(",")[2]);                                 // username
-                        LoginData.SetClass(response.split(",")[3]);                                 // username
+                        LoginData.SetUser(response.split(",")[0]);                               
+                        LoginData.SetFirstName(response.split(",")[1]);                                 
+                        LoginData.SetSchool(response.split(",")[2]);                                 
+                        LoginData.SetClass(response.split(",")[3]);                                 
 
                         LoginData.SetLocalData();
                     }
@@ -123,8 +123,9 @@ export class BackendConnection {
                 url: "https://www.hypatiamat.com/newHRecords.php",
                 data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df + "&mturma=" + globalCodTurma +
                     "&mescola=" + globalCodEscola +
-                    "&flag=2" + "&tip=" + tipoTOP +
-                    "&tC=trapbeeTOP",
+                    "&flag=2" + 
+                    "&tip=" + tipoTOP +
+                    "&tC=jogo24HypatiaTOP",
                 crossDomain: true,
                 cache: false,
                 success: function (response) {
@@ -186,7 +187,7 @@ export class BackendConnection {
                 data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df +
                     "&mturma=" + globalCodTurma +
                     "&mescola=" + globalCodEscola +
-                    "&flag=" + flag + "&tip=" + tipoTOP + "&tC=trapbeeTOP",
+                    "&flag=" + flag + "&tip=" + tipoTOP + "&tC=jogo24HypatiaTOP",
                 crossDomain: true,
                 cache: false,
                 success: function (response) {
@@ -242,7 +243,7 @@ export class BackendConnection {
                     "&codTurma=" + globalCodTurma +
                     "&codEscola=" + globalCodEscola +
                     "&pont=" + pontuacao + "&tip=" + tipoTOP +
-                    "&t=trapbeeHypatia&tC=trapbeeTOP",
+                    "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
                 crossDomain: true,
                 cache: false,
                 success: function (response) {
@@ -333,7 +334,7 @@ export class BackendConnection {
                     "&mescola=" + globalCodEscola +
                     "&mpontuacao=" + pontuacao +
                     "&mtipo=" + tipoTop +
-                    "&t=trapbeeHypatia&tC=trapbeeTOP",
+                    "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
                 crossDomain: true,
                 cache: false,
                 success: function (response) {

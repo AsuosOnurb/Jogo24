@@ -7,8 +7,8 @@ import { RankingScene } from './scenes/RankingScene'
 import {PreloadScene} from  './scenes/preloadScene'
 
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js'
-import { PlayerData } from './game/backend/PlayerData'
-import { LoginData } from './game/backend/LoginData'
+import { PlayerData } from './backend/PlayerData'
+import { LoginData } from './backend/LoginData'
 
 
 const config = {

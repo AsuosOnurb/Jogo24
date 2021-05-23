@@ -2,8 +2,8 @@ import Phaser from 'phaser'
 import { AlignGrid } from '../better/AlignGrid';
 import { BetterButton } from '../better/BetterButton';
 import { BetterText } from '../better/BetterText';
-import { BackendConnection } from '../game/backend/BackendConnection';
-import { LoginData } from '../game/backend/LoginData';
+import { BackendConnection } from '../backend/BackendConnection';
+import { LoginData } from '../backend/LoginData';
 
 export class RankingScene extends Phaser.Scene {
 
