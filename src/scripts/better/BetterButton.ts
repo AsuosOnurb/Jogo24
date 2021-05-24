@@ -64,12 +64,12 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
 
         // Setup tween animations
-        /*
+        
         if (!scene.game.device.input.touch)
         {
             this.SetupButtonHoverAnimation(); 
             this.SetupButtonOutAnimation();
-        }*/
+        }
         this.SetupButtonPressAnimation()
 
 
@@ -141,7 +141,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
             },
             ease: 'Power1',
-            duration: 70,
+            duration: 50,
             paused: true
         });
 
@@ -158,7 +158,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
                 angle: this.m_RandomHoverAngle
             },
             ease: 'Power1',
-            duration: 70,
+            duration: 50,
             paused: true
 
         });

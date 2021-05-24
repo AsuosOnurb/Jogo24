@@ -1,12 +1,13 @@
 import { LoginData } from "./LoginData";
 
 import * as $ from 'jquery';
+import { ParseScoreData } from "./BackendUtils";
 
 export class BackendConnection {
 
     private static Instance: BackendConnection;
-    private mPontuacao;
-    private mPontuacaoGlobal;
+    private static mPontuacao;
+    private static mPontuacaoGlobal;
 
 
     private constructor() {
@@ -43,10 +44,10 @@ export class BackendConnection {
                 success: (response) => {
                     if (response != "false") {
 
-                        LoginData.SetUser(response.split(",")[0]);                               
-                        LoginData.SetFirstName(response.split(",")[1]);                                 
-                        LoginData.SetSchool(response.split(",")[2]);                                 
-                        LoginData.SetClass(response.split(",")[3]);                                 
+                        LoginData.SetUser(response.split(",")[0]);
+                        LoginData.SetFirstName(response.split(",")[1]);
+                        LoginData.SetSchool(response.split(",")[2]);
+                        LoginData.SetClass(response.split(",")[3]);
 
                         LoginData.SetLocalData();
                     }
@@ -92,7 +93,7 @@ export class BackendConnection {
             })
     }
 
-    DestroySession() {
+    static DestroySession() {
         $.ajax
             ({
                 type: "POST",
@@ -109,71 +110,36 @@ export class BackendConnection {
             })
     }
 
-    /**
-     * Get the top scores
-     * @param {string} username Name to try to login with
-     * @param {string} password Password to try to login with
-     * @param {Phaser.Scene} scene scope in with the login is being made
-     */
-    GetTOP(di, df, globalCodTurma, globalCodEscola, tipoTOP, scene) {
-        var data;
-        $.ajax
-            ({
-                type: "POST",
-                url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df + "&mturma=" + globalCodTurma +
-                    "&mescola=" + globalCodEscola +
-                    "&flag=2" + 
-                    "&tip=" + tipoTOP +
-                    "&tC=jogo24HypatiaTOP",
-                crossDomain: true,
-                cache: false,
-                success: function (response) {
-                    data = [];
-                    let j = 0;
-                    response = response.split('&');
-                    for (let i = 0; i < response.length; i++) {
-                        response[i] = response[i].split('=')[1];
-                        if (i % 5 == 0) {
-                            j++;
-                            response[i] = response[i].split(" ");
 
-                            if (response[i].length == 1) {
+    static GetTOP(di, df, globalCodTurma, globalCodEscola, tipoTOP) {
+        return new Promise(function (resolve, reject) {
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "https://www.hypatiamat.com/newHRecords.php",
 
-                                response[i] = response[i][0];
-                            }
-                            else {
-                                response[i] = response[i][0] + " " + response[i][response[i].length - 1];
-                            }
-                            data.push(j);
-                        }
-                        if (i % 5 == 2) {
-                            response[i] = response[i].replace("Agrupamento de Escolas", "A.E.");
-                        }
-                        data.push(response[i]);
+                    data: "action=mostraNewA&anoLi=" + di +
+                        "&anoLf=" + df +
+                        "&mturma=" + globalCodTurma +
+                        "&mescola=" + globalCodEscola +
+                        "&flag=2" +
+                        "&tip=" + tipoTOP +
+                        "&tC=trapbeeTOP",
+                    crossDomain: true,
+                    cache: false,
+                    success: function (data) {
+                        resolve(data)
+                    },
+
+                    error: function (err) {
+                        reject(err);
                     }
+                });
+        });
 
-                    scene.scene.transition({
-                        target: 'rankingScene',
-                        data: data,
-                        duration: 1000,
-                        moveBelow: true,
-                        onUpdate: scene.transitionUP
-                    });
+       
 
-                },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("Falha de ligação, por favor verifique a sua conexão")
-                    data = [];
-                    scene.scene.transition({
-                        target: 'rankingScene',
-                        data: data,
-                        duration: 1000,
-                        moveBelow: true,
-                        onUpdate: scene.transitionUP
-                    });
-                }
-            })
+
     }
 
 
@@ -218,7 +184,7 @@ export class BackendConnection {
                         });
 
                     }
-                 
+
                     success = true;
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
@@ -228,12 +194,12 @@ export class BackendConnection {
                 }
             })
 
-            return {success, data};
+        return { success, data };
     }
 
 
 
-    VerificaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTOP, scene) {
+    static VerificaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTOP, scene) {
 
         $.ajax
             ({
@@ -323,7 +289,7 @@ export class BackendConnection {
     }
 
 
-    GravaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTop) {
+    static GravaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTop) {
 
         $.ajax
             ({
@@ -347,7 +313,7 @@ export class BackendConnection {
 
 
 
-    GetRecords(username, globalCodTurma, globalCodEscola, tipoTOP, scene) {
+    static GetRecords(username, globalCodTurma, globalCodEscola, tipoTOP, scene) {
 
         $.ajax
             ({
@@ -384,5 +350,13 @@ export class BackendConnection {
             })
 
     }
+
+
+    private static Sync_GetTOP(di, df, globalCodTurma, globalCodEscola, tipoTOP) {
+        
+    }
 }
+
+
+
 
