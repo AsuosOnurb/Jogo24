@@ -1,5 +1,11 @@
 import Phaser from 'phaser'
 
+export enum TextType
+{
+    Simple,
+    Header
+}
+
 export  class BetterText extends Phaser.GameObjects.Text 
 {
     constructor(scene: Phaser.Scene, x: number, y: number, text: string, style: any )
@@ -11,8 +17,8 @@ export  class BetterText extends Phaser.GameObjects.Text
             style.color = "#292d33";
         }
 
-        style.fontFamily= "Vertiky";
-        style.fontStyle = "bold";
+        // style.fontFamily= "Vertiky";
+        // style.fontStyle = "bold";
 
         
 

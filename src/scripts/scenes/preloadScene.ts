@@ -93,6 +93,16 @@ export  class PreloadScene extends Phaser.Scene {
   }
 
   create() {
+    this.PreloadFonts();
+
     this.scene.start('MainMenu')
+  }
+
+  PreloadFonts () : void
+  {
+    this.add.text(0,0,"DEFAULT", {font: '1px Vertiky'}).setVisible(false);
+    this.add.text(0,0,"DEFAULT", {font: '1px Folks-Normal'}).setVisible(false);
+    this.add.text(0,0,"DEFAULT", {font: '1px Folks-Bold'}).setVisible(false);
+
   }
 }

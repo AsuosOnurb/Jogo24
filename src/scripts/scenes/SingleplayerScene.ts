@@ -92,10 +92,10 @@ export class SingleplayerScene extends Phaser.Scene {
             new CountdownTimer(this, 120, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
-            new BetterText(this, 256, 256, "", { fontSize: 32 });
+            new BetterText(this, 256, 256, "", {  fontFamily: 'Vertiky', fontSize: 32 });
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontSize: 48, fill:'#FFFFFF'}, 'inputBar', 0);
+        this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontFamily: 'Vertiky', fontSize: 48, fill:'#FFFFFF'}, 'inputBar', 0);
         this.mExpressionBar.SetDisabled(1);
 
 
@@ -162,16 +162,16 @@ export class SingleplayerScene extends Phaser.Scene {
         // Setup a button for each number in the card (4 buttons)
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 204, this.scale.height / 2,
-                1.4, 1.4, "?", { fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Vertiky', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 204,
-                1.4, 1.4, "?", { fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Vertiky', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 204, this.scale.height / 2,
-                1.4, 1.4, "?", { fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", {  fontFamily: 'Vertiky',fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 204,
-                1.4, 1.4, "?", { fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", {  fontFamily: 'Vertiky',fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
         ]
 

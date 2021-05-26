@@ -24,7 +24,7 @@ export class CountdownTimer {
         this.m_currentTime = startingTime;
 
         //this.m_textObject = new BetterText(scene, 256, window.innerHeight / 2, "02:00", { fill: "#fff", fontStyle: "bold", fontSize: 64 });
-        this.m_textObject = new BetterText(scene, textX, textY, "", { fill: "#fff", fontStyle: "bold", fontSize: textSize });
+        this.m_textObject = new BetterText(scene, textX, textY, "", {  fontFamily: 'Vertiky', fill: "#fff", fontStyle: "bold", fontSize: textSize });
 
         if (optionalInitialText)
             this.m_textObject.setText(optionalInitialText);

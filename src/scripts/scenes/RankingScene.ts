@@ -13,7 +13,7 @@ export class RankingScene extends Phaser.Scene {
     private array;
 
     private jogador;
-    private pontos;
+    private pontos: BetterText;
     private escola;
     private turma;
     private dataC;
@@ -206,7 +206,7 @@ export class RankingScene extends Phaser.Scene {
 
                         orientation: 0,
                         icon: scene.add.circle(0, 50, 10).setFillStyle('0xffffff'),
-                        text: scene.add.text(50, 50, item, { fontSize: 25, color: '#000000', align: 'center' }),
+                        text: scene.add.text(50, 50, item, { fontFamily:'Vertiky',  fontSize: 25, color: 'black', align: 'center' }),
                         align: 'center',
                         space: {
                             icon: 20,
@@ -264,13 +264,13 @@ export class RankingScene extends Phaser.Scene {
             .layout()
 
 
-        this.ano = new BetterText(this, 0, 0, 'Ano letivo', { fontSize: 25, color: '#403217', align: 'center' });
+        this.ano = new BetterText(this, 0, 0, 'Ano Letivo', { fontFamily:'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
         this.m_AlignGrid.placeAtIndex(58, this.ano);
         this.ano.x += 32
-        //this.ano.y -= 40
+        this.ano.y += 16
 
         /* Radio button: hard diff */
-        this.dificil = new BetterText(this, 0, 0, 'Dificil', { fontSize: 25, color: '#000000', align: 'left' });
+        this.dificil = new BetterText(this, 0, 0, 'Dificil', {  fontFamily:'Vertiky', fontSize: 25, color: '#000000', align: 'left' });
         this.m_AlignGrid.placeAtIndex(178, this.dificil);
         this.dificil.x += 32;
 
@@ -280,7 +280,7 @@ export class RankingScene extends Phaser.Scene {
 
 
         /* Radio button: Normal Diff */
-        this.normal = new BetterText(this, 0, 0, 'Normal', { fontSize: 25, color: '#000000', align: 'left' });
+        this.normal = new BetterText(this, 0, 0, 'Normal', { fontFamily:'Vertiky',  fontSize: 25, color: '#000000', align: 'left' });
         this.m_AlignGrid.placeAtIndex(178, this.normal);
         this.normal.x += 32;
         this.normal.y += 35;
@@ -292,7 +292,7 @@ export class RankingScene extends Phaser.Scene {
         this.normal_icon.y += 35;
 
         /* Radio button: Easy diff */
-        this.facil = new BetterText(this, 0, 0, 'Fácil', { fontSize: 25, color: '#000000', align: 'left' });
+        this.facil = new BetterText(this, 0, 0, 'Fácil', { fontFamily:'Vertiky',  fontSize: 25, color: '#000000', align: 'left' });
         this.m_AlignGrid.placeAtIndex(193, this.facil);
         this.facil.x += 32
 
@@ -300,10 +300,10 @@ export class RankingScene extends Phaser.Scene {
         this.m_AlignGrid.placeAtIndex(193, this.easy_icon);
         this.easy_icon.x -= 32
 
-        this.dificuldade = new BetterText(this, 0, 0, 'Dificuldade', { fontSize: 25, color: '#403217', align: 'center' });
+        this.dificuldade = new BetterText(this, 0, 0, 'Dificuldade', {  fontFamily:'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
         this.m_AlignGrid.placeAtIndex(163, this.dificuldade);
         this.dificuldade.x += 32
-        this.dificuldade.y += 32
+        this.dificuldade.y += 28
 
 
         this.facil.setInteractive({ useHandCursor: true });
@@ -385,13 +385,13 @@ export class RankingScene extends Phaser.Scene {
            this.UpdateTop();
         });
 
-        this.filtro = new BetterText(this, 0, 0, 'Filtro', { fontSize: 25, color: '#403217' });
+        this.filtro = new BetterText(this, 0, 0, 'Filtro', {  fontFamily:'Vertiky', fontSize: 25, color: '#403217' });
         this.filtro.setOrigin(0, 0.5);
         this.m_AlignGrid.placeAtIndex(163.3, this.filtro);
 
 
 
-        this.turma_filtro = new BetterText(this, 0, 0, 'Turma', { fontSize: 25, color: '#000000', align: 'left' });
+        this.turma_filtro = new BetterText(this, 0, 0, 'Turma', {fontFamily:'Vertiky',  fontSize: 25, color: '#000000', align: 'left' });
         this.turma_filtro.setOrigin(-0.5, -1.3);
         this.m_AlignGrid.placeAtIndex(178, this.turma_filtro);
         this.turma_icon = this.add.circle(0, 0, 10, 0xffffff);
@@ -401,7 +401,7 @@ export class RankingScene extends Phaser.Scene {
 
 
 
-        this.escola_filtro = new BetterText(this, 0, 0, 'Escola', { fontSize: 25, color: '#000000', align: 'left' });
+        this.escola_filtro = new BetterText(this, 0, 0, 'Escola', { fontFamily:'Vertiky', fontSize: 25, color: '#000000', align: 'left' });
 
         this.escola_filtro.setOrigin(-0.45, -0.05);
         this.m_AlignGrid.placeAtIndex(178, this.escola_filtro);
@@ -410,7 +410,7 @@ export class RankingScene extends Phaser.Scene {
         this.escola_icon.setOrigin(0.5, -0.5);
         this.m_AlignGrid.placeAtIndex(178, this.escola_icon);
 
-        this.todos = new BetterText(this, 0, 0, 'Todos', { fontSize: 25, color: '#000000', align: 'left' });
+        this.todos = new BetterText(this, 0, 0, 'Todos', {fontFamily:'Vertiky',  fontSize: 25, color: '#000000', align: 'left' });
 
 
         this.todos.setOrigin(-0.5, 1.4);
@@ -571,25 +571,33 @@ export class RankingScene extends Phaser.Scene {
 
         }, this);
 
-        this.jogador = new BetterText(this, 0, 0, 'Jogador', { fontSize: 40, color: '#403217' });
+        this.jogador = new BetterText(this, 0, 0, 'Jogador', {fontFamily:'Folks-Bold',  fontSize: 40, color: '#403217' });
 
-        this.pontos = new BetterText(this, 0, 0, 'Pontos', { fontSize: 40, color: '#403217' });
+        this.pontos = new BetterText(this, 0, 0, 'Pontos', { fontFamily:'Folks-Bold',  fontSize: 40, color: '#403217' });
 
-        this.escola = new BetterText(this, 0, 0, 'Escola', { fontSize: 40, color: '#403217' });
+        this.escola = new BetterText(this, 0, 0, 'Escola', {  fontFamily:'Folks-Bold', fontSize: 40, color: '#403217' });
 
-        this.turma = new BetterText(this, 0, 0, 'Turma', { fontSize: 40, color: '#403217' });
+        this.turma = new BetterText(this, 0, 0, 'Turma', {  fontFamily:'Folks-Bold', fontSize: 40, color: '#403217' });
 
-        this.dataC = new BetterText(this, 0, 0, 'Data', { fontSize: 40, color: '#403217' });
+        this.dataC = new BetterText(this, 0, 0, 'Data', {  fontFamily:'Folks-Bold', fontSize: 40, color: '#403217' });
 
 
 
         this.m_AlignGrid.placeAtIndex(61, this.jogador);
-        this.m_AlignGrid.placeAtIndex(63, this.pontos);
-        this.m_AlignGrid.placeAtIndex(66, this.escola);
-        this.m_AlignGrid.placeAtIndex(69, this.turma);
-        this.m_AlignGrid.placeAtIndex(71, this.dataC);
 
-        // this.m_AlignGrid.showNumbers();
+        this.m_AlignGrid.placeAtIndex(63, this.pontos);
+        this.pontos.x -= 20;
+
+        this.m_AlignGrid.placeAtIndex(66, this.escola);
+        this.escola.x += 45;
+
+        this.m_AlignGrid.placeAtIndex(69, this.turma);
+        this.turma.x += 130
+
+        this.m_AlignGrid.placeAtIndex(71, this.dataC);
+        this.dataC.x += 50;
+
+        //this.m_AlignGrid.showNumbers();
     }
 
 
@@ -696,7 +704,7 @@ export class RankingScene extends Phaser.Scene {
         return data;
     }
 
-    selectYear() {
+        selectYear() {
         var data = new Array<string>();
 
         var d = new Date();
@@ -738,6 +746,12 @@ export class RankingScene extends Phaser.Scene {
      * Fetches Information from the DB and updates the ranking table with that data
      */
     UpdateTop(): void {
+        console.log("\n ====== Making DB connection: =========")
+        console.log(`Di: ${this.di}`)
+        console.log(`Df: ${this.df}`)
+        console.log(`flag: ${this.flag}`);
+        console.log(`Difficulty: ${this.dificulty}`)
+
         let connection = BackendConnection.UpdateTOP(this.di, this.df, this.flag, this.dificulty);
 
         connection.then((data) => {
