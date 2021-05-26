@@ -143,58 +143,32 @@ export class BackendConnection {
     }
 
 
-    static UpdateTOP(di, df, globalCodTurma, globalCodEscola, flag, tipoTOP) {
-        let data;
-        let success: boolean = false;
+    static UpdateTOP(di, df, flag, tipoTOP) {
+        let classCode: string = LoginData.GetClass();
+        let schoolCode: string = LoginData.GetSchool();
+
+        return new Promise(function(resolve, reject){
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
                 data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df +
-                    "&mturma=" + globalCodTurma +
-                    "&mescola=" + globalCodEscola +
+                    "&mturma=" + classCode +
+                    "&mescola=" + schoolCode +
                     "&flag=" + flag + "&tip=" + tipoTOP + "&tC=jogo24HypatiaTOP",
                 crossDomain: true,
                 cache: false,
-                success: function (response) {
-                    data = [];
-                    let j = 0;
-                    response = response.split('&');
-                    for (let i = 0; i < response.length; i++) {
-                        response[i] = response[i].split('=')[1];
-                        if (i % 5 == 0) {
-                            j++;
-                            response[i] = response[i].split(" ");
-                            if (response[i].length == 1) {
-
-                                response[i] = response[i][0];
-                            }
-                            else {
-                                response[i] = response[i][0] + " " + response[i][response[i].length - 1];
-                            }
-                            data.push({
-                                name: j
-                            });
-                        }
-                        if (i % 5 == 2) {
-                            response[i] = response[i].replace("Agrupamento de Escolas", "A.E.");
-                        }
-                        data.push({
-                            name: response[i]
-                        });
-
-                    }
-
-                    success = true;
+                success: function (data) {
+                    resolve(data)
                 },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    data = [];
-                    alert("Falha de ligação, por favor verifique a sua conexão");
-                    success = false;
-                }
-            })
 
-        return { success, data };
+                error: function (err) {
+                   reject(err)
+                }
+            });
+        });
+        
+
     }
 
 
