@@ -1,21 +1,27 @@
 @font-face {
-    font-family: Vertiky;
-    src: url('./fonts/vertiky/vertiky.otf');
-    font-weight: 400;
-    font-weight: normal;
-      }
+  font-family: Vertiky;
+  src: url('./fonts/vertiky/vertiky.otf');
+  font-weight: 400;
+  font-weight: normal;
+}
 
-  @font-face {
-    font-family: Folks-Normal;
-    src: url('./fonts/headings/folks/Folks-Normal.ttf');
-    font-weight: 400;
-    font-weight: normal;
-      }
+@font-face {
+  font-family: Folks-Normal;
+  src: url('./fonts/headings/folks/Folks-Normal.ttf');
+  font-weight: 400;
+  font-weight: normal;
+}
 
+@font-face {
+  font-family: Folks-Bold;
+  src: url('./fonts/headings/folks/Folks-Bold.ttf');
+  font-weight: 400;
+  font-weight: bold;
+}
 
-      @font-face {
-        font-family: Folks-Bold;
-        src: url('./fonts/headings/folks/Folks-Bold.ttf');
-        font-weight: 400;
-        font-weight: bold;
-          }
+@font-face {
+  font-family: Bubblegum;
+  src: url('./fonts/bubblegum/BubblegumSans-Regular.ttf');
+  font-weight: 400;
+  font-weight: normal;
+}
