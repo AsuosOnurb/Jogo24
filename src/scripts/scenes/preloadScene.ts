@@ -103,6 +103,7 @@ export  class PreloadScene extends Phaser.Scene {
     this.add.text(0,0,"DEFAULT", {font: '1px Vertiky'}).setVisible(false);
     this.add.text(0,0,"DEFAULT", {font: '1px Folks-Normal'}).setVisible(false);
     this.add.text(0,0,"DEFAULT", {font: '1px Folks-Bold'}).setVisible(false);
+    this.add.text(0,0,"DEFAULT", {font: '1px Bubblegum'}).setVisible(false);
 
   }
 }

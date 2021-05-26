@@ -92,10 +92,10 @@ export class SingleplayerScene extends Phaser.Scene {
             new CountdownTimer(this, 120, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
-            new BetterText(this, 256, 256, "", {  fontFamily: 'Vertiky', fontSize: 32 });
+            new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
 
         // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
-        this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontFamily: 'Vertiky', fontSize: 48, fill:'#FFFFFF'}, 'inputBar', 0);
+        this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontFamily: 'Bubblegum', fontSize: 48, fill: '#FFFFFF' }, 'inputBar', 0);
         this.mExpressionBar.SetDisabled(1);
 
 
@@ -140,9 +140,9 @@ export class SingleplayerScene extends Phaser.Scene {
     Setup_Labels() {
 
 
-        this.textTotalCorrect = new BetterText(this, this.scale.width / 2 + 740, 128, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
+        this.textTotalCorrect = new BetterText(this, this.scale.width / 2 + 740, 128, "0", { fontFamily: 'Vertiky', fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalCorrect.setOrigin(0.5, 0.5);
-        this.textTotalWrong = new BetterText(this, this.scale.width / 2 + 740, 288, "0", { fontSize: 40, color: "#ffffff", fontStyle: "bold" })
+        this.textTotalWrong = new BetterText(this, this.scale.width / 2 + 740, 288, "0", { fontFamily: 'Vertiky', fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
 
     }
@@ -162,16 +162,16 @@ export class SingleplayerScene extends Phaser.Scene {
         // Setup a button for each number in the card (4 buttons)
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 204, this.scale.height / 2,
-                1.4, 1.4, "?", { fontFamily: 'Vertiky', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 204,
-                1.4, 1.4, "?", { fontFamily: 'Vertiky', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 204, this.scale.height / 2,
-                1.4, 1.4, "?", {  fontFamily: 'Vertiky',fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 204,
-                1.4, 1.4, "?", {  fontFamily: 'Vertiky',fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
 
         ]
 
@@ -455,13 +455,13 @@ export class SingleplayerScene extends Phaser.Scene {
                 4 - Set the current state to be PickingOperand1
             */
 
-             // Enable number buttons
+            // Enable number buttons
             let currentOperation: Operation = this.m_GameState.PeekCurrentOperation();
             console.log("Undoing the picking of the first operand:")
             console.log(currentOperation);
             this.m_BtnUsed[currentOperation.operand1BtnIndex] = false;
 
-             this.EnableNumberButtons();
+            this.EnableNumberButtons();
 
             // Disable operation buttons
             this.DisableOperationButtons()
@@ -472,8 +472,7 @@ export class SingleplayerScene extends Phaser.Scene {
             // Set the new state to PickingOperand1
             this.m_GameState.SetPlayerState(PlayerState.PickingOperand1);
         }
-        else if (currentPlayerState === PlayerState.PickingOperand2)
-        {
+        else if (currentPlayerState === PlayerState.PickingOperand2) {
             /*
                 Player picked the operator, but now we wants to go back and select a different one.
 
@@ -484,22 +483,22 @@ export class SingleplayerScene extends Phaser.Scene {
                 4 - Set the current player state as being PickingOperator
             */
 
-                // Disable the numbers
-                this.DisableNumberButtons()
+            // Disable the numbers
+            this.DisableNumberButtons()
 
-                // Enable operators
-                this.EnableOperationButtons();
+            // Enable operators
+            this.EnableOperationButtons();
 
-                // Change the expression on the bar (remove the last character, which corresponds to the operator symbol)
-                const currentText = this.mExpressionBar.GetText();
-                const substring = currentText.substring(0, currentText.length-1);
-                console.log(`..${substring}..`)
-                this.mExpressionBar.SetText(substring);
+            // Change the expression on the bar (remove the last character, which corresponds to the operator symbol)
+            const currentText = this.mExpressionBar.GetText();
+            const substring = currentText.substring(0, currentText.length - 1);
+            console.log(`..${substring}..`)
+            this.mExpressionBar.SetText(substring);
 
-                // Change the current state
-                this.m_GameState.SetPlayerState(PlayerState.PickingOperator);
+            // Change the current state
+            this.m_GameState.SetPlayerState(PlayerState.PickingOperator);
 
-                // Enable undo button
+            // Enable undo button
         }
 
 

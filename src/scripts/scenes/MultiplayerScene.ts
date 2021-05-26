@@ -494,16 +494,16 @@ export class MultiplayerScene extends Phaser.Scene {
         this.m_BtnUsed = new Array<Boolean>();
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 204, this.m_Image_CardBG.y,
-                1.4, 1.4, "?", { fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 204,
-                1.4, 1.4, "?", { fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 204, this.m_Image_CardBG.y,
-                1.4, 1.4, "?", { fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 204,
-                1.4, 1.4, "?", { fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG")
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG")
 
         ]
 
@@ -528,16 +528,16 @@ export class MultiplayerScene extends Phaser.Scene {
         // Setup the 4 coloured player buttons
         this.m_Array_PlayerButtons = [
             new BetterButton(this, 128, 128,
-                0.8, 0.8, "", { fontSize: 96 }, "btn_player1"),
+                0.8, 0.8, "", { fontFamily: 'Vertiky', fontSize: 96 }, "btn_player1"),
 
             new BetterButton(this, this.scale.width - 128, 128,
-                0.8, 0.8, "", { fontSize: 96 }, "btn_player2"),
+                0.8, 0.8, "", { fontFamily: 'Vertiky', fontSize: 96 }, "btn_player2"),
 
             new BetterButton(this, 128, this.scale.height - 128,
-                0.8, 0.8, "", { fontSize: 96 }, "btn_player3"),
+                0.8, 0.8, "", { fontFamily: 'Vertiky', fontSize: 96 }, "btn_player3"),
 
             new BetterButton(this, this.scale.width - 128, this.scale.height - 128,
-                0.8, 0.8, "", { fontSize: 96 }, "btn_player4")
+                0.8, 0.8, "", { fontFamily: 'Vertiky', fontSize: 96 }, "btn_player4")
         ];
 
         for (let i = 0; i < 4; i++) {
@@ -568,10 +568,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ================== Setup the expression bars ==================== */
         this.m_Array_ExpressionBars = [
-            new BetterButton(this, this.scale.width / 2 - 420, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(-90),
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 416, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar'),
-            new BetterButton(this, this.scale.width / 2 + 420, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(90),
-            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 416, 0.9, 0.7, "", { fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(180)
+            new BetterButton(this, this.scale.width / 2 - 420, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontFamily: 'Bubblegum', fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(-90),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y - 416, 0.9, 0.7, "", { fontFamily: 'Bubblegum', fontSize: 48, color: "#FFFFFF" }, 'inputBar'),
+            new BetterButton(this, this.scale.width / 2 + 420, this.m_Image_CardBG.y, 0.9, 0.7, "", { fontFamily: 'Bubblegum', fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(90),
+            new BetterButton(this, this.scale.width / 2, this.m_Image_CardBG.y + 416, 0.9, 0.7, "", { fontFamily: 'Bubblegum', fontSize: 48, color: "#FFFFFF" }, 'inputBar').SetAngle(180)
         ];
 
         // And make them all un-interactible
@@ -695,10 +695,9 @@ export class MultiplayerScene extends Phaser.Scene {
         this.DisableNumberButtons();
         this.DisableOperationButtons();
 
-        this.m_Array_ExpressionBars.forEach((exprBar) => 
-        {
+        this.m_Array_ExpressionBars.forEach((exprBar) => {
             exprBar.SetTextColor("#ff2600");
-        }) ;
+        });
 
         this.m_GameState.PunishCurrentPlayer();
         this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());

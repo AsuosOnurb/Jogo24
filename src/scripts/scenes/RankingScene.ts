@@ -206,7 +206,7 @@ export class RankingScene extends Phaser.Scene {
 
                         orientation: 0,
                         icon: scene.add.circle(0, 50, 10).setFillStyle('0xffffff'),
-                        text: scene.add.text(50, 50, item, { fontFamily:'Vertiky',  fontSize: 25, color: 'black', align: 'center' }),
+                        text: scene.add.text(50, 50, item, { fontFamily:'Bubblegum',  fontSize: 25, color: 'black', align: 'center' }),
                         align: 'center',
                         space: {
                             icon: 20,
@@ -270,7 +270,7 @@ export class RankingScene extends Phaser.Scene {
         this.ano.y += 16
 
         /* Radio button: hard diff */
-        this.dificil = new BetterText(this, 0, 0, 'Dificil', {  fontFamily:'Vertiky', fontSize: 25, color: '#000000', align: 'left' });
+        this.dificil = new BetterText(this, 0, 0, 'Dificil', {  fontFamily:'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
         this.m_AlignGrid.placeAtIndex(178, this.dificil);
         this.dificil.x += 32;
 
@@ -280,7 +280,7 @@ export class RankingScene extends Phaser.Scene {
 
 
         /* Radio button: Normal Diff */
-        this.normal = new BetterText(this, 0, 0, 'Normal', { fontFamily:'Vertiky',  fontSize: 25, color: '#000000', align: 'left' });
+        this.normal = new BetterText(this, 0, 0, 'Normal', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
         this.m_AlignGrid.placeAtIndex(178, this.normal);
         this.normal.x += 32;
         this.normal.y += 35;
@@ -292,7 +292,7 @@ export class RankingScene extends Phaser.Scene {
         this.normal_icon.y += 35;
 
         /* Radio button: Easy diff */
-        this.facil = new BetterText(this, 0, 0, 'Fácil', { fontFamily:'Vertiky',  fontSize: 25, color: '#000000', align: 'left' });
+        this.facil = new BetterText(this, 0, 0, 'Fácil', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
         this.m_AlignGrid.placeAtIndex(193, this.facil);
         this.facil.x += 32
 
@@ -410,7 +410,7 @@ export class RankingScene extends Phaser.Scene {
         this.escola_icon.setOrigin(0.5, -0.5);
         this.m_AlignGrid.placeAtIndex(178, this.escola_icon);
 
-        this.todos = new BetterText(this, 0, 0, 'Todos', {fontFamily:'Vertiky',  fontSize: 25, color: '#000000', align: 'left' });
+        this.todos = new BetterText(this, 0, 0, 'Todos', {fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
 
 
         this.todos.setOrigin(-0.5, 1.4);
@@ -678,7 +678,7 @@ export class RankingScene extends Phaser.Scene {
                         height: height,
 
                         orientation: 'top-to-bottom',
-                        text: scene.add.text(50, 50, item.name, { fontSize: 21, color: '#000000', align: 'center' }),
+                        text: scene.add.text(50, 50, item.name, { fontFamily:'Bubblegum', fontSize: 21, color: '#000000', align: 'center' }),
                         align: 'center',
                     });
 

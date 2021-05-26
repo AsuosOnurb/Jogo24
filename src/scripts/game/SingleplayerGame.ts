@@ -90,16 +90,16 @@ export class SingleplayerGame {
 
     CompleteOperation(): string {
         if (IsNumeric(this.mCurrentOperation.operand1) && IsNumeric(this.mCurrentOperation.operand2)) {
-            this.mCurrentOperation.expression = `${this.mCurrentOperation.operand1}${this.mCurrentOperation.operator}${this.mCurrentOperation.operand2}`;
+            this.mCurrentOperation.expression = `${this.mCurrentOperation.operand1} ${this.mCurrentOperation.operator} ${this.mCurrentOperation.operand2}`;
         }
         else if (IsNumeric(this.mCurrentOperation.operand1) && !IsNumeric(this.mCurrentOperation.operand2)) {
-            this.mCurrentOperation.expression = `${this.mCurrentOperation.operand1}${this.mCurrentOperation.operator}(${this.mCurrentOperation.operand2})`;
+            this.mCurrentOperation.expression = `${this.mCurrentOperation.operand1} ${this.mCurrentOperation.operator} (${this.mCurrentOperation.operand2})`;
 
         } else if (!IsNumeric(this.mCurrentOperation.operand1) && IsNumeric(this.mCurrentOperation.operand2)) {
-            this.mCurrentOperation.expression = `(${this.mCurrentOperation.operand1})${this.mCurrentOperation.operator}${this.mCurrentOperation.operand2}`;
+            this.mCurrentOperation.expression = `(${this.mCurrentOperation.operand1}) ${this.mCurrentOperation.operator }${this.mCurrentOperation.operand2}`;
         }
         else if (!IsNumeric(this.mCurrentOperation.operand1) && !IsNumeric(this.mCurrentOperation.operand2)) {
-            this.mCurrentOperation.expression = `(${this.mCurrentOperation.operand1})${this.mCurrentOperation.operator}(${this.mCurrentOperation.operand2})`;
+            this.mCurrentOperation.expression = `(${this.mCurrentOperation.operand1}) ${this.mCurrentOperation.operator} (${this.mCurrentOperation.operand2})`;
         }
         else
             this.mCurrentOperation.expression = "ERROR";
@@ -227,9 +227,9 @@ export class SingleplayerGame {
         // If it a more complex expression, then we put partentheses around it.
 
         if (IsNumeric(this.mCurrentOperation.operand1))
-            return `${this.mCurrentOperation.operand1}${operator}`;
+            return `${this.mCurrentOperation.operand1} ${operator}`;
         else
-            return `(${this.mCurrentOperation.operand1})${operator}`;
+            return `(${this.mCurrentOperation.operand1}) ${operator}`;
     }
 
     SetExpression(expression: string): void {
