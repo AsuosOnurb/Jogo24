@@ -27,8 +27,7 @@ export function ParseScoreData(dataString) {
     return data;
 }
 
-export function ParsedUpdatedScoreData(dataString)
-{
+export function ParsedUpdatedScoreData(dataString) {
     let data = [];
     let j = 0;
     dataString = dataString.split('&');
@@ -54,8 +53,26 @@ export function ParsedUpdatedScoreData(dataString)
         data.push({
             name: dataString[i]
         });
-        
+
     }
 
     return data;
+}
+
+export function ParseLoginData(dataString) {
+    if (dataString != "false") {
+
+        return {
+            'user': dataString.split(",")[0],                        // username
+            'firstName': dataString.split(",")[1],                       // primeiro nome do aluno
+            'escola': dataString.split(",")[2],                          // codigo da escola
+            'turma': dataString.split(",")[3]
+        };
+
+    }
+    else {
+        //scene.loginErrorMsg.visible = true;
+        return "WRONG_PASSWORD";
+    }
+
 }

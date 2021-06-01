@@ -104,10 +104,9 @@ export class RankingScene extends Phaser.Scene {
 
             this.CompleteScene();
 
-        }).catch(function (err) {
+        }).catch((err) => {
             console.log(err);
-            console.log("Failed here");
-            return [];
+            console.log("Failed to retrieve TOP");
 
         });
 

@@ -7,12 +7,16 @@ import { BetterText } from './BetterText'
 
 export class BetterButton extends Phaser.GameObjects.Sprite {
 
-    private mCurrentScene: Phaser.Scene;
+    private static NEXT_BUTTON_ID: number  = 0;
 
+
+
+    private mCurrentScene: Phaser.Scene;
+    private mID: number;
     private m_TextObject: BetterText;
     private m_IsEnabled: boolean;
 
-    private m_OriginalScale: number;
+    private m_OriginalScale;
 
     /**
      * Tween animation that triggers everytime the mouse/pointer enters/hovers the button.
@@ -32,6 +36,9 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
     constructor(scene: Phaser.Scene, x: number, y: number, xScale: number, yScale: number, text: string | undefined, textStyle: any, texture: string | Phaser.Textures.Texture, optionalAngle?: number | undefined) {
         super(scene, x, y, texture);
+
+        this.mID = BetterButton.NEXT_BUTTON_ID;
+        BetterButton.NEXT_BUTTON_ID++;
 
         this.mCurrentScene = scene;
         // add the button itself to the scene
@@ -65,12 +72,17 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
         // Setup tween animations
         
+        /*
         if (!scene.game.device.input.touch)
         {
             this.SetupButtonHoverAnimation(); 
             this.SetupButtonOutAnimation();
         }
+        */
         this.SetupButtonPressAnimation()
+
+        // console.log(`Button with ID ${this.mID} scale: (${this.scaleX}, ${this.scaleY})`);
+        //console.log(`Button with ID ${this.mID} proginal scale: (${this.m_OriginalScale})`);
 
 
     }
@@ -132,6 +144,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
 
     SetupButtonOutAnimation(): void {
+       // console.log(this.m_OriginalScale)
 
         this.m_Tween_ButtonOut = this.mCurrentScene.tweens.add({
             targets: this,
@@ -181,6 +194,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         });
 
         this.on('pointerup', () => {
+            // ("Clicked button with ID " + this.mID.toString());
             this.m_Tween_ButtonPress.play();
         });
 
@@ -260,7 +274,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         if (calculatedSize < 38)
             calculatedSize = 38;
 
-        console.log(calculatedSize);
+        // console.log(calculatedSize);
 
         this.m_TextObject.setFontSize(calculatedSize);
     }

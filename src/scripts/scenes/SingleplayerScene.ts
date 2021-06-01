@@ -89,12 +89,12 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 120, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 10, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
 
-        // Add the player input bar ::: TODO: We should probably just delete this? (Because we aren't gonna use it?)
+        // Add the player input bar :
         this.mExpressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontFamily: 'Bubblegum', fontSize: 48, fill: '#FFFFFF' }, 'inputBar', 0);
         this.mExpressionBar.SetDisabled(1);
 
@@ -291,12 +291,14 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.mBtn_NewCard.SetDisabled();
 
-        // Save player data
-        this.SavePlayerData(false); // Register another loss
-
-        //if (!LoginData.IsLoggedIn())
-        if (true)
+        if (LoginData.IsLoggedIn())
+        {
+            // Save player data
+            this.SavePlayerData(false); // Register another loss
+        }else 
+        {
             this.ShowPleaseLoginWarning();
+        }
     }
 
 

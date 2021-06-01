@@ -1,5 +1,6 @@
 import Phaser, { Display, Scale } from 'phaser'
 import { BackendConnection } from '../backend/BackendConnection';
+import { ParseLoginData } from '../backend/BackendUtils';
 import { LoginData } from '../backend/LoginData';
 
 import { BetterButton } from '../better/BetterButton'
@@ -12,6 +13,11 @@ enum Panels {
     Credits,
     Login
 };
+
+let GetValue = Phaser.Utils.Objects.GetValue;
+const COLOR_PRIMARY = 0x4e342e;
+const COLOR_LIGHT = 0x7b5e57;
+const COLOR_DARK = 0x260e04;
 
 export class MainMenuScene extends Phaser.Scene {
 
@@ -26,7 +32,7 @@ export class MainMenuScene extends Phaser.Scene {
     private btnPlaySoloMedium!: BetterButton;
     private btnPlaySoloHard!: BetterButton;
 
-    private btnOpenLoginWindow: BetterButton;
+    private btnStartLogin: BetterButton;
     private btnLogin: BetterButton;
     private btnLogout: BetterButton;
 
@@ -42,6 +48,9 @@ export class MainMenuScene extends Phaser.Scene {
     private imgCredits: Phaser.GameObjects.Image;
     private imgLoginWindow: Phaser.GameObjects.Image;
 
+    private rexUI;
+
+
 
 
 
@@ -50,8 +59,19 @@ export class MainMenuScene extends Phaser.Scene {
 
     }
 
-
     preload() {
+        this.load.scenePlugin({
+            key: 'rexuiplugin',
+            url: 'src/scripts/RexUI/rexuiplugin.min.js',
+            sceneKey: 'rexUI'
+        });
+
+       
+    }
+
+ 
+
+    create() {
 
         // Add background image 
         const bgImg = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'blueBackground');
@@ -94,25 +114,26 @@ export class MainMenuScene extends Phaser.Scene {
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 16, 1.2, 1.2, "", {}, 'btn_easy', 0);
+        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 64 , 1.2, 1.2, "", {}, 'btn_easy', 0);
         this.btnPlaySoloEasy.on("pointerup", () => this.StartSoloGame(Difficulty.Easy));
 
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 192, 1.2, 1.2, "", {}, 'btn_medium', 0);
+        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 128, 1.2, 1.2, "", {}, 'btn_medium', 0);
         this.btnPlaySoloMedium.on("pointerup", () => this.StartSoloGame(Difficulty.Medium));
 
         // Play Solo Hard button
-        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 384, 1.2, 1.2, "", {}, 'btn_hard', 0);
+        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 320, 1.2, 1.2, "", {}, 'btn_hard', 0);
         this.btnPlaySoloHard.on("pointerup", () => this.StartSoloGame(Difficulty.Hard));
 
         // Button that opens the login window/panel
-        this.btnOpenLoginWindow = new BetterButton(this, this.scale.width - 384, 128, 1, 1, "", {}, 'btn_login', 0);
-        this.btnOpenLoginWindow.on('pointerup', () => this.ShowPanel(Panels.Login));
+        this.btnStartLogin = new BetterButton(this, this.scale.width - 384, 128, 0.8, 0.8, "", {}, 'btn_start_login', 0);
+        this.btnStartLogin.on('pointerup', () => this.ShowPanel(Panels.Login));
 
         // The logout Button
-        this.btnLogout = new BetterButton(this, 128, 128, 1, 1, "", {}, 'btn_login', 0);
-        this.btnLogout.on('pointerup', () => this.Logout());
+        this.btnLogout = new BetterButton(this, this.scale.width - 384, 128, 1, 1, "", {}, 'btn_logout', 0);
+        this.btnLogout.SetDisabled(0);
+        this.btnLogout.on('pointerup', () => this.PerformLogout());
 
         // =================== Setup the panel group, their images and the close button =================
         this.imgHowToPlay = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'howToPlay');
@@ -132,8 +153,9 @@ export class MainMenuScene extends Phaser.Scene {
         this.imgLoginWindow.setScale(0.4);
         this.imgLoginWindow.setAlpha(0);
 
-        this.btnLogin = new BetterButton(this, this.scale.width/2, this.scale.height / 2 + 360  , 1, 1, "", {}, 'btn_login', 0);
+        this.btnLogin = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 360, 1.2, 1.2, "", {}, 'btn_login', 0);
         this.btnLogin.SetDisabled(0);
+        this.btnLogin.on('pointerup', () => this.PerformLogin())
 
 
         this.btnClosePanel = new BetterButton(this, this.scale.width / 2 + 400, this.scale.height / 2 - 200, 0.8, 0.8, "", {}, 'btn_close');
@@ -143,22 +165,10 @@ export class MainMenuScene extends Phaser.Scene {
         this.groupPanel = this.add.group([this.imgAboutTheGame, this.imgHowToPlay, this.imgCredits, this.btnClosePanel, this.imgLoginWindow]);
         this.groupPanel.setAlpha(0);
         this.isPanelOpen = false;
-    }
-
-
-
-    update() {
-        /*
-        const gameId = document.getElementById("game");
-        if (gameId) {
-            gameId.style.width = '100%';
-            gameId.style.height = '100%';
-        }
-
-        this.scale.refresh();
-        */
 
     }
+
+
 
     StartSoloGame(diff: Difficulty): void {
         console.log(`Starting solo game on ${diff} difficulty.`);
@@ -176,8 +186,6 @@ export class MainMenuScene extends Phaser.Scene {
 
     ShowPanel(panelName: Panels): void {
         // Only open a panel if there's not another one already opened
-        console.log("Show panels: ")
-        console.log(panelName);
         if (!this.isPanelOpen) {
             switch (panelName) {
                 case Panels.AboutGame:
@@ -245,17 +253,16 @@ export class MainMenuScene extends Phaser.Scene {
                 break;
         }
 
-        console.log("Target image:")
-        console.log(targetImage)
 
 
         // Make the image appear
-        this.tweens.add({
+        let tween = this.tweens.add({
             targets: [this.groupPanel, targetImage, panel == Panels.Login ? this.btnLogin : undefined],
             alpha: 1,
-            scale: 1.5,
+            scale: panel == Panels.Login ? 1.7 : 1.5,
             ease: 'Power1',
-            duration: 500
+            duration: 500,
+            onCompleteScope: this.OnPanelTweenComplete(panel),
         });
 
         // make the close button appear
@@ -263,7 +270,8 @@ export class MainMenuScene extends Phaser.Scene {
             targets: this.btnClosePanel,
             alpha: 1,
             ease: 'Power1',
-            duration: 500
+            duration: 300,
+            delay: 400
         });
 
         // Disable some buttons
@@ -272,6 +280,8 @@ export class MainMenuScene extends Phaser.Scene {
         // Enable login button if the panel is the Login panel
         if (panel == Panels.Login)
             this.btnLogin.SetEnabled(1);
+
+        tween.on
     }
 
     private PlayTween_HidePanel(): void {
@@ -292,26 +302,67 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnLogin.SetDisabled(0);
     }
 
-    private EnableSoloGameButtons(): void 
-    {
+    private EnableSoloGameButtons(): void {
         this.btnPlaySoloEasy.SetEnabled(1);
         this.btnPlaySoloMedium.SetEnabled(1);
         this.btnPlaySoloHard.SetEnabled(1);
     }
-    private DisableSoloGameButtons() : void 
-    {
+    private DisableSoloGameButtons(): void {
         this.btnPlaySoloEasy.SetDisabled(1);
         this.btnPlaySoloMedium.SetDisabled(1);
         this.btnPlaySoloHard.SetDisabled(1);
     }
 
-    private Logout() : void 
-    {
-        this.btnLogout.SetDisabled(0);
-        this.btnLogin.SetEnabled(1);
+  
+    private OnPanelTweenComplete(panel: Panels): void {
 
-        // BackendConnection.DestroySession(); Keep this for later
+        if (panel === Panels.Login) {
+        }
     }
 
+    private PerformLogin() : void 
+    {
+        const DEFAULT_USERNAME: string = "hypatia01";
+        const DEFAULT_PASSWORD: string = "123401";
 
+        console.log("Performing login with username " + DEFAULT_USERNAME)
+        console.log("Performing login with password " + DEFAULT_PASSWORD)
+
+        const connection = BackendConnection.Login(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+        connection.then( (data) => {
+
+            const loginResult: boolean =  LoginData.LoginWithData(data);
+
+            if (loginResult)
+            {
+                console.log("Login was successfull!")
+
+                this.btnLogout.SetEnabled(1);
+                this.btnStartLogin.SetDisabled(0);
+            }
+            else 
+            {
+                console.log("Login failed!")
+
+            }
+
+        }).catch((err) => {
+            console.log(err);
+            console.log("Failed to connect to login");
+        });
+    }
+
+    private PerformLogout() : void 
+    {
+        this.btnLogout.SetDisabled(0);
+        this.btnStartLogin.SetEnabled(1);
+
+        console.log("Performing logout")
+        console.log("Performing logout")
+
+        BackendConnection.DestroySession();
+        LoginData.GetLocalData();
+    }
+
+    
 }

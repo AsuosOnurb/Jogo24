@@ -45,8 +45,10 @@ export  class PreloadScene extends Phaser.Scene {
 
     this.load.image('btn_close', 'assets/img/main_menu/closeBT.png')
 
-    this.load.image('btn_login', 'assets/img/main_menu/loginBT.png')
-    this.load.image('loginBG', 'assets/img/main_menu/login.png')
+    this.load.image('btn_start_login', 'assets/img/main_menu/startLogin.png')
+    this.load.image('btn_login', 'assets/img/main_menu/performLogin.png')
+    this.load.image('btn_logout', 'assets/img/main_menu/logout.png')
+    this.load.image('loginBG', 'assets/img/main_menu/loginWindow.png')
 
 
 

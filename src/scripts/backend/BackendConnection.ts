@@ -25,39 +25,28 @@ export class BackendConnection {
         return LoginData.GetInstance();
     }
 
-    /**
-     * Login user
-     * @param {string} username Name to try to login with
-     * @param {string} password Password to try to login with
-     * @param {Phaser.Scene} scene scope in with the login is being made
-     */
+   
     static Login(username, password) {
+        return new Promise(function (resolve, reject) {
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "https://www.hypatiamat.com/loginActionVH.php",
+                    data: "action=dologin&u=" + username + "&p=" + password,
+                    crossDomain: true,
+                    cache: false,
 
-        $.ajax
-            ({
-                type: "POST",
-                url: "https://www.hypatiamat.com/loginActionVH.php",
-                data: "action=dologin&u=" + username + "&p=" + password,
-                crossDomain: true,
-                cache: false,
+                    success: function (data) {
+                        resolve(data)
 
-                success: (response) => {
-                    if (response != "false") {
+                    },
 
-                        LoginData.SetUser(response.split(",")[0]);
-                        LoginData.SetFirstName(response.split(",")[1]);
-                        LoginData.SetSchool(response.split(",")[2]);
-                        LoginData.SetClass(response.split(",")[3]);
-
-                        LoginData.SetLocalData();
+                    error: function (err) {
+                       reject(err);
                     }
+                })
+        });
 
-                },
-                error: (response) => {
-                    LoginData.SetUser('');
-                    alert("Falha de ligação, por favor verifique a sua conexão")
-                }
-            })
     };
 
 
@@ -102,6 +91,7 @@ export class BackendConnection {
                 cache: false,
                 success: function (response) {
                     LoginData.Logout();
+                    alert("Logout was successfull!");
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     LoginData.SetUser("");
@@ -137,7 +127,7 @@ export class BackendConnection {
                 });
         });
 
-       
+
 
 
     }
@@ -147,27 +137,27 @@ export class BackendConnection {
         let classCode: string = LoginData.GetClass();
         let schoolCode: string = LoginData.GetSchool();
 
-        return new Promise(function(resolve, reject){
-        $.ajax
-            ({
-                type: "POST",
-                url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df +
-                    "&mturma=" + classCode +
-                    "&mescola=" + schoolCode +
-                    "&flag=" + flag + "&tip=" + tipoTOP + "&tC=jogo24HypatiaTOP",
-                crossDomain: true,
-                cache: false,
-                success: function (data) {
-                    resolve(data)
-                },
+        return new Promise(function (resolve, reject) {
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "https://www.hypatiamat.com/newHRecords.php",
+                    data: "action=mostraNewA&anoLi=" + di + "&anoLf=" + df +
+                        "&mturma=" + classCode +
+                        "&mescola=" + schoolCode +
+                        "&flag=" + flag + "&tip=" + tipoTOP + "&tC=jogo24HypatiaTOP",
+                    crossDomain: true,
+                    cache: false,
+                    success: function (data) {
+                        resolve(data)
+                    },
 
-                error: function (err) {
-                   reject(err)
-                }
-            });
+                    error: function (err) {
+                        reject(err)
+                    }
+                });
         });
-        
+
 
     }
 
@@ -325,10 +315,6 @@ export class BackendConnection {
 
     }
 
-
-    private static Sync_GetTOP(di, df, globalCodTurma, globalCodEscola, tipoTOP) {
-        
-    }
 }
 
 
