@@ -9,7 +9,6 @@ import { PreloadScene } from './scenes/preloadScene'
 import UIPlugin from 'phaser3-rex-plugins/templates/ui/ui-plugin.js'
 
 
-import { PlayerData } from './backend/PlayerData'
 import { LoginData } from './backend/LoginData'
 
 

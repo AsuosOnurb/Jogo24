@@ -270,37 +270,37 @@ export class RankingScene extends Phaser.Scene {
 
         /* Radio button: hard diff */
         this.dificil = new BetterText(this, 0, 0, 'Dificil', {  fontFamily:'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(178, this.dificil);
-        this.dificil.x += 32;
+        this.m_AlignGrid.placeAtIndex(133, this.dificil);
+        this.dificil.x += 22;
 
         this.hard_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(178, this.hard_icon);
+        this.m_AlignGrid.placeAtIndex(133, this.hard_icon);
         this.hard_icon.x -= 32
 
 
         /* Radio button: Normal Diff */
         this.normal = new BetterText(this, 0, 0, 'Normal', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(178, this.normal);
+        this.m_AlignGrid.placeAtIndex(133, this.normal);
         this.normal.x += 32;
         this.normal.y += 35;
 
 
         this.normal_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(178, this.normal_icon);
+        this.m_AlignGrid.placeAtIndex(133, this.normal_icon);
         this.normal_icon.x -= 32;
         this.normal_icon.y += 35;
 
         /* Radio button: Easy diff */
         this.facil = new BetterText(this, 0, 0, 'Fácil', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(193, this.facil);
-        this.facil.x += 32
+        this.m_AlignGrid.placeAtIndex(148, this.facil);
+        this.facil.x += 22
 
         this.easy_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(193, this.easy_icon);
+        this.m_AlignGrid.placeAtIndex(148, this.easy_icon);
         this.easy_icon.x -= 32
 
         this.dificuldade = new BetterText(this, 0, 0, 'Dificuldade', {  fontFamily:'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
-        this.m_AlignGrid.placeAtIndex(163, this.dificuldade);
+        this.m_AlignGrid.placeAtIndex(118, this.dificuldade);
         this.dificuldade.x += 32
         this.dificuldade.y += 28
 
@@ -384,41 +384,37 @@ export class RankingScene extends Phaser.Scene {
            this.UpdateTop();
         });
 
-        this.filtro = new BetterText(this, 0, 0, 'Filtro', {  fontFamily:'Vertiky', fontSize: 25, color: '#403217' });
-        this.filtro.setOrigin(0, 0.5);
+        this.filtro = new BetterText(this, 0, 0, 'Filtro', {  fontFamily:'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
         this.m_AlignGrid.placeAtIndex(163.3, this.filtro);
+        this.filtro.y += 32;
+        // this.filtro.x += 16;
 
 
 
-        this.turma_filtro = new BetterText(this, 0, 0, 'Turma', {fontFamily:'Vertiky',  fontSize: 25, color: '#000000', align: 'left' });
-        this.turma_filtro.setOrigin(-0.5, -1.3);
-        this.m_AlignGrid.placeAtIndex(178, this.turma_filtro);
+        this.turma_filtro = new BetterText(this, 0, 0, 'Turma', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
+        this.m_AlignGrid.placeAtIndex(193.2, this.turma_filtro);
+
         this.turma_icon = this.add.circle(0, 0, 10, 0xffffff);
-
-        this.turma_icon.setOrigin(0.5, -2.7);
-        this.m_AlignGrid.placeAtIndex(178, this.turma_icon);
-
+        this.m_AlignGrid.placeAtIndex(193, this.turma_icon);
+        this.turma_icon.x -= 32;
 
 
-        this.escola_filtro = new BetterText(this, 0, 0, 'Escola', { fontFamily:'Vertiky', fontSize: 25, color: '#000000', align: 'left' });
+        this.escola_filtro = new BetterText(this, 0, 0, 'Escola', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
+        this.m_AlignGrid.placeAtIndex(178.2, this.escola_filtro);
+        this.escola_filtro.y += 35;
 
-        this.escola_filtro.setOrigin(-0.45, -0.05);
-        this.m_AlignGrid.placeAtIndex(178, this.escola_filtro);
+
         this.escola_icon = this.add.circle(0, 0, 10, 0xffffff);
-
-        this.escola_icon.setOrigin(0.5, -0.5);
         this.m_AlignGrid.placeAtIndex(178, this.escola_icon);
+        this.escola_icon.x -= 32;
+        this.escola_icon.y += 35;
 
-        this.todos = new BetterText(this, 0, 0, 'Todos', {fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
+        this.todos = new BetterText(this, 0, 0, 'Todos', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
+        this.m_AlignGrid.placeAtIndex(178.2, this.todos);
 
-
-        this.todos.setOrigin(-0.5, 1.4);
-
-        this.m_AlignGrid.placeAtIndex(178, this.todos);
         this.todos_icon = this.add.circle(0, 0, 10, 0xffffff);
-
-        this.todos_icon.setOrigin(0.5, 2);
         this.m_AlignGrid.placeAtIndex(178, this.todos_icon);
+        this.todos_icon.x -= 32;
 
         this.todos.setInteractive({ useHandCursor: true });
         this.todos.input.hitArea.setTo(-50, -5, this.todos.width + 60, this.todos.height);
@@ -596,7 +592,7 @@ export class RankingScene extends Phaser.Scene {
         this.m_AlignGrid.placeAtIndex(71, this.dataC);
         this.dataC.x += 50;
 
-        //this.m_AlignGrid.showNumbers();
+        // this.m_AlignGrid.showNumbers();
     }
 
 
@@ -767,7 +763,7 @@ export class RankingScene extends Phaser.Scene {
         }).catch(function (err) {
             console.log(err);
             console.log("Failed here");
-            alert("Não foi possível estabellecer ligação. Por favor tenta mais tarde.")
+            alert("Não foi possível estabellecer ligação. Por favor tente mais tarde.")
 
         });
     }

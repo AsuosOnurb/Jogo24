@@ -14,10 +14,7 @@ enum Panels {
     Login
 };
 
-let GetValue = Phaser.Utils.Objects.GetValue;
-const COLOR_PRIMARY = 0x4e342e;
-const COLOR_LIGHT = 0x7b5e57;
-const COLOR_DARK = 0x260e04;
+
 
 export class MainMenuScene extends Phaser.Scene {
 
@@ -66,10 +63,10 @@ export class MainMenuScene extends Phaser.Scene {
             sceneKey: 'rexUI'
         });
 
-       
+
     }
 
- 
+
 
     create() {
 
@@ -114,7 +111,7 @@ export class MainMenuScene extends Phaser.Scene {
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 64 , 1.2, 1.2, "", {}, 'btn_easy', 0);
+        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 64, 1.2, 1.2, "", {}, 'btn_easy', 0);
         this.btnPlaySoloEasy.on("pointerup", () => this.StartSoloGame(Difficulty.Easy));
 
 
@@ -126,14 +123,9 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 320, 1.2, 1.2, "", {}, 'btn_hard', 0);
         this.btnPlaySoloHard.on("pointerup", () => this.StartSoloGame(Difficulty.Hard));
 
-        // Button that opens the login window/panel
-        this.btnStartLogin = new BetterButton(this, this.scale.width - 384, 128, 0.8, 0.8, "", {}, 'btn_start_login', 0);
-        this.btnStartLogin.on('pointerup', () => this.ShowPanel(Panels.Login));
 
-        // The logout Button
-        this.btnLogout = new BetterButton(this, this.scale.width - 384, 128, 1, 1, "", {}, 'btn_logout', 0);
-        this.btnLogout.SetDisabled(0);
-        this.btnLogout.on('pointerup', () => this.PerformLogout());
+        this.SetupLoginLogoutButtons();
+
 
         // =================== Setup the panel group, their images and the close button =================
         this.imgHowToPlay = this.add.image(this.scale.width / 2, this.scale.height / 2 + 140, 'howToPlay');
@@ -313,15 +305,14 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnPlaySoloHard.SetDisabled(1);
     }
 
-  
+
     private OnPanelTweenComplete(panel: Panels): void {
 
         if (panel === Panels.Login) {
         }
     }
 
-    private PerformLogin() : void 
-    {
+    private PerformLogin(): void {
         const DEFAULT_USERNAME: string = "hypatia01";
         const DEFAULT_PASSWORD: string = "123401";
 
@@ -329,19 +320,17 @@ export class MainMenuScene extends Phaser.Scene {
         console.log("Performing login with password " + DEFAULT_PASSWORD)
 
         const connection = BackendConnection.Login(DEFAULT_USERNAME, DEFAULT_PASSWORD);
-        connection.then( (data) => {
+        connection.then((data) => {
 
-            const loginResult: boolean =  LoginData.LoginWithData(data);
+            const loginResult: boolean = LoginData.LoginWithData(data);
 
-            if (loginResult)
-            {
+            if (loginResult) {
                 console.log("Login was successfull!")
 
                 this.btnLogout.SetEnabled(1);
                 this.btnStartLogin.SetDisabled(0);
             }
-            else 
-            {
+            else {
                 console.log("Login failed!")
 
             }
@@ -352,8 +341,7 @@ export class MainMenuScene extends Phaser.Scene {
         });
     }
 
-    private PerformLogout() : void 
-    {
+    private PerformLogout(): void {
         this.btnLogout.SetDisabled(0);
         this.btnStartLogin.SetEnabled(1);
 
@@ -364,5 +352,26 @@ export class MainMenuScene extends Phaser.Scene {
         LoginData.GetLocalData();
     }
 
-    
+
+    private SetupLoginLogoutButtons(): void {
+        /*
+            Both login/logout buttons are created.
+            But when this scene starts, we have to decide which one is shown, based on the login status of the user.
+        */
+
+        // Button that opens the login window/panel
+        this.btnStartLogin = new BetterButton(this, this.scale.width - 384, 128, 0.8, 0.8, "", {}, 'btn_start_login', 0);
+        this.btnStartLogin.on('pointerup', () => this.ShowPanel(Panels.Login));
+
+        // The logout Button
+        this.btnLogout = new BetterButton(this, this.scale.width - 384, 128, 0.8, 0.8, "", {}, 'btn_logout', 0);
+        this.btnLogout.on('pointerup', () => this.PerformLogout());
+
+        if (LoginData.IsLoggedIn())
+            this.btnStartLogin.SetDisabled(0);
+        else
+            this.btnLogout.SetDisabled(0);
+    }
+
+
 }

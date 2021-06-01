@@ -91,7 +91,6 @@ export class BackendConnection {
                 cache: false,
                 success: function (response) {
                     LoginData.Logout();
-                    alert("Logout was successfull!");
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     LoginData.SetUser("");
@@ -114,7 +113,7 @@ export class BackendConnection {
                         "&mescola=" + globalCodEscola +
                         "&flag=2" +
                         "&tip=" + tipoTOP +
-                        "&tC=trapbeeTOP",
+                        "&tC=jogo24HypatiaTOP",
                     crossDomain: true,
                     cache: false,
                     success: function (data) {
@@ -162,7 +161,7 @@ export class BackendConnection {
     }
 
 
-
+    /*
     static VerificaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTOP, scene) {
 
         $.ajax
@@ -251,32 +250,47 @@ export class BackendConnection {
             })
 
     }
+    */
 
 
-    static GravaRecords(username, globalCodTurma, globalCodEscola, pontuacao, tipoTop) {
+    static SendScore(score, diff) {
+        const username = LoginData.GetUser();
+        const school = LoginData.GetSchool();
+        const _class = LoginData.GetClass();
 
-        $.ajax
+        console.info("Attempting connection (sending player score) to DB");
+        console.info(`Username: ${username}`);
+        console.info(`School: ${school}`);
+        console.info(`Class: ${_class}`);
+        console.info(`Score: ${score}`);
+        console.info(`Difficulty: ${diff}`);
+
+
+        return new Promise(function (resolve, reject){
+            $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
                 data: "action=insereA&musername=" + username +
-                    "&mturma=" + globalCodTurma +
-                    "&mescola=" + globalCodEscola +
-                    "&mpontuacao=" + pontuacao +
-                    "&mtipo=" + tipoTop +
+                    "&mturma=" + _class +
+                    "&mescola=" + school +
+                    "&mpontuacao=" + score +
+                    "&mtipo=" + diff +
                     "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
                 crossDomain: true,
                 cache: false,
-                success: function (response) {
+                success: function (data) {
+                    resolve(data);
                 },
-                error: function (XMLHttpRequest, textStatus, errorThrown) {
-                    alert("Falha de ligação, por favor verifique a sua conexão");
+                error: function (err) {
+                    reject(err);
                 }
             });
+        });
+        
     }
 
-
-
+    /*
     static GetRecords(username, globalCodTurma, globalCodEscola, tipoTOP, scene) {
 
         $.ajax
@@ -314,6 +328,7 @@ export class BackendConnection {
             })
 
     }
+    */
 
 }
 

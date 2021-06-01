@@ -9,6 +9,7 @@ import { ValueOfExpression } from '../game/Utils'
 import { LoginData } from '../backend/LoginData'
 import { Operation } from '../game/Operations'
 import { timers } from 'jquery'
+import { BackendConnection } from '../backend/BackendConnection'
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -89,7 +90,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 10, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 60, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -106,7 +107,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.mTextLoginWarning = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 32,
             "\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com",
-            { fontSize: 35, align: 'center' });
+            { fontFamily: 'Vertiky', align: 'center' , fontSize: 34 });
         this.mTextLoginWarning.setColor("#4e2400");
         this.mTextLoginWarning.setAlpha(0);
 
@@ -262,15 +263,6 @@ export class SingleplayerScene extends Phaser.Scene {
         this.countdownTimer.StartCountdown();
     }
 
-    CheckSolution(): void {
-
-        const isSolutionCorrect: boolean = true;
-
-        if (isSolutionCorrect)
-            this.SavePlayerData(true); // Register a win
-        else
-            this.SavePlayerData(false); // Register a loss
-    }
 
     /**
      * Activated when the countdown timer rings (reaches zero).
@@ -291,12 +283,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.mBtn_NewCard.SetDisabled();
 
-        if (LoginData.IsLoggedIn())
-        {
+        if (LoginData.IsLoggedIn()) {
             // Save player data
             this.SavePlayerData(false); // Register another loss
-        }else 
-        {
+        } else {
             this.ShowPleaseLoginWarning();
         }
     }
@@ -589,17 +579,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    SavePlayerData(playerWon: boolean): void {
-        if (playerWon)
-            // UserInfo.IncrementWins();
-            console.log("save win")
-        else
-            // UserInfo.IncrementLosses();
-            console.log("save loss")
-
-        //  UserInfo.SaveLocalData();
-    }
-
     ShowPleaseLoginWarning(): void {
 
 
@@ -647,6 +626,26 @@ export class SingleplayerScene extends Phaser.Scene {
 
 
     }
+
+
+    SavePlayerData(playerWon: boolean): void {
+       
+
+        let connection = BackendConnection.SendScore(
+            this.m_GameState.GetTotalCorrect(), 
+            this.m_GameState.mDifficulty + 1);
+
+        connection.then((data) => 
+        {
+            console.log("Game data was sent to DB");
+        }).catch((err) => {
+            console.log("Failed to send game data to DB");
+            console.log(`Error: ${err}`);
+        });
+
+    }
+
+
 
 
 }

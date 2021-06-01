@@ -3,10 +3,10 @@ import Map from './dificulty_map.json'
 import {RandomInt} from './Utils'
 
 export enum Difficulty {
-    Easy,
-    Medium,
-    Hard,
-    Any
+    Easy = 0,
+    Medium = 1,
+    Hard = 2,
+    Any = 3
 };
 
 export  class CardGenerator {
