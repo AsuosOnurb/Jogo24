@@ -15,11 +15,12 @@ import { LoginData } from './backend/LoginData'
 const config = {
   type: Phaser.AUTO,
   backgroundColor: '#ffffff',
+  dom: {
+    createContainer: true
+  },
   scale: {
-    parent: 'divID',
-    dom: {
-      createContainer: true
-    },
+    parent: 'phaser-game',
+    
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
 

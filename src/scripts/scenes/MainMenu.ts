@@ -6,6 +6,7 @@ import { LoginData } from '../backend/LoginData';
 import { BetterButton } from '../better/BetterButton'
 import { BetterText } from '../better/BetterText';
 import { Difficulty } from '../game/CardGenerator';
+import LoginForm from '../game/LoginForm';
 
 enum Panels {
     AboutGame,
@@ -32,6 +33,7 @@ export class MainMenuScene extends Phaser.Scene {
     private btnStartLogin: BetterButton;
     private btnLogin: BetterButton;
     private btnLogout: BetterButton;
+    private loginForm: LoginForm;
 
     private btnFullscreenToggle: BetterButton;
 
@@ -45,7 +47,6 @@ export class MainMenuScene extends Phaser.Scene {
     private imgCredits: Phaser.GameObjects.Image;
     private imgLoginWindow: Phaser.GameObjects.Image;
 
-    private rexUI;
 
 
 
@@ -57,18 +58,17 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.scenePlugin({
-            key: 'rexuiplugin',
-            url: 'src/scripts/RexUI/rexuiplugin.min.js',
-            sceneKey: 'rexUI'
-        });
 
+        // Pre-load the html login form for later use 
+        this.load.html('nameform', 'assets/html/loginform.html');
 
     }
 
 
 
     create() {
+
+
 
         // Add background image 
         const bgImg = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'blueBackground');
@@ -157,6 +157,13 @@ export class MainMenuScene extends Phaser.Scene {
         this.groupPanel = this.add.group([this.imgAboutTheGame, this.imgHowToPlay, this.imgCredits, this.btnClosePanel, this.imgLoginWindow]);
         this.groupPanel.setAlpha(0);
         this.isPanelOpen = false;
+
+        this.SetupLoginForm();
+
+    }
+
+    update() 
+    {
 
     }
 
@@ -271,7 +278,11 @@ export class MainMenuScene extends Phaser.Scene {
 
         // Enable login button if the panel is the Login panel
         if (panel == Panels.Login)
+        {
             this.btnLogin.SetEnabled(1);
+
+            this.loginForm.EnableForm();
+        }
 
         tween.on
     }
@@ -292,6 +303,7 @@ export class MainMenuScene extends Phaser.Scene {
 
         // Disable login button
         this.btnLogin.SetDisabled(0);
+        this.loginForm.DisableForm();
     }
 
     private EnableSoloGameButtons(): void {
@@ -313,13 +325,13 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     private PerformLogin(): void {
-        const DEFAULT_USERNAME: string = "hypatia01";
-        const DEFAULT_PASSWORD: string = "123401";
+        // const DEFAULT_USERNAME: string = "hypatia01";
+        // const DEFAULT_PASSWORD: string = "123401";
 
-        console.log("Performing login with username " + DEFAULT_USERNAME)
-        console.log("Performing login with password " + DEFAULT_PASSWORD)
+        console.log("Performing login with username " + this.loginForm.GetUsername())
+        console.log("Performing login with password " + this.loginForm.GetPassword())
 
-        const connection = BackendConnection.Login(DEFAULT_USERNAME, DEFAULT_PASSWORD);
+        const connection = BackendConnection.Login(this.loginForm.GetUsername(), this.loginForm.GetPassword());
         connection.then((data) => {
 
             const loginResult: boolean = LoginData.LoginWithData(data);
@@ -360,11 +372,11 @@ export class MainMenuScene extends Phaser.Scene {
         */
 
         // Button that opens the login window/panel
-        this.btnStartLogin = new BetterButton(this, this.scale.width - 384, 128, 0.8, 0.8, "", {}, 'btn_start_login', 0);
+        this.btnStartLogin = new BetterButton(this, this.scale.width - 384, 128, 0.85, 0.85, "", {}, 'btn_start_login', 0);
         this.btnStartLogin.on('pointerup', () => this.ShowPanel(Panels.Login));
 
         // The logout Button
-        this.btnLogout = new BetterButton(this, this.scale.width - 384, 128, 0.8, 0.8, "", {}, 'btn_logout', 0);
+        this.btnLogout = new BetterButton(this, this.scale.width - 384, 128, 0.85, 0.85, "", {}, 'btn_logout', 0);
         this.btnLogout.on('pointerup', () => this.PerformLogout());
 
         if (LoginData.IsLoggedIn())
@@ -373,5 +385,12 @@ export class MainMenuScene extends Phaser.Scene {
             this.btnLogout.SetDisabled(0);
     }
 
+    private SetupLoginForm() {
+
+       
+        this.loginForm = new LoginForm(this);
+
+        
+    }
 
 }

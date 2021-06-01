@@ -285,7 +285,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         if (LoginData.IsLoggedIn()) {
             // Save player data
-            this.SavePlayerData(false); // Register another loss
+            this.SavePlayerData(); 
         } else {
             this.ShowPleaseLoginWarning();
         }
@@ -628,7 +628,7 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
 
-    SavePlayerData(playerWon: boolean): void {
+    SavePlayerData(): void {
        
 
         let connection = BackendConnection.SendScore(
