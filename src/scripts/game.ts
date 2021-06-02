@@ -19,7 +19,7 @@ const config = {
     createContainer: true
   },
   scale: {
-    parent: 'game-wrapper',
+    parent: 'phaser-game',
     
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -47,5 +47,5 @@ const config = {
 
 
 var game = new Phaser.Game(config);
-game.scale.fullscreenTarget = document.getElementById(`game-wrapper`);
+game.scale.fullscreenTarget = document.getElementById(`phaser-game`);
 var userLoginData = LoginData.GetInstance();
