@@ -48,19 +48,12 @@ export class MainMenuScene extends Phaser.Scene {
     private imgLoginWindow: Phaser.GameObjects.Image;
 
 
-
-
-
-
     constructor() {
         super('MainMenu');
 
     }
 
     preload() {
-
-        // Pre-load the html login form for later use 
-        this.load.html('nameform', 'assets/html/loginform.html');
 
     }
 
@@ -161,12 +154,6 @@ export class MainMenuScene extends Phaser.Scene {
         this.SetupLoginForm();
 
     }
-
-    update() 
-    {
-
-    }
-
 
 
     StartSoloGame(diff: Difficulty): void {
