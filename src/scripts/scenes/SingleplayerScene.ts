@@ -1,4 +1,4 @@
-import Phaser, { Utils } from 'phaser'
+import Phaser from 'phaser'
 
 import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
@@ -8,7 +8,6 @@ import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../game/Utils'
 import { LoginData } from '../backend/LoginData'
 import { Operation } from '../game/Operations'
-import { timers } from 'jquery'
 import { BackendConnection } from '../backend/BackendConnection'
 
 
@@ -16,7 +15,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
     private isInstanced: boolean = false;
 
-    private m_Data; // The data object that comes from the main menu
+    private mScores: any;
+
     private m_GameState: SingleplayerGame;
     private countdownTimer: CountdownTimer;
 
@@ -43,9 +43,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
     private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
 
-    // The final warning image that appears if the user is not logged in
-    private mImgLoginWarning: Phaser.GameObjects.Image;
+    // The final image and information that appears everytime the timer runs out
+    private mImgEndGame: Phaser.GameObjects.Image;
     private mTextLoginWarning: BetterText;
+    private mTextGameResults: BetterText;
 
 
 
@@ -90,7 +91,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 60, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 40, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -101,13 +102,13 @@ export class SingleplayerScene extends Phaser.Scene {
 
 
         // Login warning
-        this.mImgLoginWarning = this.add.sprite(this.scale.width / 2, this.scale.height / 2, "gameEndBGg");
-        this.mImgLoginWarning.setScale(1.5)
-        this.mImgLoginWarning.setAlpha(0);
+        this.mImgEndGame = this.add.sprite(this.scale.width / 2, this.scale.height / 2, "gameEndBGg");
+        this.mImgEndGame.setScale(1.5)
+        this.mImgEndGame.setAlpha(0);
 
         this.mTextLoginWarning = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 32,
             "\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com",
-            { fontFamily: 'Vertiky', align: 'center' , fontSize: 34 });
+            { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
         this.mTextLoginWarning.setColor("#4e2400");
         this.mTextLoginWarning.setAlpha(0);
 
@@ -115,8 +116,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
     init(data) {
 
-        this.m_Data = data;
-        this.m_GameState = new SingleplayerGame(this.m_Data.difficulty);
+        this.m_GameState = new SingleplayerGame(data.difficulty);
 
         /**
          * Register event handlers/listeners onyl if the scene hasn't been started before.
@@ -134,6 +134,23 @@ export class SingleplayerScene extends Phaser.Scene {
             this.isInstanced = true;
 
         }
+
+        // Get the player scores from the DB
+        if (LoginData.IsLoggedIn())
+        {
+
+            let connection = BackendConnection.RetrievePlayerScore(data.difficulty + 1);
+            connection.then( (parsedData) => {
+                
+                console.log(parsedData)
+                this.mScores = parsedData;
+    
+            }).catch(function (err) {
+                console.log(err);
+            });
+
+        }
+
 
 
     }
@@ -264,32 +281,6 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
 
-    /**
-     * Activated when the countdown timer rings (reaches zero).
-     * Activates only once during the whole game.
-     */
-    NoTimeLeft() {
-        for (let i = 0; i < 4; i++)
-            this.m_CardButtons[i].SetDisabled();
-
-        this.m_BtnReset.SetDisabled();
-        this.m_BtnUndo.SetDisabled();
-
-        this.btnOperationAdd.SetDisabled();
-        this.btnOperationSubtract.SetDisabled();
-        this.btnOperationMultiply.SetDisabled();
-        this.btnOperationDivide.SetDisabled();
-
-
-        this.mBtn_NewCard.SetDisabled();
-
-        if (LoginData.IsLoggedIn()) {
-            // Save player data
-            this.SavePlayerData(); 
-        } else {
-            this.ShowPleaseLoginWarning();
-        }
-    }
 
 
     /**
@@ -579,12 +570,136 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    ShowPleaseLoginWarning(): void {
 
+    /**
+     * Activates when the countdown timer rings (reaches zero).
+     * Activates only once during the whole game.
+     */
+    NoTimeLeft() {
+        for (let i = 0; i < 4; i++)
+            this.m_CardButtons[i].SetDisabled();
+
+        this.m_BtnReset.SetDisabled();
+        this.m_BtnUndo.SetDisabled();
+
+        this.btnOperationAdd.SetDisabled();
+        this.btnOperationSubtract.SetDisabled();
+        this.btnOperationMultiply.SetDisabled();
+        this.btnOperationDivide.SetDisabled();
+
+
+        this.mBtn_NewCard.SetDisabled();
+
+        if (LoginData.IsLoggedIn()) {
+            // Show the final card telling the player the result of the game.
+            this.ShowGameResults();
+
+            // Send the data to the database
+            this.SendScoreToDB();
+
+        } else {
+            this.ShowPleaseLoginWarning();
+        }
+    }
+
+    /* 
+        Shows some information to the player about his score,
+        saying if he got a new record, if he got a global record (top100), a school or class record.
+    */
+
+    ShowGameResults(): void {
+
+        const playerScore = this.m_GameState.GetTotalCorrect();
+
+        // Prepare the text that will be shown
+        this.mTextGameResults = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
+        this.mTextGameResults.setColor("#4e2400");
+        this.mTextGameResults.setAlpha(0);
+
+        
+
+        let personalBest = this.mScores['personalBest'];
+        let classBest = this.mScores['classBest'];
+        let schoolBest = this.mScores['schoolBest'];
+        let top100GlobalBest = this.mScores['top100GlobalBest']
+
+        console.log(`Comparing score with ${personalBest}`)
+        console.log(`Comparing score with ${classBest}`)
+        console.log(`Comparing score with ${schoolBest}`)
+        console.log(`Comparing score with ${top100GlobalBest}`)
+
+        if (playerScore > personalBest)
+            console.info("Parabéns, alcançaste um novo recorde pessoal!");
+        
+        if (playerScore > schoolBest)
+            console.info("Parabéns, a tua pontuação é a melhor da tua escola!");
+        
+        if (playerScore > classBest)
+            console.info("Parabéns, a tua pontuação é a melhor da tua turma!");
+        
+        if (playerScore > top100GlobalBest)
+            console.info("Parabéns, a tua pontuação está nos top 100");
+
+
+
+
+    }
+
+    SendScoreToDB(): void {
+
+        const playerScore = this.m_GameState.GetTotalCorrect();
+        const diff = this.m_GameState.mDifficulty + 1;
+
+        // Before sending the score to the DB, we can check if the player got a new record.
+        // If he did, then we send it to the DB.
+        // Else, we dont have to send end at all.
+
+        /*
+        let gotNewRecord: boolean =  false;
+        let checkRecordConnection = BackendConnection.CheckScore(playerScore, diff);
+
+        checkRecordConnection.then((scores: any) =>{
+            console.log("Parsed scores")
+            console.log(scores)
+            
+            const personalBest = scores['personalBest'];
+            const classBest = scores['classBest'];
+            const schoolBest = scores['schoolBest'];
+            const globalBest  = scores['top100GlobalBest'];
+
+
+
+        }).catch((err) => {
+            console.error("Connection failed!")
+
+        });
+        */
+
+
+
+        let connection = BackendConnection.SendScore(
+            playerScore,
+            diff);
+
+        connection.then((data) => {
+            console.log("Game data was sent to DB");
+        }).catch((err) => {
+            console.log("Failed to send game data to DB");
+            console.log(`Error: ${err}`);
+        });
+
+    }
+
+
+
+    /*
+        Makes a warning appear, telling the user to login if he wants to save his score.
+    */
+    ShowPleaseLoginWarning(): void {
 
         this.tweens.add(
             {
-                targets: [this.mImgLoginWarning, this.mTextLoginWarning],
+                targets: [this.mImgEndGame, this.mTextLoginWarning],
                 alpha: 1.0,
                 scale: 1.6,
 
@@ -624,24 +739,6 @@ export class SingleplayerScene extends Phaser.Scene {
             }
         );
 
-
-    }
-
-
-    SavePlayerData(): void {
-       
-
-        let connection = BackendConnection.SendScore(
-            this.m_GameState.GetTotalCorrect(), 
-            this.m_GameState.mDifficulty + 1);
-
-        connection.then((data) => 
-        {
-            console.log("Game data was sent to DB");
-        }).catch((err) => {
-            console.log("Failed to send game data to DB");
-            console.log(`Error: ${err}`);
-        });
 
     }
 

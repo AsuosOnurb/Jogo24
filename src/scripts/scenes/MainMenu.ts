@@ -1,4 +1,4 @@
-import Phaser, { Display, Scale } from 'phaser'
+import Phaser from 'phaser'
 import { BackendConnection } from '../backend/BackendConnection';
 import { ParseLoginData } from '../backend/BackendUtils';
 import { LoginData } from '../backend/LoginData';
@@ -34,6 +34,7 @@ export class MainMenuScene extends Phaser.Scene {
     private btnLogin: BetterButton;
     private btnLogout: BetterButton;
     private loginForm: LoginForm;
+    private txtUserName: BetterText;
 
     private btnFullscreenToggle: BetterButton;
 
@@ -83,7 +84,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnTabletMode.once('pointerup', () => this.StartMultiplayerGame());
 
         // Fullscreen button
-        this.btnFullscreenToggle = new BetterButton(this, this.scale.width - 128, 128, 0.8, 0.8, "", {}, this.scale.isFullscreen ? "fullscreenOff" : "fullscreenOn");
+        this.btnFullscreenToggle = new BetterButton(this,  128, 128, 0.8, 0.8, "", {}, this.scale.isFullscreen ? "fullscreenOff" : "fullscreenOn");
         this.btnFullscreenToggle.on('pointerup', () => this.ToggleFullscreen());
 
         // Top 100 button
@@ -221,8 +222,8 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     private PlayTween_ShowPanel(panel: Panels): void {
-        console.log("Opening panel: ")
-        console.log(panel);
+        // console.log("Opening panel: ")
+        // console.log(panel);
         let targetImage: Phaser.GameObjects.Image;
         switch (panel) {
             case Panels.Login:
@@ -262,6 +263,7 @@ export class MainMenuScene extends Phaser.Scene {
 
         // Disable some buttons
         this.DisableSoloGameButtons();
+        this.DisableRightSideButtons();
 
         // Enable login button if the panel is the Login panel
         if (panel == Panels.Login)
@@ -278,9 +280,17 @@ export class MainMenuScene extends Phaser.Scene {
 
         this.tweens.add({
             targets: [this.imgAboutTheGame, this.imgCredits, this.imgHowToPlay, this.imgLoginWindow
-                , this.btnClosePanel, this.btnLogin],
+                , this.btnLogin],
             alpha: 0,
             scale: 0.4,
+            ease: 'Power1',
+            duration: 100
+        });
+
+        // make the close button disappear
+        this.tweens.add({
+            targets: this.btnClosePanel,
+            alpha: 0,
             ease: 'Power1',
             duration: 100
         });
@@ -291,6 +301,8 @@ export class MainMenuScene extends Phaser.Scene {
         // Disable login button
         this.btnLogin.SetDisabled(0);
         this.loginForm.DisableForm();
+
+        this.EnableRightSideButtons();
     }
 
     private EnableSoloGameButtons(): void {
@@ -315,24 +327,35 @@ export class MainMenuScene extends Phaser.Scene {
         // const DEFAULT_USERNAME: string = "hypatia01";
         // const DEFAULT_PASSWORD: string = "123401";
 
-        console.log("Performing login with username " + this.loginForm.GetUsername())
-        console.log("Performing login with password " + this.loginForm.GetPassword())
+        const username = this.loginForm.GetUsername();
+        const password = this.loginForm.GetPassword();
 
-        const connection = BackendConnection.Login(this.loginForm.GetUsername(), this.loginForm.GetPassword());
+        //console.log("Performing login with username " + this.loginForm.GetUsername())
+        //console.log("Performing login with password " + this.loginForm.GetPassword())
+
+        //const connection = BackendConnection.Login(this.loginForm.GetUsername(), this.loginForm.GetPassword());
+        const connection = BackendConnection.Login(username, password);
         connection.then((data) => {
 
             const loginResult: boolean = LoginData.LoginWithData(data);
 
             if (loginResult) {
                 console.log("Login was successfull!")
+                console.log(data)
 
                 this.btnLogout.SetEnabled(1);
                 this.btnStartLogin.SetDisabled(0);
+
+                this.HidePanel();
+    
+                // Make the "Welcome user text visible"
+                this.txtUserName.setVisible(true);
+                this.txtUserName.setText(`Olá, ${LoginData.GetFirstName()}`)
             }
             else {
                 console.log("Login failed!")
-
             }
+
 
         }).catch((err) => {
             console.log(err);
@@ -348,28 +371,44 @@ export class MainMenuScene extends Phaser.Scene {
         console.log("Performing logout")
 
         BackendConnection.DestroySession();
-        LoginData.GetLocalData();
+
+        // Hide the login name text
+        this.txtUserName.setText("");
+        this.txtUserName.setVisible(false);
     }
 
 
     private SetupLoginLogoutButtons(): void {
+
+        // Setup the username text label that appears on top of the logout button
+        this.txtUserName = new BetterText(this, this.scale.width - 128 , 32 , "Hello", { fontFamily: 'Folks-Normal', fontSize: 28, color: "#ffffff", fontStyle: "bold" })
+        this.txtUserName.setVisible(false);
+
         /*
             Both login/logout buttons are created.
             But when this scene starts, we have to decide which one is shown, based on the login status of the user.
         */
 
         // Button that opens the login window/panel
-        this.btnStartLogin = new BetterButton(this, this.scale.width - 384, 128, 0.85, 0.85, "", {}, 'btn_start_login', 0);
+        this.btnStartLogin = new BetterButton(this, this.scale.width -128, 128, 0.85, 0.85, "", {}, 'btn_start_login', 0);
         this.btnStartLogin.on('pointerup', () => this.ShowPanel(Panels.Login));
 
         // The logout Button
-        this.btnLogout = new BetterButton(this, this.scale.width - 384, 128, 0.85, 0.85, "", {}, 'btn_logout', 0);
+        this.btnLogout = new BetterButton(this, this.scale.width - 128, 128, 0.85, 0.85, "", {}, 'btn_logout', 0);
         this.btnLogout.on('pointerup', () => this.PerformLogout());
 
         if (LoginData.IsLoggedIn())
+        {
             this.btnStartLogin.SetDisabled(0);
+            this.txtUserName.setText(`Olá, ${LoginData.GetFirstName()}` );
+            this.txtUserName.setVisible(true);
+
+        }
         else
+        
             this.btnLogout.SetDisabled(0);
+
+        
     }
 
     private SetupLoginForm() {
@@ -379,5 +418,25 @@ export class MainMenuScene extends Phaser.Scene {
 
         
     }
+
+
+    EnableRightSideButtons() : void 
+    {
+        this.btnTabletMode.SetEnabled(1);
+        this.btnCredits.SetEnabled(1);
+        this.btnLeaderboards.SetEnabled(1);
+        this.howToPlayButton.SetEnabled(1);
+        this.btnAboutGame.SetEnabled(1)
+    }
+
+    DisableRightSideButtons() : void 
+    {
+        this.btnTabletMode.SetDisabled(1);
+        this.btnCredits.SetDisabled(1);
+        this.btnLeaderboards.SetDisabled(1);
+        this.howToPlayButton.SetDisabled(1);
+        this.btnAboutGame.SetDisabled(1)
+    }
+
 
 }

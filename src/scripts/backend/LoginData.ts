@@ -34,15 +34,8 @@ export class LoginData {
      * Retrieve data saved in the browser's sessionstorage if it exists
      */
     static GetLocalData() {
-        if (typeof (Storage) === "undefined") {
-            return;
-        }
-
-        let dataAux = sessionStorage.getItem('loginInfo');
-        if (dataAux != null) {
-            let data = JSON.parse(dataAux);
-            this.ParseData(data);
-        }
+        
+       
 
     }
 
@@ -134,7 +127,7 @@ export class LoginData {
     static LoginWithData(data) {
         const loginData = ParseLoginData(data);
 
-        console.log(loginData)
+        //console.log(loginData)
         if (loginData === "WRONG_PASSWORD") {
             alert("Utilizador ou Password Errados");
             return false;
@@ -144,7 +137,7 @@ export class LoginData {
             this.m_FirstName = loginData['firstName'];
             this.m_Class = loginData['turma'];
             this.m_School = loginData['escola'];
-            console.log("Setting login data")
+            //console.log("Setting login data")
             return true;
         }
 

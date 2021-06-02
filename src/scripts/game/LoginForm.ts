@@ -1,4 +1,4 @@
-import Phaser from 'phaser'
+import Phaser, { DOM } from 'phaser'
 
 export default class LoginForm {
 
@@ -22,18 +22,23 @@ export default class LoginForm {
     `;
 
     constructor(mainMenuScene: Phaser.Scene) {
+
         const gridConfig = {
             'scene': mainMenuScene,
             'cols': 15,
             'rows': 15
         }
 
+        console.log( mainMenuScene?.game?.domContainer?.firstChild)
 
+
+        
         let user = `
         <input type="text" name="username" ${this.STYLE_TEXT} >`;
 
         let pass = `
         <input type="password" name="password" ${this.STYLE_TEXT}>`;
+
 
         this.usernameInput = mainMenuScene.add.dom(0, 0).createFromHTML(user, 'phaser-example');
         this.usernameInput.setPosition(mainMenuScene.scale.width / 2, mainMenuScene.scale.height / 2);
@@ -51,7 +56,10 @@ export default class LoginForm {
 
         this.DisableForm();
 
-        
+
+        console.log( mainMenuScene?.game?.domContainer?.firstChild)
+        mainMenuScene.game.domContainer.setAttribute("id", "loginFormContainer")
+
 
 
     }
@@ -71,6 +79,7 @@ export default class LoginForm {
         (<HTMLInputElement> this.usernameInput.getChildByName('username')).disabled = false;
         (<HTMLInputElement> this.passwordInput.getChildByName('password')).disabled = false;
 
+        document.getElementById("loginFormContainer")?.style.removeProperty("pointer-events");
 
 
     }
@@ -84,6 +93,9 @@ export default class LoginForm {
         let passwdInput = (<HTMLInputElement> this.passwordInput.getChildByName('password'));
         passwdInput.value = "";
         passwdInput.disabled = true;
+
+        document.getElementById("loginFormContainer")?.style.setProperty("pointer-events", "none")
+
     }
 
     SetFormPosition(x, y): void 

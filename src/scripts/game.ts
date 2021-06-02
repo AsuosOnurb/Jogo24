@@ -15,11 +15,8 @@ import { LoginData } from './backend/LoginData'
 const config = {
   type: Phaser.AUTO,
   backgroundColor: '#ffffff',
-  dom: {
-    createContainer: true
-  },
+ 
   scale: {
-    parent: 'phaser-game',
     
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
@@ -27,6 +24,11 @@ const config = {
     width: 1920,
     height: 1080
   },
+  parent:'game',
+  dom: {
+    createContainer: true
+  },
+  
   antialias: true,
 
   scene: [PreloadScene, MainMenuScene, SingleplayerScene, MultiplayerScene, RankingScene],
