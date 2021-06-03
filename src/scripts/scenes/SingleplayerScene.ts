@@ -91,7 +91,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 60, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 120, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -704,33 +704,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         const playerScore = this.m_GameState.GetTotalCorrect();
         const diff = this.m_GameState.mDifficulty + 1;
-
-        // Before sending the score to the DB, we can check if the player got a new record.
-        // If he did, then we send it to the DB.
-        // Else, we dont have to send end at all.
-
-        /*
-        let gotNewRecord: boolean =  false;
-        let checkRecordConnection = BackendConnection.CheckScore(playerScore, diff);
-
-        checkRecordConnection.then((scores: any) =>{
-            console.log("Parsed scores")
-            console.log(scores)
-            
-            const personalBest = scores['personalBest'];
-            const classBest = scores['classBest'];
-            const schoolBest = scores['schoolBest'];
-            const globalBest  = scores['top100GlobalBest'];
-
-
-
-        }).catch((err) => {
-            console.error("Connection failed!")
-
-        });
-        */
-
-
+        console.log(`Sending player score: ${playerScore}`);
 
         let connection = BackendConnection.SendScore(
             playerScore,

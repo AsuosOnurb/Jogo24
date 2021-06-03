@@ -213,7 +213,7 @@ export class BackendConnection {
                 ({
                     type: "POST",
                     url: "https://www.hypatiamat.com/newHRecords.php",
-                    data: "action=maximoGlobal&codAl=" + username +
+                    data: "action=minimoGlobal&codAl=" + username +
                         "&codTurma=" + _class +
                         "&codEscola=" + school +
                         "&pont=" + 0 +

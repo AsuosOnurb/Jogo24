@@ -334,11 +334,11 @@ export class MainMenuScene extends Phaser.Scene {
         //console.log("Performing login with password " + this.loginForm.GetPassword())
 
         //const connection = BackendConnection.Login(this.loginForm.GetUsername(), this.loginForm.GetPassword());
-        const connection = BackendConnection.Login("hypatia01", "123401");
+        const connection = BackendConnection.Login(username, password);
         connection.then((data) => {
 
             const loginResult: boolean = LoginData.LoginWithData(data);
-
+            
             if (loginResult) {
                 console.log("Login was successfull!")
                 console.log(data)
