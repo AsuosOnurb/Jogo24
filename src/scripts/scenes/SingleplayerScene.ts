@@ -582,7 +582,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.mBtn_NewCard.SetDisabled();
 
-        const playerScore = 5;
+        const playerScore = this.m_GameState.GetTotalCorrect();
 
         // Check the most updated scores from the DB
         let verifConnection = BackendConnection.VerifyScore(playerScore, this.m_GameState.mDifficulty + 1);
