@@ -91,7 +91,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 120, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 4, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -105,12 +105,6 @@ export class SingleplayerScene extends Phaser.Scene {
         this.mImgEndGame = this.add.sprite(this.scale.width / 2, this.scale.height / 2, "gameEndBGg");
         this.mImgEndGame.setScale(1.5)
         this.mImgEndGame.setAlpha(0);
-
-        this.mTextLoginWarning = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 32,
-            "\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com",
-            { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
-        this.mTextLoginWarning.setColor("#4e2400");
-        this.mTextLoginWarning.setAlpha(0);
 
     }
 
@@ -138,7 +132,7 @@ export class SingleplayerScene extends Phaser.Scene {
         // Get the player scores from the DB
         if (LoginData.IsLoggedIn()) {
 
-            let connection = BackendConnection.RetrievePlayerScore(data.difficulty + 1);
+            let connection = BackendConnection.GetRecords(this.m_GameState.mDifficulty + 1);
             connection.then((parsedData) => {
 
                 console.log(parsedData)
@@ -439,8 +433,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Enable number buttons
             let currentOperation: Operation = this.m_GameState.PeekCurrentOperation();
-           //  console.log("Undoing the picking of the first operand:")
-           //  console.log(currentOperation);
+            //  console.log("Undoing the picking of the first operand:")
+            //  console.log(currentOperation);
             this.m_BtnUsed[currentOperation.operand1BtnIndex] = false;
 
             this.EnableNumberButtons();
@@ -586,19 +580,37 @@ export class SingleplayerScene extends Phaser.Scene {
         this.btnOperationMultiply.SetDisabled();
         this.btnOperationDivide.SetDisabled();
 
-
         this.mBtn_NewCard.SetDisabled();
 
-        if (LoginData.IsLoggedIn()) {
-            // Show the final card telling the player the result of the game.
-            this.ShowGameResults();
+        const playerScore = 24;
 
-            // Send the data to the database
-            this.SendScoreToDB();
+        // Check the most updated scores from the DB
+        let verifConnection = BackendConnection.VerifyScore(playerScore, this.m_GameState.mDifficulty + 1);
+        verifConnection.then((scores) => {
 
-        } else {
-            this.ShowPleaseLoginWarning();
-        }
+            console.warn("Verify  score")
+            this.mScores = scores;
+            console.log(this.mScores);
+
+            if (LoginData.IsLoggedIn()) {
+
+                // Show the final card telling the player the result of the game.
+                this.ShowGameResults(playerScore);
+    
+                // Send the data to the database
+                this.SendScoreToDB(playerScore);
+    
+            } else {
+                this.ShowPleaseLoginWarning(playerScore);
+            }
+
+
+        }).catch((err) => {
+            console.log("Failed to verify")
+        });
+
+
+       
     }
 
     /* 
@@ -606,44 +618,46 @@ export class SingleplayerScene extends Phaser.Scene {
         saying if he got a new record, if he got a global record (top100), a school or class record.
     */
 
-    ShowGameResults(): void {
+    ShowGameResults(playerScore: number): void {
 
-        const playerScore = this.m_GameState.GetTotalCorrect();
-        const playerName:string = LoginData.GetFirstName();
+        const playerName: string = LoginData.GetFirstName();
         let winMessage: string = ``;
-        
+
         let personalBest = this.mScores['personalBest'];
         let classBest = this.mScores['classBest'];
         let schoolBest = this.mScores['schoolBest'];
         let top100GlobalBest = this.mScores['top100GlobalBest']
-        
-       
+
+
         console.log(`Comparing score with ${personalBest}`)
         console.log(`Comparing score with ${classBest}`)
         console.log(`Comparing score with ${schoolBest}`)
         console.log(`Comparing score with ${top100GlobalBest}`)
 
-        if (playerScore > top100GlobalBest)
-        {
-            // Player got a top100 record
-            winMessage = `${playerName}, conseguiste um\nnovo recorde ABSOLUTO!\nCom ${playerScore} pontos.\n\nVê o teu resultado no TOP 100 absoluto.`;
+        if (playerScore > personalBest) {
+            if (playerScore > top100GlobalBest) {
+                // Player got a top100 record
+                winMessage = `${playerName}, conseguiste um\nnovo recorde ABSOLUTO!\nCom ${playerScore} pontos.\n\nVê o teu resultado no TOP 100 absoluto.`;
 
-        } else if (playerScore > schoolBest) {
-            // Player got a school record
-            winMessage = `${playerName}, conseguiste um novo\nrecorde na tua escola!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua escola.`;
+            } else if (playerScore > schoolBest) {
+                // Player got a school record
+                winMessage = `${playerName}, conseguiste um novo\nrecorde na tua escola!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua escola.`;
 
-        } else if (playerScore > classBest) {
-            // Player got a class record
-            winMessage = `${playerName}, conseguiste um\nnovo recorde na tua turma!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua turma.`;
+            } else if (playerScore > classBest) {
+                // Player got a class record
+                winMessage = `${playerName}, conseguiste um\nnovo recorde na tua turma!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua turma.`;
 
-        } else if (playerScore > personalBest) {
-            // Player got  a new personal best.
-            winMessage =  `${playerName}, conseguiste melhorar o teu\nresultado anterior.\n\nNo entanto, ainda não conseguiste \nentrar no TOP 100.\n\nTenta outra vez.`;
+            } else
+                // Player got  a new personal best.
+                winMessage = `${playerName}, conseguiste melhorar o teu\nresultado anterior.\n\nNo entanto, ainda não conseguiste \nentrar no TOP 100.\n\nTenta outra vez.`;
 
         } else {
             // Nohing new happened
             winMessage = `Obtiveste ${playerScore} pontos.\n\nNão conseguiste melhorar o teu\nresultado anterior\n(o teu melhor resultado é ${personalBest} pontos)\n\n\nTenta outra vez!`;
+
         }
+
+
 
 
 
@@ -700,18 +714,20 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    SendScoreToDB(): void {
+    SendScoreToDB(playerScore: number): void {
 
-        const playerScore = this.m_GameState.GetTotalCorrect();
         const diff = this.m_GameState.mDifficulty + 1;
         console.log(`Sending player score: ${playerScore}`);
 
-        let connection = BackendConnection.SendScore(
+
+
+        let connection = BackendConnection.GravaRecords(
             playerScore,
             diff);
 
         connection.then((data) => {
             console.log("Game data was sent to DB");
+            console.log(data)
         }).catch((err) => {
             console.log("Failed to send game data to DB");
             console.log(`Error: ${err}`);
@@ -724,7 +740,28 @@ export class SingleplayerScene extends Phaser.Scene {
     /*
         Makes a warning appear, telling the user to login if he wants to save his score.
     */
-    ShowPleaseLoginWarning(): void {
+    ShowPleaseLoginWarning(playerScore: number): void {
+
+        let messsage: string = ``;
+
+        console.log("User is not logged in. Using the stored mScores to see if he would have gotten a record")
+        console.log(this.mScores);
+        let top100GlobalBest = this.mScores['top100GlobalBest']
+
+        if (playerScore > top100GlobalBest)
+        {
+            messsage = `Se estivesses registado o teu\nnome figuraria no TOP 100 absoluto\ncom ${playerScore} pontos.\n\nRegista-te em\nwww.hypatiamat.com `;
+        }else 
+        {
+            messsage =  `\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com`;
+
+        }
+
+        // Prepare the text thal will be shown
+        this.mTextLoginWarning = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
+        this.mTextLoginWarning.setText(messsage)
+        this.mTextLoginWarning.setColor("#4e2400");
+        this.mTextLoginWarning.setAlpha(0);
 
         this.tweens.add(
             {

@@ -161,9 +161,56 @@ export class BackendConnection {
 
     }
 
+    static VerifyScore(score, diff)
+    {
+        const username = LoginData.GetUser();
+        const school = LoginData.GetSchool();
+        const _class = LoginData.GetClass();
+
+        console.info("Attempting connection (verifying player score) to DB");
+        console.info(`Username: ${username}`);
+        console.info(`School: ${school}`);
+        console.info(`Class: ${_class}`);
+        console.info(`Score: ${score}`);
+        console.info(`Difficulty: ${diff}`);
+
+        return new Promise(function (resolve, reject) {
+            $.ajax
+                ({
+                    type: "POST",
+                    url: "https://www.hypatiamat.com/newHRecords.php",
+                    data: "action=minimoGlobal&codAl=" + username + 
+                    "&codTurma=" + _class + 
+                    "&codEscola=" + school + 
+                    "&pont=" + score + 
+                    "&tip=" + diff + 
+                    "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
+                    crossDomain: true,
+                    cache: false,
+                    success: function (data) {
+
+                        const scores = 
+                        {
+                            'personalBest': parseFloat(data.split("vlMin4=")[1]),
+                            'classBest':parseFloat(data.split("vlMin3=")[1].split("&")[0]),
+                            'schoolBest': parseFloat(data.split("vlMin2=")[1].split("&")[0]), 
+                            'top100GlobalBest': parseFloat(data.split("vlMin1=")[1].split("&")[0])
+                        };
+
+                        resolve(scores);
+                    },
+                    error: function (err) {
+                        reject(err);
+                    }
+                });
+        });
 
 
-    static SendScore(score, diff) {
+    }
+
+
+
+    static GravaRecords(score, diff) {
 
         const username = LoginData.GetUser();
         const school = LoginData.GetSchool();
@@ -201,11 +248,15 @@ export class BackendConnection {
 
     }
 
-    static RetrievePlayerScore(diff) {
+    static GetRecords(diff) {
         const username = LoginData.GetUser();
         const _class = LoginData.GetClass();
         const school = LoginData.GetSchool();
 
+        console.log(username)
+        console.log(_class)
+        console.log(school)
+        console.log(diff)
 
         return new Promise(function (resolve, reject) {
 
@@ -223,7 +274,8 @@ export class BackendConnection {
                     cache: false,
                     success: function (data) {
 
-                        console.warn(data);
+                        console.warn("Get records")
+                        console.log(data);
 
 
                         const scores =
