@@ -134,8 +134,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
             let connection = BackendConnection.GetRecords(this.m_GameState.mDifficulty + 1);
             connection.then((parsedData) => {
-
-                // console.log(parsedData)
+                 console.log("Latest scores: ")
+                 console.log(parsedData)
                 this.mScores = parsedData;
 
             }).catch(function (err) {
@@ -582,12 +582,12 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.mBtn_NewCard.SetDisabled();
 
-        const playerScore = 24;
+        const playerScore = 5;
 
         // Check the most updated scores from the DB
         let verifConnection = BackendConnection.VerifyScore(playerScore, this.m_GameState.mDifficulty + 1);
         verifConnection.then((scores) => {
-
+            console.log("Latest scores")
             this.mScores = scores;
 
             if (LoginData.IsLoggedIn()) {
@@ -715,7 +715,7 @@ export class SingleplayerScene extends Phaser.Scene {
     SendScoreToDB(playerScore: number): void {
 
         const diff = this.m_GameState.mDifficulty + 1;
-        // console.log(`Sending player score: ${playerScore}`);
+        console.log(`Sending player score: ${playerScore}`);
 
 
 
@@ -724,8 +724,8 @@ export class SingleplayerScene extends Phaser.Scene {
             diff);
 
         connection.then((data) => {
-            console.log("Game data was sent to DB");
-            console.log(data)
+            // console.log("Game data was sent to DB");
+            // console.log(data)
         }).catch((err) => {
             console.log("Failed to send game data to DB");
             console.log(`Error: ${err}`);
