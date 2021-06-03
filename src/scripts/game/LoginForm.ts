@@ -29,7 +29,7 @@ export default class LoginForm {
             'rows': 15
         }
 
-        console.log( mainMenuScene?.game?.domContainer?.firstChild)
+        // console.log( mainMenuScene?.game?.domContainer?.firstChild)
 
 
         
@@ -57,7 +57,7 @@ export default class LoginForm {
         this.DisableForm();
 
 
-        console.log( mainMenuScene?.game?.domContainer?.firstChild)
+        // console.log( mainMenuScene?.game?.domContainer?.firstChild)
         mainMenuScene.game.domContainer.setAttribute("id", "loginFormContainer")
 
 

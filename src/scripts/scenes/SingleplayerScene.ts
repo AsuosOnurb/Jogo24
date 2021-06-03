@@ -91,7 +91,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 40, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 60, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -136,15 +136,14 @@ export class SingleplayerScene extends Phaser.Scene {
         }
 
         // Get the player scores from the DB
-        if (LoginData.IsLoggedIn())
-        {
+        if (LoginData.IsLoggedIn()) {
 
             let connection = BackendConnection.RetrievePlayerScore(data.difficulty + 1);
-            connection.then( (parsedData) => {
-                
+            connection.then((parsedData) => {
+
                 console.log(parsedData)
                 this.mScores = parsedData;
-    
+
             }).catch(function (err) {
                 console.log(err);
             });
@@ -369,7 +368,7 @@ export class SingleplayerScene extends Phaser.Scene {
             this.m_GameState.ResetOperationState()
         }
 
-        console.log(`Current state: ${this.m_GameState.StateToString()}`);
+        // console.log(`Current state: ${this.m_GameState.StateToString()}`);
 
 
     }
@@ -403,10 +402,10 @@ export class SingleplayerScene extends Phaser.Scene {
                We pop the top-most operation on the stack to revert to those values.
            */
 
-            console.log("Player is wants to undo the previous operation completely")
+            // console.log("Player is wants to undo the previous operation completely")
             let lastOperation = this.m_GameState.RevertToLastOperation();
             if (lastOperation === undefined) {
-                console.log("No defined operation was pushed")
+                // console.log("No defined operation was pushed")
                 return;
 
 
@@ -440,8 +439,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Enable number buttons
             let currentOperation: Operation = this.m_GameState.PeekCurrentOperation();
-            console.log("Undoing the picking of the first operand:")
-            console.log(currentOperation);
+           //  console.log("Undoing the picking of the first operand:")
+           //  console.log(currentOperation);
             this.m_BtnUsed[currentOperation.operand1BtnIndex] = false;
 
             this.EnableNumberButtons();
@@ -475,7 +474,7 @@ export class SingleplayerScene extends Phaser.Scene {
             // Change the expression on the bar (remove the last character, which corresponds to the operator symbol)
             const currentText = this.mExpressionBar.GetText();
             const substring = currentText.substring(0, currentText.length - 1);
-            console.log(`..${substring}..`)
+            // console.log(`..${substring}..`)
             this.mExpressionBar.SetText(substring);
 
             // Change the current state
@@ -486,7 +485,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
 
 
-        console.log(`Current state: ${this.m_GameState.StateToString()}`);
+        // console.log(`Current state: ${this.m_GameState.StateToString()}`);
 
         // Disable the undo button if the stack is empty
         /*
@@ -610,36 +609,92 @@ export class SingleplayerScene extends Phaser.Scene {
     ShowGameResults(): void {
 
         const playerScore = this.m_GameState.GetTotalCorrect();
-
-        // Prepare the text that will be shown
-        this.mTextGameResults = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
-        this.mTextGameResults.setColor("#4e2400");
-        this.mTextGameResults.setAlpha(0);
-
+        const playerName:string = LoginData.GetFirstName();
+        let winMessage: string = ``;
         
-
         let personalBest = this.mScores['personalBest'];
         let classBest = this.mScores['classBest'];
         let schoolBest = this.mScores['schoolBest'];
         let top100GlobalBest = this.mScores['top100GlobalBest']
-
+        
+       
         console.log(`Comparing score with ${personalBest}`)
         console.log(`Comparing score with ${classBest}`)
         console.log(`Comparing score with ${schoolBest}`)
         console.log(`Comparing score with ${top100GlobalBest}`)
 
-        if (playerScore > personalBest)
-            console.info("Parabéns, alcançaste um novo recorde pessoal!");
-        
-        if (playerScore > schoolBest)
-            console.info("Parabéns, a tua pontuação é a melhor da tua escola!");
-        
-        if (playerScore > classBest)
-            console.info("Parabéns, a tua pontuação é a melhor da tua turma!");
-        
         if (playerScore > top100GlobalBest)
-            console.info("Parabéns, a tua pontuação está nos top 100");
+        {
+            // Player got a top100 record
+            winMessage = `${playerName}, conseguiste um\nnovo recorde ABSOLUTO!\nCom ${playerScore} pontos.\n\nVê o teu resultado no TOP 100 absoluto.`;
 
+        } else if (playerScore > schoolBest) {
+            // Player got a school record
+            winMessage = `${playerName}, conseguiste um novo\nrecorde na tua escola!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua escola.`;
+
+        } else if (playerScore > classBest) {
+            // Player got a class record
+            winMessage = `${playerName}, conseguiste um\nnovo recorde na tua turma!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua turma.`;
+
+        } else if (playerScore > personalBest) {
+            // Player got  a new personal best.
+            winMessage =  `${playerName}, conseguiste melhorar o teu\nresultado anterior.\n\nNo entanto, ainda não conseguiste \nentrar no TOP 100.\n\nTenta outra vez.`;
+
+        } else {
+            // Nohing new happened
+            winMessage = `Obtiveste ${playerScore} pontos.\n\nNão conseguiste melhorar o teu\nresultado anterior\n(o teu melhor resultado é ${personalBest} pontos)\n\n\nTenta outra vez!`;
+        }
+
+
+
+        // Prepare the text that will be shown
+        this.mTextGameResults = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
+        this.mTextGameResults.setText(winMessage)
+        this.mTextGameResults.setColor("#4e2400");
+        this.mTextGameResults.setAlpha(0);
+
+        // Make the results panel appear
+        this.tweens.add(
+            {
+                targets: [this.mImgEndGame, this.mTextGameResults],
+                alpha: 1.0,
+                scale: 1.6,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        // Clear the artithmetic expression text
+        this.mExpressionBar.SetText("");
+
+        // Hide the other buttons
+        this.tweens.add(
+            {
+                targets: [this.btnOperationAdd,
+                this.btnOperationSubtract,
+                this.btnOperationMultiply,
+                this.btnOperationDivide,
+                this.m_BtnReset,
+                this.m_BtnUndo,
+                this.mExpressionBar],
+                alpha: 0.0,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        // Move the home button to the center the other buttons
+        this.tweens.add(
+            {
+                targets: this.btnGotoMenu,
+                x: this.scale.width / 2,
+                y: this.scale.height - 64,
+                duration: 1500,
+                ease: 'Power1'
+            }
+        );
 
 
 

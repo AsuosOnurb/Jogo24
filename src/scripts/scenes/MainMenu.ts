@@ -334,7 +334,7 @@ export class MainMenuScene extends Phaser.Scene {
         //console.log("Performing login with password " + this.loginForm.GetPassword())
 
         //const connection = BackendConnection.Login(this.loginForm.GetUsername(), this.loginForm.GetPassword());
-        const connection = BackendConnection.Login(username, password);
+        const connection = BackendConnection.Login("hypatia01", "123401");
         connection.then((data) => {
 
             const loginResult: boolean = LoginData.LoginWithData(data);
@@ -368,7 +368,6 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnStartLogin.SetEnabled(1);
 
         console.log("Performing logout")
-        console.log("Performing logout")
 
         BackendConnection.DestroySession();
 
@@ -379,6 +378,7 @@ export class MainMenuScene extends Phaser.Scene {
 
 
     private SetupLoginLogoutButtons(): void {
+
 
         // Setup the username text label that appears on top of the logout button
         this.txtUserName = new BetterText(this, this.scale.width - 128 , 32 , "Hello", { fontFamily: 'Folks-Normal', fontSize: 28, color: "#ffffff", fontStyle: "bold" })

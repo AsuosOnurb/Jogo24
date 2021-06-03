@@ -91,6 +91,7 @@ export class BackendConnection {
                 cache: false,
                 success: function (response) {
                     LoginData.Logout();
+                    console.log("Logged out.");
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     LoginData.SetUser("");
@@ -200,54 +201,6 @@ export class BackendConnection {
 
     }
 
-    static CheckScore(playerScore, diff) {
-        const username = LoginData.GetUser();
-        const school = LoginData.GetSchool();
-        const _class = LoginData.GetClass();
-
-        console.info("Attempting connection (getting player score) from DB");
-        console.info(`Username: ${username}`);
-        console.info(`School: ${school}`);
-        console.info(`Class: ${_class}`);
-        console.info(`Score: ${playerScore}`);
-        console.info(`Difficulty: ${diff}`);
-
-        return new Promise(function (resolve, reject) {
-            $.ajax
-                ({
-                    type: "POST",
-                    url: "https://www.hypatiamat.com/newHRecords.php",
-                    data: "action=maximoGlobal&codAl=" + username +
-                        "&codTurma=" + _class +
-                        "&codEscola=" + school +
-                        "&pont=" + playerScore +
-                        "&tip=" + diff +
-                        "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
-                    crossDomain: true,
-                    cache: false,
-                    success: function (data) {
-                        console.log("Got data: ")
-                        console.log(data);
-                        console.log("Parasing DB data...");
-
-                        const scores =
-                        {
-                            'personalBest': parseFloat(data.split("vlMin4=")[1]),
-                            'classBest': parseFloat(data.split("vlMin3=")[1].split("&")[0]),
-                            'schoolBest': parseFloat(data.split("vlMin2=")[1].split("&")[0]),
-                            'top100GlobalBest': parseFloat(data.split("vlMin1=")[1].split("&")[0])
-                        }
-
-                        resolve(scores);
-                    },
-                    error: function (err) {
-                        console.log(err),
-                            reject(err);
-                    }
-                });
-        });
-    }
-
     static RetrievePlayerScore(diff) {
         const username = LoginData.GetUser();
         const _class = LoginData.GetClass();
@@ -292,14 +245,6 @@ export class BackendConnection {
         });
 
     }
-
-    /*
-    static GetRecords(username, globalCodTurma, globalCodEscola, tipoTOP, scene) {
-
-       
-
-    }
-    */
 
 }
 

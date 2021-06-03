@@ -741,11 +741,13 @@ export class RankingScene extends Phaser.Scene {
      * Fetches Information from the DB and updates the ranking table with that data
      */
     UpdateTop(): void {
+        /*
         console.log("\n ====== Making DB connection: =========")
         console.log(`Di: ${this.di}`)
         console.log(`Df: ${this.df}`)
         console.log(`flag: ${this.flag}`);
         console.log(`Difficulty: ${this.dificulty}`)
+        */
 
         let connection = BackendConnection.UpdateTOP(this.di, this.df, this.flag, this.dificulty);
 
