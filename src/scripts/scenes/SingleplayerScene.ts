@@ -135,7 +135,7 @@ export class SingleplayerScene extends Phaser.Scene {
             let connection = BackendConnection.GetRecords(this.m_GameState.mDifficulty + 1);
             connection.then((parsedData) => {
 
-                console.log(parsedData)
+                // console.log(parsedData)
                 this.mScores = parsedData;
 
             }).catch(function (err) {
@@ -588,9 +588,7 @@ export class SingleplayerScene extends Phaser.Scene {
         let verifConnection = BackendConnection.VerifyScore(playerScore, this.m_GameState.mDifficulty + 1);
         verifConnection.then((scores) => {
 
-            console.warn("Verify  score")
             this.mScores = scores;
-            console.log(this.mScores);
 
             if (LoginData.IsLoggedIn()) {
 
@@ -629,10 +627,10 @@ export class SingleplayerScene extends Phaser.Scene {
         let top100GlobalBest = this.mScores['top100GlobalBest']
 
 
-        console.log(`Comparing score with ${personalBest}`)
-        console.log(`Comparing score with ${classBest}`)
-        console.log(`Comparing score with ${schoolBest}`)
-        console.log(`Comparing score with ${top100GlobalBest}`)
+        // console.log(`Comparing score with ${personalBest}`)
+        // console.log(`Comparing score with ${classBest}`)
+        // console.log(`Comparing score with ${schoolBest}`)
+        // console.log(`Comparing score with ${top100GlobalBest}`)
 
         if (playerScore > personalBest) {
             if (playerScore > top100GlobalBest) {
@@ -717,7 +715,7 @@ export class SingleplayerScene extends Phaser.Scene {
     SendScoreToDB(playerScore: number): void {
 
         const diff = this.m_GameState.mDifficulty + 1;
-        console.log(`Sending player score: ${playerScore}`);
+        // console.log(`Sending player score: ${playerScore}`);
 
 
 
@@ -744,8 +742,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
         let messsage: string = ``;
 
-        console.log("User is not logged in. Using the stored mScores to see if he would have gotten a record")
-        console.log(this.mScores);
+       // console.log("User is not logged in. Using the stored mScores to see if he would have gotten a record")
+       // console.log(this.mScores);
         let top100GlobalBest = this.mScores['top100GlobalBest']
 
         if (playerScore > top100GlobalBest)

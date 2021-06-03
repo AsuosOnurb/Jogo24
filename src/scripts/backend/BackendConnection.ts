@@ -91,7 +91,7 @@ export class BackendConnection {
                 cache: false,
                 success: function (response) {
                     LoginData.Logout();
-                    console.log("Logged out.");
+                    // console.log("Logged out.");
                 },
                 error: function (XMLHttpRequest, textStatus, errorThrown) {
                     LoginData.SetUser("");
@@ -167,12 +167,12 @@ export class BackendConnection {
         const school = LoginData.GetSchool();
         const _class = LoginData.GetClass();
 
-        console.info("Attempting connection (verifying player score) to DB");
-        console.info(`Username: ${username}`);
-        console.info(`School: ${school}`);
-        console.info(`Class: ${_class}`);
-        console.info(`Score: ${score}`);
-        console.info(`Difficulty: ${diff}`);
+       //  console.info("Attempting connection (verifying player score) to DB");
+       //  console.info(`Username: ${username}`);
+       //  console.info(`School: ${school}`);
+       //  console.info(`Class: ${_class}`);
+       //  console.info(`Score: ${score}`);
+       //  console.info(`Difficulty: ${diff}`);
 
         return new Promise(function (resolve, reject) {
             $.ajax
@@ -216,12 +216,12 @@ export class BackendConnection {
         const school = LoginData.GetSchool();
         const _class = LoginData.GetClass();
 
-        console.info("Attempting connection (sending player score) to DB");
-        console.info(`Username: ${username}`);
-        console.info(`School: ${school}`);
-        console.info(`Class: ${_class}`);
-        console.info(`Score: ${score}`);
-        console.info(`Difficulty: ${diff}`);
+        // console.info("Attempting connection (sending player score) to DB");
+        // console.info(`Username: ${username}`);
+        // console.info(`School: ${school}`);
+        // console.info(`Class: ${_class}`);
+        // console.info(`Score: ${score}`);
+        // console.info(`Difficulty: ${diff}`);
 
 
         return new Promise(function (resolve, reject) {
@@ -253,10 +253,10 @@ export class BackendConnection {
         const _class = LoginData.GetClass();
         const school = LoginData.GetSchool();
 
-        console.log(username)
-        console.log(_class)
-        console.log(school)
-        console.log(diff)
+        // console.log(username)
+        // console.log(_class)
+        // console.log(school)
+        // console.log(diff)
 
         return new Promise(function (resolve, reject) {
 
@@ -274,8 +274,8 @@ export class BackendConnection {
                     cache: false,
                     success: function (data) {
 
-                        console.warn("Get records")
-                        console.log(data);
+                        // console.warn("Get records")
+                        // console.log(data);
 
 
                         const scores =
