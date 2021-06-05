@@ -29,7 +29,6 @@ export default class LoginForm {
             'rows': 15
         }
 
-        // console.log( mainMenuScene?.game?.domContainer?.firstChild)
 
 
         
@@ -54,12 +53,11 @@ export default class LoginForm {
         this.passwordInput.x += -150;
         this.passwordInput.y += 148;
 
-        this.DisableForm();
 
 
-        // console.log( mainMenuScene?.game?.domContainer?.firstChild)
         mainMenuScene.game.domContainer.setAttribute("id", "loginFormContainer")
 
+        this.DisableForm();
 
 
     }

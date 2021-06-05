@@ -81,8 +81,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         */
         this.SetupButtonPressAnimation()
 
-        // console.log(`Button with ID ${this.mID} scale: (${this.scaleX}, ${this.scaleY})`);
-        //console.log(`Button with ID ${this.mID} proginal scale: (${this.m_OriginalScale})`);
+       
 
 
     }
@@ -144,7 +143,6 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
 
     SetupButtonOutAnimation(): void {
-       // console.log(this.m_OriginalScale)
 
         this.m_Tween_ButtonOut = this.mCurrentScene.tweens.add({
             targets: this,
@@ -274,7 +272,6 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         if (calculatedSize < 38)
             calculatedSize = 38;
 
-        // console.log(calculatedSize);
 
         this.m_TextObject.setFontSize(calculatedSize);
     }

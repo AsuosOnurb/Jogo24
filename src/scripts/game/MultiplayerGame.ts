@@ -85,8 +85,6 @@ export class MultiplayerGame {
 
     PushCurrentOperation() 
     {
-        console.log("Pushing new operation");
-        console.log(this.mCurrentOperation);
         this.mOperationStack.push(this.mCurrentOperation);
     }
 
@@ -145,7 +143,6 @@ export class MultiplayerGame {
                 break;
         }
 
-        console.log(`We are now on state ${this.StateToString()}`);
     }
 
     /**

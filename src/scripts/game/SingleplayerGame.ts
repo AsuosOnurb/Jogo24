@@ -67,8 +67,6 @@ export class SingleplayerGame {
 
 
     PushCurrentOperation() {
-       //  console.log("Pushing new operation");
-       //  console.log(this.mCurrentOperation);
         this.mOperationStack.push(this.mCurrentOperation);
     }
 
@@ -131,7 +129,6 @@ export class SingleplayerGame {
                 break;
         }
 
-       //  console.log(`We are now on state ${this.StateToString()}`);
     }
 
     /**

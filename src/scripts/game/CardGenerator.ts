@@ -10,26 +10,20 @@ export enum Difficulty {
 };
 
 export  class CardGenerator {
-    constructor() {
-        console.log(Map.diff_map);
-    }
-
+    
     static generateCard(difficulty: Difficulty): string {
         let cardList;
         switch (difficulty) {
             case Difficulty.Easy:
                 cardList = Map.diff_map["1"];
-                console.log("Generated an Easy card");
 
                 break;
             case Difficulty.Medium:
                 cardList = Map.diff_map["2"];
-                console.log("Generated a Medium card");
 
                 break;
             case Difficulty.Hard:
                 cardList = Map.diff_map["3"];
-                console.log("Generated a Hard card");
                 break;
             case Difficulty.Any:
                 cardList = Map.diff_map[RandomInt(1,3)];

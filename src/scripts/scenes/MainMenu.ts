@@ -158,7 +158,6 @@ export class MainMenuScene extends Phaser.Scene {
 
 
     StartSoloGame(diff: Difficulty): void {
-        console.log(`Starting solo game on ${diff} difficulty.`);
         this.scene.start("SoloGame", { difficulty: diff });
     }
 
@@ -222,8 +221,6 @@ export class MainMenuScene extends Phaser.Scene {
     }
 
     private PlayTween_ShowPanel(panel: Panels): void {
-        // console.log("Opening panel: ")
-        // console.log(panel);
         let targetImage: Phaser.GameObjects.Image;
         switch (panel) {
             case Panels.Login:
@@ -330,8 +327,6 @@ export class MainMenuScene extends Phaser.Scene {
         const username = this.loginForm.GetUsername();
         const password = this.loginForm.GetPassword();
 
-        //console.log("Performing login with username " + this.loginForm.GetUsername())
-        //console.log("Performing login with password " + this.loginForm.GetPassword())
 
         //const connection = BackendConnection.Login(this.loginForm.GetUsername(), this.loginForm.GetPassword());
         const connection = BackendConnection.Login(username, password);
@@ -340,8 +335,6 @@ export class MainMenuScene extends Phaser.Scene {
             const loginResult: boolean = LoginData.LoginWithData(data);
             
             if (loginResult) {
-                console.log("Login was successfull!")
-                console.log(data)
 
                 this.btnLogout.SetEnabled(1);
                 this.btnStartLogin.SetDisabled(0);
@@ -367,7 +360,6 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnLogout.SetDisabled(0);
         this.btnStartLogin.SetEnabled(1);
 
-        console.log("Performing logout")
 
         BackendConnection.DestroySession();
 

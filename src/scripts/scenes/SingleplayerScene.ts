@@ -91,7 +91,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer =
-            new CountdownTimer(this, 120, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 180, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -134,8 +134,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
             let connection = BackendConnection.GetRecords(this.m_GameState.mDifficulty + 1);
             connection.then((parsedData) => {
-                 console.log("Latest scores: ")
-                 console.log(parsedData)
+               
                 this.mScores = parsedData;
 
             }).catch(function (err) {
@@ -165,7 +164,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.mBtn_NewCard.on("pointerup", () => this.NewCard());
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, 96, this.scale.height - 96, 0.7, 0.7, "", {}, 'btn_gotoMenu');
+        this.btnGotoMenu = new BetterButton(this, 128, this.scale.height - 128, 1, 1, "", {}, 'btn_gotoMenu');
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
@@ -197,12 +196,12 @@ export class SingleplayerScene extends Phaser.Scene {
         }
 
         // This button lets the user reset his attempt at the current card.
-        this.m_BtnReset = new BetterButton(this, this.scale.width / 2 - 196, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 64 }, "btn_reset");
+        this.m_BtnReset = new BetterButton(this, this.scale.width / 2 - 196, this.scale.height - 84, 0.9, 0.9, "", { fontSize: 64 }, "btn_reset");
         this.m_BtnReset.on("pointerup", () => this.events.emit('ResetButtonClick'));
         this.m_BtnReset.SetDisabled();
 
         // 'Backspace' button
-        this.m_BtnUndo = new BetterButton(this, this.scale.width / 2 + 196, this.scale.height - 96, 0.8, 0.8, "", { fontSize: 32 }, "btn_undo");
+        this.m_BtnUndo = new BetterButton(this, this.scale.width / 2 + 196, this.scale.height - 84, 0.9, 0.9, "", { fontSize: 32 }, "btn_undo");
         this.m_BtnUndo.on("pointerup", () => this.events.emit('UndoButtonClick'));
         this.m_BtnUndo.SetDisabled();
 
@@ -362,7 +361,6 @@ export class SingleplayerScene extends Phaser.Scene {
             this.m_GameState.ResetOperationState()
         }
 
-        // console.log(`Current state: ${this.m_GameState.StateToString()}`);
 
 
     }
@@ -396,10 +394,8 @@ export class SingleplayerScene extends Phaser.Scene {
                We pop the top-most operation on the stack to revert to those values.
            */
 
-            // console.log("Player is wants to undo the previous operation completely")
             let lastOperation = this.m_GameState.RevertToLastOperation();
             if (lastOperation === undefined) {
-                // console.log("No defined operation was pushed")
                 return;
 
 
@@ -433,8 +429,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Enable number buttons
             let currentOperation: Operation = this.m_GameState.PeekCurrentOperation();
-            //  console.log("Undoing the picking of the first operand:")
-            //  console.log(currentOperation);
             this.m_BtnUsed[currentOperation.operand1BtnIndex] = false;
 
             this.EnableNumberButtons();
@@ -468,27 +462,16 @@ export class SingleplayerScene extends Phaser.Scene {
             // Change the expression on the bar (remove the last character, which corresponds to the operator symbol)
             const currentText = this.mExpressionBar.GetText();
             const substring = currentText.substring(0, currentText.length - 1);
-            // console.log(`..${substring}..`)
             this.mExpressionBar.SetText(substring);
 
             // Change the current state
             this.m_GameState.SetPlayerState(PlayerState.PickingOperator);
 
-            // Enable undo button
         }
 
-
-
-        // console.log(`Current state: ${this.m_GameState.StateToString()}`);
-
-        // Disable the undo button if the stack is empty
-        /*
-        if (this.m_GameState.IsStackEmpty()) {
+        // Disable the undo button if the operation stac is empty
+        if (this.m_GameState.IsStackEmpty())
             this.m_BtnUndo.SetDisabled();
-            this.m_BtnReset.SetDisabled();
-
-        }*/
-
 
     }
 
@@ -587,7 +570,6 @@ export class SingleplayerScene extends Phaser.Scene {
         // Check the most updated scores from the DB
         let verifConnection = BackendConnection.VerifyScore(playerScore, this.m_GameState.mDifficulty + 1);
         verifConnection.then((scores) => {
-            console.log("Latest scores")
             this.mScores = scores;
 
             if (LoginData.IsLoggedIn()) {
@@ -627,10 +609,6 @@ export class SingleplayerScene extends Phaser.Scene {
         let top100GlobalBest = this.mScores['top100GlobalBest']
 
 
-        // console.log(`Comparing score with ${personalBest}`)
-        // console.log(`Comparing score with ${classBest}`)
-        // console.log(`Comparing score with ${schoolBest}`)
-        // console.log(`Comparing score with ${top100GlobalBest}`)
 
         if (playerScore > personalBest) {
             if (playerScore > top100GlobalBest) {
@@ -715,7 +693,6 @@ export class SingleplayerScene extends Phaser.Scene {
     SendScoreToDB(playerScore: number): void {
 
         const diff = this.m_GameState.mDifficulty + 1;
-        console.log(`Sending player score: ${playerScore}`);
 
 
 
@@ -724,10 +701,9 @@ export class SingleplayerScene extends Phaser.Scene {
             diff);
 
         connection.then((data) => {
-            // console.log("Game data was sent to DB");
-            // console.log(data)
+           
         }).catch((err) => {
-            console.log("Failed to send game data to DB");
+            console.log("Failed to send game data.");
             console.log(`Error: ${err}`);
         });
 
@@ -742,8 +718,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         let messsage: string = ``;
 
-       // console.log("User is not logged in. Using the stored mScores to see if he would have gotten a record")
-       // console.log(this.mScores);
+       
         let top100GlobalBest = this.mScores['top100GlobalBest']
 
         if (playerScore > top100GlobalBest)

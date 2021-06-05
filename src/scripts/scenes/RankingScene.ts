@@ -732,7 +732,7 @@ export class RankingScene extends Phaser.Scene {
      *  Sets up the "Go back to menu" button.
      **/
     Setup_Button_Back(): void {
-        this.m_btn_BackToMenu = new BetterButton(this, 96, 96, 0.6, 0.6, '', {}, 'btn_gotoMenu');
+        this.m_btn_BackToMenu = new BetterButton(this, 96, 96, 0.9, 0.9, '', {}, 'btn_gotoMenu');
         this.m_btn_BackToMenu.on('pointerup', () => this.scene.start('MainMenu'));
     }
 
@@ -741,13 +741,7 @@ export class RankingScene extends Phaser.Scene {
      * Fetches Information from the DB and updates the ranking table with that data
      */
     UpdateTop(): void {
-        /*
-        console.log("\n ====== Making DB connection: =========")
-        console.log(`Di: ${this.di}`)
-        console.log(`Df: ${this.df}`)
-        console.log(`flag: ${this.flag}`);
-        console.log(`Difficulty: ${this.dificulty}`)
-        */
+       
 
         let connection = BackendConnection.UpdateTOP(this.di, this.df, this.flag, this.dificulty);
 
@@ -764,8 +758,7 @@ export class RankingScene extends Phaser.Scene {
 
         }).catch(function (err) {
             console.log(err);
-            console.log("Failed here");
-            alert("Não foi possível estabellecer ligação. Por favor tente mais tarde.")
+            alert("Não foi possível estabelecer ligação. Por favor tente mais tarde.")
 
         });
     }

@@ -127,7 +127,6 @@ export class LoginData {
     static LoginWithData(data) {
         const loginData = ParseLoginData(data);
 
-        //console.log(loginData)
         if (loginData === "WRONG_PASSWORD") {
             alert("Utilizador ou Password Errados");
             return false;
@@ -137,7 +136,6 @@ export class LoginData {
             this.m_FirstName = loginData['firstName'];
             this.m_Class = loginData['turma'];
             this.m_School = loginData['escola'];
-            //console.log("Setting login data")
             return true;
         }
 

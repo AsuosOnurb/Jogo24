@@ -99,7 +99,7 @@ export class MultiplayerScene extends Phaser.Scene {
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 70, 0.5, 0.5, "", { fontSize: 64 }, 'btn_gotoMenu');
+        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 70, 0.7, 0.7, "", { fontSize: 64 }, 'btn_gotoMenu');
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
@@ -271,7 +271,6 @@ export class MultiplayerScene extends Phaser.Scene {
     }
 
     HandleButtonClick_Number(clickedButtonIndex: number): void {
-        console.log("Clicked button " + clickedButtonIndex.toString());
 
         const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
         const state = this.m_GameState.GetCurrentState();
@@ -351,7 +350,6 @@ export class MultiplayerScene extends Phaser.Scene {
             this.m_GameState.ResetOperationState()
         }
 
-        console.log(`Current state: ${this.m_GameState.StateToString()}`);
 
     }
 
@@ -625,9 +623,6 @@ export class MultiplayerScene extends Phaser.Scene {
         // Setup the countdown timer
         this.mCountdownTimerImage = this.add.image(256 - 32, this.scale.height / 2, "clockBG1");
         this.mCountDownTimer = new CountdownTimer(this, 12, this.NoTimeLeft.bind(this), 256 + 60, this.scale.height / 2, 40, "00 : 12");
-
-
-
 
     }
 
