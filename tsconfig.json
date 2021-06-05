@@ -2,20 +2,37 @@
   "compilerOptions": {
     "target": "ES2015",
     "module": "ES2015",
-
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-
     "allowJs": true,
     "allowUnreachableCode": false,
     "noImplicitAny": false,
     "sourceMap": true,
     "strictPropertyInitialization": false,
-
     "moduleResolution": "node",
     "resolveJsonModule": true,
-    "lib": ["dom", "esnext"]
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+  },
+  "exclude": [
+    "dist",
+    "webpack",
+    "pwa",
+    "scripts/backend/BackendUtils.js",
+    "scripts/backend/AlignGrid.js"
+  ],
+  "typedocOptions": {
+    "entryPoints": [
+      "./src/scripts/game.ts"
+    ],
+    "out": "./docs",
+    "exclude": [
+      "dist",
+      "node_modules"
+    ]
   }
 }

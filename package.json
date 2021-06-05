@@ -63,6 +63,7 @@
     "jquery": "^3.6.0",
     "mathjs": "^9.3.2",
     "phaser": "^3.53.1",
-    "phaser3-rex-plugins": "^1.1.46"
+    "phaser3-rex-plugins": "^1.1.46",
+    "typedoc": "^0.20.36"
   }
 }

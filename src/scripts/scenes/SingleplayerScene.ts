@@ -62,6 +62,15 @@ export class SingleplayerScene extends Phaser.Scene {
         super("SoloGame");
     }
 
+
+    /**
+   * Preloads the scene's resources and sets up their buttons/images/text.
+   *
+   * @remarks
+   * This method is ran before the init() method.
+   *
+   * 
+   */
     preload() {
 
         // Add background image window
