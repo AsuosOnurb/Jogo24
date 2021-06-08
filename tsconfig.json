@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "outDir": "dist",
     "target": "ES2015",
     "module": "ES2015",
     "strict": true,
@@ -22,17 +23,20 @@
     "dist",
     "webpack",
     "pwa",
-    "scripts/backend/BackendUtils.js",
-    "scripts/backend/AlignGrid.js"
+    "./src/scripts/backend/BackendUtils.js",
+    "./src/scripts/backend/AlignGrid.js",
+    "*.js",
+    "**.js"
   ],
   "typedocOptions": {
     "entryPoints": [
-      "./src/scripts/game.ts"
+      "./src/scripts/scenes/MainMenu.ts"
     ],
     "out": "./docs",
     "exclude": [
       "dist",
       "node_modules"
-    ]
+    ],
+    "mode": "modules"
   }
 }

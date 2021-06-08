@@ -82,6 +82,11 @@ export class MultiplayerScene extends Phaser.Scene {
     private mCountDownTimer: CountdownTimer;
     private mCountdownTimerImage: Phaser.GameObjects.Image;
 
+    /**
+     *  The button that allows to peek a solution for the current card.
+     */
+    private mBtnPeekSolution: BetterButton;
+
 
     constructor() {
         super("MultiplayerGame");
@@ -117,6 +122,7 @@ export class MultiplayerScene extends Phaser.Scene {
             this.events.on('PlayerButtonClick', this.HandleButtonClick_Player, this);
             this.events.on('NumberButtonClick', this.HandleButtonClick_Number, this);
             this.events.on('OperationButtonClick', this.HandleButtonClick_Operation, this);
+            this.events.on('PeekSolutionButtonClick', this.HandleButtonClick_PeekSolution, this);
 
             // This flag is important. Prevents duplication of event listeners!!
             this.isInstanced = true;
@@ -330,8 +336,10 @@ export class MultiplayerScene extends Phaser.Scene {
                 }
 
                 else {
+
                     this.m_GameState.IncrTotalWrong();
                     this.ShowPlayerLost(expression);
+                    this.ShowPeekSolutionButton();
 
                 }
 
@@ -400,6 +408,7 @@ export class MultiplayerScene extends Phaser.Scene {
         });
 
     }
+
 
 
     /* ================================ Difficulty Panel ======================= */
@@ -624,6 +633,11 @@ export class MultiplayerScene extends Phaser.Scene {
         this.mCountdownTimerImage = this.add.image(256 - 32, this.scale.height / 2, "clockBG1");
         this.mCountDownTimer = new CountdownTimer(this, 12, this.NoTimeLeft.bind(this), 256 + 60, this.scale.height / 2, 40, "00 : 12");
 
+
+        /* =============== Setup the 'Peek Solution' Button ================ */
+        this.mBtnPeekSolution = new BetterButton(this, this.scale.width / 2 + 320, - 40, 0.8, 0.8, "", {}, 'btn_peekImage');
+        this.mBtnPeekSolution.SetDisabled(0);
+        this.mBtnPeekSolution.on('pointerup', () => this.events.emit('PeekSolutionButtonClick'));
     }
 
 
@@ -699,8 +713,65 @@ export class MultiplayerScene extends Phaser.Scene {
 
         this.m_Btn_NewCard.SetEnabled();
 
+    }
+
+    /**
+     * Displays (visually enables) the 'eye' button that sits on top of the expression bar).
+     * This button allows the user to peek one of the (possibly many) solutions for the current card.
+     * Should only be called when the user fails to ansert the card (i.e: When we throw an error).
+     */
+    ShowPeekSolutionButton(): void {
+        /*
+            We're using a tween for this one as well.
+            First, enable the interactivity of the button.
+            Then use the tween to make its alpha go to 1 (100% alpha).
+        */
+
+        // Enable, but still hide it.
+        this.mBtnPeekSolution.SetEnabled(0);
 
 
+        this.tweens.add(
+            {
+                targets: this.mBtnPeekSolution,
+                y: this.scale.height / 2 - 384,
+                alpha: 1,
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+
+    }
+
+    /**
+     * Clears all of the expression bars and displays a suggested solution for the current card.
+     * This procedure gets is started by the asasociated phaser event. 
+     */
+    HandleButtonClick_PeekSolution() : void 
+    {
+        // Get the suggested solution for this card
+        const solution: string = Solutions.getSolution(this.m_GameState.GetCurrentCard());
+
+
+        // Show the solution in all expression bars
+        this.m_Array_ExpressionBars.forEach((exprBar) => {
+            exprBar.SetText(solution.replaceAll('*', 'x'));
+            exprBar.SetTextColor("#00ff1a");
+        })
+
+        // Put this button back where it should be (make it dissapear to the top of the canvas)
+        this.mBtnPeekSolution.SetDisabled(1);
+        this.tweens.add(
+            {
+                targets: this.mBtnPeekSolution,
+                y: -64,
+                alpha: 0,
+                duration: 500,
+                ease: 'Power1',
+                delay: 200,
+            }
+        );
 
     }
 

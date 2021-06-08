@@ -22,6 +22,8 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('title',        'assets/img/common/titulo1.png');
     this.load.image('toon',         'assets/img/common/boneco.png');
 
+    this.load.image('btn_peekImage', 'assets/img/common/eye.png');
+
     /* =================================== Main menu assets =================================== */
     this.load.image('fullscreenOn', 'assets/img/main_menu/fullscreenBT-1.png')
     this.load.image('fullscreenOff', 'assets/img/main_menu/fullscreenBT-2.png')
