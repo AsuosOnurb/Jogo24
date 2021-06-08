@@ -182,6 +182,10 @@ export class MultiplayerScene extends Phaser.Scene {
         this.mCountDownTimer.Reset();
 
 
+        // Make the 'peek solution' button go away
+        this.HidePeekSolutionButton();
+
+
 
     }
 
@@ -713,6 +717,9 @@ export class MultiplayerScene extends Phaser.Scene {
 
         this.m_Btn_NewCard.SetEnabled();
 
+        // Also let the player see a possible solution
+        this.ShowPeekSolutionButton();
+
     }
 
     /**
@@ -756,10 +763,17 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Show the solution in all expression bars
         this.m_Array_ExpressionBars.forEach((exprBar) => {
-            exprBar.SetText(solution.replaceAll('*', 'x'));
+            exprBar.SetText(solution.replaceAll('*', 'x') + " = 24");
             exprBar.SetTextColor("#00ff1a");
         })
 
+        this.HidePeekSolutionButton();
+        
+
+    }
+
+    HidePeekSolutionButton() : void 
+    {
         // Put this button back where it should be (make it dissapear to the top of the canvas)
         this.mBtnPeekSolution.SetDisabled(1);
         this.tweens.add(
@@ -772,7 +786,6 @@ export class MultiplayerScene extends Phaser.Scene {
                 delay: 200,
             }
         );
-
     }
 
 
