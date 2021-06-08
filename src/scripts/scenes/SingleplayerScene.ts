@@ -193,16 +193,16 @@ export class SingleplayerScene extends Phaser.Scene {
         // Setup a button for each number in the card (4 buttons)
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 204, this.scale.height / 2,
-                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128,  color: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 204,
-                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128,  color: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2 + 204, this.scale.height / 2,
-                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128,  color: "#FFFFFF" }, "btn_numberBG"),
 
             new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 204,
-                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fontStyle: "bold", color: "#05b8ff" }, "btn_numberBG"),
+                1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128,  color: "#FFFFFF" }, "btn_numberBG"),
 
         ]
 
