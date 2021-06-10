@@ -58,26 +58,10 @@ export class RankingScene extends Phaser.Scene {
     private alignmentGrid;
 
     private mCurrentDate: Date;
-    private dataInicial: string;
-    private dataFinal: string;
-
-    /**
-     * The difficulty filter we pass to the database url.
-     * 1,2 and 3 correspond to easy, normal and hard mode, respectively.
-     */
-    private dificulty: number;
-
-    /**
-     * The flag parameter that corresponds to the kind of filter we're using.
-     * If the flag value is 2, then we're not filtering any scores. We're collecting ALL the scores.
-     * If the flag values is 1, then we're filtering for the scores/students in the same school as the user. 
-     * If the flag values is 0, then we're filtering for the scores/students in the same class as the user. 
-     */
+    private di;
+    private df;
+    private dificulty;
     private flag;
-
-    /**
-     * The (scrollable) table object created by the RexUI's plugin.
-     */
     private table;
     private dropdown;
 
@@ -126,8 +110,8 @@ export class RankingScene extends Phaser.Scene {
             var x = n - 1;
             var y = n;
         }
-        this.dataInicial = x + "-09-01";
-        this.dataFinal = y + "-08-31";
+        this.di = x + "-09-01";
+        this.df = y + "-08-31";
         this.dificulty = 1;
         this.flag = 2;
     }
@@ -165,7 +149,7 @@ export class RankingScene extends Phaser.Scene {
      */
     private init() {
         
-        let connection = BackendConnection.GetTOP(this.dataInicial, this.dataFinal, "", "", 1);
+        let connection = BackendConnection.GetTOP(this.di, this.df, "", "", 1);
 
         connection.then((data) => {
 
@@ -733,7 +717,7 @@ export class RankingScene extends Phaser.Scene {
     private UpdateTop(): void {
 
 
-        let connection = BackendConnection.UpdateTOP(this.dataInicial, this.dataFinal, this.flag, this.dificulty);
+        let connection = BackendConnection.UpdateTOP(this.di, this.df, this.flag, this.dificulty);
 
         connection.then((data) => {
 
