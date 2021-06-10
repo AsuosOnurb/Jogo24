@@ -30,13 +30,15 @@
   ],
   "typedocOptions": {
     "entryPoints": [
-      "./src/scripts/scenes/MainMenu.ts"
+      "./src/scripts/scenes/RankingScene.ts",
+      "./src/scripts/scenes/MainMenu.ts",
+      "./src/scripts/scenes/MultiplayerScene.ts",
+      "./src/scripts/game/MultiplayerGame.ts"
     ],
     "out": "./docs",
     "exclude": [
       "dist",
       "node_modules"
     ],
-    "mode": "modules"
   }
 }

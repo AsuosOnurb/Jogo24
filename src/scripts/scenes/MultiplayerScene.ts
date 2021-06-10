@@ -1,7 +1,5 @@
 import Phaser from 'phaser'
 
-
-
 import { BetterText } from '../better/BetterText'
 import { BetterButton } from '../better/BetterButton'
 import { Solutions } from '../game/Solutions'
@@ -10,7 +8,6 @@ import { Difficulty } from '../game/CardGenerator';
 import { Minicard } from '../better/Minicard';
 import { ValueOfExpression } from '../game/Utils';
 import { CountdownTimer } from '../game/CountdownTimer';
-import { expr } from 'jquery';
 
 
 export class MultiplayerScene extends Phaser.Scene {

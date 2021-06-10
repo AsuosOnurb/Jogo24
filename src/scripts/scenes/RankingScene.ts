@@ -6,29 +6,56 @@ import { BackendConnection } from '../backend/BackendConnection';
 import { LoginData } from '../backend/LoginData';
 import { ParsedUpdatedScoreData, ParseScoreData } from '../backend/BackendUtils';
 
+/**
+ *  @noInheritDoc
+ * The class that implements the ranking/socreboard/top scene.
+ * The only way yo arrive to this scene is from the main menu.
+ * 
+ * Here' we're using thr BackendConnction (static) object to facilitate the communication between this and the database.
+ * 
+ * To speed up things, we're using 2 pieces of external code.
+ * The first one is the RexUI's plugin. It provides us some tools to create scrollable tables, radio buttons and the likes.
+ * 
+ * 
+ * The other one is the AlignGrid object defined on AlignedGrid.js . This object lets us create a grid where we can specify positions for the UI elements. 
+ * Not only that, this object will also scale and position them according to the game's scale.
+ *              
+ */
 export class RankingScene extends Phaser.Scene {
-
-    private lastclick;
-
-    private array;
-
-    private jogador;
-    private pontos: BetterText;
-    private escola;
-    private turma;
-    private dataC;
-
-    private ano;
-    private dificil;
-    private hard_icon;
-    private normal;
-    private normal_icon;
-    private facil: BetterText;
-    private easy_icon;
-    private dificuldade;
+ 
 
 
-    private m_AlignGrid;
+    private databaseData: Array<any>;
+
+    /* ===== The labels that appear on the top of the ranking table: Jogador, Pontos, Escola, etc...  ==========*/
+    private lblJogador: BetterText;
+    private lblPontos: BetterText;
+    private lblEscola: BetterText;
+    private lblTurma: BetterText;
+    private lblData: BetterText;
+    /* ======================================================================================================== */
+
+    /* ================= The filters on the right side of the scene (radio buttons, labels) =========================== */
+    private lblAnoLetivo: BetterText;
+
+    private lblDificuldade: BetterText;
+
+    private lblDificil: BetterText;
+    private iconDificil;
+
+    private lblNormal: BetterText;
+    private iconNormal;
+
+    private lblFacil: BetterText;
+    private iconFacil;
+    /* ======================================================================================================== */
+
+
+    /**
+     * The alignment grid that helps us align the elements on the screen.
+     * This is javascriot object defined on the corresponding file (AlignGrid.js).
+     */
+    private alignmentGrid;
 
     private mCurrentDate: Date;
     private di;
@@ -40,42 +67,38 @@ export class RankingScene extends Phaser.Scene {
 
     private filtro;
 
-    private turma_filtro;
-    private turma_icon;
+    private lblFiltroTurma: BetterText;
+    private iconTurma;
 
-    private todos;
-    private todos_icon;
+    private lblFiltroTodos: BetterText;
+    private iconTodos;
 
-    private escola_filtro;
-    private escola_icon;
+    private lblFiltroEscola: BetterText;
+    private iconEscola;
 
     private container;
 
-    private title: Phaser.GameObjects.Image;
-    private topTitle: Phaser.GameObjects.Image;
+
+    /**
+     * The image with the game's title.
+     */
+    private imgTitle: Phaser.GameObjects.Image;
+
+    /**
+     * The button that starts the transitin to the main menu.
+     */
     private m_btn_BackToMenu: BetterButton;
+
+    /**
+     * A reference to the RexUI's plugin.
+     * Again, we're mixing javascript with typescript. It's not ideal, but its what we got.
+     */
     private rexUI;
 
 
     constructor() {
         super('RankingScene');
-    }
 
-
-
-
-
-    preload() {
-        this.load.scenePlugin({
-            key: 'rexuiplugin',
-            url: 'src/scripts/RexUI/rexuiplugin.min.js',
-            sceneKey: 'rexUI'
-        });
-
-
-    }
-
-    init() {
         var d = new Date();
         var m = d.getMonth();
         var n = d.getFullYear();
@@ -91,15 +114,48 @@ export class RankingScene extends Phaser.Scene {
         this.df = y + "-08-31";
         this.dificulty = 1;
         this.flag = 2;
+    }
 
 
+
+
+    /**
+     * The preload() procedure provided by phaser.
+     * THe only reason we're using this procedure is because the RexUI's plugin has to be pre-loaded before everything else.
+     */
+    private preload() {
+
+        /* Load the RexUI's plugin */
+        this.load.scenePlugin({
+            key: 'rexuiplugin',
+            url: 'src/scripts/RexUI/rexuiplugin.min.js',
+            sceneKey: 'rexUI'
+        });
+
+
+    }
+
+    /**
+     * The init() procedure provided by phaser.
+     * 
+     * Here's where we setup the whole UI.
+     * 
+     * It begins with one decision:
+     * 
+     * We try to connect to the database to retrieve it's data. If there's no internet connection, or if the connection fails (for some reason),
+     *      then we'll just load the blue background with an empty table.
+     * 
+     * If the connection to the database is successfull, then things run normally.
+     */
+    private init() {
+        
         let connection = BackendConnection.GetTOP(this.di, this.df, "", "", 1);
 
         connection.then((data) => {
 
             let parsedData = ParseScoreData(data);
 
-            this.array = parsedData;
+            this.databaseData = parsedData;
 
 
             this.CompleteScene();
@@ -107,27 +163,28 @@ export class RankingScene extends Phaser.Scene {
         }).catch((err) => {
             console.log(err);
             console.log("Failed to retrieve TOP");
+            this.LoadEmptyScene();
 
         });
 
 
     }
 
-    CompleteScene() {
+    private CompleteScene() {
         // Blue background
         this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
 
         // Title imge96
-        this.title = this.add.image(this.scale.width / 2, 112, 'title');
-        this.title.setScale(0.6, 0.6);
+        this.imgTitle = this.add.image(this.scale.width / 2, 112, 'title');
+        this.imgTitle.setScale(0.6, 0.6);
 
         const gridConfig = {
             'scene': this,
             'cols': 15,
             'rows': 15
         }
-        this.m_AlignGrid = new AlignGrid(this.game, gridConfig);
+        this.alignmentGrid = new AlignGrid(this.game, gridConfig);
 
         this.mCurrentDate = new Date();
         var m = this.mCurrentDate.getMonth();
@@ -147,11 +204,10 @@ export class RankingScene extends Phaser.Scene {
 
 
         this.container = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe79946);
-        this.m_AlignGrid.placeAtIndex(133, this.container);
+        this.alignmentGrid.placeAtIndex(133, this.container);
         this.container.x += 32
         this.container.y -= 10;
 
-        this.lastclick;
 
         this.dropdown = this.rexUI.add.gridTable({
             x: 1750,
@@ -205,7 +261,7 @@ export class RankingScene extends Phaser.Scene {
 
                         orientation: 0,
                         icon: scene.add.circle(0, 50, 10).setFillStyle('0xffffff'),
-                        text: scene.add.text(50, 50, item, { fontFamily:'Bubblegum',  fontSize: 25, color: 'black', align: 'center' }),
+                        text: scene.add.text(50, 50, item, { fontFamily: 'Bubblegum', fontSize: 25, color: 'black', align: 'center' }),
                         align: 'center',
                         space: {
                             icon: 20,
@@ -263,260 +319,178 @@ export class RankingScene extends Phaser.Scene {
             .layout()
 
 
-        this.ano = new BetterText(this, 0, 0, 'Ano Letivo', { fontFamily:'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
-        this.m_AlignGrid.placeAtIndex(58, this.ano);
-        this.ano.x += 32
-        this.ano.y += 16
+        this.lblAnoLetivo = new BetterText(this, 0, 0, 'Ano Letivo', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
+        this.alignmentGrid.placeAtIndex(58, this.lblAnoLetivo);
+        this.lblAnoLetivo.x += 32
+        this.lblAnoLetivo.y += 16
 
         /* Radio button: hard diff */
-        this.dificil = new BetterText(this, 0, 0, 'Dificil', {  fontFamily:'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(133, this.dificil);
-        this.dificil.x += 22;
+        this.lblDificil = new BetterText(this, 0, 0, 'Dificil', { fontFamily: 'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
+        this.alignmentGrid.placeAtIndex(133, this.lblDificil);
+        this.lblDificil.x += 22;
 
-        this.hard_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(133, this.hard_icon);
-        this.hard_icon.x -= 32
+        this.iconDificil = this.add.circle(0, 0, 10, 0xffffff);
+        this.alignmentGrid.placeAtIndex(133, this.iconDificil);
+        this.iconDificil.x -= 32
 
 
         /* Radio button: Normal Diff */
-        this.normal = new BetterText(this, 0, 0, 'Normal', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(133, this.normal);
-        this.normal.x += 32;
-        this.normal.y += 35;
+        this.lblNormal = new BetterText(this, 0, 0, 'Normal', { fontFamily: 'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
+        this.alignmentGrid.placeAtIndex(133, this.lblNormal);
+        this.lblNormal.x += 32;
+        this.lblNormal.y += 35;
 
 
-        this.normal_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(133, this.normal_icon);
-        this.normal_icon.x -= 32;
-        this.normal_icon.y += 35;
+        this.iconNormal = this.add.circle(0, 0, 10, 0xffffff);
+        this.alignmentGrid.placeAtIndex(133, this.iconNormal);
+        this.iconNormal.x -= 32;
+        this.iconNormal.y += 35;
 
         /* Radio button: Easy diff */
-        this.facil = new BetterText(this, 0, 0, 'Fácil', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(148, this.facil);
-        this.facil.x += 22
+        this.lblFacil = new BetterText(this, 0, 0, 'Fácil', { fontFamily: 'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
+        this.alignmentGrid.placeAtIndex(148, this.lblFacil);
+        this.lblFacil.x += 22
 
-        this.easy_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(148, this.easy_icon);
-        this.easy_icon.x -= 32
+        this.iconFacil = this.add.circle(0, 0, 10, 0xffffff);
+        this.alignmentGrid.placeAtIndex(148, this.iconFacil);
+        this.iconFacil.x -= 32
 
-        this.dificuldade = new BetterText(this, 0, 0, 'Dificuldade', {  fontFamily:'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
-        this.m_AlignGrid.placeAtIndex(118, this.dificuldade);
-        this.dificuldade.x += 32
-        this.dificuldade.y += 28
+        this.lblDificuldade = new BetterText(this, 0, 0, 'Dificuldade', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
+        this.alignmentGrid.placeAtIndex(118, this.lblDificuldade);
+        this.lblDificuldade.x += 32
+        this.lblDificuldade.y += 28
 
 
-        this.facil.setInteractive({ useHandCursor: true });
-        this.facil.input.hitArea.setTo(-50, -5, this.facil.width + 60, this.facil.height);
-        this.facil.on('pointerdown', () => {
-            this.hard_icon.setFillStyle('0xffffff');
-            this.normal_icon.setFillStyle('0xffffff');
-            this.easy_icon.setFillStyle('0x000000');
+        this.lblFacil.setInteractive({ useHandCursor: true });
+        this.lblFacil.input.hitArea.setTo(-50, -5, this.lblFacil.width + 60, this.lblFacil.height);
+        this.lblFacil.on('pointerdown', () => {
+            this.iconDificil.setFillStyle('0xffffff');
+            this.iconNormal.setFillStyle('0xffffff');
+            this.iconFacil.setFillStyle('0x000000');
             this.dificulty = 1;
 
             this.UpdateTop(); // Connect to DB
-            /*
-            const ret = BackendConnection.UpdateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty);
-            if (ret.success) {
-                if (ret.data.length < 4) {
-                    this.table.setItems([]);
-                }
-                else {
-                    this.table.setItems(ret.data);
-                }
-                this.table.refresh();
-            } else {
-                alert("Falha de ligação, por favor verifique a sua conexão");
-            }
-            */
+           
         });
 
-        this.normal.setInteractive({ useHandCursor: true });
-        this.normal.input.hitArea.setTo(-50, -5, this.normal.width + 60, this.normal.height);
+        this.lblNormal.setInteractive({ useHandCursor: true });
+        this.lblNormal.input.hitArea.setTo(-50, -5, this.lblNormal.width + 60, this.lblNormal.height);
 
-        this.normal.on('pointerdown', () => {
-            this.hard_icon.setFillStyle('0xffffff');
-            this.normal_icon.setFillStyle('0x000000');
-            this.easy_icon.setFillStyle('0xffffff');
+        this.lblNormal.on('pointerdown', () => {
+            this.iconDificil.setFillStyle('0xffffff');
+            this.iconNormal.setFillStyle('0x000000');
+            this.iconFacil.setFillStyle('0xffffff');
             this.dificulty = 2;
 
 
-            // this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty, this);
-            /*
-            const ret = BackendConnection.UpdateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty);
-            if (ret.success) {
-                if (ret.data.length < 4) {
-                    this.table.setItems([]);
-                }
-                else {
-                    this.table.setItems(ret.data);
-                }
-                this.table.refresh();
-            } else {
-                alert("Falha de ligação, por favor verifique a sua conexão");
-            }
-            */
-           this.UpdateTop(); // Connect to BD
+
+            this.UpdateTop(); // Connect to BD
         });
 
-        this.dificil.setInteractive({ useHandCursor: true });
-        this.dificil.input.hitArea.setTo(-50, -5, this.dificil.width + 60, this.dificil.height);
-        this.dificil.on('pointerdown', () => {
-            this.hard_icon.setFillStyle('0x000000');
-            this.normal_icon.setFillStyle('0xffffff');
-            this.easy_icon.setFillStyle('0xffffff');
+        this.lblDificil.setInteractive({ useHandCursor: true });
+        this.lblDificil.input.hitArea.setTo(-50, -5, this.lblDificil.width + 60, this.lblDificil.height);
+        this.lblDificil.on('pointerdown', () => {
+            this.iconDificil.setFillStyle('0x000000');
+            this.iconNormal.setFillStyle('0xffffff');
+            this.iconFacil.setFillStyle('0xffffff');
             this.dificulty = 3;
 
-            //this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty, this);
-            /*
-            const ret = BackendConnection.UpdateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty);
-            if (ret.success) {
-                if (ret.data.length < 4) {
-                    this.table.setItems([]);
-                }
-                else {
-                    this.table.setItems(ret.data);
-                }
-                this.table.refresh();
-            } else {
-                alert("Falha de ligação, por favor verifique a sua conexão");
-            }
-            */
-           this.UpdateTop();
+          
+            
+            this.UpdateTop();
         });
 
-        this.filtro = new BetterText(this, 0, 0, 'Filtro', {  fontFamily:'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
-        this.m_AlignGrid.placeAtIndex(163.3, this.filtro);
+        this.filtro = new BetterText(this, 0, 0, 'Filtro', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
+        this.alignmentGrid.placeAtIndex(163.3, this.filtro);
         this.filtro.y += 32;
         // this.filtro.x += 16;
 
 
 
-        this.turma_filtro = new BetterText(this, 0, 0, 'Turma', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(193.2, this.turma_filtro);
+        this.lblFiltroTurma = new BetterText(this, 0, 0, 'Turma', { fontFamily: 'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
+        this.alignmentGrid.placeAtIndex(193.2, this.lblFiltroTurma);
 
-        this.turma_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(193, this.turma_icon);
-        this.turma_icon.x -= 32;
-
-
-        this.escola_filtro = new BetterText(this, 0, 0, 'Escola', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(178.2, this.escola_filtro);
-        this.escola_filtro.y += 35;
+        this.iconTurma = this.add.circle(0, 0, 10, 0xffffff);
+        this.alignmentGrid.placeAtIndex(193, this.iconTurma);
+        this.iconTurma.x -= 32;
 
 
-        this.escola_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(178, this.escola_icon);
-        this.escola_icon.x -= 32;
-        this.escola_icon.y += 35;
+        this.lblFiltroEscola = new BetterText(this, 0, 0, 'Escola', { fontFamily: 'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
+        this.alignmentGrid.placeAtIndex(178.2, this.lblFiltroEscola);
+        this.lblFiltroEscola.y += 35;
 
-        this.todos = new BetterText(this, 0, 0, 'Todos', { fontFamily:'Bubblegum',  fontSize: 25, color: '#000000', align: 'left' });
-        this.m_AlignGrid.placeAtIndex(178.2, this.todos);
 
-        this.todos_icon = this.add.circle(0, 0, 10, 0xffffff);
-        this.m_AlignGrid.placeAtIndex(178, this.todos_icon);
-        this.todos_icon.x -= 32;
+        this.iconEscola = this.add.circle(0, 0, 10, 0xffffff);
+        this.alignmentGrid.placeAtIndex(178, this.iconEscola);
+        this.iconEscola.x -= 32;
+        this.iconEscola.y += 35;
 
-        this.todos.setInteractive({ useHandCursor: true });
-        this.todos.input.hitArea.setTo(-50, -5, this.todos.width + 60, this.todos.height);
-        this.todos.on('pointerdown', () => {
+        this.lblFiltroTodos = new BetterText(this, 0, 0, 'Todos', { fontFamily: 'Bubblegum', fontSize: 25, color: '#000000', align: 'left' });
+        this.alignmentGrid.placeAtIndex(178.2, this.lblFiltroTodos);
 
-            this.todos_icon.setFillStyle('0x000000');
+        this.iconTodos = this.add.circle(0, 0, 10, 0xffffff);
+        this.alignmentGrid.placeAtIndex(178, this.iconTodos);
+        this.iconTodos.x -= 32;
 
-            this.escola_icon.setFillStyle('0xffffff');
+        this.lblFiltroTodos.setInteractive({ useHandCursor: true });
+        this.lblFiltroTodos.input.hitArea.setTo(-50, -5, this.lblFiltroTodos.width + 60, this.lblFiltroTodos.height);
+        this.lblFiltroTodos.on('pointerdown', () => {
 
-            this.turma_icon.setFillStyle('0xffffff');
+            this.iconTodos.setFillStyle('0x000000');
+
+            this.iconEscola.setFillStyle('0xffffff');
+
+            this.iconTurma.setFillStyle('0xffffff');
 
             this.flag = 2;
 
-            // this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty, this);
-            /*
-            const ret = BackendConnection.UpdateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool(), this.flag, this.dificulty);
-            if (ret.success) {
-                if (ret.data.length < 4) {
-                    this.table.setItems([]);
-                }
-                else {
-                    this.table.setItems(ret.data);
-                }
-                this.table.refresh();
-            } else {
-                alert("Falha de ligação, por favor verifique a sua conexão");
-            }
-
-            */
+          
 
             this.UpdateTop();
         });
 
-        this.escola_filtro.setInteractive({ useHandCursor: true });
-        this.escola_filtro.input.hitArea.setTo(-50, -5, this.escola_filtro.width + 60, this.escola_filtro.height);
-        this.escola_filtro.on('pointerdown', () => {
+        this.lblFiltroEscola.setInteractive({ useHandCursor: true });
+        this.lblFiltroEscola.input.hitArea.setTo(-50, -5, this.lblFiltroEscola.width + 60, this.lblFiltroEscola.height);
+        this.lblFiltroEscola.on('pointerdown', () => {
 
-            this.todos_icon.setFillStyle('0xffffff');
+            this.iconTodos.setFillStyle('0xffffff');
 
-            this.escola_icon.setFillStyle('0x000000');
+            this.iconEscola.setFillStyle('0x000000');
 
-            this.turma_icon.setFillStyle('0xffffff');
+            this.iconTurma.setFillStyle('0xffffff');
 
             this.flag = 1;
-            /*
-            const ret = BackendConnection.UpdateTOP(this.di, this.df, LoginData.GetClass(), LoginData.GetSchool, this.flag, this.dificulty);
-            if (ret.success) {
-                if (ret.data.length < 4) {
-                    this.table.setItems([]);
-                }
-                else {
-                    this.table.setItems(ret.data);
-                }
-                this.table.refresh();
-            } else {
-                alert("Falha de ligação, por favor verifique a sua conexão");
-            }
-            */
-           this.UpdateTop();
+          
+            this.UpdateTop();
         });
-        this.turma_filtro.setInteractive({ useHandCursor: true });
-        this.turma_filtro.input.hitArea.setTo(-50, -5, this.turma_filtro.width + 60, this.turma_filtro.height);
-        this.turma_filtro.on('pointerdown', () => {
+        this.lblFiltroTurma.setInteractive({ useHandCursor: true });
+        this.lblFiltroTurma.input.hitArea.setTo(-50, -5, this.lblFiltroTurma.width + 60, this.lblFiltroTurma.height);
+        this.lblFiltroTurma.on('pointerdown', () => {
 
-            this.todos_icon.setFillStyle('0xffffff');
+            this.iconTodos.setFillStyle('0xffffff');
 
-            this.escola_icon.setFillStyle('0xffffff');
+            this.iconEscola.setFillStyle('0xffffff');
 
-            this.turma_icon.setFillStyle('0x000000');
+            this.iconTurma.setFillStyle('0x000000');
 
             this.flag = 0;
 
-            // this.m_Backend.updateTOP(this.di, this.df, LoginData.GetClass, LoginData.GetSchool, this.flag, this.dificulty, this);
-            /*
-            const ret = BackendConnection.UpdateTOP(this.di, this.df, LoginData.GetClass, LoginData.GetSchool, this.flag, this.dificulty);
-            if (ret.success) {
-                if (ret.data.length < 4) {
-                    this.table.setItems([]);
-                }
-                else {
-                    this.table.setItems(ret.data);
-                }
-                this.table.refresh();
-            } else {
-                alert("Falha de ligação, por favor verifique a sua conexão");
-            }
-            */
-           this.UpdateTop();
+         
+            this.UpdateTop();
         });
 
-        this.todos_icon.setFillStyle('0x000000');
-        this.easy_icon.setFillStyle('0x000000');
+        this.iconTodos.setFillStyle('0x000000');
+        this.iconFacil.setFillStyle('0x000000');
 
 
         if (LoginData.GetUser() == '') {
             this.filtro.visible = false;
-            this.turma_filtro.visible = false;
-            this.turma_icon.visible = false;
-            this.escola_filtro.visible = false;
-            this.escola_icon.visible = false;
-            this.todos.visible = false;
-            this.todos_icon.visible = false;
+            this.lblFiltroTurma.visible = false;
+            this.iconTurma.visible = false;
+            this.lblFiltroEscola.visible = false;
+            this.iconEscola.visible = false;
+            this.lblFiltroTodos.visible = false;
+            this.iconTodos.visible = false;
         }
 
 
@@ -526,39 +500,39 @@ export class RankingScene extends Phaser.Scene {
         this.events.on('transitionstart', (fromScene, duration) => {
 
             this.table.y += this.scale.height;
-            this.jogador.y += this.scale.height;
-            this.pontos.y += this.scale.height;
-            this.escola.y += this.scale.height;
-            this.turma.y += this.scale.height;
-            this.dataC.y += this.scale.height;
+            this.lblJogador.y += this.scale.height;
+            this.lblPontos.y += this.scale.height;
+            this.lblEscola.y += this.scale.height;
+            this.lblTurma.y += this.scale.height;
+            this.lblData.y += this.scale.height;
             this.dropdown.y += this.scale.height;
-            this.ano.y += this.scale.height;
-            this.dificil.y += this.scale.height;
-            this.hard_icon.y += this.scale.height;
-            this.normal.y += this.scale.height;
-            this.normal_icon.y += this.scale.height;
-            this.facil.y += this.scale.height;
-            this.easy_icon.y += this.scale.height;
-            this.dificuldade.y += this.scale.height;
+            this.lblAnoLetivo.y += this.scale.height;
+            this.lblDificil.y += this.scale.height;
+            this.iconDificil.y += this.scale.height;
+            this.lblNormal.y += this.scale.height;
+            this.iconNormal.y += this.scale.height;
+            this.lblFacil.y += this.scale.height;
+            this.iconFacil.y += this.scale.height;
+            this.lblDificuldade.y += this.scale.height;
             this.filtro.y += this.scale.height;
-            this.turma_filtro.y += this.scale.height;
-            this.turma_icon.y += this.scale.height;
-            this.escola_filtro.y += this.scale.height;
-            this.escola_icon.y += this.scale.height;
-            this.todos.y += this.scale.height;
-            this.todos_icon.y += this.scale.height;
+            this.lblFiltroTurma.y += this.scale.height;
+            this.iconTurma.y += this.scale.height;
+            this.lblFiltroEscola.y += this.scale.height;
+            this.iconEscola.y += this.scale.height;
+            this.lblFiltroTodos.y += this.scale.height;
+            this.iconTodos.y += this.scale.height;
             this.container.y += this.scale.height;
 
             this.tweens.add({
                 delay: 1000,
-                targets: [this.table, this.jogador,
-                this.pontos, this.escola, this.turma,
-                this.dataC, this.dropdown, this.ano,
-                this.dificil, this.hard_icon, this.normal,
-                this.normal_icon, this.facil, this.easy_icon,
-                this.dificuldade, this.filtro, this.turma_filtro,
-                this.turma_icon, this.escola_filtro, this.escola_icon,
-                this.todos, this.todos_icon, this.container],
+                targets: [this.table, this.lblJogador,
+                this.lblPontos, this.lblEscola, this.lblTurma,
+                this.lblData, this.dropdown, this.lblAnoLetivo,
+                this.lblDificil, this.iconDificil, this.lblNormal,
+                this.iconNormal, this.lblFacil, this.iconFacil,
+                this.lblDificuldade, this.filtro, this.lblFiltroTurma,
+                this.iconTurma, this.lblFiltroEscola, this.iconEscola,
+                this.lblFiltroTodos, this.iconTodos, this.container],
                 duration: 5000,
                 y: '-=' + this.scale.height,
                 ease: 'Power2',
@@ -566,37 +540,37 @@ export class RankingScene extends Phaser.Scene {
 
         }, this);
 
-        this.jogador = new BetterText(this, 0, 0, 'Jogador', {fontFamily:'Folks-Bold',  fontSize: 40, color: '#403217' });
+        this.lblJogador = new BetterText(this, 0, 0, 'Jogador', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
 
-        this.pontos = new BetterText(this, 0, 0, 'Pontos', { fontFamily:'Folks-Bold',  fontSize: 40, color: '#403217' });
+        this.lblPontos = new BetterText(this, 0, 0, 'Pontos', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
 
-        this.escola = new BetterText(this, 0, 0, 'Escola', {  fontFamily:'Folks-Bold', fontSize: 40, color: '#403217' });
+        this.lblEscola = new BetterText(this, 0, 0, 'Escola', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
 
-        this.turma = new BetterText(this, 0, 0, 'Turma', {  fontFamily:'Folks-Bold', fontSize: 40, color: '#403217' });
+        this.lblTurma = new BetterText(this, 0, 0, 'Turma', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
 
-        this.dataC = new BetterText(this, 0, 0, 'Data', {  fontFamily:'Folks-Bold', fontSize: 40, color: '#403217' });
+        this.lblData = new BetterText(this, 0, 0, 'Data', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
 
 
 
-        this.m_AlignGrid.placeAtIndex(61, this.jogador);
+        this.alignmentGrid.placeAtIndex(61, this.lblJogador);
 
-        this.m_AlignGrid.placeAtIndex(63, this.pontos);
-        this.pontos.x -= 20;
+        this.alignmentGrid.placeAtIndex(63, this.lblPontos);
+        this.lblPontos.x -= 20;
 
-        this.m_AlignGrid.placeAtIndex(66, this.escola);
-        this.escola.x += 45;
+        this.alignmentGrid.placeAtIndex(66, this.lblEscola);
+        this.lblEscola.x += 45;
 
-        this.m_AlignGrid.placeAtIndex(69, this.turma);
-        this.turma.x += 130
+        this.alignmentGrid.placeAtIndex(69, this.lblTurma);
+        this.lblTurma.x += 130
 
-        this.m_AlignGrid.placeAtIndex(71, this.dataC);
-        this.dataC.x += 50;
+        this.alignmentGrid.placeAtIndex(71, this.lblData);
+        this.lblData.x += 50;
 
-        // this.m_AlignGrid.showNumbers();
+        
     }
 
 
-    CreateTable(scrollMode) {
+    private CreateTable(scrollMode) {
 
         this.table = this.rexUI.add.gridTable({
             x: 848,
@@ -673,7 +647,7 @@ export class RankingScene extends Phaser.Scene {
                         height: height,
 
                         orientation: 'top-to-bottom',
-                        text: scene.add.text(50, 50, item.name, { fontFamily:'Bubblegum', fontSize: 21, color: '#000000', align: 'center' }),
+                        text: scene.add.text(50, 50, item.name, { fontFamily: 'Bubblegum', fontSize: 21, color: '#000000', align: 'center' }),
                         align: 'center',
                     });
 
@@ -684,22 +658,22 @@ export class RankingScene extends Phaser.Scene {
             .layout()
     }
 
-    CreateItems(count) {
+    private CreateItems(count) {
         var data = new Array<object>();
         for (var i = 0; i < count; i++) {
-            if (this.array[i] != '') {
+            if (this.databaseData[i] != '') {
                 data.push({
-                    name: this.array[i],
+                    name: this.databaseData[i],
                 });
             }
         }
-        if (this.array.length < 4) {
+        if (this.databaseData.length < 4) {
             return []
         }
         return data;
     }
 
-        selectYear() {
+    private selectYear() {
         var data = new Array<string>();
 
         var d = new Date();
@@ -731,7 +705,7 @@ export class RankingScene extends Phaser.Scene {
     /**
      *  Sets up the "Go back to menu" button.
      **/
-    Setup_Button_Back(): void {
+    private Setup_Button_Back(): void {
         this.m_btn_BackToMenu = new BetterButton(this, 96, 96, 0.9, 0.9, '', {}, 'btn_gotoMenu');
         this.m_btn_BackToMenu.on('pointerup', () => this.scene.start('MainMenu'));
     }
@@ -740,8 +714,8 @@ export class RankingScene extends Phaser.Scene {
     /**
      * Fetches Information from the DB and updates the ranking table with that data
      */
-    UpdateTop(): void {
-       
+    private UpdateTop(): void {
+
 
         let connection = BackendConnection.UpdateTOP(this.di, this.df, this.flag, this.dificulty);
 
@@ -761,6 +735,11 @@ export class RankingScene extends Phaser.Scene {
             alert("Não foi possível estabelecer ligação. Por favor tente mais tarde.")
 
         });
+    }
+
+    private LoadEmptyScene() : void 
+    {
+
     }
 
 
