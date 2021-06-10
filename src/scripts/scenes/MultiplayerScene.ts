@@ -1,3 +1,11 @@
+// MultiplayerScene.ts
+/**
+ * Module responsible for the implementation of the Multiplayer scene.
+ * @module
+ */
+
+
+
 import Phaser from 'phaser'
 
 import { BetterText } from '../better/BetterText'

@@ -1,3 +1,11 @@
+// RankingScene.ts
+/**
+ * Module responsible for the implementation of the Ranking/TOP scene.
+ * @module
+ */
+
+
+
 import Phaser from 'phaser'
 import { AlignGrid } from '../better/AlignGrid';
 import { BetterButton } from '../better/BetterButton';
@@ -7,11 +15,11 @@ import { LoginData } from '../backend/LoginData';
 import { ParsedUpdatedScoreData, ParseScoreData } from '../backend/BackendUtils';
 
 /**
- *  @noInheritDoc
+ 
  * The class that implements the ranking/socreboard/top scene.
  * The only way yo arrive to this scene is from the main menu.
  * 
- * Here' we're using thr BackendConnction (static) object to facilitate the communication between this and the database.
+ * Here' we're using the BackendConnection (static) object to facilitate the communication between this and the database.
  * 
  * To speed up things, we're using 2 pieces of external code.
  * The first one is the RexUI's plugin. It provides us some tools to create scrollable tables, radio buttons and the likes.
@@ -22,10 +30,9 @@ import { ParsedUpdatedScoreData, ParseScoreData } from '../backend/BackendUtils'
  *              
  */
 export class RankingScene extends Phaser.Scene {
- 
 
 
-    private databaseData: Array<any>;
+
 
     /* ===== The labels that appear on the top of the ranking table: Jogador, Pontos, Escola, etc...  ==========*/
     private lblJogador: BetterText;
@@ -36,47 +43,78 @@ export class RankingScene extends Phaser.Scene {
     /* ======================================================================================================== */
 
     /* ================= The filters on the right side of the scene (radio buttons, labels) =========================== */
+
+    /**
+     * The label that reads 'Ano Letivo'
+     */
     private lblAnoLetivo: BetterText;
 
+    /**
+     * The label that reads 'Dificuldade'
+     */
     private lblDificuldade: BetterText;
 
+    /**
+     * The label that reads 'Dificil'
+     */
     private lblDificil: BetterText;
     private iconDificil;
 
+    /**
+     * The label that reads 'Normal'
+     */
     private lblNormal: BetterText;
     private iconNormal;
 
+    /**
+     * The label that reads 'Fácil'
+     */
     private lblFacil: BetterText;
     private iconFacil;
-    /* ======================================================================================================== */
-
 
     /**
-     * The alignment grid that helps us align the elements on the screen.
-     * This is javascriot object defined on the corresponding file (AlignGrid.js).
+    * The label that reads 'Filtro'.
+    */
+    private lblFiltro: BetterText;
+
+    /**
+     * The label that reads 'Turma'.
      */
-    private alignmentGrid;
-
-    private mCurrentDate: Date;
-    private di;
-    private df;
-    private dificulty;
-    private flag;
-    private table;
-    private dropdown;
-
-    private filtro;
-
     private lblFiltroTurma: BetterText;
     private iconTurma;
 
+    /**
+     * The label that reads 'Todos'.
+     */
     private lblFiltroTodos: BetterText;
     private iconTodos;
+
+    /**
+     * The label that reads 'Escola' (on the right side of the screen).
+     * 
+     */
 
     private lblFiltroEscola: BetterText;
     private iconEscola;
 
-    private container;
+    /**
+     * The orange(brownish) background of the filter option on the right side of the screen.
+     * It's another UI element from RexUI, so we're oblivious to what its type might be.
+     */
+    private filterBackground;
+
+
+    /**
+     * The (scrollable) table object created using RexUI's plugin.
+     * This specific table is the one we use to display the scores.
+     */
+    private scoreTable;
+
+    /**
+     * Another (scrollable) table created using RexUI's plugin.
+     * This specific tables is the one we use to display the different school years list on the right side of the screen.
+     */
+    private schoolYearDropdown;
 
 
     /**
@@ -85,7 +123,7 @@ export class RankingScene extends Phaser.Scene {
     private imgTitle: Phaser.GameObjects.Image;
 
     /**
-     * The button that starts the transitin to the main menu.
+     * The button that starts the transition to the main menu.
      */
     private m_btn_BackToMenu: BetterButton;
 
@@ -94,6 +132,57 @@ export class RankingScene extends Phaser.Scene {
      * Again, we're mixing javascript with typescript. It's not ideal, but its what we got.
      */
     private rexUI;
+
+    /**
+    * The alignment grid that helps us align the elements on the screen.
+    * This is javascriot object defined on the corresponding file (AlignGrid.js).
+    */
+    private alignmentGrid;
+
+
+
+
+
+    /*
+         =================================   Data members =================================
+         The class members declare below could probably be in another class or maybe a structured object.
+         Having this kind of data (related to the database inner workings) doesnt feel right.
+
+
+         TODO: Later, find a better solution for this.
+    */
+
+    /**
+     * An array that contains the data we parse from the DB's response everytime we resquest something from it.
+     * Specifically, its an array with structured objects, where each of these objects contain information pertaining to a user/player (things like score, name, school, class, etc...)
+     * Only parsed/human readable data is assigned to this array.  
+     */
+    private databaseData: Array<any>;
+
+
+    private mCurrentDate: Date;
+    private dataInicial: string;
+    private dataFinal: string;
+
+    /**
+     * The dificulty filter parameter that is sent with the url to the DB. Value range is [1,2,3].
+     * If dificulty = 1, then the user is asking for the 'Easy' mode scores
+     * If dificulty = 2, then the user is asking for the 'Normal'/'Medium' mode scores
+     * If dificulty = 3, then the user is asking for the 'Hard' mode scores
+     * 
+     */
+    private dificulty: number;
+
+    /**
+     * The flag parameter that is sent to the DB and determines the space of scores to retrieve. Value range is [0,1,2]
+     * If flag = 1, then the user is trying to see the global scores.
+     * If flag = 2, then the user is trying to see the school scores.
+     * If flag = 3, then the user is trying to see his/her classe's scores.
+     */
+    private flag;
+
+
+
 
 
     constructor() {
@@ -110,8 +199,8 @@ export class RankingScene extends Phaser.Scene {
             var x = n - 1;
             var y = n;
         }
-        this.di = x + "-09-01";
-        this.df = y + "-08-31";
+        this.dataInicial = x + "-09-01";
+        this.dataFinal = y + "-08-31";
         this.dificulty = 1;
         this.flag = 2;
     }
@@ -148,14 +237,15 @@ export class RankingScene extends Phaser.Scene {
      * If the connection to the database is successfull, then things run normally.
      */
     private init() {
-        
-        let connection = BackendConnection.GetTOP(this.di, this.df, "", "", 1);
+
+        let connection = BackendConnection.GetTOP(this.dataInicial, this.dataFinal, "", "", 1);
 
         connection.then((data) => {
 
             let parsedData = ParseScoreData(data);
 
             this.databaseData = parsedData;
+            console.log(this.databaseData)
 
 
             this.CompleteScene();
@@ -166,6 +256,8 @@ export class RankingScene extends Phaser.Scene {
             this.LoadEmptyScene();
 
         });
+
+        console.log("A ++ build.");
 
 
     }
@@ -203,13 +295,13 @@ export class RankingScene extends Phaser.Scene {
         this.Setup_Button_Back()
 
 
-        this.container = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe79946);
-        this.alignmentGrid.placeAtIndex(133, this.container);
-        this.container.x += 32
-        this.container.y -= 10;
+        this.filterBackground = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe79946);
+        this.alignmentGrid.placeAtIndex(133, this.filterBackground);
+        this.filterBackground.x += 32
+        this.filterBackground.y -= 10;
 
 
-        this.dropdown = this.rexUI.add.gridTable({
+        this.schoolYearDropdown = this.rexUI.add.gridTable({
             x: 1750,
             y: 400,
             width: 180,
@@ -293,13 +385,13 @@ export class RankingScene extends Phaser.Scene {
                     scene.lastclick = cellContainer.getElement('icon').setFillStyle('0x000000');
 
                     if (cellContainer.getElement('text')._text != 'Todos') {
-                        scene.di = '20' + cellContainer.getElement('text')._text.split('-')[0] + '-9-1';
-                        scene.df = '20' + cellContainer.getElement('text')._text.split('-')[1] + '-8-31';
+                        this.dataInicial = '20' + cellContainer.getElement('text')._text.split('-')[0] + '-9-1';
+                        this.dataFinal = '20' + cellContainer.getElement('text')._text.split('-')[1] + '-8-31';
 
                     }
                     else {
-                        scene.di = '2015-09-01'
-                        scene.df = new Date().toISOString().slice(0, 10)
+                        this.dataInicial = '2015-09-01'
+                        this.dataFinal = new Date().toISOString().slice(0, 10)
                     }
 
                     this.UpdateTop(); // Connect to the BD
@@ -370,7 +462,7 @@ export class RankingScene extends Phaser.Scene {
             this.dificulty = 1;
 
             this.UpdateTop(); // Connect to DB
-           
+
         });
 
         this.lblNormal.setInteractive({ useHandCursor: true });
@@ -395,14 +487,14 @@ export class RankingScene extends Phaser.Scene {
             this.iconFacil.setFillStyle('0xffffff');
             this.dificulty = 3;
 
-          
-            
+
+
             this.UpdateTop();
         });
 
-        this.filtro = new BetterText(this, 0, 0, 'Filtro', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
-        this.alignmentGrid.placeAtIndex(163.3, this.filtro);
-        this.filtro.y += 32;
+        this.lblFiltro = new BetterText(this, 0, 0, 'Filtro', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
+        this.alignmentGrid.placeAtIndex(163.3, this.lblFiltro);
+        this.lblFiltro.y += 32;
         // this.filtro.x += 16;
 
 
@@ -444,7 +536,7 @@ export class RankingScene extends Phaser.Scene {
 
             this.flag = 2;
 
-          
+
 
             this.UpdateTop();
         });
@@ -460,7 +552,7 @@ export class RankingScene extends Phaser.Scene {
             this.iconTurma.setFillStyle('0xffffff');
 
             this.flag = 1;
-          
+
             this.UpdateTop();
         });
         this.lblFiltroTurma.setInteractive({ useHandCursor: true });
@@ -475,7 +567,7 @@ export class RankingScene extends Phaser.Scene {
 
             this.flag = 0;
 
-         
+
             this.UpdateTop();
         });
 
@@ -484,7 +576,7 @@ export class RankingScene extends Phaser.Scene {
 
 
         if (LoginData.GetUser() == '') {
-            this.filtro.visible = false;
+            this.lblFiltro.visible = false;
             this.lblFiltroTurma.visible = false;
             this.iconTurma.visible = false;
             this.lblFiltroEscola.visible = false;
@@ -499,13 +591,13 @@ export class RankingScene extends Phaser.Scene {
 
         this.events.on('transitionstart', (fromScene, duration) => {
 
-            this.table.y += this.scale.height;
+            this.scoreTable.y += this.scale.height;
             this.lblJogador.y += this.scale.height;
             this.lblPontos.y += this.scale.height;
             this.lblEscola.y += this.scale.height;
             this.lblTurma.y += this.scale.height;
             this.lblData.y += this.scale.height;
-            this.dropdown.y += this.scale.height;
+            this.schoolYearDropdown.y += this.scale.height;
             this.lblAnoLetivo.y += this.scale.height;
             this.lblDificil.y += this.scale.height;
             this.iconDificil.y += this.scale.height;
@@ -514,25 +606,25 @@ export class RankingScene extends Phaser.Scene {
             this.lblFacil.y += this.scale.height;
             this.iconFacil.y += this.scale.height;
             this.lblDificuldade.y += this.scale.height;
-            this.filtro.y += this.scale.height;
+            this.lblFiltro.y += this.scale.height;
             this.lblFiltroTurma.y += this.scale.height;
             this.iconTurma.y += this.scale.height;
             this.lblFiltroEscola.y += this.scale.height;
             this.iconEscola.y += this.scale.height;
             this.lblFiltroTodos.y += this.scale.height;
             this.iconTodos.y += this.scale.height;
-            this.container.y += this.scale.height;
+            this.filterBackground.y += this.scale.height;
 
             this.tweens.add({
                 delay: 1000,
-                targets: [this.table, this.lblJogador,
+                targets: [this.scoreTable, this.lblJogador,
                 this.lblPontos, this.lblEscola, this.lblTurma,
-                this.lblData, this.dropdown, this.lblAnoLetivo,
+                this.lblData, this.schoolYearDropdown, this.lblAnoLetivo,
                 this.lblDificil, this.iconDificil, this.lblNormal,
                 this.iconNormal, this.lblFacil, this.iconFacil,
-                this.lblDificuldade, this.filtro, this.lblFiltroTurma,
+                this.lblDificuldade, this.lblFiltro, this.lblFiltroTurma,
                 this.iconTurma, this.lblFiltroEscola, this.iconEscola,
-                this.lblFiltroTodos, this.iconTodos, this.container],
+                this.lblFiltroTodos, this.iconTodos, this.filterBackground],
                 duration: 5000,
                 y: '-=' + this.scale.height,
                 ease: 'Power2',
@@ -566,13 +658,13 @@ export class RankingScene extends Phaser.Scene {
         this.alignmentGrid.placeAtIndex(71, this.lblData);
         this.lblData.x += 50;
 
-        
+
     }
 
 
     private CreateTable(scrollMode) {
 
-        this.table = this.rexUI.add.gridTable({
+        this.scoreTable = this.rexUI.add.gridTable({
             x: 848,
             y: this.scale.height / 2 + 64,
 
@@ -717,18 +809,18 @@ export class RankingScene extends Phaser.Scene {
     private UpdateTop(): void {
 
 
-        let connection = BackendConnection.UpdateTOP(this.di, this.df, this.flag, this.dificulty);
+        let connection = BackendConnection.UpdateTOP(this.dataInicial, this.dataFinal, this.flag, this.dificulty);
 
         connection.then((data) => {
 
 
             let parsedData = ParsedUpdatedScoreData(data);
             if (parsedData.length < 4)
-                this.table.setItems([]);
+                this.scoreTable.setItems([]);
             else
-                this.table.setItems(parsedData);
+                this.scoreTable.setItems(parsedData);
 
-            this.table.refresh();
+            this.scoreTable.refresh();
 
         }).catch(function (err) {
             console.log(err);
@@ -737,8 +829,7 @@ export class RankingScene extends Phaser.Scene {
         });
     }
 
-    private LoadEmptyScene() : void 
-    {
+    private LoadEmptyScene(): void {
 
     }
 

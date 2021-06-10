@@ -1,3 +1,10 @@
+// MultiplayerGame.ts
+/**
+ * Module responsible for the implementation of the Multiplayer's backend (the logics side of things).
+ * @module
+ */
+
+
 import {evaluate} from 'mathjs'
 
 

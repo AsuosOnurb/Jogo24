@@ -1,3 +1,10 @@
+// MainMenu.ts
+/**
+ * Module responsible for the implementation of the Main Menu scene.
+ * @module
+ */
+
+
 import Phaser from 'phaser'
 import { BackendConnection } from '../backend/BackendConnection';
 import { LoginData } from '../backend/LoginData';
@@ -17,7 +24,6 @@ enum Panels {
 
 
 /**
- *  @noInheritDoc
  * The class that models the main menu scene.
  * This is the first scene that the player sees when he starts the game.
  * 
