@@ -27,6 +27,15 @@ import { ParsedUpdatedScoreData, ParseScoreData } from '../backend/BackendUtils'
  * 
  * The other one is the AlignGrid object defined on AlignedGrid.js . This object lets us create a grid where we can specify positions for the UI elements. 
  * Not only that, this object will also scale and position them according to the game's scale.
+ * 
+ * 
+ *  ================================================================================
+ *                                  Filter Based Updating
+ * Another thing one might notice is how the table is updated everytime a filter is clicked. 
+ * We have to connect to the database everyime because we want to receive the most updated information/scores.
+ * We could just retrieve them all and store them in based on their filter categories, but that would mean we wouldn't take into account
+ * the new scores that could be added during the time the player is in this scene.
+ * ===========================================================================================
  *              
  */
 export class RankingScene extends Phaser.Scene {
@@ -139,10 +148,6 @@ export class RankingScene extends Phaser.Scene {
     */
     private alignmentGrid;
 
-
-
-
-
     /*
          =================================   Data members =================================
          The class members declare below could probably be in another class or maybe a structured object.
@@ -160,7 +165,6 @@ export class RankingScene extends Phaser.Scene {
     private databaseData: Array<any>;
 
 
-    private mCurrentDate: Date;
     private dataInicial: string;
     private dataFinal: string;
 
@@ -192,16 +196,18 @@ export class RankingScene extends Phaser.Scene {
     constructor() {
         super('RankingScene');
 
-        var d = new Date();
-        var m = d.getMonth();
-        var n = d.getFullYear();
+        const d = new Date();
+        const m = d.getMonth();
+        const n = d.getFullYear();
+
+        let x, y;
         if (m > 7) {
-            var x = n;
-            var y = n + 1;
+            x = n;
+            y = n + 1;
         }
         else {
-            var x = n - 1;
-            var y = n;
+            x = n - 1;
+            y = n;
         }
         this.dataInicial = x + "-09-01";
         this.dataFinal = y + "-08-31";
@@ -248,7 +254,7 @@ export class RankingScene extends Phaser.Scene {
 
             let parsedData = ParseScoreData(data);
 
-            this.databaseData = parsedData;
+            this.databaseData = parsedData; // databaseData is what we use to populate the table when we first start the scene.
 
             this.CompleteScene();
 
@@ -259,11 +265,16 @@ export class RankingScene extends Phaser.Scene {
 
         });
 
-
-
     }
 
-    private CompleteScene() {
+    /* ======================= Scnene construction (visual side of things ) ======================== */
+
+
+    /**
+     * Starts the whole scene creation process.
+     * At the end of execution, the scene is completely done and ready for interaction.
+     */
+    private CompleteScene() : void {
         // Blue background
         this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
@@ -279,142 +290,12 @@ export class RankingScene extends Phaser.Scene {
         }
         this.alignmentGrid = new AlignGrid(this.game, gridConfig);
 
-        this.mCurrentDate = new Date();
-        var m = this.mCurrentDate.getMonth();
-        var n = this.mCurrentDate.getFullYear();
-        let x;
-        let y;
+        // Setup the table 
+        this.CreateTable();
 
-
-
-        //TABLE
-        var scrollMode = 0; // 0:vertical, 1:horizontal
-        this.CreateTable(scrollMode);
-
-
-        // Setup the "Back" button
-        this.SetupMenuButton()
-
-
-        this.filterBackground = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe79946);
-        this.alignmentGrid.placeAtIndex(133, this.filterBackground);
-        this.filterBackground.x += 32
-        this.filterBackground.y -= 10;
-
-
-        this.schoolYearDropdown = this.rexUI.add.gridTable({
-            x: 1750,
-            y: 400,
-            width: 180,
-            height: 250,
-
-            scrollMode: scrollMode,
-
-            table: {
-                cellWidth: 100,
-                cellHeight: 50,
-                columns: 1,
-
-                mask: {
-                    padding: 2,
-                    updateMode: 0,
-                },
-
-                reuseCellContainer: true,
-            },
-
-
-
-            slider: {
-                track: this.rexUI.add.roundRectangle(0, 0, 10, 10, 10, 0x260e04),
-                thumb: this.rexUI.add.roundRectangle(0, 0, 32, 32, 13, 0xc85c02),
-            },
-            space: {
-                left: 20,
-                right: 0,
-                top: 20,
-                bottom: 20,
-
-                table: 10,
-                header: 10,
-                footer: 10,
-            },
-
-            createCellContainerCallback: (cell, cellContainer) => {
-
-                var scene = cell.scene,
-                    width = cell.width,
-                    height = cell.height,
-                    item = cell.item,
-                    index = cell.index,
-
-                    cellContainer = scene.rexUI.add.label({
-                        width: width,
-                        height: height,
-
-                        orientation: 0,
-                        icon: scene.add.circle(0, 50, 10).setFillStyle('0xffffff'),
-                        text: scene.add.text(50, 50, item, { fontFamily: 'Bubblegum', fontSize: 25, color: 'black', align: 'center' }),
-                        align: 'center',
-                        space: {
-                            icon: 20,
-                        }
-                    });
-
-
-                var m = this.mCurrentDate.getMonth();
-                var n = this.mCurrentDate.getFullYear();
-                if (m > 7) {
-                    x = n;
-                    y = n + 1;
-                }
-                else {
-                    x = n - 1;
-                    y = n;
-                }
-
-
-                let xx: string = x.toString();
-                let yy: string = y.toString();
-
-
-                cellContainer.setInteractive({ useHandCursor: true });
-                cellContainer.on('pointerdown', () => {
-                    if (scene.lastclick) {
-                        scene.lastclick.setFillStyle('0xffffff');
-                    }
-                    scene.lastclick = cellContainer.getElement('icon').setFillStyle('0x000000');
-
-                    if (cellContainer.getElement('text')._text != 'Todos') {
-                        this.dataInicial = '20' + cellContainer.getElement('text')._text.split('-')[0] + '-9-1';
-                        this.dataFinal = '20' + cellContainer.getElement('text')._text.split('-')[1] + '-8-31';
-
-                    }
-                    else {
-                        this.dataInicial = '2015-09-01'
-                        this.dataFinal = new Date().toISOString().slice(0, 10)
-                    }
-
-                    this.UpdateTop(); // Connect to the BD
-                });
-
-                let tmp = xx.slice(2, 4) + '-' + yy.slice(2, 4);
-                if (cellContainer.getElement('text')._text == tmp) {
-                    scene.lastclick = cellContainer.getElement('icon').setFillStyle('0x000000');
-                }
-
-                return cellContainer;
-
-
-            },
-            items: this.CreateSchoolYears()
-        })
-            .layout()
-
-
-        this.SetupLabels();
-
-
+        // Setup the filter on the right side of the screen
+        this.SetupFilter();
+        this.SetupYearFilterDropdown();
 
         if (LoginData.GetUser() == '') {
             this.lblFiltro.visible = false;
@@ -426,37 +307,24 @@ export class RankingScene extends Phaser.Scene {
             this.iconTodos.visible = false;
         }
 
-        this.lblJogador = new BetterText(this, 0, 0, 'Jogador', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-        this.lblPontos = new BetterText(this, 0, 0, 'Pontos', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-        this.lblEscola = new BetterText(this, 0, 0, 'Escola', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-        this.lblTurma = new BetterText(this, 0, 0, 'Turma', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-        this.lblData = new BetterText(this, 0, 0, 'Data', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
 
 
-
-        this.alignmentGrid.placeAtIndex(61, this.lblJogador);
-
-        this.alignmentGrid.placeAtIndex(63, this.lblPontos);
-        this.lblPontos.x -= 20;
-
-        this.alignmentGrid.placeAtIndex(66, this.lblEscola);
-        this.lblEscola.x += 45;
-
-        this.alignmentGrid.placeAtIndex(69, this.lblTurma);
-        this.lblTurma.x += 130
-
-        this.alignmentGrid.placeAtIndex(71, this.lblData);
-        this.lblData.x += 50;
-
+        // Setup the "Back" button
+        this.SetupMenuButton()
 
     }
 
 
-    private CreateTable(scrollMode) {
+    /**
+     * Creates the scoreboard table.
+     * Utilizes the RexUI's plugin.
+     */
+    private CreateTable() : void {
+
+        /**
+         * Lots of values used here are hardcoded, which could be a bad thing. It's what you get fo reusing code.
+         * At the same time, this values seem to work just fine. If it ain't broke, don't fix it.
+         */
 
         this.scoreTable = this.rexUI.add.gridTable({
             x: 848,
@@ -465,7 +333,7 @@ export class RankingScene extends Phaser.Scene {
             width: 1560,
             height: 768,
 
-            scrollMode: scrollMode,
+            scrollMode: 0, // Vertical scroll
 
             background: this.rexUI.add.roundRectangle(-100, 0, 8, 10, 10, 0xe79946),
 
@@ -539,65 +407,36 @@ export class RankingScene extends Phaser.Scene {
 
                 return cellContainer;
             },
-            items: this.CreateItems(600)
+            items: this.GetTableData()
         })
             .layout()
+
+
+        /* Setup the labels on the top od the table */
+        this.lblJogador = new BetterText(this, 0, 0, 'Jogador', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+        this.alignmentGrid.placeAtIndex(61, this.lblJogador);
+
+        this.lblPontos = new BetterText(this, 0, 0, 'Pontos', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+        this.alignmentGrid.placeAtIndex(63, this.lblPontos);
+        this.lblPontos.x -= 20;
+
+        this.lblEscola = new BetterText(this, 0, 0, 'Escola', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+        this.alignmentGrid.placeAtIndex(66, this.lblEscola);
+        this.lblEscola.x += 45;
+
+        this.lblTurma = new BetterText(this, 0, 0, 'Turma', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+        this.alignmentGrid.placeAtIndex(69, this.lblTurma);
+        this.lblTurma.x += 130
+
+        this.lblData = new BetterText(this, 0, 0, 'Data', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+        this.alignmentGrid.placeAtIndex(71, this.lblData);
+        this.lblData.x += 50;
+
     }
 
-    private CreateItems(count) {
-        var data = new Array<object>();
-        for (var i = 0; i < count; i++) {
-            if (this.databaseData[i] != '') {
-                console.log("Database data: ")
-                console.log(this.databaseData[i]);
-                data.push({
-                    name: this.databaseData[i],
-                });
-            }
-        }
-        if (this.databaseData.length < 4) {
-            return []
-        }
 
-        console.log("Create items data")
-        console.log(data);
 
-        return data;
-    }
 
-    /**
-     * Creates an array filled with strings relating to the school years from 2015 until the current year.
-     * This procedure is used, only, when we're creating the fitlers for each school year on the topmost portion on the right side of the screen.
-     * 
-     * @return An array with strings for each school year interval, i.e: an array like ["Todos", "20-21", "18-19", "17-18", "16-17", "15-16"]
-     */
-    private CreateSchoolYears(): Array<string> {
-        var data = new Array<string>();
-
-        var d = new Date();
-        var m = d.getMonth();
-        var n = d.getFullYear();
-        if (m > 7) {
-            var x = n;
-            var y = n + 1;
-        }
-        else {
-            var x = n - 1;
-            var y = n;
-        }
-        let di = x + '-09-01';
-        let df = y + '-08-31';
-        let j = 15;
-        for (let i = 2015; i < y; i++) {
-
-            data.push('' + j.toString() + '-' + (j + 1).toString());
-            j++;
-        }
-        data.push('Todos');
-        data = data.reverse();
-
-        return data;
-    }
 
 
 
@@ -615,7 +454,13 @@ export class RankingScene extends Phaser.Scene {
      * 
      * The radio buttons have the UpdateTop() procedure assocciated because we want the table to update when we click them.
      */
-    private SetupLabels(): void {
+    private SetupFilter(): void {
+        this.filterBackground = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe79946);
+        this.alignmentGrid.placeAtIndex(133, this.filterBackground);
+        this.filterBackground.x += 32
+        this.filterBackground.y -= 10;
+
+
         this.lblAnoLetivo = new BetterText(this, 0, 0, 'Ano Letivo', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
         this.alignmentGrid.placeAtIndex(58, this.lblAnoLetivo);
         this.lblAnoLetivo.x += 32
@@ -781,20 +626,211 @@ export class RankingScene extends Phaser.Scene {
 
     }
 
+    /**
+     * Creates the school year list/dropdown filter.
+     */
+    private SetupYearFilterDropdown(): void {
+        this.schoolYearDropdown = this.rexUI.add.gridTable({
+            x: 1750,
+            y: 400,
+            width: 180,
+            height: 250,
 
+            scrollMode: 0, // Vertical scroll
+
+            table: {
+                cellWidth: 100,
+                cellHeight: 50,
+                columns: 1,
+
+                mask: {
+                    padding: 2,
+                    updateMode: 0,
+                },
+
+                reuseCellContainer: true,
+            },
+
+
+
+            slider: {
+                track: this.rexUI.add.roundRectangle(0, 0, 10, 10, 10, 0x260e04),
+                thumb: this.rexUI.add.roundRectangle(0, 0, 32, 32, 13, 0xc85c02),
+            },
+            space: {
+                left: 20,
+                right: 0,
+                top: 20,
+                bottom: 20,
+
+                table: 10,
+                header: 10,
+                footer: 10,
+            },
+
+            createCellContainerCallback: (cell, cellContainer) => {
+
+                var scene = cell.scene,
+                    width = cell.width,
+                    height = cell.height,
+                    item = cell.item,
+                    index = cell.index,
+
+                    cellContainer = scene.rexUI.add.label({
+                        width: width,
+                        height: height,
+
+                        orientation: 0,
+                        icon: scene.add.circle(0, 50, 10).setFillStyle('0xffffff'),
+                        text: scene.add.text(50, 50, item, { fontFamily: 'Bubblegum', fontSize: 25, color: 'black', align: 'center' }),
+                        align: 'center',
+                        space: {
+                            icon: 20,
+                        }
+                    });
+
+                const currDate: Date = new Date()
+                var m = currDate.getMonth();
+                var n = currDate.getFullYear();
+
+                let x, y;
+                if (m > 7) {
+                    x = n;
+                    y = n + 1;
+                }
+                else {
+                    x = n - 1;
+                    y = n;
+                }
+
+
+                let xx: string = x.toString();
+                let yy: string = y.toString();
+
+
+                cellContainer.setInteractive({ useHandCursor: true });
+                cellContainer.on('pointerdown', () => {
+                    if (scene.lastclick) {
+                        scene.lastclick.setFillStyle('0xffffff');
+                    }
+                    scene.lastclick = cellContainer.getElement('icon').setFillStyle('0x000000');
+
+                    if (cellContainer.getElement('text')._text != 'Todos') {
+                        this.dataInicial = '20' + cellContainer.getElement('text')._text.split('-')[0] + '-9-1';
+                        this.dataFinal = '20' + cellContainer.getElement('text')._text.split('-')[1] + '-8-31';
+
+                    }
+                    else {
+                        this.dataInicial = '2015-09-01'
+                        this.dataFinal = new Date().toISOString().slice(0, 10)
+                    }
+
+                    this.UpdateTop(); // Connect to the BD
+                });
+
+                let tmp = xx.slice(2, 4) + '-' + yy.slice(2, 4);
+                if (cellContainer.getElement('text')._text == tmp) {
+                    scene.lastclick = cellContainer.getElement('icon').setFillStyle('0x000000');
+                }
+
+                return cellContainer;
+
+
+            },
+            items: this.GetSchoolYearList()
+        })
+            .layout()
+    }
+
+    /**
+     * Used to create an empty table (an empty scene).
+     * 
+     * We use this when no connection to the database is possible when we enter this scene. This way, we dont get just a blank screen.
+     * TODO: We could even display a text message saying what caused the error.
+     */
     private LoadEmptyScene(): void {
 
     }
 
+    /* =================== Data manipulation ================================ */
 
+    /**
+       * Creates an array filled with strings relating to the school years from 2015 until the current year.
+       * This procedure is used, only, when we're creating the fitlers for each school year on the topmost portion on the right side of the screen.
+       * 
+       * @return An array with strings for each school year interval, i.e: an array like ["Todos", "20-21", "18-19", "17-18", "16-17", "15-16"]
+       **/
+    private GetSchoolYearList(): Array<string> {
+        var data = new Array<string>();
+
+        var d = new Date();
+        var m = d.getMonth();
+        var n = d.getFullYear();
+        if (m > 7) {
+            var x = n;
+            var y = n + 1;
+        }
+        else {
+            var x = n - 1;
+            var y = n;
+        }
+        let di = x + '-09-01';
+        let df = y + '-08-31';
+        let j = 15;
+        for (let i = 2015; i < y; i++) {
+
+            data.push('' + j.toString() + '-' + (j + 1).toString());
+            j++;
+        }
+        data.push('Todos');
+        data = data.reverse();
+
+        return data;
+    }
+
+    /**
+ * Creates an array with user data by parsing the array 'databaseData'.
+ 
+ * 
+ * @returns An array of objects that RexUI understands and can use to add to the table.
+ **/
+    private GetTableData(): Array<any> {
+
+        /*
+        * This procedure has a quirk that can only be explained by inspecting RexUI's source.
+        * To add items to the table, it seems that it is necessary to add them wrapped in an object
+        * with a 'name' property (see this function's definition).
+        * 
+        * Also, currently we're adding the data item by item, where maybe it would be better to add it
+        * in chuncks (line by line for example).
+        */
+
+        const tableData: Array<any> = [];
+
+        this.databaseData.forEach((u) => {
+            tableData.push({ 'name': u });
+        });
+
+        return tableData;
+    }
 
     /* ======================== Connection with backend =================== */
 
 
     /**
-     * Fetches Information from the DB and updates the ranking table with that data
+     * Fetches information from the DB and updates the ranking table with that data.
+     * If, at the time of invocation, it is not possible to correctly communicate with the DB, then the score table is emptied.
      */
     private UpdateTop(): void {
+
+        /** 
+         * This procedure does two things (wich is probably bad practice...):
+         * 1 - Attempts to connect to the database.
+         * 2 - If connection is done successfully, then it sets the table with the data it got.
+         *      Else, it empties the table.
+         * 
+         * Also, notice how we have to parse what we receive from the database. We don't use the raw data we receive from the DB.
+         */
 
 
         let connection = BackendConnection.UpdateTOP(this.dataInicial, this.dataFinal, this.flag, this.dificulty);
@@ -803,8 +839,6 @@ export class RankingScene extends Phaser.Scene {
 
 
             let parsedData = ParsedUpdatedScoreData(data);
-            console.log("Parse data")
-            console.log(parsedData);
             if (parsedData.length < 4)
                 this.scoreTable.setItems([]);
             else

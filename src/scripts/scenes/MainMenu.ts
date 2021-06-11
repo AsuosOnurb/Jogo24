@@ -141,6 +141,8 @@ export class MainMenuScene extends Phaser.Scene {
     constructor() {
         super('MainMenu');
 
+        console.warn("Final tweaks version");
+
     }
 
     /**
