@@ -125,7 +125,7 @@ export class RankingScene extends Phaser.Scene {
     /**
      * The button that starts the transition to the main menu.
      */
-    private m_btn_BackToMenu: BetterButton;
+    private btnMainMenu: BetterButton;
 
     /**
      * A reference to the RexUI's plugin.
@@ -135,7 +135,7 @@ export class RankingScene extends Phaser.Scene {
 
     /**
     * The alignment grid that helps us align the elements on the screen.
-    * This is javascriot object defined on the corresponding file (AlignGrid.js).
+    * This is javascript object defined on the corresponding file (AlignGrid.js).
     */
     private alignmentGrid;
 
@@ -166,6 +166,8 @@ export class RankingScene extends Phaser.Scene {
 
     /**
      * The dificulty filter parameter that is sent with the url to the DB. Value range is [1,2,3].
+     * 
+     * 
      * If dificulty = 1, then the user is asking for the 'Easy' mode scores
      * If dificulty = 2, then the user is asking for the 'Normal'/'Medium' mode scores
      * If dificulty = 3, then the user is asking for the 'Hard' mode scores
@@ -174,7 +176,9 @@ export class RankingScene extends Phaser.Scene {
     private dificulty: number;
 
     /**
-     * The flag parameter that is sent to the DB and determines the space of scores to retrieve. Value range is [0,1,2]
+     * The flag parameter that is sent to the DB and determines the space of scores to retrieve. Value range is [0,1,2].
+     * 
+     * 
      * If flag = 1, then the user is trying to see the global scores.
      * If flag = 2, then the user is trying to see the school scores.
      * If flag = 3, then the user is trying to see his/her classe's scores.
@@ -245,8 +249,6 @@ export class RankingScene extends Phaser.Scene {
             let parsedData = ParseScoreData(data);
 
             this.databaseData = parsedData;
-            console.log(this.databaseData)
-
 
             this.CompleteScene();
 
@@ -257,7 +259,6 @@ export class RankingScene extends Phaser.Scene {
 
         });
 
-        console.log("A ++ build.");
 
 
     }
@@ -267,7 +268,7 @@ export class RankingScene extends Phaser.Scene {
         this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
 
-        // Title imge96
+        // Title image
         this.imgTitle = this.add.image(this.scale.width / 2, 112, 'title');
         this.imgTitle.setScale(0.6, 0.6);
 
@@ -292,7 +293,7 @@ export class RankingScene extends Phaser.Scene {
 
 
         // Setup the "Back" button
-        this.Setup_Button_Back()
+        this.SetupMenuButton()
 
 
         this.filterBackground = this.rexUI.add.roundRectangle(0, 0, 216, 768, 10, 0xe79946);
@@ -406,11 +407,215 @@ export class RankingScene extends Phaser.Scene {
 
 
             },
-            items: this.selectYear()
+            items: this.CreateSchoolYears()
         })
             .layout()
 
 
+        this.SetupLabels();
+
+
+
+        if (LoginData.GetUser() == '') {
+            this.lblFiltro.visible = false;
+            this.lblFiltroTurma.visible = false;
+            this.iconTurma.visible = false;
+            this.lblFiltroEscola.visible = false;
+            this.iconEscola.visible = false;
+            this.lblFiltroTodos.visible = false;
+            this.iconTodos.visible = false;
+        }
+
+        this.lblJogador = new BetterText(this, 0, 0, 'Jogador', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+
+        this.lblPontos = new BetterText(this, 0, 0, 'Pontos', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+
+        this.lblEscola = new BetterText(this, 0, 0, 'Escola', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+
+        this.lblTurma = new BetterText(this, 0, 0, 'Turma', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+
+        this.lblData = new BetterText(this, 0, 0, 'Data', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
+
+
+
+        this.alignmentGrid.placeAtIndex(61, this.lblJogador);
+
+        this.alignmentGrid.placeAtIndex(63, this.lblPontos);
+        this.lblPontos.x -= 20;
+
+        this.alignmentGrid.placeAtIndex(66, this.lblEscola);
+        this.lblEscola.x += 45;
+
+        this.alignmentGrid.placeAtIndex(69, this.lblTurma);
+        this.lblTurma.x += 130
+
+        this.alignmentGrid.placeAtIndex(71, this.lblData);
+        this.lblData.x += 50;
+
+
+    }
+
+
+    private CreateTable(scrollMode) {
+
+        this.scoreTable = this.rexUI.add.gridTable({
+            x: 848,
+            y: this.scale.height / 2 + 64,
+
+            width: 1560,
+            height: 768,
+
+            scrollMode: scrollMode,
+
+            background: this.rexUI.add.roundRectangle(-100, 0, 8, 10, 10, 0xe79946),
+
+            table: {
+                cellWidth: 50,
+                cellHeight: 50,
+                columns: 6,
+
+                mask: {
+                    padding: 2,
+                    updateMode: 0,
+                },
+
+                reuseCellContainer: true,
+            },
+
+
+
+            slider: {
+                track: this.rexUI.add.roundRectangle(0, 0, 18, 10, 10, 0x260e04),
+                thumb: this.rexUI.add.roundRectangle(0, 0, 32, 32, 13, 0xc85c02),
+            },
+            space: {
+                left: 10,
+                right: 26,
+                top: 132,
+                bottom: 30,
+
+                table: 10,
+                header: 10,
+                footer: 10,
+            },
+
+            createCellContainerCallback: function (cell, cellContainer) {
+                let newwith;
+
+                if (cell.index % 6 == 0) {//index
+                    newwith = 10;
+                }
+                if (cell.index % 6 == 1) {//nome
+                    newwith = 10;
+                }
+                if (cell.index % 6 == 2) {//pontos
+                    newwith = 500;
+                }
+                if (cell.index % 6 == 3) {//Escola
+                    newwith = 1305;
+                }
+                if (cell.index % 6 == 4) {//turm
+                    newwith = 2140;
+                }
+                if (cell.index % 6 == 5) {
+                    newwith = 2370;
+                }
+
+
+                var scene = cell.scene,
+                    width = newwith,
+                    height = cell.height,
+                    item = cell.item,
+                    index = cell.index,
+
+                    cellContainer = scene.rexUI.add.label({
+                        width: width,
+                        height: height,
+
+                        orientation: 'top-to-bottom',
+                        text: scene.add.text(50, 50, item.name, { fontFamily: 'Bubblegum', fontSize: 21, color: '#000000', align: 'center' }),
+                        align: 'center',
+                    });
+
+                return cellContainer;
+            },
+            items: this.CreateItems(600)
+        })
+            .layout()
+    }
+
+    private CreateItems(count) {
+        var data = new Array<object>();
+        for (var i = 0; i < count; i++) {
+            if (this.databaseData[i] != '') {
+                console.log("Database data: ")
+                console.log(this.databaseData[i]);
+                data.push({
+                    name: this.databaseData[i],
+                });
+            }
+        }
+        if (this.databaseData.length < 4) {
+            return []
+        }
+
+        console.log("Create items data")
+        console.log(data);
+
+        return data;
+    }
+
+    /**
+     * Creates an array filled with strings relating to the school years from 2015 until the current year.
+     * This procedure is used, only, when we're creating the fitlers for each school year on the topmost portion on the right side of the screen.
+     * 
+     * @return An array with strings for each school year interval, i.e: an array like ["Todos", "20-21", "18-19", "17-18", "16-17", "15-16"]
+     */
+    private CreateSchoolYears(): Array<string> {
+        var data = new Array<string>();
+
+        var d = new Date();
+        var m = d.getMonth();
+        var n = d.getFullYear();
+        if (m > 7) {
+            var x = n;
+            var y = n + 1;
+        }
+        else {
+            var x = n - 1;
+            var y = n;
+        }
+        let di = x + '-09-01';
+        let df = y + '-08-31';
+        let j = 15;
+        for (let i = 2015; i < y; i++) {
+
+            data.push('' + j.toString() + '-' + (j + 1).toString());
+            j++;
+        }
+        data.push('Todos');
+        data = data.reverse();
+
+        return data;
+    }
+
+
+
+    /**
+     *  Sets up the "Go back to menu" button.
+     **/
+    private SetupMenuButton(): void {
+        this.btnMainMenu = new BetterButton(this, 96, 96, 0.9, 0.9, '', {}, 'btn_gotoMenu');
+        this.btnMainMenu.on('pointerup', () => this.scene.start('MainMenu'));
+    }
+
+    /**
+     * Procedure responsible for the setting up of the labels and their radio buttons.
+     * These labels are the ones we see on the right side of the screen (the filter).
+     * 
+     * The radio buttons have the UpdateTop() procedure assocciated because we want the table to update when we click them.
+     */
+    private SetupLabels(): void {
         this.lblAnoLetivo = new BetterText(this, 0, 0, 'Ano Letivo', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
         this.alignmentGrid.placeAtIndex(58, this.lblAnoLetivo);
         this.lblAnoLetivo.x += 32
@@ -574,233 +779,16 @@ export class RankingScene extends Phaser.Scene {
         this.iconTodos.setFillStyle('0x000000');
         this.iconFacil.setFillStyle('0x000000');
 
-
-        if (LoginData.GetUser() == '') {
-            this.lblFiltro.visible = false;
-            this.lblFiltroTurma.visible = false;
-            this.iconTurma.visible = false;
-            this.lblFiltroEscola.visible = false;
-            this.iconEscola.visible = false;
-            this.lblFiltroTodos.visible = false;
-            this.iconTodos.visible = false;
-        }
+    }
 
 
-
-
-
-        this.events.on('transitionstart', (fromScene, duration) => {
-
-            this.scoreTable.y += this.scale.height;
-            this.lblJogador.y += this.scale.height;
-            this.lblPontos.y += this.scale.height;
-            this.lblEscola.y += this.scale.height;
-            this.lblTurma.y += this.scale.height;
-            this.lblData.y += this.scale.height;
-            this.schoolYearDropdown.y += this.scale.height;
-            this.lblAnoLetivo.y += this.scale.height;
-            this.lblDificil.y += this.scale.height;
-            this.iconDificil.y += this.scale.height;
-            this.lblNormal.y += this.scale.height;
-            this.iconNormal.y += this.scale.height;
-            this.lblFacil.y += this.scale.height;
-            this.iconFacil.y += this.scale.height;
-            this.lblDificuldade.y += this.scale.height;
-            this.lblFiltro.y += this.scale.height;
-            this.lblFiltroTurma.y += this.scale.height;
-            this.iconTurma.y += this.scale.height;
-            this.lblFiltroEscola.y += this.scale.height;
-            this.iconEscola.y += this.scale.height;
-            this.lblFiltroTodos.y += this.scale.height;
-            this.iconTodos.y += this.scale.height;
-            this.filterBackground.y += this.scale.height;
-
-            this.tweens.add({
-                delay: 1000,
-                targets: [this.scoreTable, this.lblJogador,
-                this.lblPontos, this.lblEscola, this.lblTurma,
-                this.lblData, this.schoolYearDropdown, this.lblAnoLetivo,
-                this.lblDificil, this.iconDificil, this.lblNormal,
-                this.iconNormal, this.lblFacil, this.iconFacil,
-                this.lblDificuldade, this.lblFiltro, this.lblFiltroTurma,
-                this.iconTurma, this.lblFiltroEscola, this.iconEscola,
-                this.lblFiltroTodos, this.iconTodos, this.filterBackground],
-                duration: 5000,
-                y: '-=' + this.scale.height,
-                ease: 'Power2',
-            });
-
-        }, this);
-
-        this.lblJogador = new BetterText(this, 0, 0, 'Jogador', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-        this.lblPontos = new BetterText(this, 0, 0, 'Pontos', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-        this.lblEscola = new BetterText(this, 0, 0, 'Escola', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-        this.lblTurma = new BetterText(this, 0, 0, 'Turma', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-        this.lblData = new BetterText(this, 0, 0, 'Data', { fontFamily: 'Folks-Bold', fontSize: 40, color: '#403217' });
-
-
-
-        this.alignmentGrid.placeAtIndex(61, this.lblJogador);
-
-        this.alignmentGrid.placeAtIndex(63, this.lblPontos);
-        this.lblPontos.x -= 20;
-
-        this.alignmentGrid.placeAtIndex(66, this.lblEscola);
-        this.lblEscola.x += 45;
-
-        this.alignmentGrid.placeAtIndex(69, this.lblTurma);
-        this.lblTurma.x += 130
-
-        this.alignmentGrid.placeAtIndex(71, this.lblData);
-        this.lblData.x += 50;
-
+    private LoadEmptyScene(): void {
 
     }
 
 
-    private CreateTable(scrollMode) {
 
-        this.scoreTable = this.rexUI.add.gridTable({
-            x: 848,
-            y: this.scale.height / 2 + 64,
-
-            width: 1560,
-            height: 768,
-
-            scrollMode: scrollMode,
-
-            background: this.rexUI.add.roundRectangle(-100, 0, 8, 10, 10, 0xe79946),
-
-            table: {
-                cellWidth: 50,
-                cellHeight: 50,
-                columns: 6,
-
-                mask: {
-                    padding: 2,
-                    updateMode: 0,
-                },
-
-                reuseCellContainer: true,
-            },
-
-
-
-            slider: {
-                track: this.rexUI.add.roundRectangle(0, 0, 18, 10, 10, 0x260e04),
-                thumb: this.rexUI.add.roundRectangle(0, 0, 32, 32, 13, 0xc85c02),
-            },
-            space: {
-                left: 10,
-                right: 26,
-                top: 132,
-                bottom: 30,
-
-                table: 10,
-                header: 10,
-                footer: 10,
-            },
-
-            createCellContainerCallback: function (cell, cellContainer) {
-                let newwith;
-
-                if (cell.index % 6 == 0) {//index
-                    newwith = 10;
-                }
-                if (cell.index % 6 == 1) {//nome
-                    newwith = 10;
-                }
-                if (cell.index % 6 == 2) {//pontos
-                    newwith = 500;
-                }
-                if (cell.index % 6 == 3) {//Escola
-                    newwith = 1305;
-                }
-                if (cell.index % 6 == 4) {//turm
-                    newwith = 2140;
-                }
-                if (cell.index % 6 == 5) {
-                    newwith = 2370;
-                }
-
-
-                var scene = cell.scene,
-                    width = newwith,
-                    height = cell.height,
-                    item = cell.item,
-                    index = cell.index,
-
-                    cellContainer = scene.rexUI.add.label({
-                        width: width,
-                        height: height,
-
-                        orientation: 'top-to-bottom',
-                        text: scene.add.text(50, 50, item.name, { fontFamily: 'Bubblegum', fontSize: 21, color: '#000000', align: 'center' }),
-                        align: 'center',
-                    });
-
-                return cellContainer;
-            },
-            items: this.CreateItems(600)
-        })
-            .layout()
-    }
-
-    private CreateItems(count) {
-        var data = new Array<object>();
-        for (var i = 0; i < count; i++) {
-            if (this.databaseData[i] != '') {
-                data.push({
-                    name: this.databaseData[i],
-                });
-            }
-        }
-        if (this.databaseData.length < 4) {
-            return []
-        }
-        return data;
-    }
-
-    private selectYear() {
-        var data = new Array<string>();
-
-        var d = new Date();
-        var m = d.getMonth();
-        var n = d.getFullYear();
-        if (m > 7) {
-            var x = n;
-            var y = n + 1;
-        }
-        else {
-            var x = n - 1;
-            var y = n;
-        }
-        let di = x + '-09-01';
-        let df = y + '-08-31';
-        let j = 15;
-        for (let i = 2015; i < y; i++) {
-
-            data.push('' + j.toString() + '-' + (j + 1).toString());
-            j++;
-        }
-        data.push('Todos');
-        data = data.reverse();
-        return data;
-    }
-
-
-
-    /**
-     *  Sets up the "Go back to menu" button.
-     **/
-    private Setup_Button_Back(): void {
-        this.m_btn_BackToMenu = new BetterButton(this, 96, 96, 0.9, 0.9, '', {}, 'btn_gotoMenu');
-        this.m_btn_BackToMenu.on('pointerup', () => this.scene.start('MainMenu'));
-    }
+    /* ======================== Connection with backend =================== */
 
 
     /**
@@ -815,6 +803,8 @@ export class RankingScene extends Phaser.Scene {
 
 
             let parsedData = ParsedUpdatedScoreData(data);
+            console.log("Parse data")
+            console.log(parsedData);
             if (parsedData.length < 4)
                 this.scoreTable.setItems([]);
             else
@@ -827,10 +817,6 @@ export class RankingScene extends Phaser.Scene {
             alert("Não foi possível estabelecer ligação. Por favor tente mais tarde.")
 
         });
-    }
-
-    private LoadEmptyScene(): void {
-
     }
 
 

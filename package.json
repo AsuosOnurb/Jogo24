@@ -64,6 +64,7 @@
     "mathjs": "^9.3.2",
     "phaser": "^3.53.1",
     "phaser3-rex-plugins": "^1.1.46",
-    "typedoc": "^0.20.36"
+    "typedoc": "^0.20.36",
+    "typedoc-theme-dark": "0.0.5"
   }
 }
