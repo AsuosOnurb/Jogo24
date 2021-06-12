@@ -1,6 +1,6 @@
 
 import Phaser, { Game } from 'phaser'
-import { RandomInt } from '../game/Utils';
+import { RandomInt } from '../utils/Utils';
 import { BetterText } from './BetterText'
 
 

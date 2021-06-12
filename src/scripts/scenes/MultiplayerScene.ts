@@ -8,14 +8,14 @@
 
 import Phaser from 'phaser'
 
-import { BetterText } from '../better/BetterText'
-import { BetterButton } from '../better/BetterButton'
-import { Solutions } from '../game/Solutions'
+import { BetterText } from '../components/BetterText'
+import { BetterButton } from '../components/BetterButton'
+import { Solutions } from '../utils/Solutions'
 import { MultiplayerGame, PlayerState } from '../game/MultiplayerGame';
-import { Difficulty } from '../game/CardGenerator';
-import { Minicard } from '../better/Minicard';
-import { ValueOfExpression } from '../game/Utils';
-import { CountdownTimer } from '../game/CountdownTimer';
+import { Difficulty } from '../utils/CardGenerator';
+import { Minicard } from '../components/Minicard';
+import { ValueOfExpression } from '../utils/Utils';
+import { CountdownTimer } from '../components/CountdownTimer';
 
 
 export class MultiplayerScene extends Phaser.Scene {
@@ -163,7 +163,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.btnOperationDivide.SetDisabled();
 
         // Update the solution debug text
-        this.textSolution.setText(`Solução: ${Solutions.getSolution(generatedCard)}`);
+        this.textSolution.setText(`Solução: ${Solutions.GetSolution(generatedCard)}`);
 
         // Clear the text from expression bars
         for (let i = 0; i < 4; i++)
@@ -763,7 +763,7 @@ export class MultiplayerScene extends Phaser.Scene {
     HandleButtonClick_PeekSolution() : void 
     {
         // Get the suggested solution for this card
-        const solution: string = Solutions.getSolution(this.m_GameState.GetCurrentCard());
+        const solution: string = Solutions.GetSolution(this.m_GameState.GetCurrentCard());
 
 
         // Show the solution in all expression bars

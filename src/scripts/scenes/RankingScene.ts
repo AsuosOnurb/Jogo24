@@ -7,9 +7,9 @@
 
 
 import Phaser from 'phaser'
-import { AlignGrid } from '../better/AlignGrid';
-import { BetterButton } from '../better/BetterButton';
-import { BetterText } from '../better/BetterText';
+import { AlignGrid } from '../utils/external/AlignGrid'
+import { BetterButton } from '../components/BetterButton';
+import { BetterText } from '../components/BetterText';
 import { BackendConnection } from '../backend/BackendConnection';
 import { LoginData } from '../backend/LoginData';
 import { ParsedUpdatedScoreData, ParseScoreData } from '../backend/BackendUtils';
@@ -227,7 +227,7 @@ export class RankingScene extends Phaser.Scene {
         /* Load the RexUI's plugin */
         this.load.scenePlugin({
             key: 'rexuiplugin',
-            url: 'src/scripts/RexUI/rexuiplugin.min.js',
+            url: 'src/scripts/utils/external/RexUI/rexuiplugin.min.js',
             sceneKey: 'rexUI'
         });
 

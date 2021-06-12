@@ -9,10 +9,10 @@ import Phaser from 'phaser'
 import { BackendConnection } from '../backend/BackendConnection';
 import { LoginData } from '../backend/LoginData';
 
-import { BetterButton } from '../better/BetterButton'
-import { BetterText } from '../better/BetterText';
-import { Difficulty } from '../game/CardGenerator';
-import LoginForm from '../game/LoginForm';
+import { BetterButton } from '../components/BetterButton'
+import { BetterText } from '../components/BetterText';
+import { Difficulty } from '../utils/CardGenerator';
+import LoginForm from '../components/LoginForm';
 
 
 enum Panels {

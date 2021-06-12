@@ -1,4 +1,4 @@
-import { BetterText } from "../better/BetterText";
+import { BetterText } from "./BetterText";
 
 export class CountdownTimer {
 

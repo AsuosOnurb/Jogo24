@@ -9,10 +9,10 @@ import {evaluate} from 'mathjs'
 
 
 
-import { Operation } from './Operations'
-import { CardGenerator, Difficulty } from "./CardGenerator";
-import { Stack } from './Stack';
-import { IsNumeric } from './Utils';
+import { Operation } from '../utils/Operations'
+import { CardGenerator, Difficulty } from "../utils/CardGenerator";
+import { Stack } from '../utils/Stack';
+import { IsNumeric } from '../utils/Utils';
 
 
 export enum PlayerState {
@@ -81,7 +81,7 @@ export class MultiplayerGame {
    
 
     NewCard(): string {
-        this.mCurrentCard = CardGenerator.generateCard(this.mDifficulty);
+        this.mCurrentCard = CardGenerator.GenerateCard(this.mDifficulty);
 
         this.ResetOperationState();
 

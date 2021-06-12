@@ -32,6 +32,8 @@
     "entryPoints": [
       "./src/scripts/scenes/RankingScene.ts",
       "./src/scripts/scenes/MainMenu.ts",
+      "./src/scripts/scenes/SingleplayerScene.ts",
+      "./src/scripts/game/SingleplayerGame.ts",
       "./src/scripts/scenes/MultiplayerScene.ts",
       "./src/scripts/game/MultiplayerGame.ts"
     ],

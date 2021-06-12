@@ -55,10 +55,10 @@
 					<a href="../modules.html">Jogo24</a>
 				</li>
 				<li>
-					<a href="../modules/game_multiplayergame.html">game/MultiplayerGame</a>
+					<a href="../modules/game_singleplayergame.html">game/SingleplayerGame</a>
 				</li>
 				<li>
-					<a href="game_multiplayergame.playerstate.html">PlayerState</a>
+					<a href="game_singleplayergame.playerstate.html">PlayerState</a>
 				</li>
 			</ul>
 			<h1>Enumeration PlayerState</h1>
@@ -68,6 +68,18 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Defines the states that the player can be in.
+							A player can either be:
+							1 - Picking the first operand of an operation;
+							2 - Picking the operator of the operation.
+						3 - Picking the second (and last) operand of the operation.</p>
+					</div>
+					<p>The whole game process revolves around these three states.</p>
+				</div>
+			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -75,9 +87,9 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_multiplayergame.playerstate.html#pickingoperand1" class="tsd-kind-icon">Picking<wbr>Operand1</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_multiplayergame.playerstate.html#pickingoperand2" class="tsd-kind-icon">Picking<wbr>Operand2</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_multiplayergame.playerstate.html#pickingoperator" class="tsd-kind-icon">Picking<wbr>Operator</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_singleplayergame.playerstate.html#pickingoperand1" class="tsd-kind-icon">Picking<wbr>Operand1</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_singleplayergame.playerstate.html#pickingoperand2" class="tsd-kind-icon">Picking<wbr>Operand2</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_singleplayergame.playerstate.html#pickingoperator" class="tsd-kind-icon">Picking<wbr>Operator</a></li>
 							</ul>
 						</section>
 					</div>
@@ -88,30 +100,30 @@
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="pickingoperand1" class="tsd-anchor"></a>
 					<h3>Picking<wbr>Operand1</h3>
-					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operand1<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
+					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operand1<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 0</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/b281ce3/src/scripts/game/MultiplayerGame.ts#L19">src/scripts/game/MultiplayerGame.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/b281ce3/src/scripts/game/SingleplayerGame.ts#L20">src/scripts/game/SingleplayerGame.ts:20</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="pickingoperand2" class="tsd-anchor"></a>
 					<h3>Picking<wbr>Operand2</h3>
-					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operand2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 3</span></div>
+					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operand2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/b281ce3/src/scripts/game/MultiplayerGame.ts#L21">src/scripts/game/MultiplayerGame.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/b281ce3/src/scripts/game/SingleplayerGame.ts#L22">src/scripts/game/SingleplayerGame.ts:22</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
 					<a name="pickingoperator" class="tsd-anchor"></a>
 					<h3>Picking<wbr>Operator</h3>
-					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
+					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/b281ce3/src/scripts/game/MultiplayerGame.ts#L20">src/scripts/game/MultiplayerGame.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/b281ce3/src/scripts/game/SingleplayerGame.ts#L21">src/scripts/game/SingleplayerGame.ts:21</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -123,10 +135,10 @@
 					<li class=" ">
 						<a href="../modules.html">Modules</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/game_multiplayergame.html">game/<wbr>Multiplayer<wbr>Game</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/game_singleplayergame.html">game/<wbr>Singleplayer<wbr>Game</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -148,23 +160,23 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-enum tsd-parent-kind-module">
-						<a href="game_multiplayergame.playerstate.html" class="tsd-kind-icon">Player<wbr>State</a>
+						<a href="game_singleplayergame.playerstate.html" class="tsd-kind-icon">Player<wbr>State</a>
 						<ul>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="game_multiplayergame.playerstate.html#pickingoperand1" class="tsd-kind-icon">Picking<wbr>Operand1</a>
+								<a href="game_singleplayergame.playerstate.html#pickingoperand1" class="tsd-kind-icon">Picking<wbr>Operand1</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="game_multiplayergame.playerstate.html#pickingoperand2" class="tsd-kind-icon">Picking<wbr>Operand2</a>
+								<a href="game_singleplayergame.playerstate.html#pickingoperand2" class="tsd-kind-icon">Picking<wbr>Operand2</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="game_multiplayergame.playerstate.html#pickingoperator" class="tsd-kind-icon">Picking<wbr>Operator</a>
+								<a href="game_singleplayergame.playerstate.html#pickingoperator" class="tsd-kind-icon">Picking<wbr>Operator</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
 					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/game_multiplayergame.multiplayergame.html" class="tsd-kind-icon">Multiplayer<wbr>Game</a>
+						<a href="../classes/game_singleplayergame.singleplayergame.html" class="tsd-kind-icon">Singleplayer<wbr>Game</a>
 					</li>
 				</ul>
 			</nav>
