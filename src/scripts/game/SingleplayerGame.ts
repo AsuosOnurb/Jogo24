@@ -106,27 +106,49 @@ export class SingleplayerGame {
 
 
     /**
-     * Generates a new card (string representation) based on the game's difficulty.
+     * Resets the game state.
      * 
-     * @returns The string representation of the generated card.
-     * 
-     * @remarks This function also modifies the {@link SingleplayerGame.currentCard} member variable with the new generated card string.
+     * @remarks This procedure does 3 things:
+     * 1. Starts by generating a new card.
+     * 2. Then resets the current operation's state.
+     * 3. And completely deletes/wipes the operations stack.
      */
-    NewCard(): string {
+    public NewCard(): void {
+        // Generate a new card
         this.currentCard = CardGenerator.GenerateCard(this.difficulty);
-        return this.currentCard;
+
+        // Reset the operation state
+        this.ResetOperationState();
+
+        // Reset The operation stack
+        this.ResetOperationStack();
     }
 
-
-    PushCurrentOperation() {
+    /**
+     * Completes the current operation's construction process by pushing it to the operations stack.
+     */
+    public PushCurrentOperation() {
         this.operationStack.push(this.currentOperation);
     }
 
-    PeekCurrentOperation(): Operation {
+    /**
+     * Allows inspection of the current operation.
+     * @returns The current operation that is being constructed.
+     * 
+     * @remarks As the function name implies, we're not executing a pop() form the operations stack. 
+     * This means we can peek the operation value without affecting the stack.
+     */
+    public PeekCurrentOperation(): Operation {
         return this.currentOperation;
     }
 
-    RevertToLastOperation(): Operation | undefined {
+    /**
+     * Pops the topmost operation on the stack and assigns it to the current operation.
+     * @returns The new operation that now has the previous operation's values. May also return an empty/undefined object if the stack is empty.
+     *      
+     * @remarks This function alters the operations stack data.
+     */
+    public RevertToLastOperation(): Operation | undefined {
         let lastOp = this.operationStack.pop();
 
         if (!lastOp)
@@ -137,8 +159,21 @@ export class SingleplayerGame {
 
     }
 
+    /**
+     * Finalizes the whole process of operation construction.
+     * @param operand2 The second operand of the operation.
+     * @param operand2Index The index of the card button associated with the second operand.
+     * 
+     * @returns The arithmetic expression associated with the current/completed operation.
+     */
 
-    CompleteOperation(): string {
+    public CompleteOperation(operand2, operand2Index): string {
+
+        // Assign the second operand
+        this.currentOperation.operand2 = operand2;
+        this.currentOperation.operand2BtnIndex = operand2Index;
+
+        let operationExpression;
         if (IsNumeric(this.currentOperation.operand1) && IsNumeric(this.currentOperation.operand2)) {
             this.currentOperation.expression = `${this.currentOperation.operand1}${this.currentOperation.operator}${this.currentOperation.operand2}`;
         }
@@ -146,7 +181,7 @@ export class SingleplayerGame {
             this.currentOperation.expression = `${this.currentOperation.operand1}${this.currentOperation.operator}(${this.currentOperation.operand2})`;
 
         } else if (!IsNumeric(this.currentOperation.operand1) && IsNumeric(this.currentOperation.operand2)) {
-            this.currentOperation.expression = `(${this.currentOperation.operand1})${this.currentOperation.operator }${this.currentOperation.operand2}`;
+            this.currentOperation.expression = `(${this.currentOperation.operand1})${this.currentOperation.operator}${this.currentOperation.operand2}`;
         }
         else if (!IsNumeric(this.currentOperation.operand1) && !IsNumeric(this.currentOperation.operand2)) {
             this.currentOperation.expression = `(${this.currentOperation.operand1})${this.currentOperation.operator}(${this.currentOperation.operand2})`;
@@ -154,11 +189,26 @@ export class SingleplayerGame {
         else
             this.currentOperation.expression = "ERROR";
 
-        return this.currentOperation.expression;
+        // Save the expression we want to return
+        operationExpression = this.currentOperation.expression;
+
+        // Push the operation ot the stack
+        this.operationStack.push(this.currentOperation);
+
+        // The cycle restarts. The player now has to pick the first operand for a whole new operation.
+        this.ResetOperationState();
+
+        return operationExpression;
     }
 
-    CheckSolution(expression: string): boolean {
-        const val = evaluate(expression.replaceAll("x", "*"));
+
+    /**
+     * Check whether or not the expression/operation correctly equates to 24.
+     * @param operationExpression The arithmetic expression to test.
+     * @returns True if the specified operation's expression value equals 24. Returns false otherwise.
+     */
+    public CheckSolution(operationExpression: string): boolean {
+        const val = evaluate(operationExpression.replaceAll("x", "*"));
         return val === 24;
     }
 

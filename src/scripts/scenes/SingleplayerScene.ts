@@ -251,14 +251,14 @@ export class SingleplayerScene extends Phaser.Scene {
 
     NewCard(): void {
 
-        let generatedCard = this.gameState.NewCard();
-        this.gameState.ResetOperationState();
+        // Tell the single player game that we're going to be playing a new card.
+        this.gameState.NewCard();
 
         // Change the current card number buttons and store the card numbers
-        for (let i = 0; i < generatedCard.length; i++) {
+        for (let i = 0; i < this.gameState.GetCurrentCard().length; i++) {
 
             // Set the text of the number button
-            this.m_CardButtons[i].SetText(generatedCard[i]);
+            this.m_CardButtons[i].SetText(this.gameState.GetCurrentCard()[i]);
 
             // Enable the button
             this.m_CardButtons[i].SetEnabled();
@@ -278,7 +278,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.btnUndo.SetDisabled();
 
         // Update the solution debug text
-        this.textSolution.setText(`[DEBUG] Solução: ${Solutions.GetSolution(generatedCard)}`);
+        this.textSolution.setText(`[DEBUG] Solução: ${Solutions.GetSolution(this.gameState.GetCurrentCard())}`);
 
         // Clear the expression text
         this.expressionBar.SetText("");
@@ -286,7 +286,7 @@ export class SingleplayerScene extends Phaser.Scene {
         // Reset game state
         this.gameState.ResetOperationState();
         this.gameState.ResetOperationStack();
-        this.gameState.SetCard(generatedCard);
+        this.gameState.SetCard(this.gameState.GetCurrentCard());
 
         // Reset expression bar text color
         this.expressionBar.SetTextColor("#FFFFFF");
@@ -339,14 +339,13 @@ export class SingleplayerScene extends Phaser.Scene {
 
         } else if (state === PlayerState.PickingOperand2) {
 
-            this.gameState.SetOperand2(pickedNumber, clickedButtonIndex);
+            // Complete the current operation and get its expression 
+            const expression = this.gameState.CompleteOperation(pickedNumber, clickedButtonIndex);
 
-            // Update the button text if the button we just clicked was the 2nd operand
-            const expression = this.gameState.CompleteOperation();
-
+            // Assigne the operation expression to the button we just clicked
             this.m_CardButtons[clickedButtonIndex].NumberButtonSetText(expression);
 
-            // Set the text on the expression bar
+            // Also insert the expression on the expression bar
             this.expressionBar.SetText(expression);
 
             /*
@@ -380,9 +379,7 @@ export class SingleplayerScene extends Phaser.Scene {
                 this.btnUndo.SetDisabled();
             }
 
-            // Push the operation 
-            this.gameState.PushCurrentOperation();
-            this.gameState.ResetOperationState()
+           
         }
 
 
