@@ -58,7 +58,9 @@ export class SingleplayerScene extends Phaser.Scene {
     */
     private m_CardButtons: Array<BetterButton>;
     private m_BtnUsed: Array<Boolean>;
-    constructor() {
+
+
+    private constructor() {
         super("SoloGame");
     }
 
@@ -71,7 +73,7 @@ export class SingleplayerScene extends Phaser.Scene {
    *
    * 
    */
-    preload() {
+    private preload() {
 
         // Add background image window
         const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
@@ -117,19 +119,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    /**
-   * Returns the average of two numbers.
-   *
-   * @remarks
-   * This method is part of the {@link core-library#Statistics | Statistics subsystem}.
-   *
-   * @param x - The first input number
-   * @param y - The second input number
-   * @returns The arithmetic mean of `x` and `y`
-   *
-   * @beta
-   */
-    init(data) {
+  
+    private init(data) {
 
         this.gameState = new SingleplayerGame(data.difficulty);
 
@@ -170,7 +161,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    Setup_Labels() {
+    private Setup_Labels() {
 
 
         this.textTotalCorrect = new BetterText(this, this.scale.width / 2 + 740, 128, "0", { fontFamily: 'Vertiky', fontSize: 40, color: "#ffffff", fontStyle: "bold" })
@@ -180,7 +171,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    Setup_Buttons() {
+    private Setup_Buttons() {
 
         // 'New Card' button
         this.btnNewCard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2, 0.6, 0.6, "", {}, "btn_playCard");
@@ -249,7 +240,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    NewCard(): void {
+    private NewCard(): void {
 
         // Tell the single player game that we're going to be playing a new card.
         this.gameState.NewCard();
@@ -283,10 +274,7 @@ export class SingleplayerScene extends Phaser.Scene {
         // Clear the expression text
         this.expressionBar.SetText("");
 
-        // Reset game state
-        this.gameState.ResetOperationState();
-        this.gameState.ResetOperationStack();
-        this.gameState.SetCard(this.gameState.GetCurrentCard());
+       
 
         // Reset expression bar text color
         this.expressionBar.SetTextColor("#FFFFFF");
@@ -302,12 +290,11 @@ export class SingleplayerScene extends Phaser.Scene {
     /**
         Callback that handles the click of a number button (one of the numbers on the card)
     */
-    HandleButtonClick_Number(clickedButtonIndex: number): void {
+    private HandleButtonClick_Number(clickedButtonIndex: number): void {
 
 
 
         const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
-        const state = this.gameState.GetCurrentPlayerState();
 
         // Enable reset btn
         this.btnReset.SetEnabled();
@@ -315,7 +302,7 @@ export class SingleplayerScene extends Phaser.Scene {
         // Enable undo btn
         this.btnUndo.SetEnabled();
 
-        if (this.gameState.GetCurrentPlayerState() === PlayerState.PickingOperand1) {
+        if (this.gameState.GetPlayerState() === PlayerState.PickingOperand1) {
 
             // this.m_CardButtons[clickedButtonIndex].SetDisabled();
 
@@ -325,8 +312,8 @@ export class SingleplayerScene extends Phaser.Scene {
             // Also enable the operation buttons
             this.EnableOperationButtons();
 
-            // Update current operation
-            this.gameState.SetOperand1(pickedNumber, clickedButtonIndex);
+            // Update current operation. This also sends the player to the next state (now he has to pick the operator)
+            this.gameState.PickOperand1(pickedNumber, clickedButtonIndex);
 
             // Update the expression text
             this.expressionBar.SetText(pickedNumber);
@@ -334,13 +321,12 @@ export class SingleplayerScene extends Phaser.Scene {
             // Disable the number buttons
             this.DisableNumberButtons();
 
-            this.gameState.NextState();
 
 
-        } else if (state === PlayerState.PickingOperand2) {
+        } else if (this.gameState.GetPlayerState() === PlayerState.PickingOperand2) {
 
             // Complete the current operation and get its expression 
-            const expression = this.gameState.CompleteOperation(pickedNumber, clickedButtonIndex);
+            const expression = this.gameState.PickOperand2(pickedNumber, clickedButtonIndex);
 
             // Assigne the operation expression to the button we just clicked
             this.m_CardButtons[clickedButtonIndex].NumberButtonSetText(expression);
@@ -379,17 +365,16 @@ export class SingleplayerScene extends Phaser.Scene {
                 this.btnUndo.SetDisabled();
             }
 
-           
-        }
 
+        }
 
 
     }
 
-    HandleButtonClick_Operation(operator: string) {
+    private HandleButtonClick_Operation(operator: string) {
 
-        const mostRecentExpression: string = this.gameState.SetOperator(operator);
-        this.gameState.NextState();
+        // Pick the operator and get the most updated expression string. Also, this call sendds us to the next state (pickign operand 2)
+        const mostRecentExpression: string = this.gameState.PickOperator(operator);
 
         // Enable card buttons
         this.EnableNumberButtons();
@@ -405,10 +390,10 @@ export class SingleplayerScene extends Phaser.Scene {
      * 
      * Currently, we're using a stack made of Operation objects.
      */
-    HandleButtonClick_Undo(): void {
+    private HandleButtonClick_Undo(): void {
 
-        const currentPlayerState: PlayerState = this.gameState.GetCurrentPlayerState()
-        if (currentPlayerState === PlayerState.PickingOperand1) {
+
+        if (this.gameState.GetPlayerState() === PlayerState.PickingOperand1) {
             /* 
                The user has not yet picked the first operand.
                The fact that he pressed 'Undo' means that he wants to go back to the previous operation. 
@@ -435,7 +420,7 @@ export class SingleplayerScene extends Phaser.Scene {
             // Update the text expression bar
             this.expressionBar.SetText("");
 
-        } else if (currentPlayerState === PlayerState.PickingOperator) {
+        } else if (this.gameState.GetPlayerState() === PlayerState.PickingOperator) {
             /*
                 Player picked the first operand, and now he is supposed to be picking the operator.
                 But he wants to go back, so he can re-select the first operand.
@@ -463,7 +448,7 @@ export class SingleplayerScene extends Phaser.Scene {
             // Set the new state to PickingOperand1
             this.gameState.SetPlayerState(PlayerState.PickingOperand1);
         }
-        else if (currentPlayerState === PlayerState.PickingOperand2) {
+        else if (this.gameState.GetPlayerState() === PlayerState.PickingOperand2) {
             /*
                 Player picked the operator, but now we wants to go back and select a different one.
 
@@ -492,16 +477,24 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Disable the undo button if the operation stac is empty
         if (this.gameState.IsStackEmpty())
+        {
             this.btnUndo.SetDisabled();
+            console.log("Stack is empty. Disabling undo button");
+
+            //////// handle undo after btn reset!!!
+        }
 
     }
 
     // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
-    HandleButtonClick_Reset(): void {
-        // Reset game state
-        this.gameState.ResetOperationState();
+    private HandleButtonClick_Reset(): void {
+
+        // Completely reset game (while keeping the scores of course)
+        this.gameState.CompleteReset();
 
         this.DisableOperationButtons();
+        this.btnReset.SetDisabled();
+        this.btnUndo.SetDisabled();
 
         this.EnableNumberButtons();
         this.ResetNumberButtons();
@@ -513,14 +506,14 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
 
-    ShowPlayerWon(expression: string): void {
+    private ShowPlayerWon(expression: string): void {
         this.expressionBar.SetText(expression + ` = ${24}`);
         this.expressionBar.SetTextColor("#00ff1a");
         this.textTotalCorrect.setText(this.gameState.GetTotalCorrect().toString());
         this.expressionBar.PlayCorrectExpressionTween();
     }
 
-    ShowPlayerLost(expression: string): void {
+    private ShowPlayerLost(expression: string): void {
         this.expressionBar.SetText(expression + ` = ${ValueOfExpression(expression)}`);
         this.expressionBar.SetTextColor("#ff2600");
         this.textTotalWrong.setText(this.gameState.GetTotalWrong().toString());
@@ -530,33 +523,33 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
 
-    EnableNumberButtons() {
+    private EnableNumberButtons() {
         for (let i = 0; i < 4; i++) {
             if (this.m_BtnUsed[i] === false)
                 this.m_CardButtons[i].SetEnabled();
         }
     }
 
-    DisableNumberButtons() {
+    private DisableNumberButtons() {
         for (let i = 0; i < 4; i++) {
             this.m_CardButtons[i].SetDisabled();
         }
     }
 
-    EnableOperationButtons(): void {
+    private EnableOperationButtons(): void {
         this.btnOperationAdd.SetEnabled();
         this.btnOperationSubtract.SetEnabled();
         this.btnOperationDivide.SetEnabled();
         this.btnOperationMultiply.SetEnabled();
     }
-    DisableOperationButtons(): void {
+    private DisableOperationButtons(): void {
         this.btnOperationAdd.SetDisabled();
         this.btnOperationSubtract.SetDisabled();
         this.btnOperationDivide.SetDisabled();
         this.btnOperationMultiply.SetDisabled();
     }
 
-    ResetNumberButtons(): void {
+    private ResetNumberButtons(): void {
         for (let i = 0; i < 4; i++) {
             this.m_CardButtons[i].SetText(this.gameState.GetCurrentCard()[i])
             this.m_CardButtons[i].SetFontSize(128);
@@ -572,7 +565,7 @@ export class SingleplayerScene extends Phaser.Scene {
      * Activates when the countdown timer rings (reaches zero).
      * Activates only once during the whole game.
      */
-    NoTimeLeft() {
+    private NoTimeLeft() {
         for (let i = 0; i < 4; i++)
             this.m_CardButtons[i].SetDisabled();
 
@@ -619,7 +612,7 @@ export class SingleplayerScene extends Phaser.Scene {
         saying if he got a new record, if he got a global record (top100), a school or class record.
     */
 
-    ShowGameResults(playerScore: number): void {
+    private ShowGameResults(playerScore: number): void {
 
         const playerName: string = LoginData.GetFirstName();
         let winMessage: string = ``;
@@ -711,7 +704,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    SendScoreToDB(playerScore: number): void {
+    private SendScoreToDB(playerScore: number): void {
 
         const diff = this.gameState.difficulty + 1;
 
@@ -735,7 +728,7 @@ export class SingleplayerScene extends Phaser.Scene {
     /*
         Makes a warning appear, telling the user to login if he wants to save his score.
     */
-    ShowPleaseLoginWarning(playerScore: number): void {
+    private ShowPleaseLoginWarning(playerScore: number): void {
 
         let messsage: string = ``;
 

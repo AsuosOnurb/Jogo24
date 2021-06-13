@@ -9,10 +9,11 @@ import { Stack } from '../utils/Stack'
 
 /**
  * Defines the states that the player can be in.
+ * 
  * A player can either be:
- * 1 - Picking the first operand of an operation;
- * 2 - Picking the operator of the operation.
- * 3 - Picking the second (and last) operand of the operation.
+ * 1. Picking the first operand of an operation;
+ * 2. Picking the operator of the operation.
+ * 3. Picking the second (and last) operand of the operation.
  * 
  * The whole game process revolves around these three states.
  */
@@ -124,50 +125,74 @@ export class SingleplayerGame {
         this.ResetOperationStack();
     }
 
-    /**
-     * Completes the current operation's construction process by pushing it to the operations stack.
-     */
-    public PushCurrentOperation() {
-        this.operationStack.push(this.currentOperation);
-    }
+
 
     /**
-     * Allows inspection of the current operation.
-     * @returns The current operation that is being constructed.
+     * Check whether or not the expression/operation correctly equates to 24.
+     * @param operationExpression The arithmetic expression to test.
+     * @returns True if the specified operation's expression value equals 24. Returns false otherwise.
+     */
+    public CheckSolution(operationExpression: string): boolean {
+        const val = evaluate(operationExpression.replaceAll("x", "*"));
+        return val === 24;
+    }
+
+
+    /* ============================== Picking operands and operator =================================== */
+
+    /**
+     * Sets the first operand of the current operation.
+     * @param operand1 The (string) value of the first operand. It's astring value because we get it from its button and we also don't care about its numerical value.
+     * @param operand1BtnIndex The index of the button associated with this operand.
      * 
-     * @remarks As the function name implies, we're not executing a pop() form the operations stack. 
-     * This means we can peek the operation value without affecting the stack.
+     * @remarks This procedure is does more than just setting the first operand. It also sets/advances the player state to {@link PlayerState.PickingOperator}.
      */
-    public PeekCurrentOperation(): Operation {
-        return this.currentOperation;
+    public PickOperand1(operand1: string, operand1BtnIndex: number): void {
+        // Update the current operation
+        this.currentOperation.operand1 = operand1;
+        this.currentOperation.operand1BtnIndex = operand1BtnIndex;
+
+        // Advance to the next state (if we're here, it means the player now has to pick the operator)
+        this.playerState = PlayerState.PickingOperator;
     }
 
     /**
-     * Pops the topmost operation on the stack and assigns it to the current operation.
-     * @returns The new operation that now has the previous operation's values. May also return an empty/undefined object if the stack is empty.
-     *      
-     * @remarks This function alters the operations stack data.
+     * Sets the operator of the current operation.
+     * @param operator The string representation of the operator, i.e: '+', '-', '*', '/' .
+     * @returns The most up-to-date string representation of the current arithmetic expression (includes the operator itself).
+     * 
+     * @remarks This function also advances the player state to {@link PlayerState.PickingOperand2}.
      */
-    public RevertToLastOperation(): Operation | undefined {
-        let lastOp = this.operationStack.pop();
+    public PickOperator(operator: string): string {
 
-        if (!lastOp)
-            return undefined;
+        // Update the current operation operator
+        this.currentOperation.operator = operator;
 
-        this.currentOperation = lastOp;
-        return lastOp;
+        // Go to the next state
+        this.playerState = PlayerState.PickingOperand2;
 
+        // We can also return, here, the most recent expression string.
+        // If the first operand is just a single number, then we dont need a parentheses around it.
+        // If it a more complex expression, then we put partentheses around it.
+
+        if (IsNumeric(this.currentOperation.operand1))
+            return `${this.currentOperation.operand1} ${operator}`;
+        else
+            return `(${this.currentOperation.operand1}) ${operator}`;
     }
 
     /**
-     * Finalizes the whole process of operation construction.
+     * Finalizes the whole process of operation construction by setting the second operand.
      * @param operand2 The second operand of the operation.
      * @param operand2Index The index of the card button associated with the second operand.
      * 
      * @returns The arithmetic expression associated with the current/completed operation.
+     * 
+     * @remarks This function also resets the player state. After invocation, the player state will be {@link PlayerState.PickingOperand1}
+     * and the current operation {@link SingleplayerGame.currentOperation} object will be reset to a new one.
      */
 
-    public CompleteOperation(operand2, operand2Index): string {
+    public PickOperand2(operand2: string, operand2Index: number): string {
 
         // Assign the second operand
         this.currentOperation.operand2 = operand2;
@@ -202,146 +227,153 @@ export class SingleplayerGame {
     }
 
 
+    /* ========================== Operations and Operation Stack ====================================== */
+
     /**
-     * Check whether or not the expression/operation correctly equates to 24.
-     * @param operationExpression The arithmetic expression to test.
-     * @returns True if the specified operation's expression value equals 24. Returns false otherwise.
-     */
-    public CheckSolution(operationExpression: string): boolean {
-        const val = evaluate(operationExpression.replaceAll("x", "*"));
-        return val === 24;
-    }
-
-    GetCurrentPlayerState(): PlayerState {
-        return this.playerState;
-    }
-
-    NextState(): void {
-        switch (this.playerState) {
-            case PlayerState.PickingOperand1:
-                this.playerState = PlayerState.PickingOperator;
-                break;
-            case PlayerState.PickingOperand2:
-                this.ResetOperationState();
-                break;
-            case PlayerState.PickingOperator:
-                this.playerState = PlayerState.PickingOperand2;
-                break;
-            default:
-                break;
-        }
-
+    * Completes the current operation's construction process by pushing it to the operations stack.
+    */
+    public PushCurrentOperation() {
+        this.operationStack.push(this.currentOperation);
     }
 
     /**
-     * Resets the game state to one where the player is:
-     * 1 - Picking the first operand.
-     * 2 - All card buttons are enabled again. (This is done in the scene class!!!)
-     * 3 - A whole new stack of operations is created (previous one is reset).
-     * 4 - A new arithmetic expression is created.
+     * Allows inspection of the current operation.
+     * @returns The current operation that is being constructed.
+     * 
+     * @remarks As the function name implies, we're not executing a pop() form the operations stack. 
+     * This means we can peek the operation value without affecting the stack.
      */
-    ResetOperationState(): void {
+    public PeekCurrentOperation(): Operation {
+        return this.currentOperation;
+    }
+
+    /**
+     * Pops the topmost operation on the stack and assigns it to the current operation.
+     * @returns The new operation that now has the previous operation's values. May also return an empty/undefined object if the stack is empty.
+     *      
+     * @remarks This function alters the operations stack data.
+     */
+    public RevertToLastOperation(): Operation | undefined {
+        let lastOp = this.operationStack.pop();
+
+        if (!lastOp)
+            return undefined;
+
+        this.currentOperation = lastOp;
+        return lastOp;
+
+    }
+
+    /**
+    * Resets the operation state.
+    * 
+    * @remarks This procedure resets the current operation. It also sets the player state to {@link PlayerState.PickingOperand1}.
+    */
+    public ResetOperationState(): void {
         // Player has to pick the first operand
         this.playerState = PlayerState.PickingOperand1;
         this.currentOperation = new Operation();
-        //this.mCurrentOperation.operand1 = this.mCurrentOperation.operand2 = this.mCurrentOperation.operator = "";
     }
 
+    /**
+    * Resets/Wipes the operation stack.
+    */
     ResetOperationStack(): void {
         this.operationStack = new Stack<Operation>();
     }
 
-
-    StateToString(): string {
-        switch (this.playerState) {
-            case PlayerState.PickingOperand1:
-                return "Picking operand 1";
-
-            case PlayerState.PickingOperand2:
-                return "Picking operand 2";
-
-            case PlayerState.PickingOperator:
-                return "Picking operator ";
-
-        }
+    /**
+     * Completely resets the game state.
+     * This procedure is only used when the player clicks the reset button.
+     *
+     * @remarks This procedure completely wipes the operation stack and resets the operation state. 
+     */
+    CompleteReset()
+    {
+        this.ResetOperationState();
+        this.ResetOperationStack();
     }
 
-    IsPickingOperator(): boolean {
-        return this.playerState === PlayerState.PickingOperator;
-    }
 
-    IsPickingOperand1(): boolean {
-        return this.playerState === PlayerState.PickingOperand1;
-    }
 
-    IsPickingOperand2(): boolean {
-        return this.playerState === PlayerState.PickingOperand2;
-    }
+    /* ============================================== Getters and Setter ============================================== */
 
-    IncrTotalCorrect(): number {
+    // Player score
+
+    /**
+     *  Increments the total amount of correct answers.
+     * @returns The new total amount of times the player got a correct answer.
+     */
+    public IncrTotalCorrect(): number {
         this.totalCorrect += 1;
         return this.totalCorrect;
     }
 
-    IncrTotalWrong(): number {
+    /**
+     *  Increments the total amount of incorrect answers.
+     * @returns The new total amount of times the player got an incorrect answer.
+     */
+    public IncrTotalWrong(): number {
         this.totalWrong += 1;
         return this.totalWrong;
     }
 
-    SetCard(card: string): void {
-        this.currentCard = card;
-    }
-
-    GetTotalCorrect(): number {
+    /**
+     *  Retrieves the total amount of correct answers.
+     * @returns The total amount of times the player got a correct answer.
+     */
+    public GetTotalCorrect(): number {
         return this.totalCorrect;
     }
 
-    GetTotalWrong(): number {
+    /**
+     *  Retrieves the total amount of incorrect answers.
+     * @returns The total amount of times the player got an incorrect answer.
+     */
+    public GetTotalWrong(): number {
         return this.totalWrong;
     }
 
-    GetCurrentExpression(): string {
-        return `${this.currentOperation.operand1}${this.currentOperation.operator}${this.currentOperation.operand2}`;
-    }
-
-    GetCurrentCard(): string {
+    // Current card 
+    public GetCurrentCard(): string {
         return this.currentCard;
     }
 
-    SetOperand1(operand, index): void {
-        this.currentOperation.operand1 = operand;
-        this.currentOperation.operand1BtnIndex = index;
+    public SetCard(card: string): void {
+        this.currentCard = card;
     }
 
-    SetOperand2(operand, index): void {
-        this.currentOperation.operand2 = operand;
-        this.currentOperation.operand2BtnIndex = index;
+
+    // Player State
+
+    /**
+     * Gets the current state of the player.
+     * @returns The PlayerState of the player
+     */
+    public GetPlayerState(): PlayerState {
+        return this.playerState;
     }
 
-    SetOperator(operator: string): string {
-        this.currentOperation.operator = operator;
-
-        // We can also return, here, the most recent expression string.
-        // If the first operand is just a single number, then we dont need a parentheses around it.
-        // If it a more complex expression, then we put partentheses around it.
-
-        if (IsNumeric(this.currentOperation.operand1))
-            return `${this.currentOperation.operand1} ${operator}`;
-        else
-            return `(${this.currentOperation.operand1}) ${operator}`;
+    /**
+     * Assigns a new player state to the current one.
+     * @param state The new player state to assign.
+     */
+    public SetPlayerState(state: PlayerState) {
+        this.playerState = state;
     }
 
-    SetExpression(expression: string): void {
-        this.currentOperation.expression = expression;
-    }
 
-    IsStackEmpty(): boolean {
+    // Operation stack
+    /**
+     * Checks if the stack of operations is empty.
+     * @returns True if the operations stack is empty. Returns false otherwise.
+     */
+    public IsStackEmpty(): boolean {
         return this.operationStack.isEmpty();
     }
 
-    SetPlayerState(state: PlayerState) {
-        this.playerState = state;
-    }
+
+
 
 
 }

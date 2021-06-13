@@ -474,7 +474,7 @@ export class MainMenuScene extends Phaser.Scene {
             const loginResult: boolean = LoginData.LoginWithData(data);
 
             if (loginResult) {
-                
+
                 // Show the logout button, and disable the login button.
                 this.btnLogout.SetEnabled(1);
                 this.btnStartLogin.SetDisabled(0);
@@ -582,6 +582,8 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnAboutGame.SetDisabled(1)
     }
 
+    /* ==================== Fullscreen handling  */
+
     /**
      * Toggles the fullscreen mode.
      */
@@ -591,14 +593,15 @@ export class MainMenuScene extends Phaser.Scene {
          */
         if (this.scale.isFullscreen) {
 
-            this.scale.stopFullscreen();
+            this.game.scale.stopFullscreen();
             this.btnFullscreenToggle.SetImage('fullscreenOn');
         }
         else {
-            this.scale.startFullscreen();
+            this.game.scale.startFullscreen();
             this.btnFullscreenToggle.SetImage('fullscreenOff');
         }
     }
+
 
 
 
