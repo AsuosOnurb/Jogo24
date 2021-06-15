@@ -213,6 +213,7 @@ export class RankingScene extends Phaser.Scene {
         this.dataFinal = y + "-08-31";
         this.dificulty = 1;
         this.flag = 2;
+
     }
 
 
@@ -248,6 +249,20 @@ export class RankingScene extends Phaser.Scene {
      */
     private init() {
 
+        // Blue background
+        this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
+
+        // Title image
+        this.imgTitle = this.add.image(this.scale.width / 2, 112, 'title');
+        this.imgTitle.setScale(0.6, 0.6);
+
+        // Setup the "Back" button
+        this.SetupMenuButton()
+
+        let fadedoutImg =  this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
+
+        
+
         let connection = BackendConnection.GetTOP(this.dataInicial, this.dataFinal, "", "", 1);
 
         connection.then((data) => {
@@ -256,11 +271,17 @@ export class RankingScene extends Phaser.Scene {
 
             this.databaseData = parsedData; // databaseData is what we use to populate the table when we first start the scene.
 
+            this.tweens.add({
+                targets: fadedoutImg,
+                alpha: 0,
+                duration: 500,
+            });
+
             this.CompleteScene();
 
+           
+
         }).catch((err) => {
-            console.log(err);
-            console.log("Failed to retrieve TOP");
             this.LoadEmptyScene();
 
         });
@@ -274,14 +295,9 @@ export class RankingScene extends Phaser.Scene {
      * Starts the whole scene creation process.
      * At the end of execution, the scene is completely done and ready for interaction.
      */
-    private CompleteScene() : void {
-        // Blue background
-        this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
+    private CompleteScene(): void {
 
 
-        // Title image
-        this.imgTitle = this.add.image(this.scale.width / 2, 112, 'title');
-        this.imgTitle.setScale(0.6, 0.6);
 
         const gridConfig = {
             'scene': this,
@@ -297,7 +313,7 @@ export class RankingScene extends Phaser.Scene {
         this.SetupFilter();
         this.SetupYearFilterDropdown();
 
-        if (LoginData.GetUser() == '') {
+        if (!LoginData.IsLoggedIn()) {
             this.lblFiltro.visible = false;
             this.lblFiltroTurma.visible = false;
             this.iconTurma.visible = false;
@@ -309,8 +325,6 @@ export class RankingScene extends Phaser.Scene {
 
 
 
-        // Setup the "Back" button
-        this.SetupMenuButton()
 
     }
 
@@ -319,7 +333,7 @@ export class RankingScene extends Phaser.Scene {
      * Creates the scoreboard table.
      * Utilizes the RexUI's plugin.
      */
-    private CreateTable() : void {
+    private CreateTable(): void {
 
         /**
          * Lots of values used here are hardcoded, which could be a bad thing. It's what you get fo reusing code.
@@ -432,6 +446,7 @@ export class RankingScene extends Phaser.Scene {
         this.alignmentGrid.placeAtIndex(71, this.lblData);
         this.lblData.x += 50;
 
+
     }
 
 
@@ -444,7 +459,7 @@ export class RankingScene extends Phaser.Scene {
      *  Sets up the "Go back to menu" button.
      **/
     private SetupMenuButton(): void {
-        this.btnMainMenu = new BetterButton(this, 96, 96, 0.9, 0.9, '', {}, 'btn_gotoMenu');
+        this.btnMainMenu = new BetterButton(this, 128, 128, 0.8, 0.8, '', {}, 'btn_gotoMenu');
         this.btnMainMenu.on('pointerup', () => this.scene.start('MainMenu'));
     }
 
@@ -545,7 +560,6 @@ export class RankingScene extends Phaser.Scene {
         this.lblFiltro = new BetterText(this, 0, 0, 'Filtro', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
         this.alignmentGrid.placeAtIndex(163.3, this.lblFiltro);
         this.lblFiltro.y += 32;
-        // this.filtro.x += 16;
 
 
 
@@ -750,6 +764,51 @@ export class RankingScene extends Phaser.Scene {
      */
     private LoadEmptyScene(): void {
 
+        // Move the menu button to the center of the screen
+        this.btnMainMenu.setDepth(1); // This is not cool. We're making it so that this button stays in front of everything we're about to add next.
+        this.tweens.add(
+            {
+                targets: this.btnMainMenu,
+                x: this.scale.width / 2,
+                y: this.scale.height / 2 + 200,
+                scale: 1.1,
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        // Show an empty panel where we later put a warning text
+        let panelImg: Phaser.GameObjects.Image = this.add.image(this.scale.width / 2, this.scale.height / 2 + 128, "panel_empty");
+        panelImg.setAlpha(0);
+        this.tweens.add(
+            {
+                targets: panelImg,
+                scale: 1.5,
+                alpha: 1,
+                duration: 500,
+                ease: 'Power1'
+            }
+        )
+
+        // Create a text warning the user that connection to internet was not possible
+        let noConnectionWarningText: BetterText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 128,
+            "Não foi possível ligar à internet.", { fontFamily: 'Vertiky', align: 'center', fontSize: 64, color: "#4e2400" });
+        noConnectionWarningText.setAlpha(0);
+
+        let tryAgainText: BetterText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 16,
+            "Verifica a tua ligação e tenta novemente.", { fontFamily: 'Vertiky', align: 'center', fontSize: 48, color: "#4e2400" });
+        tryAgainText.setAlpha(0);
+
+        this.tweens.add(
+            {
+                targets: [noConnectionWarningText, tryAgainText],
+                alpha: 1,
+                duration: 500,
+                ease: 'Power1',
+                delay: 300
+            }
+        )
+
     }
 
     /* =================== Data manipulation ================================ */
@@ -766,16 +825,15 @@ export class RankingScene extends Phaser.Scene {
         var d = new Date();
         var m = d.getMonth();
         var n = d.getFullYear();
+
+        let y;
         if (m > 7) {
-            var x = n;
-            var y = n + 1;
+            y = n + 1;
         }
         else {
-            var x = n - 1;
-            var y = n;
+            y = n;
         }
-        let di = x + '-09-01';
-        let df = y + '-08-31';
+
         let j = 15;
         for (let i = 2015; i < y; i++) {
 
@@ -847,7 +905,6 @@ export class RankingScene extends Phaser.Scene {
             this.scoreTable.refresh();
 
         }).catch(function (err) {
-            console.log(err);
             alert("Não foi possível estabelecer ligação. Por favor tente mais tarde.")
 
         });

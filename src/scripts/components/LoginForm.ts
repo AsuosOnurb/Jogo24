@@ -23,20 +23,9 @@ export default class LoginForm {
 
     constructor(mainMenuScene: Phaser.Scene) {
 
-        const gridConfig = {
-            'scene': mainMenuScene,
-            'cols': 15,
-            'rows': 15
-        }
+        let user = `<input type="text" name="username" ${this.STYLE_TEXT} >`;
 
-
-
-        
-        let user = `
-        <input type="text" name="username" ${this.STYLE_TEXT} >`;
-
-        let pass = `
-        <input type="password" name="password" ${this.STYLE_TEXT}>`;
+        let pass = `<input type="password" name="password" ${this.STYLE_TEXT}>`;
 
 
         this.usernameInput = mainMenuScene.add.dom(0, 0).createFromHTML(user, 'phaser-example');

@@ -15,12 +15,7 @@ export  class BetterText extends Phaser.GameObjects.Text
         if (!style.color)
         {
             style.color = "#292d33";
-        }
-
-        // style.fontFamily= "Vertiky";
-        // style.fontStyle = "bold";
-
-        
+        }        
 
         super(scene, x  , y   , text, style);
         

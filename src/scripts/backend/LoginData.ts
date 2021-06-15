@@ -7,14 +7,7 @@ export class LoginData {
     private static m_FirstName: string;
     private static m_Class: string;
     private static m_School: string;
-
-
-    private constructor() {
-        LoginData.SetUser('');
-        LoginData.SetFirstName('');
-        LoginData.SetClass('');
-        LoginData.SetSchool('');
-    }
+    private static isLoggedIn: boolean = false;
 
     static GetInstance(): LoginData {
         if (!LoginData.Instance) {
@@ -24,40 +17,8 @@ export class LoginData {
         return LoginData.Instance
     }
 
-    // sessionStorage format:
-    // "user": string
-    // "firstName": string
-    // "turma": string
-    // "escola": string
+   
 
-    /**
-     * Retrieve data saved in the browser's sessionstorage if it exists
-     */
-    static GetLocalData() {
-        
-       
-
-    }
-
-    /**
-     * Set browser's sessionstorage accordingly to the current class data
-     */
-    static SetLocalData() {
-
-        if (typeof (Storage) === "undefined") {
-            return;
-        }
-
-        let storeInfo = {
-            'user': LoginData.GetUser(), 'firstName': LoginData.GetFirstName(),
-            'turma': LoginData.GetClass(), 'escola': LoginData.GetSchool()
-        };
-
-
-        let info = JSON.stringify(storeInfo);
-
-        sessionStorage.setItem("loginInfo", info);
-    }
 
     /**
      * Delete user login info
@@ -67,7 +28,7 @@ export class LoginData {
         LoginData.SetFirstName('');
         LoginData.SetClass('');
         LoginData.SetSchool('');
-        LoginData.SetLocalData();
+        this.isLoggedIn = false;
     }
 
 
@@ -136,6 +97,9 @@ export class LoginData {
             this.m_FirstName = loginData['firstName'];
             this.m_Class = loginData['turma'];
             this.m_School = loginData['escola'];
+
+            this.isLoggedIn = true;
+
             return true;
         }
 
@@ -143,6 +107,6 @@ export class LoginData {
 
     static IsLoggedIn() : boolean 
     {
-        return this.m_User != '';
+        return this.isLoggedIn;
     }
 }

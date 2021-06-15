@@ -296,8 +296,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         if (this.gameState.GetPlayerState() === PlayerState.PickingOperand1) {
 
-            // this.m_CardButtons[clickedButtonIndex].SetDisabled();
-
+            
             // Mark it as used, so that it doesnt get enabled again.
             this.m_BtnUsed[clickedButtonIndex] = true;
 

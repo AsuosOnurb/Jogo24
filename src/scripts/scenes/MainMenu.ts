@@ -288,7 +288,6 @@ export class MainMenuScene extends Phaser.Scene {
         if (!this.isPanelOpen) {
             switch (panelName) {
                 case Panels.AboutGame:
-                    //this.groupPanel.setVisible(true);
                     this.PlayTween_ShowPanel(Panels.AboutGame)
                     break;
 
@@ -355,7 +354,7 @@ export class MainMenuScene extends Phaser.Scene {
         }
 
         // Make the image appear
-        let tween = this.tweens.add({
+        this.tweens.add({
             targets: [this.groupPanel, targetImage, panel == Panels.Login ? this.btnLogin : undefined],
             alpha: 1,
             scale: panel == Panels.Login ? 1.7 : 1.5,
@@ -460,8 +459,7 @@ export class MainMenuScene extends Phaser.Scene {
          *  3 - Pofit?
          */
 
-        // const DEFAULT_USERNAME: string = "hypatia01";
-        // const DEFAULT_PASSWORD: string = "123401";
+       
 
         const username: string = this.loginForm.GetUsername();
         const password: string = this.loginForm.GetPassword();

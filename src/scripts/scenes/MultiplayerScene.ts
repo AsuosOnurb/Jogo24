@@ -97,12 +97,6 @@ export class MultiplayerScene extends Phaser.Scene {
         super("MultiplayerGame");
     }
 
-    preload() {
-
-
-
-    }
-
     init() {
         // Add background image window
         const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
@@ -298,10 +292,8 @@ export class MultiplayerScene extends Phaser.Scene {
     HandleButtonClick_Number(clickedButtonIndex: number): void {
 
         const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
-        const state = this.m_GameState.GetCurrentState();
 
-
-        if (this.m_GameState.GetCurrentState() === PlayerState.PickingOperand1) {
+        if (this.m_GameState.GetPlayerState() === PlayerState.PickingOperand1) {
 
             this.m_CardButtons[clickedButtonIndex].SetDisabled();
 
@@ -312,22 +304,19 @@ export class MultiplayerScene extends Phaser.Scene {
             this.EnableOperationButtons();
 
             // Update current operation
-            this.m_GameState.SetOperand1(pickedNumber, clickedButtonIndex);
+            this.m_GameState.PickOperand1(pickedNumber, clickedButtonIndex);
 
             // Update the expression bars
             this.m_Array_ExpressionBars.forEach((exprBar: BetterButton) => {
                 exprBar.SetText(pickedNumber)
             });
 
-            this.m_GameState.NextState();
 
 
-        } else if (state === PlayerState.PickingOperand2) {
+        } else if (this.m_GameState.GetPlayerState() === PlayerState.PickingOperand2) {
 
-            this.m_GameState.SetOperand2(pickedNumber, clickedButtonIndex);
-
-            // Update the button text if the button we just clicked was the 2nd operand
-            const expression = this.m_GameState.CompleteOperation();
+            // Get the newly calculated expression
+            const expression = this.m_GameState.PickOperand2(pickedNumber, clickedButtonIndex);
 
             this.m_CardButtons[clickedButtonIndex].NumberButtonSetText(expression);
 
@@ -372,8 +361,6 @@ export class MultiplayerScene extends Phaser.Scene {
 
             }
 
-            // Push the operation 
-            this.m_GameState.PushCurrentOperation();
             this.m_GameState.ResetOperationState()
         }
 
@@ -382,8 +369,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
     HandleButtonClick_Operation(operator: string) {
 
-        const mostRecentExpression: string = this.m_GameState.SetOperator(operator);
-        this.m_GameState.NextState();
+        const mostRecentExpression: string = this.m_GameState.PickOperator(operator);
 
         // Enable card buttons
         this.EnableNumberButtons();
@@ -617,7 +603,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ==================== Difficulty image ================ */
         // Show an image on the top of the page that displays the difficulty of the current card
-        switch (this.m_GameState.mDifficulty) {
+        switch (this.m_GameState.difficulty) {
             case Difficulty.Any:
                 this.imageDifficulty = this.add.image(this.scale.width / 2, -96, 'btn_allDifficulties');
                 break;
@@ -639,7 +625,7 @@ export class MultiplayerScene extends Phaser.Scene {
             targets: this.imageDifficulty,
             y: 70,
             repeat: 0,
-            ease: 'Power1'
+            ease: 'Elastic1'
         });
 
 

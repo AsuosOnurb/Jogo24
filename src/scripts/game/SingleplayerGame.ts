@@ -198,7 +198,6 @@ export class SingleplayerGame {
         this.currentOperation.operand2 = operand2;
         this.currentOperation.operand2BtnIndex = operand2Index;
 
-        let operationExpression;
         if (IsNumeric(this.currentOperation.operand1) && IsNumeric(this.currentOperation.operand2)) {
             this.currentOperation.expression = `${this.currentOperation.operand1}${this.currentOperation.operator}${this.currentOperation.operand2}`;
         }
@@ -215,7 +214,7 @@ export class SingleplayerGame {
             this.currentOperation.expression = "ERROR";
 
         // Save the expression we want to return
-        operationExpression = this.currentOperation.expression;
+        let operationExpression = this.currentOperation.expression;
 
         // Push the operation ot the stack
         this.operationStack.push(this.currentOperation);

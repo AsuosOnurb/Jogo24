@@ -24,6 +24,8 @@ export  class PreloadScene extends Phaser.Scene {
 
     this.load.image('btn_peekImage', 'assets/img/common/eye.png');
 
+    this.load.image('panel_empty', 'assets/img/common/painelVazio.png')
+
     /* =================================== Main menu assets =================================== */
     this.load.image('fullscreenOn', 'assets/img/main_menu/fullscreenBT-1.png')
     this.load.image('fullscreenOff', 'assets/img/main_menu/fullscreenBT-2.png')

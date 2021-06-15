@@ -1,7 +1,6 @@
 import { LoginData } from "./LoginData";
 
 import * as $ from 'jquery';
-import { ParseScoreData } from "./BackendUtils";
 
 export class BackendConnection {
 
@@ -9,10 +8,6 @@ export class BackendConnection {
     private static mPontuacao;
     private static mPontuacaoGlobal;
 
-
-    private constructor() {
-
-    }
 
     GetInstance(): BackendConnection {
         if (!BackendConnection.Instance)
@@ -28,8 +23,7 @@ export class BackendConnection {
 
     static Login(username, password) {
         return new Promise(function (resolve, reject) {
-            $.ajax
-                ({
+            $.ajax ({
                     type: "POST",
                     url: "https://www.hypatiamat.com/loginActionVH.php",
                     data: "action=dologin&u=" + username + "&p=" + password,
@@ -67,7 +61,6 @@ export class BackendConnection {
                         LoginData.SetFirstName(response.split(",")[1]);
                         LoginData.SetSchool(response.split(",")[2]);
                         LoginData.SetClass(response.split(",")[3]);
-                        LoginData.SetLocalData();
                     }
                     else {
                         LoginData.SetUser("");
@@ -244,8 +237,7 @@ export class BackendConnection {
 
         return new Promise(function (resolve, reject) {
 
-            $.ajax
-                ({
+            $.ajax ({
                     type: "POST",
                     url: "https://www.hypatiamat.com/newHRecords.php",
                     data: "action=minimoGlobal&codAl=" + username +

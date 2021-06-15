@@ -1,5 +1,5 @@
 
-import Phaser, { Game } from 'phaser'
+import Phaser  from 'phaser'
 import { RandomInt } from '../utils/Utils';
 import { BetterText } from './BetterText'
 
@@ -71,13 +71,16 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
 
         // Setup tween animations
-        
-        
+        /*
+        Uncomment these line if pretty button animations are a must.
+
         if (!scene.game.device.input.touch)
         {
             this.SetupButtonHoverAnimation(); 
             this.SetupButtonOutAnimation();
         }
+
+        */      
         
         this.SetupButtonPressAnimation()
 
@@ -144,6 +147,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
     SetupButtonOutAnimation(): void {
 
+        
         this.m_Tween_ButtonOut = this.mCurrentScene.tweens.add({
             targets: this,
             props: {
@@ -156,8 +160,13 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
             paused: true,
             delay: 60
         });
+        
 
         this.on('pointerout', () => this.m_Tween_ButtonOut.play());
+        
+        
+        
+
 
     }
 
@@ -193,7 +202,6 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         });
 
         this.on('pointerup', () => {
-            // ("Clicked button with ID " + this.mID.toString());
             this.m_Tween_ButtonPress.play();
         });
 
@@ -212,17 +220,6 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     }
 
     PlayCorrectExpressionTween(): void {
-
-
-        /*
-        this.scene.tweens.add({
-            targets: this,
-            props: {
-                y: {value: 64, duration: 150, ease:"Bounce.easeInOut", yoyo:true}
-            },
-            
-        });*/
-
         this.scene.tweens.add({
             targets: [this, this.m_TextObject],
             y: this.mCurrentScene.scale.height / 2,
