@@ -163,7 +163,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
     private Setup_Labels() {
 
-
         this.textTotalCorrect = new BetterText(this, this.scale.width / 2 + 740, 128, "0", { fontFamily: 'Vertiky', fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalCorrect.setOrigin(0.5, 0.5);
         this.textTotalWrong = new BetterText(this, this.scale.width / 2 + 740, 288, "0", { fontFamily: 'Vertiky', fontSize: 40, color: "#ffffff", fontStyle: "bold" })
@@ -273,26 +272,19 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Clear the expression text
         this.expressionBar.SetText("");
-
        
-
         // Reset expression bar text color
         this.expressionBar.SetTextColor("#FFFFFF");
-
 
         // Start the timer
         this.countdownTimer.StartCountdown();
     }
 
 
-
-
     /**
         Callback that handles the click of a number button (one of the numbers on the card)
     */
     private HandleButtonClick_Number(clickedButtonIndex: number): void {
-
-
 
         const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
 

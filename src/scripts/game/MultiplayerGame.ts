@@ -6,9 +6,6 @@
 
 
 import {evaluate} from 'mathjs'
-
-
-
 import { Operation } from '../utils/Operations'
 import { CardGenerator, Difficulty } from "../utils/CardGenerator";
 import { Stack } from '../utils/Stack';
@@ -188,58 +185,6 @@ export class MultiplayerGame {
         }
     }
 
-    IsPickingOperator(): boolean {
-        return this.m_PlayerState === PlayerState.PickingOperator;
-    }
-    
-    IsPickingOperand1() : boolean 
-    {
-        return this.m_PlayerState === PlayerState.PickingOperand1;
-    }
-
-    IsPickingOperand2() : boolean 
-    {
-        return this.m_PlayerState === PlayerState.PickingOperand2;
-    }
-
-    IncrTotalCorrect(): number {
-        this.mPlayers[this.m_CurrentPlayer].AddPoint();
-        return this.mPlayers[this.m_CurrentPlayer].GetScore();
-    }
-
-    IncrTotalWrong(): number {
-        this.mPlayers[this.m_CurrentPlayer].SubtractPoint();
-        return this.mPlayers[this.m_CurrentPlayer].GetScore();
-    }
-
-
-    IsStackEmpty() : boolean
-    {
-        return this.mOperationStack.isEmpty();
-    }
-
-    SetPickingOperand2(): void {
-        this.m_PlayerState = PlayerState.PickingOperand2;
-    }
-
-    IsCardWon(): boolean {
-        // return (this.mCurrentOperation.result.n === 24 && this.mCurrentOperation.result.d === 1);
-        return true
-    }
-
-    AwardCurrentPlayer(): number {
-        this.mPlayers[this.m_CurrentPlayer].AddPoint();
-        return this.mPlayers[this.m_CurrentPlayer].GetScore();
-    }
-
-    PunishCurrentPlayer(): number {
-        this.mPlayers[this.m_CurrentPlayer].SubtractPoint();
-        return this.mPlayers[this.m_CurrentPlayer].GetScore();
-    }
-
-
-  
-
     // ============= Getters & Setters =============
     GetCurrentPlayer(): number {
         return this.m_CurrentPlayer;
@@ -279,20 +224,24 @@ export class MultiplayerGame {
             return `(${this.mCurrentOperation.operand1})${operator}`;
     }
 
-    SetExpression(expression:string) : void 
-    {
-        this.mCurrentOperation.expression = expression;
+    
+  
+    /* ============================================== Getters and Setter ============================================== */
+    
+    /* ========================= Player Score =========================== */
+    IncrTotalCorrect(): number {
+        this.mPlayers[this.m_CurrentPlayer].AddPoint();
+        return this.mPlayers[this.m_CurrentPlayer].GetScore();
     }
 
-
-    SetCard(card: string): void {
-        this.mCurrentCard = card;
+    IncrTotalWrong(): number {
+        this.mPlayers[this.m_CurrentPlayer].SubtractPoint();
+        return this.mPlayers[this.m_CurrentPlayer].GetScore();
     }
 
-
-    GetCurrentExpression() : string 
+    GetCurrentPlayerScore() : number 
     {
-        return `${this.mCurrentOperation.operand1}${this.mCurrentOperation.operator}${this.mCurrentOperation.operand2}`;
+        return this.mPlayers[this.m_CurrentPlayer].GetScore();
     }
 
     GetCurrentCard () :string 
@@ -300,10 +249,7 @@ export class MultiplayerGame {
         return this.mCurrentCard;
     }
 
-    GetCurrentPlayerScore() : number 
-    {
-        return this.mPlayers[this.m_CurrentPlayer].GetScore();
-    }
+    
 
 
 

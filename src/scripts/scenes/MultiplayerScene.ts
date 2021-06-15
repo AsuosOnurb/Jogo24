@@ -142,14 +142,15 @@ export class MultiplayerScene extends Phaser.Scene {
 
     NewCard(): void {
 
-        let generatedCard = this.m_GameState.NewCard();
+        // Tell the mutiplayer player game that we're going to be playing a new card.
+        this.m_GameState.NewCard();
 
 
         // Change the current card number buttons and store the card numbers
-        for (let i = 0; i < generatedCard.length; i++) {
+        for (let i = 0; i < this.m_GameState.GetCurrentCard().length; i++) {
 
             // Set the text of the number button
-            this.m_CardButtons[i].NumberButtonSetText(generatedCard[i]);
+            this.m_CardButtons[i].NumberButtonSetText(this.m_GameState.GetCurrentCard()[i]);
             this.m_CardButtons[i].SetDisabled(0.7);
 
             this.m_BtnUsed[i] = false;
@@ -163,7 +164,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.btnOperationDivide.SetDisabled();
 
         // Update the solution debug text
-        this.textSolution.setText(`Solução: ${Solutions.GetSolution(generatedCard)}`);
+        this.textSolution.setText(`Solução: ${Solutions.GetSolution(this.m_GameState.GetCurrentCard())}`);
 
         // Clear the text from expression bars
         for (let i = 0; i < 4; i++)
@@ -174,8 +175,8 @@ export class MultiplayerScene extends Phaser.Scene {
             this.m_Array_PlayerButtons[i].SetEnabled();
 
         // Add the text to the mini cards
-        this.mMinicard1.SetCard(generatedCard);
-        this.mMinicard2.SetCard(generatedCard);
+        this.mMinicard1.SetCard(this.m_GameState.GetCurrentCard());
+        this.mMinicard2.SetCard(this.m_GameState.GetCurrentCard());
 
         // Reset expression bars
         this.m_Array_ExpressionBars.forEach((exprBar) => {
@@ -184,13 +185,12 @@ export class MultiplayerScene extends Phaser.Scene {
         });
 
 
+        // Reset the countdown timer so that it gets set to the default initial time for this game mode.
         this.mCountDownTimer.Reset();
 
 
         // Make the 'peek solution' button go away
         this.HidePeekSolutionButton();
-
-
 
     }
 
@@ -244,6 +244,11 @@ export class MultiplayerScene extends Phaser.Scene {
 
     }
 
+    /**
+     * Redraws the current card by fliping its numbers to accomodate the current player view.
+     * @param clickedButtonIndex The index associated with the player button that was just clicked. 
+     * This parameter is important because this procedure needs to know how it should flip the card.
+     */
     RedrawCard(clickedButtonIndex: number): void {
         if (clickedButtonIndex === 0 || clickedButtonIndex === 1) {
             this.m_Btn_NewCard.setFlipY(true);
@@ -263,6 +268,11 @@ export class MultiplayerScene extends Phaser.Scene {
 
     }
 
+    /**
+     * Redraws the two mini cards by repositioning and flipping them to accomodate the players that are not currently playing.     * 
+     * @param clickedButtonIndex The index associated with the player button that was just clicked. 
+     * This parameter is important because this procedure needs to know how it should flip the two mini cards.
+     */
     RedrawMiniCards(clickedButtonIndex: number): void {
         // Flip the card according to the new current player
         if (clickedButtonIndex == 0 || clickedButtonIndex == 1) {
@@ -717,7 +727,7 @@ export class MultiplayerScene extends Phaser.Scene {
             exprBar.SetTextColor("#ff2600");
         });
 
-        this.m_GameState.PunishCurrentPlayer();
+        this.m_GameState.IncrTotalWrong();
         this.m_Array_PlayerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
 
         this.m_Btn_NewCard.SetEnabled();
@@ -728,7 +738,7 @@ export class MultiplayerScene extends Phaser.Scene {
     }
 
     /**
-     * Displays (visually enables) the 'eye' button that sits on top of the expression bar).
+     * Displays (visualy enables) the 'eye' button that sits on top of the expression bar).
      * This button allows the user to peek one of the (possibly many) solutions for the current card.
      * Should only be called when the user fails to ansert the card (i.e: When we throw an error).
      */
@@ -760,8 +770,7 @@ export class MultiplayerScene extends Phaser.Scene {
      * Clears all of the expression bars and displays a suggested solution for the current card.
      * This procedure gets is started by the asasociated phaser event. 
      */
-    HandleButtonClick_PeekSolution() : void 
-    {
+    HandleButtonClick_PeekSolution(): void {
         // Get the suggested solution for this card
         const solution: string = Solutions.GetSolution(this.m_GameState.GetCurrentCard());
 
@@ -773,12 +782,14 @@ export class MultiplayerScene extends Phaser.Scene {
         })
 
         this.HidePeekSolutionButton();
-        
+
 
     }
 
-    HidePeekSolutionButton() : void 
-    {
+    /**
+     * Disables and hides the button that allows the player to peek the solution for the current card.
+     */
+    HidePeekSolutionButton(): void {
         // Put this button back where it should be (make it dissapear to the top of the canvas)
         this.mBtnPeekSolution.SetDisabled(1);
         this.tweens.add(
