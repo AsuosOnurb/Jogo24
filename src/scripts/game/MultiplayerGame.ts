@@ -42,7 +42,7 @@ export class MultiplayerGame {
     public readonly difficulty: Difficulty;
     private currentCard: string;
 
-    private readonly MAX_CARD_TOTAL: number = 12;
+    public readonly MAX_CARD_TOTAL: number = 12;
     private cardTotal: number;
 
     private players: Array<Player>;
@@ -245,9 +245,9 @@ export class MultiplayerGame {
         return this.currentCard;
     }
 
-    IncrementTotalCardsUsed(): void {
+    IncrementTotalCardsUsed(): number {
         this.cardTotal += 1;
-        console.log(this.cardTotal);
+        return this.cardTotal;
     }
 
     IsMaxCardCountReached() : boolean

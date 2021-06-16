@@ -94,6 +94,8 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_player3', 'assets/img/multiplayer_game/btt3.png');
     this.load.image('btn_player4', 'assets/img/multiplayer_game/btt4.png');
 
+    this.load.image('cardCounterBG', 'assets/img/multiplayer_game/cardCounterBG.png');
+
     /* ========================== Ranking scene ==================================== */
     this.load.image('sliderThumb', 'assets/img/common/numeroBTBG.png');
 

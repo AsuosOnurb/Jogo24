@@ -83,6 +83,8 @@ export class MultiplayerScene extends Phaser.Scene {
 
     private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
     private imageDifficulty: Phaser.GameObjects.Image; // The image that displays the current game difficulty
+    private cardCounter: BetterButton;  // The card counter (Its a button just for simplicity)
+    
 
     private mCountDownTimer: CountdownTimer;
     private mCountdownTimerImage: Phaser.GameObjects.Image;
@@ -107,6 +109,8 @@ export class MultiplayerScene extends Phaser.Scene {
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
+
+        
 
 
         // Debug solutution label
@@ -135,6 +139,9 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
     NewCard(): void {
+
+        // Disable this btn
+        this.m_Btn_NewCard.SetDisabled();
 
         // Tell the mutiplayer player game that we're going to be playing a new card.
         this.m_GameState.NewCard();
@@ -187,8 +194,10 @@ export class MultiplayerScene extends Phaser.Scene {
         this.HidePeekSolutionButton();
 
 
-        // Increment the total of cards played.
-        this.m_GameState.IncrementTotalCardsUsed();
+        // Increment the total of cards played, and update the tard counter
+        const totalCards = this.m_GameState.IncrementTotalCardsUsed();
+        this.cardCounter.SetText(`${totalCards} / ${this.m_GameState.MAX_CARD_TOTAL}`)
+        
 
 
     }
@@ -509,6 +518,10 @@ export class MultiplayerScene extends Phaser.Scene {
         // Setup the game card group
         this.m_Image_CardBG = this.add.image(this.scale.width / 2, this.scale.height / 2 + 60, 'cardBG');
         this.m_Image_CardBG.setScale(1.1);
+
+        // Card Counter
+        this.cardCounter = new BetterButton(this, this.scale.width / 2 + 256, 70, 0.5, 0.5, `0 / ${this.m_GameState.MAX_CARD_TOTAL}`, 
+                    { fontFamily: 'Vertiky', align: 'center', fontSize: 38, color: "white" }, 'cardCounterBG' );
 
 
         // Setup a button for each number in the card (4 buttons)
