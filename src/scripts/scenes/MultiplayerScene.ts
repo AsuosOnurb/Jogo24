@@ -521,7 +521,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Card Counter
         this.cardCounter = new BetterButton(this, this.scale.width / 2 + 256, 70, 0.5, 0.5, `0 / ${this.m_GameState.MAX_CARD_TOTAL}`, 
-                    { fontFamily: 'Vertiky', align: 'center', fontSize: 38, color: "white" }, 'cardCounterBG' );
+                    { fontFamily: 'Vertiky', align: 'center', fontSize: 38, color: "white", fontStye:"bold"}, 'cardCounterBG' );
 
 
         // Setup a button for each number in the card (4 buttons)
