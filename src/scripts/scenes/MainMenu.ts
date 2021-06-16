@@ -6,13 +6,13 @@
 
 
 import Phaser from 'phaser'
-import { BackendConnection } from '../backend/BackendConnection';
 import { LoginData } from '../backend/LoginData';
 
 import { BetterButton } from '../components/BetterButton'
 import { BetterText } from '../components/BetterText';
 import { Difficulty } from '../utils/CardGenerator';
 import LoginForm from '../components/LoginForm';
+import { DestroySession, Login } from '../backend/BackendConnection';
 
 
 enum Panels {
@@ -465,7 +465,7 @@ export class MainMenuScene extends Phaser.Scene {
         const password: string = this.loginForm.GetPassword();
 
         // Attempt connection to the database
-        const connection = BackendConnection.Login(username, password);
+        const connection = Login(username, password);
         connection.then((data) => {
 
             // Store the data we just got for later, if the login was possible. 
@@ -504,7 +504,7 @@ export class MainMenuScene extends Phaser.Scene {
 
 
         /* In this case, we're not worried  about the result of the connection we're attempting */
-        BackendConnection.DestroySession();
+        DestroySession();
 
         // Hide the login name text
         this.txtUserName.setText("");

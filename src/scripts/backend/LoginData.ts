@@ -2,6 +2,7 @@ import { ParseLoginData } from "./BackendUtils";
 
 
 export class LoginData {
+    
     private static Instance: LoginData;
     private static m_User: string;
     private static m_FirstName: string;

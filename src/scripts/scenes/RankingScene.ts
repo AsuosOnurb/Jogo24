@@ -10,9 +10,9 @@ import Phaser from 'phaser'
 import { AlignGrid } from '../utils/external/AlignGrid'
 import { BetterButton } from '../components/BetterButton';
 import { BetterText } from '../components/BetterText';
-import { BackendConnection } from '../backend/BackendConnection';
 import { LoginData } from '../backend/LoginData';
 import { ParsedUpdatedScoreData, ParseScoreData } from '../backend/BackendUtils';
+import { GetTOP, UpdateTOP } from '../backend/BackendConnection';
 
 /**
  
@@ -263,7 +263,7 @@ export class RankingScene extends Phaser.Scene {
 
         
 
-        let connection = BackendConnection.GetTOP(this.dataInicial, this.dataFinal, "", "", 1);
+        let connection = GetTOP(this.dataInicial, this.dataFinal, "", "", 1);
 
         connection.then((data) => {
 
@@ -890,7 +890,7 @@ export class RankingScene extends Phaser.Scene {
          */
 
 
-        let connection = BackendConnection.UpdateTOP(this.dataInicial, this.dataFinal, this.flag, this.dificulty);
+        let connection = UpdateTOP(this.dataInicial, this.dataFinal, this.flag, this.dificulty);
 
         connection.then((data) => {
 

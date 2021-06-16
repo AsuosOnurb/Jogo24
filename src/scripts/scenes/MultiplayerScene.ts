@@ -522,7 +522,7 @@ export class MultiplayerScene extends Phaser.Scene {
         // Card Counter
         this.cardCounter = new BetterButton(this, this.scale.width / 2 + 256, 70, 0.5, 0.5, `0 / ${this.m_GameState.MAX_CARD_TOTAL}`, 
                     { fontFamily: 'Vertiky', align: 'center', fontSize: 38, color: "white", fontStye:"bold"}, 'cardCounterBG' );
-
+        this.cardCounter.SetDisabled(1);
 
         // Setup a button for each number in the card (4 buttons)
         this.m_BtnUsed = new Array<Boolean>();
@@ -853,11 +853,9 @@ export class MultiplayerScene extends Phaser.Scene {
                 2.b - Existem vários jogadores com a pontuação máxima -> Mostrar esses jogadores
         */
         if (this.m_GameState.IsGameTied()) {
-            console.log("Game was a tie");
             this.ShowEndgamePanelTieMessage();
         }
         else {
-            console.log("Someone won")
             this.ShowEndgamePanelWinningMessage();
         }
 
@@ -901,13 +899,11 @@ export class MultiplayerScene extends Phaser.Scene {
         let congratsText: BetterText;
         if (winningPlayersIndexes.length > 1) {
             // More than one winner
-            console.log("Vários Jogadores")
             congratsText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 54,
                 `Parabéns               \n\n\nObtiveram um total de ${winningScore} pontos!`, { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });
         }
         else {
             // Only one winner
-            console.log("Um jogador")
 
             congratsText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 54,
                 `Parabéns               \n\n\nObtiveste um total de ${winningScore} pontos!`, { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });

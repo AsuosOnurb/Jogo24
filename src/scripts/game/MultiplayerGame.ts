@@ -178,10 +178,6 @@ export class MultiplayerGame {
 
     IsGameTied() : boolean
     {
-        console.log(this.players[0].GetScore())
-        console.log(this.players[1].GetScore())
-        console.log(this.players[2].GetScore())
-        console.log(this.players[3].GetScore())
         return this.players[0].GetScore() === this.players[1].GetScore() &&
                 this.players[1].GetScore() === this.players[2].GetScore() && 
                 this.players[2].GetScore() === this.players[3].GetScore();
@@ -191,12 +187,9 @@ export class MultiplayerGame {
     {
         let scoresArray = new Array<number>();
         this.players.forEach((p) => scoresArray.push(p.GetScore()));
-        console.log("Scores: ")
-        console.log(scoresArray)
 
         // Get the max score on the scores array
         const maxScore = Math.max.apply(null, scoresArray);
-        console.log("Max score: " + maxScore);
 
         // Find the indexes that have this max score
         let winningIndexes = new Array<number>();
@@ -206,8 +199,6 @@ export class MultiplayerGame {
                 winningIndexes.push(i);
         }
 
-        console.log("Winning indexes:")
-        console.log(winningIndexes);
         return winningIndexes;
 
     }
@@ -215,8 +206,6 @@ export class MultiplayerGame {
     GetWinningScore() : number 
     {
         let indexes = this.GetWinningPlayersIndexes();
-        console.log("Indexes")
-        console.log(indexes)
         return this.players[indexes[0]].GetScore();
     }
 
