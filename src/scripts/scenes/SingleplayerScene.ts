@@ -88,8 +88,8 @@ export class SingleplayerScene extends Phaser.Scene {
         cardBG.setScale(1.15);
 
         // Add the corect/incorrect label backgrounds
-        const correctBG = this.add.sprite(this.scale.width / 2 + 680, 128, 'correctCounter')
-        const wrongBG = this.add.sprite(this.scale.width / 2 + 680, 288, 'wrongCounter')
+        this.add.sprite(this.scale.width / 2 + 680, 128, 'correctCounter')
+        this.add.sprite(this.scale.width / 2 + 680, 288, 'wrongCounter')
 
 
         // Setup labels 
@@ -101,8 +101,8 @@ export class SingleplayerScene extends Phaser.Scene {
         // Add the timer background
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
-        this.countdownTimer =
-            new CountdownTimer(this, 180, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+        this.countdownTimer = // 180
+            new CountdownTimer(this, 10, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -119,7 +119,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-  
+
     private init(data) {
 
         this.gameState = new SingleplayerGame(data.difficulty);
@@ -148,8 +148,6 @@ export class SingleplayerScene extends Phaser.Scene {
             connection.then((parsedData) => {
 
                 this.playerScores = parsedData;
-                console.log("mScores::")
-                console.log(this.playerScores)
 
             }).catch(function (err) {
                 console.log(err);
@@ -272,7 +270,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Clear the expression text
         this.expressionBar.SetText("");
-       
+
         // Reset expression bar text color
         this.expressionBar.SetTextColor("#FFFFFF");
 
@@ -296,7 +294,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         if (this.gameState.GetPlayerState() === PlayerState.PickingOperand1) {
 
-            
+
             // Mark it as used, so that it doesnt get enabled again.
             this.m_BtnUsed[clickedButtonIndex] = true;
 
@@ -372,7 +370,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Disable operation buttons
         this.DisableOperationButtons();
-        //this.mExpressionBar.SetText(`(${this.mExpressionBar.GetText()})${operator}`);
         this.expressionBar.SetText(mostRecentExpression);
     }
 
@@ -467,8 +464,7 @@ export class SingleplayerScene extends Phaser.Scene {
         }
 
         // Disable the undo button if the operation stac is empty
-        if (this.gameState.IsStackEmpty())
-        {
+        if (this.gameState.IsStackEmpty()) {
             this.btnUndo.SetDisabled();
             console.log("Stack is empty. Disabling undo button");
 
@@ -571,7 +567,6 @@ export class SingleplayerScene extends Phaser.Scene {
         this.btnNewCard.SetDisabled();
 
         const playerScore = this.gameState.GetTotalCorrect();
-
         // Check the most updated scores from the DB
         let verifConnection = BackendConnection.VerifyScore(playerScore, this.gameState.difficulty + 1);
         verifConnection.then((scores) => {
@@ -581,6 +576,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
                 // Show the final card telling the player the result of the game.
                 this.ShowGameResults(playerScore);
+
+                console.log(this.playerScores)
+                console.log(playerScore)
 
                 // Send the data to the database
                 this.SendScoreToDB(playerScore);
@@ -606,7 +604,7 @@ export class SingleplayerScene extends Phaser.Scene {
     private ShowGameResults(playerScore: number): void {
 
         const playerName: string = LoginData.GetFirstName();
-        let winMessage: string = ``;
+        let winMessage: string;
 
         let personalBest = this.playerScores['personalBest'];
         let classBest = this.playerScores['classBest'];
@@ -680,16 +678,7 @@ export class SingleplayerScene extends Phaser.Scene {
             }
         );
 
-        // Move the home button to the center the other buttons
-        this.tweens.add(
-            {
-                targets: this.btnGotoMenu,
-                x: this.scale.width / 2,
-                y: this.scale.height - 64,
-                duration: 1500,
-                ease: 'Power1'
-            }
-        );
+
 
 
 
@@ -698,20 +687,7 @@ export class SingleplayerScene extends Phaser.Scene {
     private SendScoreToDB(playerScore: number): void {
 
         const diff = this.gameState.difficulty + 1;
-
-
-
-        let connection = BackendConnection.GravaRecords(
-            playerScore,
-            diff);
-
-        connection.then((data) => {
-
-        }).catch((err) => {
-            console.log("Failed to send game data.");
-            console.log(`Error: ${err}`);
-        });
-
+        BackendConnection.GravaRecords(playerScore, diff);
     }
 
 
@@ -721,21 +697,21 @@ export class SingleplayerScene extends Phaser.Scene {
     */
     private ShowPleaseLoginWarning(playerScore: number): void {
 
-        let messsage: string = ``;
+        let message: string;
 
 
         let top100GlobalBest = this.playerScores['top100GlobalBest']
 
         if (playerScore > top100GlobalBest) {
-            messsage = `Se estivesses registado o teu\nnome figuraria no TOP 100 absoluto\ncom ${playerScore} pontos.\n\nRegista-te em\nwww.hypatiamat.com `;
+            message = `Se estivesses registado o teu\nnome figuraria no TOP 100 absoluto\ncom ${playerScore} pontos.\n\nRegista-te em\nwww.hypatiamat.com `;
         } else {
-            messsage = `\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com`;
+            message = `\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com`;
 
         }
 
         // Prepare the text thal will be shown
         this.txtLoginWarning = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
-        this.txtLoginWarning.setText(messsage)
+        this.txtLoginWarning.setText(message)
         this.txtLoginWarning.setColor("#4e2400");
         this.txtLoginWarning.setAlpha(0);
 
@@ -770,16 +746,6 @@ export class SingleplayerScene extends Phaser.Scene {
             }
         );
 
-        // Move the home button to the center the other buttons
-        this.tweens.add(
-            {
-                targets: this.btnGotoMenu,
-                x: this.scale.width / 2,
-                y: this.scale.height - 64,
-                duration: 1500,
-                ease: 'Power1'
-            }
-        );
 
 
     }

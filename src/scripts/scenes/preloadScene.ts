@@ -25,6 +25,8 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_peekImage', 'assets/img/common/eye.png');
 
     this.load.image('panel_empty', 'assets/img/common/painelVazio.png')
+    this.load.image('gameEndBGg', 'assets/img/solo_game/finalDoJogo.png');
+
 
     /* =================================== Main menu assets =================================== */
     this.load.image('fullscreenOn', 'assets/img/main_menu/fullscreenBT-1.png')
@@ -79,7 +81,6 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_multiplication',   'assets/img/solo_game/opMultiplicacao.png');
     this.load.image('btn_division',   'assets/img/solo_game/opDivisao.png');
 
-    this.load.image('gameEndBGg', 'assets/img/solo_game/finalDoJogo.png');
   
 
     /* =================================== Multiplayer game assets ============================== */

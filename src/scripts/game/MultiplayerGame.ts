@@ -42,6 +42,9 @@ export class MultiplayerGame {
     public readonly difficulty: Difficulty;
     private currentCard: string;
 
+    private readonly MAX_CARD_TOTAL: number = 12;
+    private cardTotal: number;
+
     private players: Array<Player>;
     private currentPlayer: number; // numbers [0,1,2,3]
     private playerState: PlayerState;
@@ -59,6 +62,8 @@ export class MultiplayerGame {
         // When the game starts, the cards start with this default '????' look.
         this.currentCard = "????";
 
+        // Initialize the card counter
+        this.cardTotal = 0;
 
         // We're going to have four players
         this.players = [
@@ -71,11 +76,8 @@ export class MultiplayerGame {
         // Initialize the player state
         this.playerState = PlayerState.PickingOperand1;
 
-
         this.currentOperation = new Operation();
-
     }
-
 
 
     /**
@@ -151,15 +153,10 @@ export class MultiplayerGame {
     }
 
 
-
     CheckSolution(expression: string): boolean {
         const val = evaluate(expression.replaceAll("x", "*"));
         return val === 24;
     }
-
-
-
-
 
 
     /* ============================================== Getters and Setter ============================================== */
@@ -179,10 +176,54 @@ export class MultiplayerGame {
         return this.players[this.currentPlayer].GetScore();
     }
 
+    IsGameTied() : boolean
+    {
+        console.log(this.players[0].GetScore())
+        console.log(this.players[1].GetScore())
+        console.log(this.players[2].GetScore())
+        console.log(this.players[3].GetScore())
+        return this.players[0].GetScore() === this.players[1].GetScore() &&
+                this.players[1].GetScore() === this.players[2].GetScore() && 
+                this.players[2].GetScore() === this.players[3].GetScore();
+    }
+
+    GetWinningPlayersIndexes() : Array<number>
+    {
+        let scoresArray = new Array<number>();
+        this.players.forEach((p) => scoresArray.push(p.GetScore()));
+        console.log("Scores: ")
+        console.log(scoresArray)
+
+        // Get the max score on the scores array
+        const maxScore = Math.max.apply(null, scoresArray);
+        console.log("Max score: " + maxScore);
+
+        // Find the indexes that have this max score
+        let winningIndexes = new Array<number>();
+        for(let i = 0; i < scoresArray.length; i++)
+        {
+            if (scoresArray[i] === maxScore)
+                winningIndexes.push(i);
+        }
+
+        console.log("Winning indexes:")
+        console.log(winningIndexes);
+        return winningIndexes;
+
+    }
+
+    GetWinningScore() : number 
+    {
+        let indexes = this.GetWinningPlayersIndexes();
+        console.log("Indexes")
+        console.log(indexes)
+        return this.players[indexes[0]].GetScore();
+    }
+
+
     /* ==================== Player State ============= */
 
-    GetPlayerState() : PlayerState 
-    {
+    GetPlayerState(): PlayerState {
         return this.playerState;
     }
 
@@ -198,10 +239,20 @@ export class MultiplayerGame {
     }
 
 
-    /* ================== Current Card ===================== */
+    /* ================== Cards ===================== */
 
     GetCurrentCard(): string {
         return this.currentCard;
+    }
+
+    IncrementTotalCardsUsed(): void {
+        this.cardTotal += 1;
+        console.log(this.cardTotal);
+    }
+
+    IsMaxCardCountReached() : boolean
+    {
+        return this.cardTotal === this.MAX_CARD_TOTAL
     }
 
     /* ============= Player Order/Turn Management ================== */

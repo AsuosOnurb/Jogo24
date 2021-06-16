@@ -707,7 +707,7 @@ export class RankingScene extends Phaser.Scene {
                 var m = currDate.getMonth();
                 var n = currDate.getFullYear();
 
-                let x, y;
+                let x: number, y: number;
                 if (m > 7) {
                     x = n;
                     y = n + 1;
@@ -760,7 +760,6 @@ export class RankingScene extends Phaser.Scene {
      * Used to create an empty table (an empty scene).
      * 
      * We use this when no connection to the database is possible when we enter this scene. This way, we dont get just a blank screen.
-     * TODO: We could even display a text message saying what caused the error.
      */
     private LoadEmptyScene(): void {
 

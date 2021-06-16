@@ -186,6 +186,11 @@ export class MultiplayerScene extends Phaser.Scene {
         // Make the 'peek solution' button go away
         this.HidePeekSolutionButton();
 
+
+        // Increment the total of cards played.
+        this.m_GameState.IncrementTotalCardsUsed();
+
+
     }
 
 
@@ -358,6 +363,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
                 // Stop time counter
                 this.mCountDownTimer.StopCountdown();
+
+                // Check if the total of cards was reached
+                if (this.m_GameState.IsMaxCardCountReached())
+                    this.ShowEndgamePanel();
 
             }
 
@@ -721,6 +730,11 @@ export class MultiplayerScene extends Phaser.Scene {
         // Also let the player see a possible solution
         this.ShowPeekSolutionButton();
 
+        // Check if the total of cards was reached
+        if (this.m_GameState.IsMaxCardCountReached()) {
+            this.ShowEndgamePanel();
+        }
+
     }
 
     /**
@@ -791,5 +805,134 @@ export class MultiplayerScene extends Phaser.Scene {
     }
 
 
+    ShowEndgamePanel(): void {
+        // Disabling, hiding some elements that are overlapped
+        this.m_Array_ExpressionBars.forEach((exprBar) => exprBar.SetDisabled(0));
+        this.mBtnPeekSolution.SetDisabled(0);
+        this.mBtnPeekSolution.setVisible(false);
+        this.m_Array_PlayerButtons.forEach((pBtn) => pBtn.SetDisabled());
+        this.mMinicard1.SetVisible(false)
+        this.mMinicard2.SetVisible(false)
+        this.m_Btn_NewCard.SetDisabled();
+
+
+        // Show an empty panel where we later put a warning text
+        let panelImg: Phaser.GameObjects.Image = this.add.image(this.scale.width / 2, this.scale.height / 2 + 64, "gameEndBGg");
+        panelImg.setAlpha(0);
+        this.tweens.add(
+            {
+                targets: panelImg,
+                scale: 1.5,
+                alpha: 1,
+                duration: 500,
+                ease: 'Power1'
+            }
+        )
+
+
+        // Was the game a tie? If so, then show a message saying that.
+        // If someone won, then show a message for them.
+        /*
+            Outcomes:
+            1 - Empate -> "O Jogo ficou empatado"
+            2 - Não foi empate 
+                2.a - Existe apenas um jogador com a pontuação máxima -> Mostrar apenas esse jogador
+                2.b - Existem vários jogadores com a pontuação máxima -> Mostrar esses jogadores
+        */
+        if (this.m_GameState.IsGameTied()) {
+            console.log("Game was a tie");
+            this.ShowEndgamePanelTieMessage();
+        }
+        else {
+            console.log("Someone won")
+            this.ShowEndgamePanelWinningMessage();
+        }
+
+
+        // Move the main menu button to the panel
+        this.btnGotoMenu.setDepth(1);
+        this.tweens.add({
+            targets: this.btnGotoMenu,
+            scale: 1,
+            duration: 500,
+            ease: 'Power1',
+            x: this.scale.width / 2,
+            y: this.scale.height / 2 + 300
+        });
+
+
+    }
+
+    ShowEndgamePanelTieMessage(): void {
+        let tieMessage = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 54,
+            `O jogo ficou empatado!`, { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });
+
+        tieMessage.setAlpha(0);
+
+
+        this.tweens.add(
+            {
+                targets: tieMessage,
+                alpha: 1,
+                duration: 500,
+                ease: 'Power1',
+            }
+        )
+    }
+
+    ShowEndgamePanelWinningMessage(): void {
+
+        const winningPlayersIndexes: Array<number> = this.m_GameState.GetWinningPlayersIndexes();
+        const winningScore: number = this.m_GameState.GetWinningScore();
+
+        let congratsText: BetterText;
+        if (winningPlayersIndexes.length > 1) {
+            // More than one winner
+            console.log("Vários Jogadores")
+            congratsText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 54,
+                `Parabéns               \n\n\nObtiveram um total de ${winningScore} pontos!`, { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });
+        }
+        else {
+            // Only one winner
+            console.log("Um jogador")
+
+            congratsText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 54,
+                `Parabéns               \n\n\nObtiveste um total de ${winningScore} pontos!`, { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });
+
+
+        }
+
+
+        congratsText!.setAlpha(0);
+        this.tweens.add(
+            {
+                targets: [congratsText],
+                alpha: 1,
+                duration: 500,
+                ease: 'Power1',
+            }
+        )
+
+        // Move the buttons to the panel to show which players won
+        for (let i = 0; i < winningPlayersIndexes.length; i++) {
+            const associatedButton: BetterButton = this.m_Array_PlayerButtons[winningPlayersIndexes[i]];
+            associatedButton.SetText("");
+            associatedButton.setDepth(1);
+
+            this.tweens.add(
+                {
+                    targets: associatedButton,
+                    alpha: 1,
+                    x: this.scale.width / 2 + 96 + i*64,
+                    y: this.scale.height / 2 - 25,
+                    scale: 0.6,
+                    duration: 500,
+                    ease: 'Power1',
+                }
+            )
+        }
+
+
+    }
 
 }

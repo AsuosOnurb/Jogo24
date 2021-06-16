@@ -5,8 +5,6 @@ import * as $ from 'jquery';
 export class BackendConnection {
 
     private static Instance: BackendConnection;
-    private static mPontuacao;
-    private static mPontuacaoGlobal;
 
 
     GetInstance(): BackendConnection {
