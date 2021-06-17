@@ -239,6 +239,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
     private NewCard(): void {
 
+        // Disable the 'New Card' button
+        this.btnNewCard.SetDisabled();
+
         // Tell the single player game that we're going to be playing a new card.
         this.gameState.NewCard();
 
@@ -352,6 +355,7 @@ export class SingleplayerScene extends Phaser.Scene {
                 this.DisableOperationButtons()
                 this.btnReset.SetDisabled();
                 this.btnUndo.SetDisabled();
+                this.btnNewCard.SetEnabled();
             }
 
 
@@ -493,11 +497,276 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
 
+    /* ======================== Endgame Screens ========================= */
+
+
+    /**
+     * Activates when the countdown timer rings (reaches zero).
+     * Activates only once during the whole game.
+     */
+    private NoTimeLeft() {
+        for (let i = 0; i < 4; i++)
+            this.m_CardButtons[i].SetDisabled();
+
+        this.btnReset.SetDisabled();
+        this.btnUndo.SetDisabled();
+
+        this.btnOperationAdd.SetDisabled();
+        this.btnOperationSubtract.SetDisabled();
+        this.btnOperationMultiply.SetDisabled();
+        this.btnOperationDivide.SetDisabled();
+
+        this.btnNewCard.SetDisabled();
+
+        const playerScore = this.gameState.GetTotalCorrect();
+        // Check the most updated scores from the DB
+        let verifConnection = VerifyScore(playerScore, this.gameState.difficulty + 1);
+        verifConnection.then((scores) => {
+            this.playerScores = scores;
+
+            console.log("No time left. Connection to Db to retrieve scores was successfull. Verifying login status")
+
+            if (LoginData.IsLoggedIn()) {
+
+                // Show the final card telling the player the result of the game.
+                this.ShowGameResults(playerScore);
+
+                console.log(this.playerScores)
+                console.log(playerScore)
+
+                // Send the data to the database
+                this.SendScoreToDB(playerScore);
+
+            } else {
+                this.ShowPleaseLoginWarning(playerScore);
+            }
+
+
+        }).catch((err) => {
+            /* 
+                Connection throught internet was not possible.
+                We'll have to display a simple message congratulating the player. 
+            */
+            this.ShowEndgameScore(playerScore);
+        });
+
+
+
+    }
+
+    /** 
+        Shows some information to the player about his score,
+        saying if he got a new record, if he got a global record (top100), a school or class record.
+
+        @remarks Gets called only if the player is logged in AND a connection to the DB is possible.
+    */
+    private ShowGameResults(playerScore: number): void {
+
+        const playerName: string = LoginData.GetFirstName();
+        let winMessage: string;
+
+        let personalBest = this.playerScores['personalBest'];
+        let classBest = this.playerScores['classBest'];
+        let schoolBest = this.playerScores['schoolBest'];
+        let top100GlobalBest = this.playerScores['top100GlobalBest']
+
+
+
+        if (playerScore > personalBest) {
+            if (playerScore > top100GlobalBest) {
+                // Player got a top100 record
+                winMessage = `${playerName}, conseguiste um\nnovo recorde ABSOLUTO!\nCom ${playerScore} pontos.\n\nVê o teu resultado no TOP 100 absoluto.`;
+
+            } else if (playerScore > schoolBest) {
+                // Player got a school record
+                winMessage = `${playerName}, conseguiste um novo\nrecorde na tua escola!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua escola.`;
+
+            } else if (playerScore > classBest) {
+                // Player got a class record
+                winMessage = `${playerName}, conseguiste um\nnovo recorde na tua turma!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua turma.`;
+
+            } else
+                // Player got  a new personal best.
+                winMessage = `${playerName}, conseguiste melhorar o teu\nresultado anterior.\n\nNo entanto, ainda não conseguiste \nentrar no TOP 100.\n\nTenta outra vez.`;
+
+        } else {
+            // Nohing new happened
+            winMessage = `Obtiveste ${playerScore} pontos.\n\nNão conseguiste melhorar o teu\nresultado anterior\n(o teu melhor resultado é ${personalBest} pontos)\n\n\nTenta outra vez!`;
+
+        }
+
+        // Prepare the text that will be shown
+        this.txtGameResults = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
+        this.txtGameResults.setText(winMessage)
+        this.txtGameResults.setColor("#4e2400");
+        this.txtGameResults.setAlpha(0);
+
+        // Make the results panel appear
+        this.tweens.add(
+            {
+                targets: [this.imgEndGame, this.txtGameResults],
+                alpha: 1.0,
+                scale: 1.6,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        // Clear the artithmetic expression text
+        this.expressionBar.SetText("");
+
+        // Hide the other buttons
+        this.tweens.add(
+            {
+                targets: [this.btnOperationAdd,
+                this.btnOperationSubtract,
+                this.btnOperationMultiply,
+                this.btnOperationDivide,
+                this.btnReset,
+                this.btnUndo,
+                this.expressionBar],
+                alpha: 0.0,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+
+
+
+
+    }
+
+
+    /**
+     * Makes a warning appear, telling the user to login if he wants to save his score.
+     *
+     *   @remarks Gets called only if the player is NOT logged in AND a connection to the DB is possible.
+     */
+    private ShowPleaseLoginWarning(playerScore: number): void {
+
+        let message: string;
+
+
+        let top100GlobalBest = this.playerScores['top100GlobalBest']
+
+        if (playerScore > top100GlobalBest) {
+            message = `Se estivesses registado o teu\nnome figuraria no TOP 100 absoluto\ncom ${playerScore} pontos.\n\nRegista-te em\nwww.hypatiamat.com `;
+        } else {
+            message = `Obtiveste ${playerScore} pontos!\n\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com`;
+
+        }
+
+        // Prepare the text thal will be shown
+        this.txtLoginWarning = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
+        this.txtLoginWarning.setText(message)
+        this.txtLoginWarning.setColor("#4e2400");
+        this.txtLoginWarning.setAlpha(0);
+
+        this.tweens.add(
+            {
+                targets: [this.imgEndGame, this.txtLoginWarning],
+                alpha: 1.0,
+                scale: 1.6,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        // Clear the artithmetic expression text
+        this.expressionBar.SetText("");
+
+        // Hide the other buttons
+        this.tweens.add(
+            {
+                targets: [this.btnOperationAdd,
+                this.btnOperationSubtract,
+                this.btnOperationMultiply,
+                this.btnOperationDivide,
+                this.btnReset,
+                this.btnUndo,
+                this.expressionBar],
+                alpha: 0.0,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+
+
+    }
+
+    /**
+     * Makes a message appear with the player score.
+     * @param playerScore The score of the player
+     * @remarks Gets called only when connection to the DB is NOT possible (therefore login is not possible either)
+     */
+    private ShowEndgameScore(playerScore) {
+
+        // Prepare the text thal will be shown
+        let message: string;
+        if (playerScore == 1)
+            message = `Parabéns!\nObtiveste 1 ponto!`
+        else 
+            message =  `Parabéns!\nObtiveste ${playerScore} pontos!`
+
+        let congratsText = new BetterText(this, this.scale.width / 2, this.scale.height / 2, message, { color: '#4e2400', fontFamily: 'Vertiky', align: 'center', fontSize: 54 });
+        //this.txtLoginWarning.setColor("#4e2400");
+        congratsText.setAlpha(0);
+
+        this.tweens.add(
+            {
+                targets: [this.imgEndGame, congratsText],
+                alpha: 1.0,
+                scale: 1.6,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        // Clear the artithmetic expression text
+        this.expressionBar.SetText("");
+
+        // Hide the other buttons
+        this.tweens.add(
+            {
+                targets: [this.btnOperationAdd,
+                this.btnOperationSubtract,
+                this.btnOperationMultiply,
+                this.btnOperationDivide,
+                this.btnReset,
+                this.btnUndo,
+                this.expressionBar],
+                alpha: 0.0,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+    }
+
+
+
+    /* ==================== Utilities ========================== */
+    private SendScoreToDB(playerScore: number): void {
+
+        const diff = this.gameState.difficulty + 1;
+        GravaRecords(playerScore, diff);
+    }
+
+
+
     private ShowPlayerWon(expression: string): void {
         this.expressionBar.SetText(expression + ` = ${24}`);
         this.expressionBar.SetTextColor("#00ff1a");
         this.textTotalCorrect.setText(this.gameState.GetTotalCorrect().toString());
         this.expressionBar.PlayCorrectExpressionTween();
+
     }
 
     private ShowPlayerLost(expression: string): void {
@@ -546,211 +815,5 @@ export class SingleplayerScene extends Phaser.Scene {
 
 
     }
-
-
-    /**
-     * Activates when the countdown timer rings (reaches zero).
-     * Activates only once during the whole game.
-     */
-    private NoTimeLeft() {
-        for (let i = 0; i < 4; i++)
-            this.m_CardButtons[i].SetDisabled();
-
-        this.btnReset.SetDisabled();
-        this.btnUndo.SetDisabled();
-
-        this.btnOperationAdd.SetDisabled();
-        this.btnOperationSubtract.SetDisabled();
-        this.btnOperationMultiply.SetDisabled();
-        this.btnOperationDivide.SetDisabled();
-
-        this.btnNewCard.SetDisabled();
-
-        const playerScore = this.gameState.GetTotalCorrect();
-        // Check the most updated scores from the DB
-        let verifConnection = VerifyScore(playerScore, this.gameState.difficulty + 1);
-        verifConnection.then((scores) => {
-            this.playerScores = scores;
-
-            if (LoginData.IsLoggedIn()) {
-
-                // Show the final card telling the player the result of the game.
-                this.ShowGameResults(playerScore);
-
-                console.log(this.playerScores)
-                console.log(playerScore)
-
-                // Send the data to the database
-                this.SendScoreToDB(playerScore);
-
-            } else {
-                this.ShowPleaseLoginWarning(playerScore);
-            }
-
-
-        }).catch((err) => {
-            console.log("Failed to verify")
-        });
-
-
-
-    }
-
-    /* 
-        Shows some information to the player about his score,
-        saying if he got a new record, if he got a global record (top100), a school or class record.
-    */
-
-    private ShowGameResults(playerScore: number): void {
-
-        const playerName: string = LoginData.GetFirstName();
-        let winMessage: string;
-
-        let personalBest = this.playerScores['personalBest'];
-        let classBest = this.playerScores['classBest'];
-        let schoolBest = this.playerScores['schoolBest'];
-        let top100GlobalBest = this.playerScores['top100GlobalBest']
-
-
-
-        if (playerScore > personalBest) {
-            if (playerScore > top100GlobalBest) {
-                // Player got a top100 record
-                winMessage = `${playerName}, conseguiste um\nnovo recorde ABSOLUTO!\nCom ${playerScore} pontos.\n\nVê o teu resultado no TOP 100 absoluto.`;
-
-            } else if (playerScore > schoolBest) {
-                // Player got a school record
-                winMessage = `${playerName}, conseguiste um novo\nrecorde na tua escola!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua escola.`;
-
-            } else if (playerScore > classBest) {
-                // Player got a class record
-                winMessage = `${playerName}, conseguiste um\nnovo recorde na tua turma!\nCom ${playerScore} pontos.\n\n\nVê o teu resultado no TOP 100\nda tua turma.`;
-
-            } else
-                // Player got  a new personal best.
-                winMessage = `${playerName}, conseguiste melhorar o teu\nresultado anterior.\n\nNo entanto, ainda não conseguiste \nentrar no TOP 100.\n\nTenta outra vez.`;
-
-        } else {
-            // Nohing new happened
-            winMessage = `Obtiveste ${playerScore} pontos.\n\nNão conseguiste melhorar o teu\nresultado anterior\n(o teu melhor resultado é ${personalBest} pontos)\n\n\nTenta outra vez!`;
-
-        }
-
-
-
-
-
-        // Prepare the text that will be shown
-        this.txtGameResults = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
-        this.txtGameResults.setText(winMessage)
-        this.txtGameResults.setColor("#4e2400");
-        this.txtGameResults.setAlpha(0);
-
-        // Make the results panel appear
-        this.tweens.add(
-            {
-                targets: [this.imgEndGame, this.txtGameResults],
-                alpha: 1.0,
-                scale: 1.6,
-
-                duration: 500,
-                ease: 'Power1'
-            }
-        );
-
-        // Clear the artithmetic expression text
-        this.expressionBar.SetText("");
-
-        // Hide the other buttons
-        this.tweens.add(
-            {
-                targets: [this.btnOperationAdd,
-                this.btnOperationSubtract,
-                this.btnOperationMultiply,
-                this.btnOperationDivide,
-                this.btnReset,
-                this.btnUndo,
-                this.expressionBar],
-                alpha: 0.0,
-
-                duration: 500,
-                ease: 'Power1'
-            }
-        );
-
-
-
-
-
-    }
-
-    private SendScoreToDB(playerScore: number): void {
-
-        const diff = this.gameState.difficulty + 1;
-        GravaRecords(playerScore, diff);
-    }
-
-
-
-    /*
-        Makes a warning appear, telling the user to login if he wants to save his score.
-    */
-    private ShowPleaseLoginWarning(playerScore: number): void {
-
-        let message: string;
-
-
-        let top100GlobalBest = this.playerScores['top100GlobalBest']
-
-        if (playerScore > top100GlobalBest) {
-            message = `Se estivesses registado o teu\nnome figuraria no TOP 100 absoluto\ncom ${playerScore} pontos.\n\nRegista-te em\nwww.hypatiamat.com `;
-        } else {
-            message = `\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com`;
-
-        }
-
-        // Prepare the text thal will be shown
-        this.txtLoginWarning = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
-        this.txtLoginWarning.setText(message)
-        this.txtLoginWarning.setColor("#4e2400");
-        this.txtLoginWarning.setAlpha(0);
-
-        this.tweens.add(
-            {
-                targets: [this.imgEndGame, this.txtLoginWarning],
-                alpha: 1.0,
-                scale: 1.6,
-
-                duration: 500,
-                ease: 'Power1'
-            }
-        );
-
-        // Clear the artithmetic expression text
-        this.expressionBar.SetText("");
-
-        // Hide the other buttons
-        this.tweens.add(
-            {
-                targets: [this.btnOperationAdd,
-                this.btnOperationSubtract,
-                this.btnOperationMultiply,
-                this.btnOperationDivide,
-                this.btnReset,
-                this.btnUndo,
-                this.expressionBar],
-                alpha: 0.0,
-
-                duration: 500,
-                ease: 'Power1'
-            }
-        );
-
-
-
-    }
-
-
-
 
 }

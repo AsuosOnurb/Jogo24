@@ -66,7 +66,7 @@ export class MultiplayerScene extends Phaser.Scene {
     private m_Group_CardGroup: Phaser.GameObjects.Group;
     private m_Image_CardBG: Phaser.GameObjects.Image;
     private m_CardButtons: Array<BetterButton>;
-    private m_BtnUsed: Array<Boolean>;
+    private m_BtnUsed: Array<boolean>;
     private m_Btn_NewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
 
 
@@ -525,7 +525,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.cardCounter.SetDisabled(1);
 
         // Setup a button for each number in the card (4 buttons)
-        this.m_BtnUsed = new Array<Boolean>();
+        this.m_BtnUsed = new Array<boolean>();
         this.m_CardButtons = [
             new BetterButton(this, this.scale.width / 2 - 204, this.m_Image_CardBG.y,
                 1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, fill: "#FFFFFF" }, "btn_numberBG"),
