@@ -769,7 +769,7 @@ export class RankingScene extends Phaser.Scene {
             {
                 targets: this.btnMainMenu,
                 x: this.scale.width / 2,
-                y: this.scale.height / 2 + 200,
+                y: this.scale.height / 2 + 256,
                 scale: 1.1,
                 duration: 500,
                 ease: 'Power1'
@@ -790,11 +790,11 @@ export class RankingScene extends Phaser.Scene {
         )
 
         // Create a text warning the user that connection to internet was not possible
-        let noConnectionWarningText: BetterText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 128,
+        let noConnectionWarningText: BetterText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 64,
             "Não foi possível ligar à internet.", { fontFamily: 'Vertiky', align: 'center', fontSize: 64, color: "#4e2400" });
         noConnectionWarningText.setAlpha(0);
 
-        let tryAgainText: BetterText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 16,
+        let tryAgainText: BetterText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 32,
             "Verifica a tua ligação e tenta novemente.", { fontFamily: 'Vertiky', align: 'center', fontSize: 48, color: "#4e2400" });
         tryAgainText.setAlpha(0);
 

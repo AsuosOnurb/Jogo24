@@ -580,7 +580,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnAboutGame.SetDisabled(1)
     }
 
-    /* ==================== Fullscreen handling  */
+    /* ==================== Fullscreen handling ==================== */
 
     /**
      * Toggles the fullscreen mode.
