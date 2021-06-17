@@ -21,6 +21,7 @@
   },
   "exclude": [
     "dist",
+    "node_mdules",
     "webpack",
     "pwa",
     "./src/scripts/backend/BackendUtils.js",
@@ -35,12 +36,11 @@
       "./src/scripts/scenes/SingleplayerScene.ts",
       "./src/scripts/game/SingleplayerGame.ts",
       "./src/scripts/scenes/MultiplayerScene.ts",
-      "./src/scripts/game/MultiplayerGame.ts"
+      "./src/scripts/game/MultiplayerGame.ts",
+      "./src/scripts/components/BetterButton.ts",
+      "./src/scripts/components/BetterText.ts"
     ],
     "out": "./docs",
-    "exclude": [
-      "dist",
-      "node_modules"
-    ],
+    
   }
 }
