@@ -64,6 +64,7 @@ export class SingleplayerScene extends Phaser.Scene {
         super("SoloGame");
     }
 
+    /* ============================================ Scene Setup ============================================
 
     /**
    * Preloads the scene's resources and sets up their buttons/images/text.
@@ -102,7 +103,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer = // 180
-            new CountdownTimer(this, 10, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 180, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -237,6 +238,12 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
+
+    /* ============================================ Functionality ============================================ */
+
+    /**
+     * Handles the functionality of the New Card button.
+     */
     private NewCard(): void {
 
         // Disable the 'New Card' button
@@ -283,7 +290,19 @@ export class SingleplayerScene extends Phaser.Scene {
 
 
     /**
-        Callback that handles the click of a number button (one of the numbers on the card)
+     * Handles the functionality of the number buttons on the card.
+     * @param clickedButtonIndex The index of the button that was clicked.
+     * 
+     * @remarks The notion of button index is very important in this game mode due to the Undo feature.
+     * In order to know what buttons need to change, each operation has 2 button indexes: 
+     * 1. The index for the first operand button
+     * 2. A second index for the second operand button
+     * 
+     * Because each card has 4 button, the index range is [0,1,2,3].
+     * Index 0 relates to the left-most button.
+     * Index 1 relates to the top-most button.
+     * Index 2 relates to the right-most button.
+     * Index 3 relates to the bottom-most button.
     */
     private HandleButtonClick_Number(clickedButtonIndex: number): void {
 
@@ -327,16 +346,18 @@ export class SingleplayerScene extends Phaser.Scene {
             this.expressionBar.SetText(expression);
 
             /*
-                We can also check if this is the last available/enabled button.
-                If it is, then it means we now must check if the solution is correct
-            */
-            let usedCount = 0;
-            for (let i = 0; i < 4; i++)
-                if (this.m_BtnUsed[i] === true)
-                    usedCount++;
+                This is where we check if the player got the answer right.
+                First, we must only check the answer if all the card buttons have been picked (no number can be left untouched).
 
+                If all numbers have been used, then we check the solution.
+            */
+
+            const usedCount = this.m_BtnUsed.filter((b) => b == true).length;
 
             if (usedCount === 3) {
+                // All numbers were used. Proceed to checking the solution
+
+                
                 const won: boolean = this.gameState.CheckSolution(expression);
 
                 if (won) {
@@ -364,6 +385,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
+    /**
+     * Handles the functionality of the operator buttons.
+     * @param operator The string representation of the operator that was clicked, i.e: '+', '-', '*', '/' .
+     */
     private HandleButtonClick_Operation(operator: string) {
 
         // Pick the operator and get the most updated expression string. Also, this call sendds us to the next state (pickign operand 2)
@@ -378,9 +403,7 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
     /**
-     * Undo the last performed operation.
-     * 
-     * Currently, we're using a stack made of Operation objects.
+     * Handles the functionality of the Undo Button.
      */
     private HandleButtonClick_Undo(): void {
 
@@ -477,7 +500,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
-    // Reset the calculations to the original state (happens when the 'Reset' button is clicked)
+    /**
+     * Handles the functionality of the Reset Button.
+     */
     private HandleButtonClick_Reset(): void {
 
         // Completely reset game (while keeping the scores of course)
@@ -497,12 +522,12 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
 
-    /* ======================== Endgame Screens ========================= */
+    /* ============================================ Endgame Screens ============================================ */
 
 
     /**
      * Activates when the countdown timer rings (reaches zero).
-     * Activates only once during the whole game.
+     * @remarks Activates only once during the whole game.
      */
     private NoTimeLeft() {
         for (let i = 0; i < 4; i++)
@@ -529,7 +554,7 @@ export class SingleplayerScene extends Phaser.Scene {
             if (LoginData.IsLoggedIn()) {
 
                 // Show the final card telling the player the result of the game.
-                this.ShowGameResults(playerScore);
+                this.ShowEndgameMessageLoggedIn(playerScore);
 
                 console.log(this.playerScores)
                 console.log(playerScore)
@@ -538,7 +563,7 @@ export class SingleplayerScene extends Phaser.Scene {
                 this.SendScoreToDB(playerScore);
 
             } else {
-                this.ShowPleaseLoginWarning(playerScore);
+                this.ShowEndgameMessageNotLoggedIn(playerScore);
             }
 
 
@@ -547,7 +572,7 @@ export class SingleplayerScene extends Phaser.Scene {
                 Connection throught internet was not possible.
                 We'll have to display a simple message congratulating the player. 
             */
-            this.ShowEndgameScore(playerScore);
+            this.ShowEndgameMessageNotConnected(playerScore);
         });
 
 
@@ -555,12 +580,10 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
     /** 
-        Shows some information to the player about his score,
-        saying if he got a new record, if he got a global record (top100), a school or class record.
-
-        @remarks Gets called only if the player is logged in AND a connection to the DB is possible.
+     * Shows some information to the player about his score, saying if he got a new record, if he got a global record (top100), a school or class record.
+     * @remarks Gets called only if the player is logged in AND a connection to the DB is possible.
     */
-    private ShowGameResults(playerScore: number): void {
+    private ShowEndgameMessageLoggedIn(playerScore: number): void {
 
         const playerName: string = LoginData.GetFirstName();
         let winMessage: string;
@@ -645,7 +668,7 @@ export class SingleplayerScene extends Phaser.Scene {
      *
      *   @remarks Gets called only if the player is NOT logged in AND a connection to the DB is possible.
      */
-    private ShowPleaseLoginWarning(playerScore: number): void {
+    private ShowEndgameMessageNotLoggedIn(playerScore: number): void {
 
         let message: string;
 
@@ -705,7 +728,7 @@ export class SingleplayerScene extends Phaser.Scene {
      * @param playerScore The score of the player
      * @remarks Gets called only when connection to the DB is NOT possible (therefore login is not possible either)
      */
-    private ShowEndgameScore(playerScore) {
+    private ShowEndgameMessageNotConnected(playerScore) {
 
         // Prepare the text thal will be shown
         let message: string;
@@ -752,14 +775,12 @@ export class SingleplayerScene extends Phaser.Scene {
 
 
 
-    /* ==================== Utilities ========================== */
+    /* ============================================ Utilities ============================================ */
     private SendScoreToDB(playerScore: number): void {
 
         const diff = this.gameState.difficulty + 1;
         GravaRecords(playerScore, diff);
     }
-
-
 
     private ShowPlayerWon(expression: string): void {
         this.expressionBar.SetText(expression + ` = ${24}`);
@@ -777,7 +798,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
 
     }
-
 
     private EnableNumberButtons() {
         for (let i = 0; i < 4; i++) {
@@ -798,6 +818,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.btnOperationDivide.SetEnabled();
         this.btnOperationMultiply.SetEnabled();
     }
+
     private DisableOperationButtons(): void {
         this.btnOperationAdd.SetDisabled();
         this.btnOperationSubtract.SetDisabled();

@@ -89,6 +89,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#max_card_total" class="tsd-kind-icon">MAX_<wbr>CARD_<wbr>TOTAL</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="game_multiplayergame.multiplayergame.html#cardtotal" class="tsd-kind-icon">card<wbr>Total</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="game_multiplayergame.multiplayergame.html#currentcard" class="tsd-kind-icon">current<wbr>Card</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="game_multiplayergame.multiplayergame.html#currentoperation" class="tsd-kind-icon">current<wbr>Operation</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="game_multiplayergame.multiplayergame.html#currentplayer" class="tsd-kind-icon">current<wbr>Player</a></li>
@@ -105,8 +107,13 @@
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#getcurrentplayer" class="tsd-kind-icon">Get<wbr>Current<wbr>Player</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#getcurrentplayerscore" class="tsd-kind-icon">Get<wbr>Current<wbr>Player<wbr>Score</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#getplayerstate" class="tsd-kind-icon">Get<wbr>Player<wbr>State</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#getwinningplayersindexes" class="tsd-kind-icon">Get<wbr>Winning<wbr>Players<wbr>Indexes</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#getwinningscore" class="tsd-kind-icon">Get<wbr>Winning<wbr>Score</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#incrtotalcorrect" class="tsd-kind-icon">Incr<wbr>Total<wbr>Correct</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#incrtotalwrong" class="tsd-kind-icon">Incr<wbr>Total<wbr>Wrong</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#incrementtotalcardsused" class="tsd-kind-icon">Increment<wbr>Total<wbr>Cards<wbr>Used</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#isgametied" class="tsd-kind-icon">Is<wbr>Game<wbr>Tied</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#ismaxcardcountreached" class="tsd-kind-icon">Is<wbr>Max<wbr>Card<wbr>Count<wbr>Reached</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#newcard" class="tsd-kind-icon">New<wbr>Card</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#pickoperand1" class="tsd-kind-icon">Pick<wbr>Operand1</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="game_multiplayergame.multiplayergame.html#pickoperand2" class="tsd-kind-icon">Pick<wbr>Operand2</a></li>
@@ -130,7 +137,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L49">src/scripts/game/MultiplayerGame.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L52">src/scripts/game/MultiplayerGame.ts:52</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -146,13 +153,33 @@
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class">
+					<a name="max_card_total" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagReadonly">Readonly</span> MAX_<wbr>CARD_<wbr>TOTAL</h3>
+					<div class="tsd-signature tsd-kind-icon">MAX_<wbr>CARD_<wbr>TOTAL<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> = 12</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L45">src/scripts/game/MultiplayerGame.ts:45</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="cardtotal" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> card<wbr>Total</h3>
+					<div class="tsd-signature tsd-kind-icon">card<wbr>Total<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L46">src/scripts/game/MultiplayerGame.ts:46</a></li>
+						</ul>
+					</aside>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="currentcard" class="tsd-anchor"></a>
 					<h3><span class="tsd-flag ts-flagPrivate">Private</span> current<wbr>Card</h3>
 					<div class="tsd-signature tsd-kind-icon">current<wbr>Card<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L43">src/scripts/game/MultiplayerGame.ts:43</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L43">src/scripts/game/MultiplayerGame.ts:43</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -162,7 +189,7 @@
 					<div class="tsd-signature tsd-kind-icon">current<wbr>Operation<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Operation</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L49">src/scripts/game/MultiplayerGame.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L52">src/scripts/game/MultiplayerGame.ts:52</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -172,7 +199,7 @@
 					<div class="tsd-signature tsd-kind-icon">current<wbr>Player<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L46">src/scripts/game/MultiplayerGame.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L49">src/scripts/game/MultiplayerGame.ts:49</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -182,7 +209,7 @@
 					<div class="tsd-signature tsd-kind-icon">difficulty<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Difficulty</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L42">src/scripts/game/MultiplayerGame.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L42">src/scripts/game/MultiplayerGame.ts:42</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -192,7 +219,7 @@
 					<div class="tsd-signature tsd-kind-icon">player<wbr>State<span class="tsd-signature-symbol">:</span> <a href="../enums/game_multiplayergame.playerstate.html" class="tsd-signature-type" data-tsd-kind="Enumeration">PlayerState</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L47">src/scripts/game/MultiplayerGame.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L50">src/scripts/game/MultiplayerGame.ts:50</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -202,7 +229,7 @@
 					<div class="tsd-signature tsd-kind-icon">players<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Player</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L45">src/scripts/game/MultiplayerGame.ts:45</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L48">src/scripts/game/MultiplayerGame.ts:48</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -219,7 +246,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L155">src/scripts/game/MultiplayerGame.ts:155</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L156">src/scripts/game/MultiplayerGame.ts:156</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -242,7 +269,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L203">src/scripts/game/MultiplayerGame.ts:203</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L233">src/scripts/game/MultiplayerGame.ts:233</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
@@ -259,7 +286,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L208">src/scripts/game/MultiplayerGame.ts:208</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L248">src/scripts/game/MultiplayerGame.ts:248</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -276,7 +303,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L178">src/scripts/game/MultiplayerGame.ts:178</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L175">src/scripts/game/MultiplayerGame.ts:175</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -293,10 +320,44 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L184">src/scripts/game/MultiplayerGame.ts:184</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L215">src/scripts/game/MultiplayerGame.ts:215</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="../enums/game_multiplayergame.playerstate.html" class="tsd-signature-type" data-tsd-kind="Enumeration">PlayerState</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getwinningplayersindexes" class="tsd-anchor"></a>
+					<h3>Get<wbr>Winning<wbr>Players<wbr>Indexes</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">Get<wbr>Winning<wbr>Players<wbr>Indexes<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L186">src/scripts/game/MultiplayerGame.ts:186</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">[]</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getwinningscore" class="tsd-anchor"></a>
+					<h3>Get<wbr>Winning<wbr>Score</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">Get<wbr>Winning<wbr>Score<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L206">src/scripts/game/MultiplayerGame.ts:206</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -310,7 +371,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L168">src/scripts/game/MultiplayerGame.ts:168</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L165">src/scripts/game/MultiplayerGame.ts:165</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
@@ -327,10 +388,61 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L173">src/scripts/game/MultiplayerGame.ts:173</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L170">src/scripts/game/MultiplayerGame.ts:170</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="incrementtotalcardsused" class="tsd-anchor"></a>
+					<h3>Increment<wbr>Total<wbr>Cards<wbr>Used</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">Increment<wbr>Total<wbr>Cards<wbr>Used<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L237">src/scripts/game/MultiplayerGame.ts:237</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">number</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="isgametied" class="tsd-anchor"></a>
+					<h3>Is<wbr>Game<wbr>Tied</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">Is<wbr>Game<wbr>Tied<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L179">src/scripts/game/MultiplayerGame.ts:179</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="ismaxcardcountreached" class="tsd-anchor"></a>
+					<h3>Is<wbr>Max<wbr>Card<wbr>Count<wbr>Reached</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">Is<wbr>Max<wbr>Card<wbr>Count<wbr>Reached<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L242">src/scripts/game/MultiplayerGame.ts:242</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
 						</li>
 					</ul>
 				</section>
@@ -344,7 +456,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L88">src/scripts/game/MultiplayerGame.ts:88</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L90">src/scripts/game/MultiplayerGame.ts:90</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -375,7 +487,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L96">src/scripts/game/MultiplayerGame.ts:96</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L98">src/scripts/game/MultiplayerGame.ts:98</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -401,7 +513,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L103">src/scripts/game/MultiplayerGame.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L105">src/scripts/game/MultiplayerGame.ts:105</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -427,7 +539,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L134">src/scripts/game/MultiplayerGame.ts:134</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L136">src/scripts/game/MultiplayerGame.ts:136</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -450,7 +562,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L194">src/scripts/game/MultiplayerGame.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L224">src/scripts/game/MultiplayerGame.ts:224</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -477,7 +589,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/1bc9495/src/scripts/game/MultiplayerGame.ts#L212">src/scripts/game/MultiplayerGame.ts:212</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/62013fa/src/scripts/game/MultiplayerGame.ts#L252">src/scripts/game/MultiplayerGame.ts:252</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -531,6 +643,12 @@
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
 								<a href="game_multiplayergame.multiplayergame.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class">
+								<a href="game_multiplayergame.multiplayergame.html#max_card_total" class="tsd-kind-icon">MAX_<wbr>CARD_<wbr>TOTAL</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="game_multiplayergame.multiplayergame.html#cardtotal" class="tsd-kind-icon">card<wbr>Total</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="game_multiplayergame.multiplayergame.html#currentcard" class="tsd-kind-icon">current<wbr>Card</a>
 							</li>
@@ -565,10 +683,25 @@
 								<a href="game_multiplayergame.multiplayergame.html#getplayerstate" class="tsd-kind-icon">Get<wbr>Player<wbr>State</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="game_multiplayergame.multiplayergame.html#getwinningplayersindexes" class="tsd-kind-icon">Get<wbr>Winning<wbr>Players<wbr>Indexes</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="game_multiplayergame.multiplayergame.html#getwinningscore" class="tsd-kind-icon">Get<wbr>Winning<wbr>Score</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="game_multiplayergame.multiplayergame.html#incrtotalcorrect" class="tsd-kind-icon">Incr<wbr>Total<wbr>Correct</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="game_multiplayergame.multiplayergame.html#incrtotalwrong" class="tsd-kind-icon">Incr<wbr>Total<wbr>Wrong</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="game_multiplayergame.multiplayergame.html#incrementtotalcardsused" class="tsd-kind-icon">Increment<wbr>Total<wbr>Cards<wbr>Used</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="game_multiplayergame.multiplayergame.html#isgametied" class="tsd-kind-icon">Is<wbr>Game<wbr>Tied</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="game_multiplayergame.multiplayergame.html#ismaxcardcountreached" class="tsd-kind-icon">Is<wbr>Max<wbr>Card<wbr>Count<wbr>Reached</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="game_multiplayergame.multiplayergame.html#newcard" class="tsd-kind-icon">New<wbr>Card</a>
