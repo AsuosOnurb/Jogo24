@@ -103,7 +103,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer = // 180
-            new CountdownTimer(this, 180, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 20, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -357,7 +357,7 @@ export class SingleplayerScene extends Phaser.Scene {
             if (usedCount === 3) {
                 // All numbers were used. Proceed to checking the solution
 
-                
+
                 const won: boolean = this.gameState.CheckSolution(expression);
 
                 if (won) {
