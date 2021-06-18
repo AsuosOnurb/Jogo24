@@ -1,10 +1,37 @@
+// BackendConnection.ts
+/**
+ * Module responsible for the implementation of the interface with the game's backend.
+ * @module
+ */
+
+
 import { LoginData } from "./LoginData";
 
 import * as $ from 'jquery';
 
+export enum DifficultyFilter  {
+    Easy = 1,
+    Medium = 2,
+    Hard = 3
+
+}
+
+export enum SpaceFilter 
+{
+    Class = 0,
+    School = 1,
+    All = 2,
+}
+
 
 /* ======================== Login System ========================= */
 
+/**
+ * Attempts to login the user.
+ * @param username The user's username
+ * @param password The user's password
+ * @return Returns a promise of a string with the user's login data (name, school, class)
+ */
 export function Login(username: string, password: string) {
     return new Promise(function (resolve, reject) {
         $.ajax({
@@ -32,38 +59,9 @@ export function Login(username: string, password: string) {
 };
 
 
-
 /**
- * Check if there is an active session
+ * Attempts to logout the user.
  */
-/*
- export function SessionVerify() {
-    $.ajax
-        ({
-            type: "POST",
-            url: "https://www.hypatiamat.com/loginActionVH.php",
-            data: "action=verify",
-            cache: false,
-            success: function (response) {
-                if (response != "not") {
-                    LoginData.SetUser(response.split(",")[0]);
-                    LoginData.SetFirstName(response.split(",")[1]);
-                    LoginData.SetSchool(response.split(",")[2]);
-                    LoginData.SetClass(response.split(",")[3]);
-                }
-                else {
-                    LoginData.SetUser("");
-                    return;
-
-                }
-            },
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                LoginData.SetUser("");
-                alert("Falha de ligação, por favor verifique a sua conexão")
-            }
-        })
-}*/
-
 export function DestroySession() {
     $.ajax
         ({
@@ -82,9 +80,17 @@ export function DestroySession() {
 }
 
 
-/* ============================= Scores ===================================== */
+/* ============================= Ranking Scene Scores ===================================== */
 
-export function GetTOP(di: string, df: string) {
+/**
+ * Gets, from the DB, a (big) string with all user's data in a given date interval.
+ * @param di The initial date of the time interval.
+ * @param df The final date of the time interval.
+ * 
+ * @return Returns a promise of that data.
+ * 
+ */
+export function GetGlobalTOP(di: string, df: string) {
     return new Promise(function (resolve, reject) {
         $.ajax
             ({
@@ -115,20 +121,29 @@ export function GetTOP(di: string, df: string) {
 
 }
 
-
-export function UpdateTOP(di, df, flag, tipoTOP) {
+/**
+ * Gets, from the DB, a (big) string with all user's data in a given date interval.
+ * @param di The initial date of the time interval.
+ * @param df The final date of the time interval.
+ * 
+ * @return Returns a promise of that data.
+ * 
+ * @remarks This function is used only when we're trying ot update the score table with different filters.
+ * 
+ */
+export function GetFilteredTOP(di: string, df: string, flag: SpaceFilter, tipoTOP: DifficultyFilter) {
     let classCode: string = LoginData.GetClass();
     let schoolCode: string = LoginData.GetSchool();
+
 
     return new Promise(function (resolve, reject) {
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=mostraNew&anoLi=" + di + "&anoLf=" + df +
-                    "&mturma=" + classCode +
-                    "&mescola=" + schoolCode +
-                    "&flag=" + flag + "&tip=" + tipoTOP + "&tC=jogo24HypatiaTOP",
+
+                data: `action=mostraNew&anoLi=${di}&anoLf=${df}&mturma=${classCode}&mescola=${schoolCode}&flag=${flag}&tip=${tipoTOP}&tC=jogo24HypatiaTOP`,
+
                 crossDomain: true,
                 cache: false,
                 success: function (data) {
@@ -144,7 +159,19 @@ export function UpdateTOP(di, df, flag, tipoTOP) {
 
 }
 
-export function VerifyScore(score, diff) {
+
+/* ============================= Getting and Sending Scores ===================================== */
+
+/**
+ * Gets, from the DB, the most updated scores.
+ * @param score The score that the player got.
+ * @param diff The difficulty of the game.
+ * @returns A promise of an object containing different kinds of scores.
+ * 
+ * @remarks This is useful in the singleplayer game, when we want to check if the player got a PB and things like that.
+ * We need to perform this update because new scores can be added while the user is playing.
+ */
+export function GetUpdatedScores(score: number, diff: number) {
     const username = LoginData.GetUser();
     const school = LoginData.GetSchool();
     const _class = LoginData.GetClass();

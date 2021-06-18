@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PlayerState | Jogo24</title>
+	<title>DifficultyFilter | Jogo24</title>
 	<meta name="description" content="Documentation for Jogo24">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -55,33 +55,19 @@
 					<a href="../modules.html">Jogo24</a>
 				</li>
 				<li>
-					<a href="../modules/game_singleplayergame.html">game/SingleplayerGame</a>
+					<a href="../modules/backend_backendconnection.html">backend/BackendConnection</a>
 				</li>
 				<li>
-					<a href="game_singleplayergame.playerstate.html">PlayerState</a>
+					<a href="backend_backendconnection.difficultyfilter.html">DifficultyFilter</a>
 				</li>
 			</ul>
-			<h1>Enumeration PlayerState</h1>
+			<h1>Enumeration DifficultyFilter</h1>
 		</div>
 	</div>
 </header>
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
-			<section class="tsd-panel tsd-comment">
-				<div class="tsd-comment tsd-typography">
-					<div class="lead">
-						<p>Defines the states that the player can be in.</p>
-					</div>
-					<p>A player can either be:</p>
-					<ol>
-						<li>Picking the first operand of an operation;</li>
-						<li>Picking the operator of the operation.</li>
-						<li>Picking the second (and last) operand of the operation.</li>
-					</ol>
-					<p>The whole game process revolves around these three states.</p>
-				</div>
-			</section>
 			<section class="tsd-panel-group tsd-index-group">
 				<h2>Index</h2>
 				<section class="tsd-panel tsd-index-panel">
@@ -89,9 +75,9 @@
 						<section class="tsd-index-section ">
 							<h3>Enumeration members</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_singleplayergame.playerstate.html#pickingoperand1" class="tsd-kind-icon">Picking<wbr>Operand1</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_singleplayergame.playerstate.html#pickingoperand2" class="tsd-kind-icon">Picking<wbr>Operand2</a></li>
-								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="game_singleplayergame.playerstate.html#pickingoperator" class="tsd-kind-icon">Picking<wbr>Operator</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="backend_backendconnection.difficultyfilter.html#easy" class="tsd-kind-icon">Easy</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="backend_backendconnection.difficultyfilter.html#hard" class="tsd-kind-icon">Hard</a></li>
+								<li class="tsd-kind-enum-member tsd-parent-kind-enum"><a href="backend_backendconnection.difficultyfilter.html#medium" class="tsd-kind-icon">Medium</a></li>
 							</ul>
 						</section>
 					</div>
@@ -100,32 +86,32 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Enumeration members</h2>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="pickingoperand1" class="tsd-anchor"></a>
-					<h3>Picking<wbr>Operand1</h3>
-					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operand1<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 0</span></div>
+					<a name="easy" class="tsd-anchor"></a>
+					<h3>Easy</h3>
+					<div class="tsd-signature tsd-kind-icon">Easy<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/761e79d/src/scripts/game/SingleplayerGame.ts#L21">src/scripts/game/SingleplayerGame.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/761e79d/src/scripts/backend/BackendConnection.ts#L13">src/scripts/backend/BackendConnection.ts:13</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="pickingoperand2" class="tsd-anchor"></a>
-					<h3>Picking<wbr>Operand2</h3>
-					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operand2<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
+					<a name="hard" class="tsd-anchor"></a>
+					<h3>Hard</h3>
+					<div class="tsd-signature tsd-kind-icon">Hard<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 3</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/761e79d/src/scripts/game/SingleplayerGame.ts#L23">src/scripts/game/SingleplayerGame.ts:23</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/761e79d/src/scripts/backend/BackendConnection.ts#L15">src/scripts/backend/BackendConnection.ts:15</a></li>
 						</ul>
 					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-enum-member tsd-parent-kind-enum">
-					<a name="pickingoperator" class="tsd-anchor"></a>
-					<h3>Picking<wbr>Operator</h3>
-					<div class="tsd-signature tsd-kind-icon">Picking<wbr>Operator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 1</span></div>
+					<a name="medium" class="tsd-anchor"></a>
+					<h3>Medium</h3>
+					<div class="tsd-signature tsd-kind-icon">Medium<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol"> = 2</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/761e79d/src/scripts/game/SingleplayerGame.ts#L22">src/scripts/game/SingleplayerGame.ts:22</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/761e79d/src/scripts/backend/BackendConnection.ts#L14">src/scripts/backend/BackendConnection.ts:14</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -137,7 +123,7 @@
 					<li class=" ">
 						<a href="../modules.html">Modules</a>
 					</li>
-					<li class=" tsd-kind-module">
+					<li class="current tsd-kind-module">
 						<a href="../modules/backend_backendconnection.html">backend/<wbr>Backend<wbr>Connection</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -152,7 +138,7 @@
 					<li class=" tsd-kind-module">
 						<a href="../modules/game_multiplayergame.html">game/<wbr>Multiplayer<wbr>Game</a>
 					</li>
-					<li class="current tsd-kind-module">
+					<li class=" tsd-kind-module">
 						<a href="../modules/game_singleplayergame.html">game/<wbr>Singleplayer<wbr>Game</a>
 					</li>
 					<li class=" tsd-kind-module">
@@ -174,23 +160,44 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-enum tsd-parent-kind-module">
-						<a href="game_singleplayergame.playerstate.html" class="tsd-kind-icon">Player<wbr>State</a>
+						<a href="backend_backendconnection.difficultyfilter.html" class="tsd-kind-icon">Difficulty<wbr>Filter</a>
 						<ul>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="game_singleplayergame.playerstate.html#pickingoperand1" class="tsd-kind-icon">Picking<wbr>Operand1</a>
+								<a href="backend_backendconnection.difficultyfilter.html#easy" class="tsd-kind-icon">Easy</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="game_singleplayergame.playerstate.html#pickingoperand2" class="tsd-kind-icon">Picking<wbr>Operand2</a>
+								<a href="backend_backendconnection.difficultyfilter.html#hard" class="tsd-kind-icon">Hard</a>
 							</li>
 							<li class=" tsd-kind-enum-member tsd-parent-kind-enum">
-								<a href="game_singleplayergame.playerstate.html#pickingoperator" class="tsd-kind-icon">Picking<wbr>Operator</a>
+								<a href="backend_backendconnection.difficultyfilter.html#medium" class="tsd-kind-icon">Medium</a>
 							</li>
 						</ul>
 					</li>
 				</ul>
 				<ul class="after-current">
-					<li class=" tsd-kind-class tsd-parent-kind-module">
-						<a href="../classes/game_singleplayergame.singleplayergame.html" class="tsd-kind-icon">Singleplayer<wbr>Game</a>
+					<li class=" tsd-kind-enum tsd-parent-kind-module">
+						<a href="backend_backendconnection.spacefilter.html" class="tsd-kind-icon">Space<wbr>Filter</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/backend_backendconnection.html#destroysession" class="tsd-kind-icon">Destroy<wbr>Session</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/backend_backendconnection.html#getfilteredtop" class="tsd-kind-icon">Get<wbr>FilteredTOP</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/backend_backendconnection.html#getglobaltop" class="tsd-kind-icon">Get<wbr>GlobalTOP</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/backend_backendconnection.html#getrecords" class="tsd-kind-icon">Get<wbr>Records</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/backend_backendconnection.html#getupdatedscores" class="tsd-kind-icon">Get<wbr>Updated<wbr>Scores</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/backend_backendconnection.html#gravarecords" class="tsd-kind-icon">Grava<wbr>Records</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="../modules/backend_backendconnection.html#login" class="tsd-kind-icon">Login</a>
 					</li>
 				</ul>
 			</nav>

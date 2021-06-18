@@ -8,7 +8,7 @@ import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../utils/Utils'
 import { LoginData } from '../backend/LoginData'
 import { Operation } from '../utils/Operations'
-import { GetRecords, GravaRecords, VerifyScore } from '../backend/BackendConnection'
+import { GetRecords, GravaRecords, GetUpdatedScores } from '../backend/BackendConnection'
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -545,7 +545,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         const playerScore = this.gameState.GetTotalCorrect();
         // Check the most updated scores from the DB
-        let verifConnection = VerifyScore(playerScore, this.gameState.difficulty + 1);
+        let verifConnection = GetUpdatedScores(playerScore, this.gameState.difficulty + 1);
         verifConnection.then((scores) => {
             this.playerScores = scores;
 

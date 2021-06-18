@@ -12,7 +12,7 @@ import { BetterButton } from '../components/BetterButton';
 import { BetterText } from '../components/BetterText';
 import { LoginData } from '../backend/LoginData';
 import { ParsedUpdatedScoreData, ParseScoreData } from '../backend/BackendUtils';
-import { GetTOP, UpdateTOP } from '../backend/BackendConnection';
+import { GetGlobalTOP, GetFilteredTOP, SpaceFilter, DifficultyFilter } from '../backend/BackendConnection';
 
 /**
  
@@ -177,17 +177,17 @@ export class RankingScene extends Phaser.Scene {
      * If dificulty = 3, then the user is asking for the 'Hard' mode scores
      * 
      */
-    private dificulty: number;
+    private dificultyFilter: DifficultyFilter;
 
     /**
-     * The flag parameter that is sent to the DB and determines the space of scores to retrieve. Value range is [0,1,2].
+     * The parameter that is sent to the DB and determines the space of scores to retrieve. Value range is [0,1,2].
      * 
      * 
-     * If flag = 1, then the user is trying to see the global scores.
-     * If flag = 2, then the user is trying to see the school scores.
-     * If flag = 3, then the user is trying to see his/her classe's scores.
+     * If flag = 2, then the user is trying to see the global scores.
+     * If flag = 1, then the user is trying to see the school scores.
+     * If flag = 0, then the user is trying to see his/her classe's scores.
      */
-    private flag;
+    private spaceFilter: SpaceFilter;
 
 
 
@@ -211,8 +211,8 @@ export class RankingScene extends Phaser.Scene {
         }
         this.dataInicial = x + "-09-01";
         this.dataFinal = y + "-08-31";
-        this.dificulty = 1;
-        this.flag = 2;
+        this.dificultyFilter = DifficultyFilter.Easy;
+        this.spaceFilter = SpaceFilter.All;
 
     }
 
@@ -261,7 +261,9 @@ export class RankingScene extends Phaser.Scene {
 
         let fadedoutImg =  this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
-        let connection = GetTOP(this.dataInicial, this.dataFinal);
+        
+
+        let connection = GetGlobalTOP(this.dataInicial, this.dataFinal);
 
         connection.then((data) => {
 
@@ -522,9 +524,9 @@ export class RankingScene extends Phaser.Scene {
             this.iconDificil.setFillStyle('0xffffff');
             this.iconNormal.setFillStyle('0xffffff');
             this.iconFacil.setFillStyle('0x000000');
-            this.dificulty = 1;
+            this.dificultyFilter = DifficultyFilter.Easy;
 
-            this.UpdateTop(); // Connect to DB
+            this.UpdateTable(); // Connect to DB
 
         });
 
@@ -535,11 +537,11 @@ export class RankingScene extends Phaser.Scene {
             this.iconDificil.setFillStyle('0xffffff');
             this.iconNormal.setFillStyle('0x000000');
             this.iconFacil.setFillStyle('0xffffff');
-            this.dificulty = 2;
+            this.dificultyFilter =  DifficultyFilter.Medium;
 
 
 
-            this.UpdateTop(); // Connect to BD
+            this.UpdateTable(); // Connect to BD
         });
 
         this.lblDificil.setInteractive({ useHandCursor: true });
@@ -548,11 +550,11 @@ export class RankingScene extends Phaser.Scene {
             this.iconDificil.setFillStyle('0x000000');
             this.iconNormal.setFillStyle('0xffffff');
             this.iconFacil.setFillStyle('0xffffff');
-            this.dificulty = 3;
+            this.dificultyFilter =  DifficultyFilter.Hard;
 
 
 
-            this.UpdateTop();
+            this.UpdateTable();
         });
 
         this.lblFiltro = new BetterText(this, 0, 0, 'Filtro', { fontFamily: 'Folks-Bold', fontSize: 32, color: '#403217', align: 'center' });
@@ -596,11 +598,11 @@ export class RankingScene extends Phaser.Scene {
 
             this.iconTurma.setFillStyle('0xffffff');
 
-            this.flag = 2;
+            this.spaceFilter = SpaceFilter.All;
 
 
 
-            this.UpdateTop();
+            this.UpdateTable();
         });
 
         this.lblFiltroEscola.setInteractive({ useHandCursor: true });
@@ -613,9 +615,9 @@ export class RankingScene extends Phaser.Scene {
 
             this.iconTurma.setFillStyle('0xffffff');
 
-            this.flag = 1;
+            this.spaceFilter = SpaceFilter.School;
 
-            this.UpdateTop();
+            this.UpdateTable();
         });
         this.lblFiltroTurma.setInteractive({ useHandCursor: true });
         this.lblFiltroTurma.input.hitArea.setTo(-50, -5, this.lblFiltroTurma.width + 60, this.lblFiltroTurma.height);
@@ -627,10 +629,10 @@ export class RankingScene extends Phaser.Scene {
 
             this.iconTurma.setFillStyle('0x000000');
 
-            this.flag = 0;
+            this.spaceFilter = SpaceFilter.Class;
 
 
-            this.UpdateTop();
+            this.UpdateTable();
         });
 
         this.iconTodos.setFillStyle('0x000000');
@@ -737,7 +739,7 @@ export class RankingScene extends Phaser.Scene {
                         this.dataFinal = new Date().toISOString().slice(0, 10)
                     }
 
-                    this.UpdateTop(); // Connect to the BD
+                    this.UpdateTable(); // Connect to the BD
                 });
 
                 let tmp = xx.slice(2, 4) + '-' + yy.slice(2, 4);
@@ -876,7 +878,7 @@ export class RankingScene extends Phaser.Scene {
      * Fetches information from the DB and updates the ranking table with that data.
      * If, at the time of invocation, it is not possible to correctly communicate with the DB, then the score table is emptied.
      */
-    private UpdateTop(): void {
+    private UpdateTable(): void {
 
         /** 
          * This procedure does two things (wich is probably bad practice...):
@@ -888,7 +890,7 @@ export class RankingScene extends Phaser.Scene {
          */
 
 
-        let connection = UpdateTOP(this.dataInicial, this.dataFinal, this.flag, this.dificulty);
+        let connection = GetFilteredTOP(this.dataInicial, this.dataFinal, this.spaceFilter, this.dificultyFilter);
 
         connection.then((data) => {
 
