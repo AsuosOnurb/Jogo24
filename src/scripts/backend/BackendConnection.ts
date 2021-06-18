@@ -5,12 +5,16 @@ import * as $ from 'jquery';
 
 /* ======================== Login System ========================= */
 
-export function Login(username, password) {
+export function Login(username: string, password: string) {
     return new Promise(function (resolve, reject) {
         $.ajax({
             type: "POST",
+
             url: "https://www.hypatiamat.com/loginActionVH.php",
-            data: "action=dologin&u=" + username + "&p=" + password,
+            
+            data: "action=dologin&u=" + 
+            username + "&p=" + password,
+
             crossDomain: true,
             cache: false,
 
@@ -32,6 +36,7 @@ export function Login(username, password) {
 /**
  * Check if there is an active session
  */
+/*
  export function SessionVerify() {
     $.ajax
         ({
@@ -57,7 +62,7 @@ export function Login(username, password) {
                 alert("Falha de ligação, por favor verifique a sua conexão")
             }
         })
-}
+}*/
 
 export function DestroySession() {
     $.ajax
@@ -78,20 +83,21 @@ export function DestroySession() {
 
 
 /* ============================= Scores ===================================== */
-export function GetTOP(di, df, globalCodTurma, globalCodEscola, tipoTOP) {
+
+export function GetTOP(di: string, df: string) {
     return new Promise(function (resolve, reject) {
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
 
-                data: "action=mostraNew&anoLi=" + di +
-                    "&anoLf=" + df +
-                    "&mturma=" + globalCodTurma +
-                    "&mescola=" + globalCodEscola +
-                    "&flag=2" +
-                    "&tip=" + tipoTOP +
-                    "&tC=jogo24HypatiaTOP",
+                data: `action=mostraNew&anoLi=${di} 
+                    &anoLf=${df}
+                    &mturma=
+                    &mescola=
+                    &flag=2
+                    &tip=1
+                    &tC=jogo24HypatiaTOP`,
                 crossDomain: true,
                 cache: false,
                 success: function (data) {
@@ -177,8 +183,7 @@ export function VerifyScore(score, diff) {
 
 }
 
-
-
+/* Tipar função */
 export function GravaRecords(score, diff) {
 
     const username = LoginData.GetUser();

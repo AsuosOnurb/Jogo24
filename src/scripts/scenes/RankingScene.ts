@@ -261,9 +261,7 @@ export class RankingScene extends Phaser.Scene {
 
         let fadedoutImg =  this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
-        
-
-        let connection = GetTOP(this.dataInicial, this.dataFinal, "", "", 1);
+        let connection = GetTOP(this.dataInicial, this.dataFinal);
 
         connection.then((data) => {
 
