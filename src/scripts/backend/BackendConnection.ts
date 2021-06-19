@@ -9,15 +9,14 @@ import { LoginData } from "./LoginData";
 
 import * as $ from 'jquery';
 
-export enum DifficultyFilter  {
+export enum DifficultyFilter {
     Easy = 1,
     Medium = 2,
     Hard = 3
 
 }
 
-export enum SpaceFilter 
-{
+export enum SpaceFilter {
     Class = 0,
     School = 1,
     All = 2,
@@ -38,9 +37,9 @@ export function Login(username: string, password: string) {
             type: "POST",
 
             url: "https://www.hypatiamat.com/loginActionVH.php",
-            
-            data: "action=dologin&u=" + 
-            username + "&p=" + password,
+
+            data: "action=dologin&u=" +
+                username + "&p=" + password,
 
             crossDomain: true,
             cache: false,
@@ -97,14 +96,14 @@ export function GetGlobalTOP(di: string, df: string) {
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
 
-                data: 
-                "action=mostraNew&anoLi=" + di +
-                "&anoLf=" + df +
-                "&mturma=" + "" +
-                "&mescola=" + "" +
-                "&flag=2" +
-                "&tip=" + "1" +
-                "&tC=jogo24HypatiaTOP",
+                data:
+                    "action=mostraNew&anoLi=" + di +
+                    "&anoLf=" + df +
+                    "&mturma=" + "" +
+                    "&mescola=" + "" +
+                    "&flag=2" +
+                    "&tip=" + "1" +
+                    "&tC=jogo24HypatiaTOP",
 
                 crossDomain: true,
                 cache: false,
@@ -143,19 +142,19 @@ export function GetFilteredTOP(di: string, df: string, flag: SpaceFilter, tipoTO
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
 
-                data: 
-                "action=mostraNew&anoLi=" + di + 
-                "&anoLf=" + df +
-                "&mturma=" + classCode +
-                "&mescola=" + schoolCode +
-                "&flag=" + flag + 
-                "&tip=" + tipoTOP + 
-                "&tC=jogo24HypatiaTOP",
+                data:
+                    "action=mostraNew&anoLi=" + di +
+                    "&anoLf=" + df +
+                    "&mturma=" + classCode +
+                    "&mescola=" + schoolCode +
+                    "&flag=" + flag +
+                    "&tip=" + tipoTOP +
+                    "&tC=jogo24HypatiaTOP",
 
                 crossDomain: true,
                 cache: false,
                 success: function (dta) {
-               
+
                     resolve(dta)
                 },
 
@@ -170,10 +169,6 @@ export function GetFilteredTOP(di: string, df: string, flag: SpaceFilter, tipoTO
 
 
 /* ============================= Getting and Sending Scores ===================================== */
-
-
-
-
 /**
  * Sends/Registers the player score to the DB.
  * @param score The score to send/register.
@@ -186,19 +181,20 @@ export function UpdateScore(score: number, diff: number) {
     const userSchool = LoginData.GetSchool();
     const userClass = LoginData.GetClass();
 
+
     return new Promise(function (resolve, reject) {
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
 
-                data: 
-                    `action=insere&musername=${userUsername}
-                    &mturma=${userClass}
-                    &mescola=${userSchool}
-                    &mpontuacao=${score}
-                    &mtipo=${diff}
-                    &t=jogo24Hypatia&tC=jogo24HypatiaTOP`,
+                data:
+                    "action=insere&musername=" + userUsername +
+                    "&mturma=" + userClass +
+                    "&mescola=" + userSchool +
+                    "&mpontuacao=" + score +
+                    "&mtipo=" + diff +
+                    "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
 
                 crossDomain: true,
                 cache: false,
@@ -221,7 +217,7 @@ export function UpdateScore(score: number, diff: number) {
  * @remarks This is useful in the singleplayer game, when we want to check if the player got a PB and things like that.
  * We need to perform this update because new scores can be added while the user is playing.
  */
- export function GetUpdatedScores(score: number, diff: number) {
+export function GetUpdatedScores(score: number, diff: number) {
     const username = LoginData.GetUser();
     const school = LoginData.GetSchool();
     const _class = LoginData.GetClass();

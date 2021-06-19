@@ -731,8 +731,8 @@ export class SingleplayerScene extends Phaser.Scene {
         let message: string;
         if (playerScore == 1)
             message = `Parabéns!\nObtiveste 1 ponto!`
-        else 
-            message =  `Parabéns!\nObtiveste ${playerScore} pontos!`
+        else
+            message = `Parabéns!\nObtiveste ${playerScore} pontos!`
 
         let congratsText = new BetterText(this, this.scale.width / 2, this.scale.height / 2, message, { color: '#4e2400', fontFamily: 'Vertiky', align: 'center', fontSize: 54 });
         //this.txtLoginWarning.setColor("#4e2400");
@@ -776,7 +776,11 @@ export class SingleplayerScene extends Phaser.Scene {
     private SendScoreToDB(playerScore: number): void {
 
         const diff = this.gameState.difficulty + 1;
-        UpdateScore(playerScore, diff);
+        let connection = UpdateScore(playerScore, diff);
+        connection.then((data) => {
+        }).catch((err) => {
+            alert("Não foi possível enviar a pontuação. Verifique a ligação à internet.");
+        });
     }
 
     private ShowPlayerWon(expression: string): void {
