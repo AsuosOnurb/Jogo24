@@ -262,12 +262,16 @@ export class RankingScene extends Phaser.Scene {
         let fadedoutImg =  this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
         
-
+        console.log("Getting global top");
         let connection = GetGlobalTOP(this.dataInicial, this.dataFinal);
+        console.log(connection)
 
         connection.then((data) => {
 
+            console.log(data)
+
             let parsedData = ParseScoreData(data);
+            console.log(parsedData);
 
             this.databaseData = parsedData; // databaseData is what we use to populate the table when we first start the scene.
 

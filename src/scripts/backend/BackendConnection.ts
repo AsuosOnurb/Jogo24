@@ -98,14 +98,13 @@ export function GetGlobalTOP(di: string, df: string) {
                 url: "https://www.hypatiamat.com/newHRecords.php",
 
                 data: 
-                    `action=mostraNew
-                    &anoLi=${di} 
-                    &anoLf=${df}
-                    &mturma=
-                    &mescola=
-                    &flag=${SpaceFilter.All}
-                    &tip=${DifficultyFilter.Easy}
-                    &tC=jogo24HypatiaTOP`,
+                "action=mostraNew&anoLi=" + di +
+                "&anoLf=" + df +
+                "&mturma=" + "" +
+                "&mescola=" + "" +
+                "&flag=2" +
+                "&tip=" + "1" +
+                "&tC=jogo24HypatiaTOP",
 
                 crossDomain: true,
                 cache: false,
@@ -145,19 +144,19 @@ export function GetFilteredTOP(di: string, df: string, flag: SpaceFilter, tipoTO
                 url: "https://www.hypatiamat.com/newHRecords.php",
 
                 data: 
-                    `action=mostraNew
-                    &anoLi=${di}
-                    &anoLf=${df}
-                    &mturma=${classCode}
-                    &mescola=${schoolCode}
-                    &flag=${flag}
-                    &tip=${tipoTOP}
-                    &tC=jogo24HypatiaTOP`,
+                "action=mostraNew&anoLi=" + di + 
+                "&anoLf=" + df +
+                "&mturma=" + classCode +
+                "&mescola=" + schoolCode +
+                "&flag=" + flag + 
+                "&tip=" + tipoTOP + 
+                "&tC=jogo24HypatiaTOP",
 
                 crossDomain: true,
                 cache: false,
-                success: function (data) {
-                    resolve(data)
+                success: function (dta) {
+               
+                    resolve(dta)
                 },
 
                 error: function (err) {
