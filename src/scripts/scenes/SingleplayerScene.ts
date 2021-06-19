@@ -8,7 +8,7 @@ import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../utils/Utils'
 import { LoginData } from '../backend/LoginData'
 import { Operation } from '../utils/Operations'
-import { GetRecords, GravaRecords, GetUpdatedScores } from '../backend/BackendConnection'
+import { GetRecords, UpdateScore, GetUpdatedScores } from '../backend/BackendConnection'
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -556,9 +556,6 @@ export class SingleplayerScene extends Phaser.Scene {
                 // Show the final card telling the player the result of the game.
                 this.ShowEndgameMessageLoggedIn(playerScore);
 
-                console.log(this.playerScores)
-                console.log(playerScore)
-
                 // Send the data to the database
                 this.SendScoreToDB(playerScore);
 
@@ -779,7 +776,7 @@ export class SingleplayerScene extends Phaser.Scene {
     private SendScoreToDB(playerScore: number): void {
 
         const diff = this.gameState.difficulty + 1;
-        GravaRecords(playerScore, diff);
+        UpdateScore(playerScore, diff);
     }
 
     private ShowPlayerWon(expression: string): void {

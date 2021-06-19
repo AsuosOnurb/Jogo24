@@ -97,13 +97,16 @@ export function GetGlobalTOP(di: string, df: string) {
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
 
-                data: `action=mostraNew&anoLi=${di} 
+                data: 
+                    `action=mostraNew
+                    &anoLi=${di} 
                     &anoLf=${df}
                     &mturma=
                     &mescola=
-                    &flag=2
-                    &tip=1
+                    &flag=${SpaceFilter.All}
+                    &tip=${DifficultyFilter.Easy}
                     &tC=jogo24HypatiaTOP`,
+
                 crossDomain: true,
                 cache: false,
                 success: function (data) {
@@ -135,14 +138,21 @@ export function GetFilteredTOP(di: string, df: string, flag: SpaceFilter, tipoTO
     let classCode: string = LoginData.GetClass();
     let schoolCode: string = LoginData.GetSchool();
 
-
     return new Promise(function (resolve, reject) {
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
 
-                data: `action=mostraNew&anoLi=${di}&anoLf=${df}&mturma=${classCode}&mescola=${schoolCode}&flag=${flag}&tip=${tipoTOP}&tC=jogo24HypatiaTOP`,
+                data: 
+                    `action=mostraNew
+                    &anoLi=${di}
+                    &anoLf=${df}
+                    &mturma=${classCode}
+                    &mescola=${schoolCode}
+                    &flag=${flag}
+                    &tip=${tipoTOP}
+                    &tC=jogo24HypatiaTOP`,
 
                 crossDomain: true,
                 cache: false,
@@ -209,28 +219,32 @@ export function GetUpdatedScores(score: number, diff: number) {
 
 
 }
+/**
+ * Sends/Registers the player score to the DB.
+ * @param score The score to send/register.
+ * @param diff The difficulty mode of the game.
+ * @returns A promise 
+ */
+export function UpdateScore(score: number, diff: number) {
 
-/* Tipar função */
-export function GravaRecords(score, diff) {
-
-    const username = LoginData.GetUser();
-    const school = LoginData.GetSchool();
-    const _class = LoginData.GetClass();
-
-
-
+    const userUsername = LoginData.GetUser();
+    const userSchool = LoginData.GetSchool();
+    const userClass = LoginData.GetClass();
 
     return new Promise(function (resolve, reject) {
         $.ajax
             ({
                 type: "POST",
                 url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=insere&musername=" + username +
-                    "&mturma=" + _class +
-                    "&mescola=" + school +
-                    "&mpontuacao=" + score +
-                    "&mtipo=" + diff +
-                    "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
+
+                data: 
+                    `action=insere&musername=${userUsername}
+                    &mturma=${userClass}
+                    &mescola=${userSchool}
+                    &mpontuacao=${score}
+                    &mtipo=${diff}
+                    &t=jogo24Hypatia&tC=jogo24HypatiaTOP`,
+
                 crossDomain: true,
                 cache: false,
                 success: function (data) {
@@ -241,7 +255,6 @@ export function GravaRecords(score, diff) {
                 }
             });
     });
-
 }
 
 export function GetRecords(diff) {
