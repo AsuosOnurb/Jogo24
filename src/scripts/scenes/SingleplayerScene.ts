@@ -8,7 +8,7 @@ import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../utils/Utils'
 import { LoginData } from '../backend/LoginData'
 import { Operation } from '../utils/Operations'
-import { GetRecords, UpdateScore, GetUpdatedScores } from '../backend/BackendConnection'
+import { GetPreviousScores, UpdateScore, GetUpdatedScores } from '../backend/BackendConnection'
 
 
 export class SingleplayerScene extends Phaser.Scene {
@@ -145,7 +145,7 @@ export class SingleplayerScene extends Phaser.Scene {
         // Get the player scores from the DB
         if (LoginData.IsLoggedIn()) {
 
-            let connection = GetRecords(this.gameState.difficulty + 1);
+            let connection = GetPreviousScores(this.gameState.difficulty + 1);
             connection.then((parsedData) => {
 
                 this.playerScores = parsedData;

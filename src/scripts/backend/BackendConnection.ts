@@ -171,53 +171,9 @@ export function GetFilteredTOP(di: string, df: string, flag: SpaceFilter, tipoTO
 
 /* ============================= Getting and Sending Scores ===================================== */
 
-/**
- * Gets, from the DB, the most updated scores.
- * @param score The score that the player got.
- * @param diff The difficulty of the game.
- * @returns A promise of an object containing different kinds of scores.
- * 
- * @remarks This is useful in the singleplayer game, when we want to check if the player got a PB and things like that.
- * We need to perform this update because new scores can be added while the user is playing.
- */
-export function GetUpdatedScores(score: number, diff: number) {
-    const username = LoginData.GetUser();
-    const school = LoginData.GetSchool();
-    const _class = LoginData.GetClass();
-
-    return new Promise(function (resolve, reject) {
-        $.ajax
-            ({
-                type: "POST",
-                url: "https://www.hypatiamat.com/newHRecords.php",
-                data: "action=minimoGlobal&codAl=" + username +
-                    "&codTurma=" + _class +
-                    "&codEscola=" + school +
-                    "&pont=" + score +
-                    "&tip=" + diff +
-                    "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
-                crossDomain: true,
-                cache: false,
-                success: function (data) {
-
-                    const scores =
-                    {
-                        'personalBest': parseFloat(data.split("vlMin4=")[1]),
-                        'classBest': parseFloat(data.split("vlMin3=")[1].split("&")[0]),
-                        'schoolBest': parseFloat(data.split("vlMin2=")[1].split("&")[0]),
-                        'top100GlobalBest': parseFloat(data.split("vlMin1=")[1].split("&")[0])
-                    };
-
-                    resolve(scores);
-                },
-                error: function (err) {
-                    reject(err);
-                }
-            });
-    });
 
 
-}
+
 /**
  * Sends/Registers the player score to the DB.
  * @param score The score to send/register.
@@ -256,12 +212,56 @@ export function UpdateScore(score: number, diff: number) {
     });
 }
 
-export function GetRecords(diff) {
+/**
+ * Gets, from the DB, the most updated scores.
+ * @param score The score that the player got.
+ * @param diff The difficulty of the game.
+ * @returns A promise of an object containing different kinds of scores.
+ * 
+ * @remarks This is useful in the singleplayer game, when we want to check if the player got a PB and things like that.
+ * We need to perform this update because new scores can be added while the user is playing.
+ */
+ export function GetUpdatedScores(score: number, diff: number) {
+    const username = LoginData.GetUser();
+    const school = LoginData.GetSchool();
+    const _class = LoginData.GetClass();
+
+    return new Promise(function (resolve, reject) {
+        $.ajax
+            ({
+                type: "POST",
+                url: "https://www.hypatiamat.com/newHRecords.php",
+                data: "action=minimoGlobal&codAl=" + username +
+                    "&codTurma=" + _class +
+                    "&codEscola=" + school +
+                    "&pont=" + score +
+                    "&tip=" + diff +
+                    "&t=jogo24Hypatia&tC=jogo24HypatiaTOP",
+                crossDomain: true,
+                cache: false,
+                success: function (data) {
+
+                    const scores =
+                    {
+                        'personalBest': parseFloat(data.split("vlMin4=")[1]),
+                        'classBest': parseFloat(data.split("vlMin3=")[1].split("&")[0]),
+                        'schoolBest': parseFloat(data.split("vlMin2=")[1].split("&")[0]),
+                        'top100GlobalBest': parseFloat(data.split("vlMin1=")[1].split("&")[0])
+                    };
+
+                    resolve(scores);
+                },
+                error: function (err) {
+                    reject(err);
+                }
+            });
+    });
+}
+
+export function GetPreviousScores(diff) {
     const username = LoginData.GetUser();
     const _class = LoginData.GetClass();
     const school = LoginData.GetSchool();
-
-
 
     return new Promise(function (resolve, reject) {
 
