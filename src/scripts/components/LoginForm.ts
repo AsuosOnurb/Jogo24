@@ -175,7 +175,6 @@ export class LoginForm {
     public ShowErrorLoginNoConnection(): void {
 
         if (this.noConnectionWarning.alpha === 0) {
-
             this.noConnectionWarning.setAlpha(1);
             this.menuScene.tweens.add({
                 targets: this.noConnectionWarning,
