@@ -1,3 +1,11 @@
+// SingleplayerScene.ts
+/**
+ * Module responsible for the implementation of the Singleplayer scene.
+ * @module
+ */
+
+
+
 import Phaser from 'phaser'
 
 import { BetterText } from '../components/BetterText'
@@ -11,6 +19,11 @@ import { Operation } from '../utils/Operations'
 import { GetPreviousScores, UpdateScore, GetUpdatedScores } from '../backend/BackendConnection'
 
 
+/**
+ * Models the screen/scene where the singleplayer game takes place.
+ * This class/file is only responsible for the visual/interaction side of things.
+ * The game data/logics is handled in the {@link SingleplayerGame}.
+ */
 export class SingleplayerScene extends Phaser.Scene {
 
     private isInstanced: boolean = false;
@@ -24,40 +37,95 @@ export class SingleplayerScene extends Phaser.Scene {
     // ===================== UI Objects (text objects, buttons, etc....) ==================
 
     // Text
-    private textTotalWrong!: BetterText // Total wrong counter label 
-    private textTotalCorrect!: BetterText; // Total correct counter label
 
-    private expressionBar: BetterButton; // Displays on the top bar the whole arithmetic expression made by the player
+    /**
+     * Total wrong counter label.
+     */
+    private textTotalWrong: BetterText
 
-    private textSolution!: BetterText; // debug only
+    /**
+     * Total correct counter label.
+     */
+    private textTotalCorrect: BetterText;
+
+    /**
+     * The bar on the top of the screen that holds the arith. expression.
+     */
+    private expressionBar: BetterButton;
+
+    private textSolution: BetterText; // debug only
 
     // Buttons
-    private btnNewCard!: BetterButton;              // Resets player input and gives player a new card / new numbers
-    private btnReset!: BetterButton;           // Resets player input. Lets him try again the current card.
-    private btnUndo!: BetterButton;           // Lets the user delete the last inserted character.
+    /**
+     * The green button at the center of the card that gives/generates a new card.
+     */
+    private btnNewCard: BetterButton;
 
-    private btnOperationAdd!: BetterButton;         // Performs Addition
-    private btnOperationSubtract!: BetterButton;    // Performs Subtraction
-    private btnOperationMultiply!: BetterButton;    // Performs Multiplication
-    private btnOperationDivide!: BetterButton;      // Perfroms Division
+    /**
+     * The button that resets the game state and lets the player retry the card from the beginning.
+     */
+    private btnReset!: BetterButton;
 
-    private btnGotoMenu!: BetterButton;             // Redirects player to the main menu
+    /**
+     * The button that allows the player to backtrack on his/her moves.
+     */
+    private btnUndo!: BetterButton;
 
-    // The final image and information that appears everytime the timer runs out
+    /**
+     * The button that performs the addition operation.
+     */
+    private btnOperationAdd!: BetterButton;
+
+    /**
+     * The button that performs the subtraction operation.
+     */
+    private btnOperationSubtract!: BetterButton;
+
+    /**
+     * The button that performs the multiplication operation.
+     */
+    private btnOperationMultiply!: BetterButton;
+
+    /**
+     * The button that performs the division operation.
+     */
+    private btnOperationDivide!: BetterButton;
+
+    /**
+     * The button that allows the player to go back to the main menu.
+     */
+    private btnGotoMenu!: BetterButton;
+
+    /**
+     *  The final image and information that appears everytime the timer runs out
+     */
     private imgEndGame: Phaser.GameObjects.Image;
+
+    /**
+     *  The text that warns the player that he should login if he wants to save his score on the TOP.
+     */
     private txtLoginWarning: BetterText;
+
+    /**
+      *  The text that shows the player his/her results.
+      */
     private txtGameResults: BetterText;
 
 
+    /**
+     The 4 buttons on the card.
 
-
-    /*
-     Card Buttons.
      These buttons are changed everytime we generate a new card. 
      Each button is associated with one of the 4 numbers.
     */
     private cardButtons: Array<BetterButton>;
-    private usedButtons: Array<Boolean>;
+
+    /**
+     * The array that marks the (card) buttons thar are used.
+     * 
+     * @remarks This array is very important because it allows us to know which buttons were picked/used and which ones should be enabled.
+     */
+    private usedButtons: Array<boolean>;
 
 
     private constructor() {
@@ -67,13 +135,13 @@ export class SingleplayerScene extends Phaser.Scene {
     /* ============================================ Scene Setup ============================================
 
     /**
-   * Preloads the scene's resources and sets up their buttons/images/text.
-   *
-   * @remarks
-   * This method is ran before the init() method.
-   *
-   * 
-   */
+     * Preloads the scene's resources and sets up their buttons/images/text.
+     *
+     * @remarks
+     * This method is ran before the init() method.
+     *
+     * 
+     */
     private preload() {
 
         // Add background image window
@@ -103,7 +171,7 @@ export class SingleplayerScene extends Phaser.Scene {
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer = // 180
-            new CountdownTimer(this, 20, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 180, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
         this.textSolution =
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
@@ -121,6 +189,11 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
 
+    /**
+     * Scene initialization procedure. 
+     * Executes right after preload() and just before create().
+     * @param data The data object that is sent from the main menu. For now, the data object contains only the difficulty property of the game.
+     */
     private init(data) {
 
         this.gameState = new SingleplayerGame(data.difficulty);
@@ -160,6 +233,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
+    /**
+     * Sets up the labels/texts.
+     */
     private Setup_Labels() {
 
         this.textTotalCorrect = new BetterText(this, this.scale.width / 2 + 740, 128, "0", { fontFamily: 'Vertiky', fontSize: 40, color: "#ffffff", fontStyle: "bold" })
@@ -169,6 +245,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
     }
 
+    /**
+     * Sets up all of the buttons.
+     * This is runs once at the start of the game.
+     */
     private Setup_Buttons() {
 
         // 'New Card' button
@@ -197,7 +277,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         ]
 
-        this.usedButtons = new Array<Boolean>();
+        this.usedButtons = new Array<boolean>();
         for (let i = 0; i < this.cardButtons.length; i++) {
             this.cardButtons[i].SetTextColor("#ffffff")
 
@@ -243,6 +323,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
     /**
      * Handles the functionality of the New Card button.
+     * 
+     * Internally, we're generating a new card and the countdown timer starts ticking.
      */
     private NewCard(): void {
 

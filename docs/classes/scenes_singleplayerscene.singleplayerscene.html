@@ -68,6 +68,15 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>Models the screen/scene where the singleplayer game takes place.
+							This class/file is only responsible for the visual/interaction side of things.
+						The game data/logics is handled in the <a href="game_singleplayergame.singleplayergame.html">SingleplayerGame</a>.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -106,6 +115,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#btnundo" class="tsd-kind-icon">btn<wbr>Undo</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#cache" class="tsd-kind-icon">cache</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#cameras" class="tsd-kind-icon">cameras</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#cardbuttons" class="tsd-kind-icon">card<wbr>Buttons</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#children" class="tsd-kind-icon">children</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#countdowntimer" class="tsd-kind-icon">countdown<wbr>Timer</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#data" class="tsd-kind-icon">data</a></li>
@@ -119,8 +129,6 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#isinstanced" class="tsd-kind-icon">is<wbr>Instanced</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#lights" class="tsd-kind-icon">lights</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#load" class="tsd-kind-icon">load</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#m_btnused" class="tsd-kind-icon">m_<wbr><wbr>Btn<wbr>Used</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#m_cardbuttons" class="tsd-kind-icon">m_<wbr><wbr>Card<wbr>Buttons</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#make" class="tsd-kind-icon">make</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#matter" class="tsd-kind-icon">matter</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#physics" class="tsd-kind-icon">physics</a></li>
@@ -140,6 +148,7 @@
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_singleplayerscene.singleplayerscene.html#tweens" class="tsd-kind-icon">tweens</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#txtgameresults" class="tsd-kind-icon">txt<wbr>Game<wbr>Results</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#txtloginwarning" class="tsd-kind-icon">txt<wbr>Login<wbr>Warning</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_singleplayerscene.singleplayerscene.html#usedbuttons" class="tsd-kind-icon">used<wbr>Buttons</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -185,7 +194,7 @@
 							<aside class="tsd-sources">
 								<p>Overrides Phaser.Scene.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L60">src/scripts/scenes/SingleplayerScene.ts:60</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L128">src/scripts/scenes/SingleplayerScene.ts:128</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <a href="scenes_singleplayerscene.singleplayerscene.html" class="tsd-signature-type" data-tsd-kind="Class">SingleplayerScene</a></h4>
@@ -235,9 +244,14 @@
 					<div class="tsd-signature tsd-kind-icon">btn<wbr>Goto<wbr>Menu<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L44">src/scripts/scenes/SingleplayerScene.ts:44</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L97">src/scripts/scenes/SingleplayerScene.ts:97</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The button that allows the player to go back to the main menu.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="btnnewcard" class="tsd-anchor"></a>
@@ -245,9 +259,14 @@
 					<div class="tsd-signature tsd-kind-icon">btn<wbr>New<wbr>Card<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L35">src/scripts/scenes/SingleplayerScene.ts:35</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L62">src/scripts/scenes/SingleplayerScene.ts:62</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The green button at the center of the card that gives/generates a new card.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="btnoperationadd" class="tsd-anchor"></a>
@@ -255,9 +274,14 @@
 					<div class="tsd-signature tsd-kind-icon">btn<wbr>Operation<wbr>Add<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L39">src/scripts/scenes/SingleplayerScene.ts:39</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L77">src/scripts/scenes/SingleplayerScene.ts:77</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The button that performs the addition operation.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="btnoperationdivide" class="tsd-anchor"></a>
@@ -265,9 +289,14 @@
 					<div class="tsd-signature tsd-kind-icon">btn<wbr>Operation<wbr>Divide<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L42">src/scripts/scenes/SingleplayerScene.ts:42</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L92">src/scripts/scenes/SingleplayerScene.ts:92</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The button that performs the division operation.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="btnoperationmultiply" class="tsd-anchor"></a>
@@ -275,9 +304,14 @@
 					<div class="tsd-signature tsd-kind-icon">btn<wbr>Operation<wbr>Multiply<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L41">src/scripts/scenes/SingleplayerScene.ts:41</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L87">src/scripts/scenes/SingleplayerScene.ts:87</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The button that performs the multiplication operation.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="btnoperationsubtract" class="tsd-anchor"></a>
@@ -285,9 +319,14 @@
 					<div class="tsd-signature tsd-kind-icon">btn<wbr>Operation<wbr>Subtract<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L40">src/scripts/scenes/SingleplayerScene.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L82">src/scripts/scenes/SingleplayerScene.ts:82</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The button that performs the subtraction operation.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="btnreset" class="tsd-anchor"></a>
@@ -295,9 +334,14 @@
 					<div class="tsd-signature tsd-kind-icon">btn<wbr>Reset<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L36">src/scripts/scenes/SingleplayerScene.ts:36</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L67">src/scripts/scenes/SingleplayerScene.ts:67</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The button that resets the game state and lets the player retry the card from the beginning.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="btnundo" class="tsd-anchor"></a>
@@ -305,9 +349,14 @@
 					<div class="tsd-signature tsd-kind-icon">btn<wbr>Undo<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L37">src/scripts/scenes/SingleplayerScene.ts:37</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L72">src/scripts/scenes/SingleplayerScene.ts:72</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The button that allows the player to backtrack on his/her moves.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="cache" class="tsd-anchor"></a>
@@ -343,6 +392,23 @@
 						<p>This property will only be available if defined in the Scene Injection Map.</p>
 					</div>
 				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="cardbuttons" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> card<wbr>Buttons</h3>
+					<div class="tsd-signature tsd-kind-icon">card<wbr>Buttons<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L121">src/scripts/scenes/SingleplayerScene.ts:121</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The 4 buttons on the card.</p>
+						</div>
+						<p>These buttons are changed everytime we generate a new card.
+						Each button is associated with one of the 4 numbers.</p>
+					</div>
+				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="children" class="tsd-anchor"></a>
 					<h3>children</h3>
@@ -366,7 +432,7 @@
 					<div class="tsd-signature tsd-kind-icon">countdown<wbr>Timer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">CountdownTimer</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L21">src/scripts/scenes/SingleplayerScene.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L34">src/scripts/scenes/SingleplayerScene.ts:34</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -411,9 +477,14 @@
 					<div class="tsd-signature tsd-kind-icon">expression<wbr>Bar<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L30">src/scripts/scenes/SingleplayerScene.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L54">src/scripts/scenes/SingleplayerScene.ts:54</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The bar on the top of the screen that holds the arith. expression.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="facebook" class="tsd-anchor"></a>
@@ -455,7 +526,7 @@
 					<div class="tsd-signature tsd-kind-icon">game<wbr>State<span class="tsd-signature-symbol">:</span> <a href="game_singleplayergame.singleplayergame.html" class="tsd-signature-type" data-tsd-kind="Class">SingleplayerGame</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L20">src/scripts/scenes/SingleplayerScene.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L33">src/scripts/scenes/SingleplayerScene.ts:33</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -465,9 +536,14 @@
 					<div class="tsd-signature tsd-kind-icon">img<wbr>End<wbr>Game<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Image</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L47">src/scripts/scenes/SingleplayerScene.ts:47</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L102">src/scripts/scenes/SingleplayerScene.ts:102</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> The final image and information that appears everytime the timer runs out</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="input" class="tsd-anchor"></a>
@@ -492,7 +568,7 @@
 					<div class="tsd-signature tsd-kind-icon">is<wbr>Instanced<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> = false</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L16">src/scripts/scenes/SingleplayerScene.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L29">src/scripts/scenes/SingleplayerScene.ts:29</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -529,26 +605,6 @@
 						</div>
 						<p>This property will only be available if defined in the Scene Injection Map and the plugin is installed.</p>
 					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_btnused" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> m_<wbr><wbr>Btn<wbr>Used</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr><wbr>Btn<wbr>Used<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Boolean</span><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L60">src/scripts/scenes/SingleplayerScene.ts:60</a></li>
-						</ul>
-					</aside>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_cardbuttons" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> m_<wbr><wbr>Card<wbr>Buttons</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr><wbr>Card<wbr>Buttons<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a><span class="tsd-signature-symbol">[]</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L59">src/scripts/scenes/SingleplayerScene.ts:59</a></li>
-						</ul>
-					</aside>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="make" class="tsd-anchor"></a>
@@ -607,7 +663,7 @@
 					<div class="tsd-signature tsd-kind-icon">player<wbr>Scores<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L18">src/scripts/scenes/SingleplayerScene.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L31">src/scripts/scenes/SingleplayerScene.ts:31</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -735,7 +791,7 @@
 					<div class="tsd-signature tsd-kind-icon">text<wbr>Solution<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L32">src/scripts/scenes/SingleplayerScene.ts:32</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L56">src/scripts/scenes/SingleplayerScene.ts:56</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -745,9 +801,14 @@
 					<div class="tsd-signature tsd-kind-icon">text<wbr>Total<wbr>Correct<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L28">src/scripts/scenes/SingleplayerScene.ts:28</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L49">src/scripts/scenes/SingleplayerScene.ts:49</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Total correct counter label.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="texttotalwrong" class="tsd-anchor"></a>
@@ -755,9 +816,14 @@
 					<div class="tsd-signature tsd-kind-icon">text<wbr>Total<wbr>Wrong<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L27">src/scripts/scenes/SingleplayerScene.ts:27</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L44">src/scripts/scenes/SingleplayerScene.ts:44</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Total wrong counter label.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="textures" class="tsd-anchor"></a>
@@ -816,9 +882,14 @@
 					<div class="tsd-signature tsd-kind-icon">txt<wbr>Game<wbr>Results<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L49">src/scripts/scenes/SingleplayerScene.ts:49</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L112">src/scripts/scenes/SingleplayerScene.ts:112</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> The text that shows the player his/her results.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
 					<a name="txtloginwarning" class="tsd-anchor"></a>
@@ -826,9 +897,34 @@
 					<div class="tsd-signature tsd-kind-icon">txt<wbr>Login<wbr>Warning<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L48">src/scripts/scenes/SingleplayerScene.ts:48</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L107">src/scripts/scenes/SingleplayerScene.ts:107</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p> The text that warns the player that he should login if he wants to save his score on the TOP.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="usedbuttons" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> used<wbr>Buttons</h3>
+					<div class="tsd-signature tsd-kind-icon">used<wbr>Buttons<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L128">src/scripts/scenes/SingleplayerScene.ts:128</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The array that marks the (card) buttons thar are used.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>remarks</dt>
+							<dd><p>This array is very important because it allows us to know which buttons were picked/used and which ones should be enabled.</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -843,7 +939,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L806">src/scripts/scenes/SingleplayerScene.ts:806</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L874">src/scripts/scenes/SingleplayerScene.ts:874</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -860,7 +956,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L819">src/scripts/scenes/SingleplayerScene.ts:819</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L887">src/scripts/scenes/SingleplayerScene.ts:887</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -877,7 +973,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L799">src/scripts/scenes/SingleplayerScene.ts:799</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L867">src/scripts/scenes/SingleplayerScene.ts:867</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -894,7 +990,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L812">src/scripts/scenes/SingleplayerScene.ts:812</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L880">src/scripts/scenes/SingleplayerScene.ts:880</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -911,7 +1007,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L307">src/scripts/scenes/SingleplayerScene.ts:307</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L389">src/scripts/scenes/SingleplayerScene.ts:389</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -957,7 +1053,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L392">src/scripts/scenes/SingleplayerScene.ts:392</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L465">src/scripts/scenes/SingleplayerScene.ts:465</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -988,7 +1084,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L506">src/scripts/scenes/SingleplayerScene.ts:506</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L577">src/scripts/scenes/SingleplayerScene.ts:577</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1010,7 +1106,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L408">src/scripts/scenes/SingleplayerScene.ts:408</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L484">src/scripts/scenes/SingleplayerScene.ts:484</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1032,13 +1128,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L247">src/scripts/scenes/SingleplayerScene.ts:247</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L329">src/scripts/scenes/SingleplayerScene.ts:329</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
 									<p>Handles the functionality of the New Card button.</p>
 								</div>
+								<p>Internally, we&#39;re generating a new card and the countdown timer starts ticking.</p>
 							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
@@ -1054,7 +1151,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L532">src/scripts/scenes/SingleplayerScene.ts:532</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L603">src/scripts/scenes/SingleplayerScene.ts:603</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1081,7 +1178,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L826">src/scripts/scenes/SingleplayerScene.ts:826</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L894">src/scripts/scenes/SingleplayerScene.ts:894</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1098,7 +1195,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L776">src/scripts/scenes/SingleplayerScene.ts:776</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L840">src/scripts/scenes/SingleplayerScene.ts:840</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1121,9 +1218,15 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L172">src/scripts/scenes/SingleplayerScene.ts:172</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L252">src/scripts/scenes/SingleplayerScene.ts:252</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets up all of the buttons.
+									This is runs once at the start of the game.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -1138,9 +1241,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L163">src/scripts/scenes/SingleplayerScene.ts:163</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L239">src/scripts/scenes/SingleplayerScene.ts:239</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets up the labels/texts.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -1155,7 +1263,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L583">src/scripts/scenes/SingleplayerScene.ts:583</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L647">src/scripts/scenes/SingleplayerScene.ts:647</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1188,7 +1296,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L728">src/scripts/scenes/SingleplayerScene.ts:728</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L792">src/scripts/scenes/SingleplayerScene.ts:792</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1224,7 +1332,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L668">src/scripts/scenes/SingleplayerScene.ts:668</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L732">src/scripts/scenes/SingleplayerScene.ts:732</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1257,7 +1365,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L790">src/scripts/scenes/SingleplayerScene.ts:790</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L858">src/scripts/scenes/SingleplayerScene.ts:858</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1280,7 +1388,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L782">src/scripts/scenes/SingleplayerScene.ts:782</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L850">src/scripts/scenes/SingleplayerScene.ts:850</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -1303,13 +1411,22 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L124">src/scripts/scenes/SingleplayerScene.ts:124</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L197">src/scripts/scenes/SingleplayerScene.ts:197</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Scene initialization procedure.
+									Executes right after preload() and just before create().</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>data: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The data object that is sent from the main menu. For now, the data object contains only the difficulty property of the game.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1326,7 +1443,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/3999107/src/scripts/scenes/SingleplayerScene.ts#L77">src/scripts/scenes/SingleplayerScene.ts:77</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/f8df3c4/src/scripts/scenes/SingleplayerScene.ts#L145">src/scripts/scenes/SingleplayerScene.ts:145</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1458,6 +1575,9 @@
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="scenes_singleplayerscene.singleplayerscene.html#cameras" class="tsd-kind-icon">cameras</a>
 							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_singleplayerscene.singleplayerscene.html#cardbuttons" class="tsd-kind-icon">card<wbr>Buttons</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="scenes_singleplayerscene.singleplayerscene.html#children" class="tsd-kind-icon">children</a>
 							</li>
@@ -1496,12 +1616,6 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="scenes_singleplayerscene.singleplayerscene.html#load" class="tsd-kind-icon">load</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="scenes_singleplayerscene.singleplayerscene.html#m_btnused" class="tsd-kind-icon">m_<wbr><wbr>Btn<wbr>Used</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="scenes_singleplayerscene.singleplayerscene.html#m_cardbuttons" class="tsd-kind-icon">m_<wbr><wbr>Card<wbr>Buttons</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 								<a href="scenes_singleplayerscene.singleplayerscene.html#make" class="tsd-kind-icon">make</a>
@@ -1559,6 +1673,9 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
 								<a href="scenes_singleplayerscene.singleplayerscene.html#txtloginwarning" class="tsd-kind-icon">txt<wbr>Login<wbr>Warning</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_singleplayerscene.singleplayerscene.html#usedbuttons" class="tsd-kind-icon">used<wbr>Buttons</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="scenes_singleplayerscene.singleplayerscene.html#disablenumberbuttons" class="tsd-kind-icon">Disable<wbr>Number<wbr>Buttons</a>
