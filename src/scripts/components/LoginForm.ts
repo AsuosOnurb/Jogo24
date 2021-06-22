@@ -52,7 +52,7 @@ export class LoginForm {
      */
     constructor(mainMenuScene: Phaser.Scene) {
 
-      
+    
 
 
         this.menuScene = mainMenuScene;
@@ -153,7 +153,7 @@ export class LoginForm {
      * the credentials he wrote are wrong.
      */
     public ShowErrorLoginWrongCredentials(): void {
-
+        
         if (this.wrongCredentialsWarning.alpha === 0) {
 
             this.wrongCredentialsWarning.setAlpha(1);
@@ -173,7 +173,7 @@ export class LoginForm {
      *  connection to the database was not possible.
      */
     public ShowErrorLoginNoConnection(): void {
-
+      
         if (this.noConnectionWarning.alpha === 0) {
             this.noConnectionWarning.setAlpha(1);
             this.menuScene.tweens.add({
