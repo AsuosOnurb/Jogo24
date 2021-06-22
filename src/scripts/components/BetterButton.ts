@@ -26,33 +26,29 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     /**
      * The text object that is displayed on the button.
      */
-    private m_TextObject: BetterText;
+    private textObject: BetterText;
 
     /**
      * The scale that the button starts with.
      * @remarks This is mainly used to control the modifications performed by the animations.
      */
-    private m_OriginalScale;
+    private originalScale;
 
     /**
      * Tween animation that triggers everytime the mouse/pointer enters/hovers the button.
      */
-    private m_Tween_ButtonHover: Phaser.Tweens.Tween;
+    private tweenButtonHover: Phaser.Tweens.Tween;
 
     /**
      * Tween animation that triggers everytime the mouse/pointer exits/(stops hovering) the button.
      */
-    private m_Tween_ButtonOut: Phaser.Tweens.Tween;
+    private tweenButtonOut: Phaser.Tweens.Tween;
 
     /**
      * Tween animation that triggers everytime the mouse/pointer presses the button.
      */
-    private m_Tween_ButtonPress: Phaser.Tweens.Tween;
+    private tweenButtonPress: Phaser.Tweens.Tween;
 
-    /**
-     *  The amplitude of the angle the button is rotated by when it is hovered.
-     **/
-    private m_RandomHoverAngle: number;
 
     /**
      * Creates a new BetterButton object.
@@ -64,14 +60,12 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      * @param text The text string to display on the button
      * @param textStyle The styling that is applied to the text
      * @param texture The background texture/image of the button
-     * @param optionalAngle The angle the button should rotate twoards when it is hovered
      */
     constructor(
         scene: Phaser.Scene, x: number, y: number,
         xScale: number, yScale: number,
         text: string, textStyle: any,
-        texture: string,
-        optionalAngle?: number | undefined) {
+        texture: string) {
 
         super(scene, x, y, texture);
 
@@ -80,47 +74,22 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         scene.add.existing(this);
 
         this.setScale(xScale, yScale);
-        this.m_OriginalScale = this.scale;
+        this.originalScale = this.scale;
 
         // Set the text
         if (!(text === undefined || textStyle === undefined))
-            this.m_TextObject = new BetterText(scene, x, y, text, textStyle);
+            this.textObject = new BetterText(scene, x, y, text, textStyle);
 
 
         // offset the text object position
-        this.m_TextObject?.setOrigin(0.5);
+        this.textObject?.setOrigin(0.5);
 
         // Buttons are interactible by default
         this.SetEnabled();
 
-
-        // Define some events for when the mouse is over, out of the button for some pretty effects.
-        // Also setup some effect where the button 'gets pressed' when it is clicked.
-        if (optionalAngle === undefined) {
-            const randomAngles = [- 6, -5, -4, 4, 5, 6];
-            this.m_RandomHoverAngle = randomAngles[Math.floor(Math.random() * randomAngles.length)]// The amount of degrees the button performs when it is being hovered.
-        }
-        else {
-            this.m_RandomHoverAngle = optionalAngle;
-        }
-
-
-        // Setup tween animations
-        /*
-            Uncomment these line if pretty button animations are a must.
-
-        if (!scene.game.device.input.touch)
-        {
-            this.SetupButtonHoverAnimation(); 
-            this.SetupButtonOutAnimation();
-        }
-        */
-
         // For now, we'll just add a discrete size increment when the button is hovered, and a size decrement when the mouse exits the hover state
         this.SetupButtonHoverAnimation();
         this.SetupButtonOutAnimation();
-
-
         this.SetupButtonPressAnimation()
 
     }
@@ -153,7 +122,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.on('pointerout', () => this.m_Tween_ButtonOut.play());
         */
 
-        this.on('pointerout', () => {this.scale -= 0.1; this.m_TextObject.scale -= 0.1;});
+        this.on('pointerout', () => {this.scale -= 0.1; this.textObject.scale -= 0.1;});
 
     }
 
@@ -179,7 +148,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.on('pointerover', () => this.m_Tween_ButtonHover.play());
         */
 
-        this.on('pointerover', () => {this.scale += 0.1; this.m_TextObject.scale += 0.1});
+        this.on('pointerover', () => {this.scale += 0.1; this.textObject.scale += 0.1});
 
     }
 
@@ -188,10 +157,10 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     private SetupButtonPressAnimation(): void {
 
-        this.m_Tween_ButtonPress = this.mCurrentScene.tweens.add({
-            targets: [this, this.m_TextObject],
+        this.tweenButtonPress = this.mCurrentScene.tweens.add({
+            targets: [this, this.textObject],
             props: {
-                scale: this.m_OriginalScale - 0.2
+                scale: this.originalScale - 0.2
             },
             ease: 'Power1',
             duration: 70,
@@ -200,7 +169,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         });
 
         this.on('pointerup', () => {
-            this.m_Tween_ButtonPress.play();
+            this.tweenButtonPress.play();
         });
 
     }
@@ -211,7 +180,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     PlayCorrectExpressionTween(): void {
         this.scene.tweens.add({
-            targets: [this, this.m_TextObject],
+            targets: [this, this.textObject],
             y: this.mCurrentScene.scale.height / 2,
             scale: 2,
             duration: 1000,
@@ -228,7 +197,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     PlayIncorrectExpressionTween(): void {
         this.scene.tweens.add({
-            targets: [this, this.m_TextObject],
+            targets: [this, this.textObject],
             y: this.y + 64,
             scale: 1.4,
             duration: 250,
@@ -248,7 +217,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
   * @param newtext The text string to apply to the button
   */
     SetText(newtext: string): void {
-        this.m_TextObject.setText(newtext);
+        this.textObject.setText(newtext);
     }
 
     /**
@@ -259,7 +228,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     NumberButtonSetText(newText: string): void {
 
-        this.m_TextObject.setText(newText);
+        this.textObject.setText(newText);
         this.UpdateFontSize();
     }
 
@@ -269,7 +238,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
 
     GetText(): string {
-        return this.m_TextObject.text;
+        return this.textObject.text;
     }
 
     /**
@@ -279,7 +248,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     SetEnabled(alpha: number = 1.0) {
         this.setInteractive({ cursor: 'pointer' });
-        this.m_TextObject.setAlpha(alpha);
+        this.textObject.setAlpha(alpha);
 
         this.setAlpha(alpha);
 
@@ -293,7 +262,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     SetDisabled(alpha: number = 0.3): void {
         this.disableInteractive();
-        this.m_TextObject.setAlpha(alpha);
+        this.textObject.setAlpha(alpha);
         this.setAlpha(alpha);
     }
 
@@ -304,7 +273,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     SetAngle(degrees): BetterButton {
         this.setAngle(degrees);
-        this.m_TextObject.setAngle(degrees);
+        this.textObject.setAngle(degrees);
 
         return this;
     }
@@ -316,7 +285,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     SetScale(x, y): void {
         this.setScale(x, y);
-        this.m_TextObject.setScale(x, y);
+        this.textObject.setScale(x, y);
     }
 
     /**
@@ -328,8 +297,8 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.setFlipY(flip);
         this.setFlipX(flip);
 
-        this.m_TextObject.setFlipY(flip);
-        this.m_TextObject.setFlipX(flip);
+        this.textObject.setFlipY(flip);
+        this.textObject.setFlipX(flip);
     }
 
     /**
@@ -337,7 +306,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     HideShape() {
         this.setVisible(false);
-        this.m_TextObject.setVisible(true);
+        this.textObject.setVisible(true);
     }
 
     /**
@@ -345,7 +314,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      * @param hexcolor The hex string of the color that is to be applied to the text of the button.
      */
     SetTextColor(hexcolor: string): void {
-        this.m_TextObject.setColor(hexcolor);
+        this.textObject.setColor(hexcolor);
     }
 
     /**
@@ -353,7 +322,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      * @param size The new size of the tex.
      */
     SetFontSize(size): void {
-        this.m_TextObject.setFontSize(size);
+        this.textObject.setFontSize(size);
 
     }
 
@@ -372,16 +341,16 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
         let calculatedSize = 0;
 
-        if (this.m_TextObject.text.length === 1 || this.m_TextObject.text.length === 0)
+        if (this.textObject.text.length === 1 || this.textObject.text.length === 0)
             calculatedSize = 128;
         else
-            calculatedSize = 128 / (this.m_TextObject.text.length * 0.4)
+            calculatedSize = 128 / (this.textObject.text.length * 0.4)
 
         if (calculatedSize < 38)
             calculatedSize = 38;
 
 
-        this.m_TextObject.setFontSize(calculatedSize);
+        this.textObject.setFontSize(calculatedSize);
     }
 
 }

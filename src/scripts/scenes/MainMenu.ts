@@ -195,16 +195,16 @@ export class MainMenuScene extends Phaser.Scene {
 
 
         // Play Solo Easy button
-        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 64, 1.2, 1.2, "", {}, 'btn_easy', 0);
+        this.btnPlaySoloEasy = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 - 64, 1.2, 1.2, "", {}, 'btn_easy');
         this.btnPlaySoloEasy.on("pointerup", () => this.StartSoloGame(Difficulty.Easy));
 
 
         // Play Solo Medium button
-        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 128, 1.2, 1.2, "", {}, 'btn_medium', 0);
+        this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 128, 1.2, 1.2, "", {}, 'btn_medium');
 
 
         // Play Solo Hard button
-        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 320, 1.2, 1.2, "", {}, 'btn_hard', 0);
+        this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 320, 1.2, 1.2, "", {}, 'btn_hard');
 
         this.btnPlaySoloEasy.on("pointerup",    () => this.StartSoloGame(Difficulty.Easy));
         this.btnPlaySoloMedium.on("pointerup",  () => this.StartSoloGame(Difficulty.Medium));
@@ -232,7 +232,7 @@ export class MainMenuScene extends Phaser.Scene {
         this.imgLoginWindow.setScale(0.4);
         this.imgLoginWindow.setAlpha(0);
 
-        this.btnLogin = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 360, 1.2, 1.2, "", {}, 'btn_login', 0);
+        this.btnLogin = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 360, 1.2, 1.2, "", {}, 'btn_login');
         this.btnLogin.SetDisabled(0);
         this.btnLogin.on('pointerup', () => this.PerformLogin())
 
@@ -530,11 +530,11 @@ export class MainMenuScene extends Phaser.Scene {
         */
 
         // Button that opens the login window/panel
-        this.btnStartLogin = new BetterButton(this, this.scale.width - 128, 128, 0.85, 0.85, "", {}, 'btn_start_login', 0);
+        this.btnStartLogin = new BetterButton(this, this.scale.width - 128, 128, 0.85, 0.85, "", {}, 'btn_start_login');
         this.btnStartLogin.on('pointerup', () => this.ShowPanel(Panels.Login));
 
         // The logout Button
-        this.btnLogout = new BetterButton(this, this.scale.width - 128, 128, 0.85, 0.85, "", {}, 'btn_logout', 0);
+        this.btnLogout = new BetterButton(this, this.scale.width - 128, 128, 0.85, 0.85, "", {}, 'btn_logout');
         this.btnLogout.on('pointerup', () => this.PerformLogout());
 
         if (LoginData.IsLoggedIn()) {

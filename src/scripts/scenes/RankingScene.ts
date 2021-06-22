@@ -40,9 +40,6 @@ import { GetGlobalTOP, GetFilteredTOP, SpaceFilter, DifficultyFilter } from '../
  */
 export class RankingScene extends Phaser.Scene {
 
-
-
-
     /* ===== The labels that appear on the top of the ranking table: Jogador, Pontos, Escola, etc...  ==========*/
     private lblJogador: BetterText;
     private lblPontos: BetterText;

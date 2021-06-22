@@ -109,7 +109,7 @@ export class SingleplayerScene extends Phaser.Scene {
             new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
 
         // Add the player input bar :
-        this.expressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontFamily: 'Bubblegum', fontSize: 48, fill: '#FFFFFF' }, 'inputBar', 0);
+        this.expressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontFamily: 'Bubblegum', fontSize: 48, fill: '#FFFFFF' }, 'inputBar');
         this.expressionBar.SetDisabled(1);
 
 
