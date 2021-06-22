@@ -22,7 +22,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
     private isInstanced: boolean = false;
 
-    private m_GameState: MultiplayerGame;
+    private gameState: MultiplayerGame;
 
 
 
@@ -104,6 +104,7 @@ export class MultiplayerScene extends Phaser.Scene {
     }
 
     init() {
+
         // Add background image window
         const bgImg = this.add.sprite(this.game.scale.width / 2, this.game.scale.height / 2, 'blueBackground');
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
@@ -148,14 +149,14 @@ export class MultiplayerScene extends Phaser.Scene {
         this.btnNewcard.SetDisabled();
 
         // Tell the mutiplayer player game that we're going to be playing a new card.
-        this.m_GameState.NewCard();
+        this.gameState.NewCard();
 
 
         // Change the current card number buttons and store the card numbers
-        for (let i = 0; i < this.m_GameState.GetCurrentCard().length; i++) {
+        for (let i = 0; i < this.gameState.GetCurrentCard().length; i++) {
 
             // Set the text of the number button
-            this.cardButtons[i].NumberButtonSetText(this.m_GameState.GetCurrentCard()[i]);
+            this.cardButtons[i].NumberButtonSetText(this.gameState.GetCurrentCard()[i]);
             this.cardButtons[i].SetDisabled(0.7);
 
             this.usedButtons[i] = false;
@@ -169,7 +170,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.btnOperationDivide.SetDisabled();
 
         // Update the solution debug text
-        this.txtSolution.setText(`Solução: ${Solutions.GetSolution(this.m_GameState.GetCurrentCard())}`);
+        this.txtSolution.setText(`Solução: ${Solutions.GetSolution(this.gameState.GetCurrentCard())}`);
 
         // Clear the text from expression bars
         for (let i = 0; i < 4; i++)
@@ -180,8 +181,8 @@ export class MultiplayerScene extends Phaser.Scene {
             this.playerButtons[i].SetEnabled();
 
         // Add the text to the mini cards
-        this.minicard1.SetCard(this.m_GameState.GetCurrentCard());
-        this.minicard2.SetCard(this.m_GameState.GetCurrentCard());
+        this.minicard1.SetCard(this.gameState.GetCurrentCard());
+        this.minicard2.SetCard(this.gameState.GetCurrentCard());
 
         // Reset expression bars
         this.expressionBars.forEach((exprBar) => {
@@ -199,8 +200,8 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
         // Increment the total of cards played, and update the tard counter
-        const totalCards = this.m_GameState.IncrementTotalCardsUsed();
-        this.cardCounter.SetText(`${totalCards} / ${this.m_GameState.MAX_CARD_TOTAL}`)
+        const totalCards = this.gameState.IncrementTotalCardsUsed();
+        this.cardCounter.SetText(`${totalCards} / ${this.gameState.MAX_CARD_TOTAL}`)
 
 
 
@@ -222,7 +223,7 @@ export class MultiplayerScene extends Phaser.Scene {
     }
 
     HandleButtonClick_Player(clickedButtonIndex: number): void {
-        this.m_GameState.SetCurrentPlayer(clickedButtonIndex);
+        this.gameState.SetCurrentPlayer(clickedButtonIndex);
 
         // The colored player button was clicked. Disable all others right away
         for (let i = 0; i < 4; i++) {
@@ -311,7 +312,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         const pickedNumber = this.cardButtons[clickedButtonIndex].GetText();
 
-        if (this.m_GameState.GetPlayerState() === PlayerState.PickingOperand1) {
+        if (this.gameState.GetPlayerState() === PlayerState.PickingOperand1) {
 
             this.cardButtons[clickedButtonIndex].SetDisabled();
 
@@ -322,7 +323,7 @@ export class MultiplayerScene extends Phaser.Scene {
             this.EnableOperationButtons();
 
             // Update current operation
-            this.m_GameState.PickOperand1(pickedNumber, clickedButtonIndex);
+            this.gameState.PickOperand1(pickedNumber, clickedButtonIndex);
 
             // Update the expression bars
             this.expressionBars.forEach((exprBar: BetterButton) => {
@@ -331,10 +332,10 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
 
-        } else if (this.m_GameState.GetPlayerState() === PlayerState.PickingOperand2) {
+        } else if (this.gameState.GetPlayerState() === PlayerState.PickingOperand2) {
 
             // Get the newly calculated expression
-            const expression = this.m_GameState.PickOperand2(pickedNumber, clickedButtonIndex);
+            const expression = this.gameState.PickOperand2(pickedNumber, clickedButtonIndex);
 
             this.cardButtons[clickedButtonIndex].NumberButtonSetText(expression);
 
@@ -354,16 +355,16 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
             if (usedCount === 3) {
-                const won: boolean = this.m_GameState.CheckSolution(expression);
+                const won: boolean = this.gameState.CheckSolution(expression);
 
                 if (won) {
-                    this.m_GameState.IncrTotalCorrect();
+                    this.gameState.IncrTotalCorrect();
                     this.ShowPlayerWon(expression);
                 }
 
                 else {
 
-                    this.m_GameState.IncrTotalWrong();
+                    this.gameState.IncrTotalWrong();
                     this.ShowPlayerLost(expression);
                     this.ShowPeekSolutionButton();
 
@@ -378,12 +379,12 @@ export class MultiplayerScene extends Phaser.Scene {
                 this.countdownTimer.StopCountdown();
 
                 // Check if the total of cards was reached
-                if (this.m_GameState.IsMaxCardCountReached())
+                if (this.gameState.IsMaxCardCountReached())
                     this.ShowEndgamePanel();
 
             }
 
-            this.m_GameState.ResetOperationState()
+            this.gameState.ResetOperationState()
         }
 
 
@@ -391,7 +392,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
     HandleButtonClick_Operation(operator: string) {
 
-        const mostRecentExpression: string = this.m_GameState.PickOperator(operator);
+        const mostRecentExpression: string = this.gameState.PickOperator(operator);
 
         // Enable card buttons
         this.EnableNumberButtons();
@@ -505,7 +506,7 @@ export class MultiplayerScene extends Phaser.Scene {
                 break;
         }
 
-        this.m_GameState = new MultiplayerGame(diff);
+        this.gameState = new MultiplayerGame(diff);
 
 
         // Setup the GUI's initial state
@@ -524,7 +525,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.imgCardBackground.setScale(1.1);
 
         // Card Counter
-        this.cardCounter = new BetterButton(this, this.scale.width / 2 + 256, 70, 0.5, 0.5, `0 / ${this.m_GameState.MAX_CARD_TOTAL}`,
+        this.cardCounter = new BetterButton(this, this.scale.width / 2 + 256, 70, 0.5, 0.5, `0 / ${this.gameState.MAX_CARD_TOTAL}`,
             { fontFamily: 'Vertiky', align: 'center', fontSize: 38, color: "white", fontStye: "bold" }, 'cardCounterBG');
         this.cardCounter.SetDisabled(1);
 
@@ -629,7 +630,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         /* ==================== Difficulty image ================ */
         // Show an image on the top of the page that displays the difficulty of the current card
-        switch (this.m_GameState.difficulty) {
+        switch (this.gameState.difficulty) {
             case Difficulty.Any:
                 this.imageDifficulty = this.add.image(this.scale.width / 2, -96, 'btn_allDifficulties');
                 break;
@@ -661,7 +662,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
 
         // Setup the countdown timer
-         this.add.image(256 - 32, this.scale.height / 2, "clockBG1");
+        this.add.image(256 - 32, this.scale.height / 2, "clockBG1");
         this.countdownTimer = new CountdownTimer(this, 12, this.NoTimeLeft.bind(this), 256 + 60, this.scale.height / 2, 40, "00 : 12");
 
 
@@ -707,7 +708,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         });
 
-        this.playerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
+        this.playerButtons[this.gameState.GetCurrentPlayer()].SetText(this.gameState.GetCurrentPlayerScore().toString());
 
 
     }
@@ -720,7 +721,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         });
 
-        this.playerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
+        this.playerButtons[this.gameState.GetCurrentPlayer()].SetText(this.gameState.GetCurrentPlayerScore().toString());
 
 
 
@@ -739,8 +740,8 @@ export class MultiplayerScene extends Phaser.Scene {
             exprBar.SetTextColor("#ff2600");
         });
 
-        this.m_GameState.IncrTotalWrong();
-        this.playerButtons[this.m_GameState.GetCurrentPlayer()].SetText(this.m_GameState.GetCurrentPlayerScore().toString());
+        this.gameState.IncrTotalWrong();
+        this.playerButtons[this.gameState.GetCurrentPlayer()].SetText(this.gameState.GetCurrentPlayerScore().toString());
 
         this.btnNewcard.SetEnabled();
 
@@ -748,7 +749,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.ShowPeekSolutionButton();
 
         // Check if the total of cards was reached
-        if (this.m_GameState.IsMaxCardCountReached()) {
+        if (this.gameState.IsMaxCardCountReached()) {
             this.ShowEndgamePanel();
         }
 
@@ -789,7 +790,7 @@ export class MultiplayerScene extends Phaser.Scene {
      */
     HandleButtonClick_PeekSolution(): void {
         // Get the suggested solution for this card
-        const solution: string = Solutions.GetSolution(this.m_GameState.GetCurrentCard());
+        const solution: string = Solutions.GetSolution(this.gameState.GetCurrentCard());
 
 
         // Show the solution in all expression bars
@@ -856,7 +857,7 @@ export class MultiplayerScene extends Phaser.Scene {
                 2.a - Existe apenas um jogador com a pontuação máxima -> Mostrar apenas esse jogador
                 2.b - Existem vários jogadores com a pontuação máxima -> Mostrar esses jogadores
         */
-        if (this.m_GameState.IsGameTied()) {
+        if (this.gameState.IsGameTied()) {
             this.ShowEndgamePanelTieMessage();
         }
         else {
@@ -897,8 +898,8 @@ export class MultiplayerScene extends Phaser.Scene {
 
     ShowEndgamePanelWinningMessage(): void {
 
-        const winningPlayersIndexes: Array<number> = this.m_GameState.GetWinningPlayersIndexes();
-        const winningScore: number = this.m_GameState.GetWinningScore();
+        const winningPlayersIndexes: Array<number> = this.gameState.GetWinningPlayersIndexes();
+        const winningScore: number = this.gameState.GetWinningScore();
 
         let congratsText: BetterText;
         if (winningPlayersIndexes.length > 1) {

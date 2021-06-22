@@ -56,8 +56,8 @@ export class SingleplayerScene extends Phaser.Scene {
      These buttons are changed everytime we generate a new card. 
      Each button is associated with one of the 4 numbers.
     */
-    private m_CardButtons: Array<BetterButton>;
-    private m_BtnUsed: Array<Boolean>;
+    private cardButtons: Array<BetterButton>;
+    private usedButtons: Array<Boolean>;
 
 
     private constructor() {
@@ -182,7 +182,7 @@ export class SingleplayerScene extends Phaser.Scene {
         });
 
         // Setup a button for each number in the card (4 buttons)
-        this.m_CardButtons = [
+        this.cardButtons = [
             new BetterButton(this, this.scale.width / 2 - 204, this.scale.height / 2,
                 1.4, 1.4, "?", { fontFamily: 'Bubblegum', fontSize: 128, color: "#FFFFFF" }, "btn_numberBG"),
 
@@ -197,14 +197,14 @@ export class SingleplayerScene extends Phaser.Scene {
 
         ]
 
-        this.m_BtnUsed = new Array<Boolean>();
-        for (let i = 0; i < this.m_CardButtons.length; i++) {
-            this.m_CardButtons[i].SetTextColor("#ffffff")
+        this.usedButtons = new Array<Boolean>();
+        for (let i = 0; i < this.cardButtons.length; i++) {
+            this.cardButtons[i].SetTextColor("#ffffff")
 
             // Each button starts disabled
-            this.m_CardButtons[i].SetDisabled();
-            this.m_CardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i));
-            this.m_BtnUsed[i] = false;
+            this.cardButtons[i].SetDisabled();
+            this.cardButtons[i].on("pointerup", () => this.events.emit('NumberButtonClick', i));
+            this.usedButtons[i] = false;
         }
 
         // This button lets the user reset his attempt at the current card.
@@ -256,16 +256,16 @@ export class SingleplayerScene extends Phaser.Scene {
         for (let i = 0; i < this.gameState.GetCurrentCard().length; i++) {
 
             // Set the text of the number button
-            this.m_CardButtons[i].SetText(this.gameState.GetCurrentCard()[i]);
+            this.cardButtons[i].SetText(this.gameState.GetCurrentCard()[i]);
 
             // Enable the button
-            this.m_CardButtons[i].SetEnabled();
+            this.cardButtons[i].SetEnabled();
 
             // Mark all number buttons as "un-used"
-            this.m_BtnUsed[i] = false;
+            this.usedButtons[i] = false;
 
             // Reset number buttons font size
-            this.m_CardButtons[i].SetFontSize(128);
+            this.cardButtons[i].SetFontSize(128);
 
         }
 
@@ -306,7 +306,7 @@ export class SingleplayerScene extends Phaser.Scene {
     */
     private HandleButtonClick_Number(clickedButtonIndex: number): void {
 
-        const pickedNumber = this.m_CardButtons[clickedButtonIndex].GetText();
+        const pickedNumber = this.cardButtons[clickedButtonIndex].GetText();
 
         // Enable reset btn
         this.btnReset.SetEnabled();
@@ -317,7 +317,7 @@ export class SingleplayerScene extends Phaser.Scene {
         if (this.gameState.GetPlayerState() === PlayerState.PickingOperand1) {
 
             // Mark it as used, so that it doesnt get enabled again.
-            this.m_BtnUsed[clickedButtonIndex] = true;
+            this.usedButtons[clickedButtonIndex] = true;
 
             // Also enable the operation buttons
             this.EnableOperationButtons();
@@ -337,7 +337,7 @@ export class SingleplayerScene extends Phaser.Scene {
             const expression = this.gameState.PickOperand2(pickedNumber, clickedButtonIndex);
 
             // Assigne the operation expression to the button we just clicked
-            this.m_CardButtons[clickedButtonIndex].NumberButtonSetText(expression);
+            this.cardButtons[clickedButtonIndex].NumberButtonSetText(expression);
 
             // Also insert the expression on the expression bar
             this.expressionBar.SetText(expression);
@@ -349,7 +349,7 @@ export class SingleplayerScene extends Phaser.Scene {
                 If all numbers have been used, then we check the solution.
             */
 
-            const usedCount = this.m_BtnUsed.filter((b) => b == true).length;
+            const usedCount = this.usedButtons.filter((b) => b == true).length;
 
             if (usedCount === 3) {
                 // All numbers were used. Proceed to checking the solution
@@ -413,13 +413,13 @@ export class SingleplayerScene extends Phaser.Scene {
                 return;
 
             // We have to change the buttons to the previous numbers and enable them
-            this.m_CardButtons[lastOperation.operand1BtnIndex].NumberButtonSetText(lastOperation.operand1);
-            this.m_CardButtons[lastOperation.operand1BtnIndex].SetEnabled();
-            this.m_BtnUsed[lastOperation.operand1BtnIndex] = false;
+            this.cardButtons[lastOperation.operand1BtnIndex].NumberButtonSetText(lastOperation.operand1);
+            this.cardButtons[lastOperation.operand1BtnIndex].SetEnabled();
+            this.usedButtons[lastOperation.operand1BtnIndex] = false;
 
-            this.m_CardButtons[lastOperation.operand2BtnIndex].NumberButtonSetText(lastOperation.operand2);
-            this.m_CardButtons[lastOperation.operand2BtnIndex].SetEnabled();
-            this.m_BtnUsed[lastOperation.operand2BtnIndex] = false;
+            this.cardButtons[lastOperation.operand2BtnIndex].NumberButtonSetText(lastOperation.operand2);
+            this.cardButtons[lastOperation.operand2BtnIndex].SetEnabled();
+            this.usedButtons[lastOperation.operand2BtnIndex] = false;
 
             // Update the text expression bar
             this.expressionBar.SetText("");
@@ -439,7 +439,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Enable number buttons
             let currentOperation: Operation = this.gameState.PeekCurrentOperation();
-            this.m_BtnUsed[currentOperation.operand1BtnIndex] = false;
+            this.usedButtons[currentOperation.operand1BtnIndex] = false;
 
             this.EnableNumberButtons();
 
@@ -520,7 +520,7 @@ export class SingleplayerScene extends Phaser.Scene {
      */
     private NoTimeLeft() {
         for (let i = 0; i < 4; i++)
-            this.m_CardButtons[i].SetDisabled();
+            this.cardButtons[i].SetDisabled();
 
         this.btnReset.SetDisabled();
         this.btnUndo.SetDisabled();
@@ -784,14 +784,14 @@ export class SingleplayerScene extends Phaser.Scene {
 
     private EnableNumberButtons() {
         for (let i = 0; i < 4; i++) {
-            if (this.m_BtnUsed[i] === false)
-                this.m_CardButtons[i].SetEnabled();
+            if (this.usedButtons[i] === false)
+                this.cardButtons[i].SetEnabled();
         }
     }
 
     private DisableNumberButtons() {
         for (let i = 0; i < 4; i++) {
-            this.m_CardButtons[i].SetDisabled();
+            this.cardButtons[i].SetDisabled();
         }
     }
 
@@ -811,10 +811,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
     private ResetNumberButtons(): void {
         for (let i = 0; i < 4; i++) {
-            this.m_CardButtons[i].SetText(this.gameState.GetCurrentCard()[i])
-            this.m_CardButtons[i].SetFontSize(128);
-            this.m_CardButtons[i].SetEnabled();
-            this.m_BtnUsed[i] = false;
+            this.cardButtons[i].SetText(this.gameState.GetCurrentCard()[i])
+            this.cardButtons[i].SetFontSize(128);
+            this.cardButtons[i].SetEnabled();
+            this.usedButtons[i] = false;
         }
 
 
