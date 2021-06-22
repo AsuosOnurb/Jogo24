@@ -144,6 +144,8 @@ export class MainMenuScene extends Phaser.Scene {
         console.warn("Final tweaks version");
 
     }
+    
+
 
     /**
      * The 'create' method provided by Phaser.
@@ -155,6 +157,12 @@ export class MainMenuScene extends Phaser.Scene {
      * 
      */
     create() {
+
+        this.add.text(0,0,"DEFAULT", {font: '1px Vertiky'}).setVisible(false);
+        this.add.text(0,0,"DEFAULT", {font: '1px Folks-Normal'}).setVisible(false);
+        this.add.text(0,0,"DEFAULT", {font: '1px Folks-Bold'}).setVisible(false);
+        this.add.text(0,0,"DEFAULT", {font: '1px Bubblegum'}).setVisible(false);
+        
 
         // Add background image 
         const bgImg = this.add.sprite(this.scale.width / 2, this.scale.height / 2, 'blueBackground');
@@ -488,10 +496,13 @@ export class MainMenuScene extends Phaser.Scene {
             }
             else {
                 console.log("Login failed!")
+                this.loginForm.ShowErrorLoginWrongCredentials();
+            
             }
 
 
         }).catch((err) => {
+            this.loginForm.ShowErrorLoginNoConnection();
         });
     }
 
@@ -553,10 +564,14 @@ export class MainMenuScene extends Phaser.Scene {
      * These kind of objects are responsible for the handling of the HTML input bars that appear on the Login panel.
      * Refer to the LoginForm docs. for more info on how it works.
      */
-    private SetupLoginForm() {
+    private SetupLoginForm() : void {
         this.loginForm = new LoginForm(this);
     }
 
+
+    
+
+    /* ===================================================================================== */
 
     /**
      * Enables all of the button on the right side of the screen.

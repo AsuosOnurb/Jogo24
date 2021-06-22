@@ -68,7 +68,7 @@ export class LoginData {
         const loginData = ParseLoginData(data);
 
         if (loginData === "WRONG_PASSWORD") {
-            alert("Utilizador ou Password Errados");
+           
             return false;
         }
         else {
