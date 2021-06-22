@@ -42,6 +42,9 @@
 
       "./src/scripts/components/BetterButton.ts",
       "./src/scripts/components/BetterText.ts",
+      "./src/scripts/components/CountdownTimer.ts",
+      "./src/scripts/components/LoginForm.ts",
+      "./src/scripts/components/Minicard.ts",
 
       "./src/scripts/backend/BackendConnection.ts",
       "./src/scripts/backend/LoginData.ts"

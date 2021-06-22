@@ -69,13 +69,13 @@ export function DestroySession() {
             data: "action=des",
             cache: false,
             success: function (response) {
-                LoginData.Logout();
             },
             error: function (XMLHttpRequest, textStatus, errorThrown) {
-                LoginData.SetUser("");
                 alert("Falha de ligação, por favor verifique a sua conexão")
             }
-        })
+        });
+
+        LoginData.Logout();
 }
 
 
@@ -177,7 +177,7 @@ export function GetFilteredTOP(di: string, df: string, flag: SpaceFilter, tipoTO
  */
 export function UpdateScore(score: number, diff: number) {
 
-    const userUsername = LoginData.GetUser();
+    const userUsername = LoginData.GetUsername();
     const userSchool = LoginData.GetSchool();
     const userClass = LoginData.GetClass();
 
@@ -218,7 +218,7 @@ export function UpdateScore(score: number, diff: number) {
  * We need to perform this update because new scores can be added while the user is playing.
  */
 export function GetUpdatedScores(score: number, diff: number) {
-    const username = LoginData.GetUser();
+    const username = LoginData.GetUsername();
     const school = LoginData.GetSchool();
     const _class = LoginData.GetClass();
 
@@ -255,7 +255,7 @@ export function GetUpdatedScores(score: number, diff: number) {
 }
 
 export function GetPreviousScores(diff) {
-    const username = LoginData.GetUser();
+    const username = LoginData.GetUsername();
     const _class = LoginData.GetClass();
     const school = LoginData.GetSchool();
 

@@ -264,10 +264,8 @@ export class RankingScene extends Phaser.Scene {
         let connection = GetGlobalTOP(this.dataInicial, this.dataFinal);
         connection.then((data) => {
 
-            console.log(data)
 
             let parsedData = ParseScoreData(data);
-            console.log(parsedData);
 
             this.databaseData = parsedData; // databaseData is what we use to populate the table when we first start the scene.
 

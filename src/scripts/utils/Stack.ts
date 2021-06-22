@@ -33,10 +33,5 @@ export class Stack<T> {
         return this.stack[this.length - 1];
     }
 
-    public stackContents(): void {
-        console.log('Stack Contents');
-        for (let i = 0; i < this.length; ++i) {
-            console.log(`stack[${i}]: ${this.stack[i]}`);
-        }
-    }
+   
 }

@@ -224,7 +224,6 @@ export class SingleplayerScene extends Phaser.Scene {
                 this.playerScores = parsedData;
 
             }).catch(function (err) {
-                console.log(err);
             });
 
         }
@@ -564,7 +563,6 @@ export class SingleplayerScene extends Phaser.Scene {
         // Disable the undo button if the operation stac is empty
         if (this.gameState.IsStackEmpty()) {
             this.btnUndo.SetDisabled();
-            console.log("Stack is empty. Disabling undo button");
 
             //////// handle undo after btn reset!!!
         }

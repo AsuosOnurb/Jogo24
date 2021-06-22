@@ -492,8 +492,6 @@ export class MainMenuScene extends Phaser.Scene {
 
 
         }).catch((err) => {
-            console.log(err);
-            console.log("Failed to connect to login");
         });
     }
 

@@ -1,4 +1,12 @@
 
+// SingleplayerGame.ts
+/**
+ * Module responsible for the implementation of the logics side of 
+ * things of the singleplayer game mode.
+ * @module
+ */
+
+
 
 import { Operation } from "../utils/Operations";
 import { CardGenerator, Difficulty } from "../utils/CardGenerator";
