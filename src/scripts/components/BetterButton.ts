@@ -29,11 +29,6 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
     private m_TextObject: BetterText;
 
     /**
-     * Whether or not the button is enabled.
-     */
-    private m_IsEnabled: boolean;
-
-    /**
      * The scale that the button starts with.
      * @remarks This is mainly used to control the modifications performed by the animations.
      */
@@ -119,8 +114,12 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
             this.SetupButtonHoverAnimation(); 
             this.SetupButtonOutAnimation();
         }
-
         */
+
+        // For now, we'll just add a discrete size increment when the button is hovered, and a size decrement when the mouse exits the hover state
+        this.SetupButtonHoverAnimation();
+        this.SetupButtonOutAnimation();
+
 
         this.SetupButtonPressAnimation()
 
@@ -135,6 +134,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     SetupButtonOutAnimation(): void {
 
+        /*
 
         this.m_Tween_ButtonOut = this.mCurrentScene.tweens.add({
             targets: this,
@@ -151,18 +151,19 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
 
         this.on('pointerout', () => this.m_Tween_ButtonOut.play());
+        */
 
-
-
-
+        this.on('pointerout', () => {this.scale -= 0.1; this.m_TextObject.scale -= 0.1;});
 
     }
+
 
     /**
      * Sets up the animation that triggers when the mouse begins hovering the button.
      */
     SetupButtonHoverAnimation(): void {
 
+        /*
         this.m_Tween_ButtonHover = this.mCurrentScene.tweens.add({
             targets: this,
             props: {
@@ -176,13 +177,16 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         });
 
         this.on('pointerover', () => this.m_Tween_ButtonHover.play());
+        */
+
+        this.on('pointerover', () => {this.scale += 0.1; this.m_TextObject.scale += 0.1});
 
     }
 
     /**
      * Sets up the animation that triggers when the mouse/pointer presses the button.
      */
-    SetupButtonPressAnimation(): void {
+    private SetupButtonPressAnimation(): void {
 
         this.m_Tween_ButtonPress = this.mCurrentScene.tweens.add({
             targets: [this, this.m_TextObject],
@@ -278,7 +282,6 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.m_TextObject.setAlpha(alpha);
 
         this.setAlpha(alpha);
-        this.m_IsEnabled = true;
 
 
     }
@@ -292,7 +295,6 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.disableInteractive();
         this.m_TextObject.setAlpha(alpha);
         this.setAlpha(alpha);
-        this.m_IsEnabled = false;
     }
 
     /**

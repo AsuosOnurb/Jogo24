@@ -259,13 +259,12 @@ export class RankingScene extends Phaser.Scene {
         // Setup the "Back" button
         this.SetupMenuButton()
 
-        let fadedoutImg =  this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
+        // This image fades out giving the illusion of the elements appearing
+        let fadedoutImg = this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
-        
-        console.log("Getting global top");
+
+        // Connecting to the DB. We're trying to collect the TOP global scores.
         let connection = GetGlobalTOP(this.dataInicial, this.dataFinal);
-        console.log(connection)
-
         connection.then((data) => {
 
             console.log(data)
@@ -275,6 +274,7 @@ export class RankingScene extends Phaser.Scene {
 
             this.databaseData = parsedData; // databaseData is what we use to populate the table when we first start the scene.
 
+
             this.tweens.add({
                 targets: fadedoutImg,
                 alpha: 0,
@@ -283,7 +283,7 @@ export class RankingScene extends Phaser.Scene {
 
             this.CompleteScene();
 
-           
+
 
         }).catch((err) => {
             this.LoadEmptyScene();
@@ -301,13 +301,13 @@ export class RankingScene extends Phaser.Scene {
      */
     private CompleteScene(): void {
 
-
-
+        
         const gridConfig = {
             'scene': this,
             'cols': 15,
             'rows': 15
         }
+
         this.alignmentGrid = new AlignGrid(this.game, gridConfig);
 
         // Setup the table 
@@ -318,18 +318,8 @@ export class RankingScene extends Phaser.Scene {
         this.SetupYearFilterDropdown();
 
         if (!LoginData.IsLoggedIn()) {
-            this.lblFiltro.visible = false;
-            this.lblFiltroTurma.visible = false;
-            this.iconTurma.visible = false;
-            this.lblFiltroEscola.visible = false;
-            this.iconEscola.visible = false;
-            this.lblFiltroTodos.visible = false;
-            this.iconTodos.visible = false;
+            this.HideUserFilter();
         }
-
-
-
-
     }
 
 
@@ -368,8 +358,6 @@ export class RankingScene extends Phaser.Scene {
                 reuseCellContainer: true,
             },
 
-
-
             slider: {
                 track: this.rexUI.add.roundRectangle(0, 0, 18, 10, 10, 0x260e04),
                 thumb: this.rexUI.add.roundRectangle(0, 0, 32, 32, 13, 0xc85c02),
@@ -406,7 +394,6 @@ export class RankingScene extends Phaser.Scene {
                 if (cell.index % 6 == 5) {
                     newwith = 2370;
                 }
-
 
                 var scene = cell.scene,
                     width = newwith,
@@ -452,11 +439,6 @@ export class RankingScene extends Phaser.Scene {
 
 
     }
-
-
-
-
-
 
 
     /**
@@ -541,7 +523,7 @@ export class RankingScene extends Phaser.Scene {
             this.iconDificil.setFillStyle('0xffffff');
             this.iconNormal.setFillStyle('0x000000');
             this.iconFacil.setFillStyle('0xffffff');
-            this.dificultyFilter =  DifficultyFilter.Medium;
+            this.dificultyFilter = DifficultyFilter.Medium;
 
 
 
@@ -554,7 +536,7 @@ export class RankingScene extends Phaser.Scene {
             this.iconDificil.setFillStyle('0x000000');
             this.iconNormal.setFillStyle('0xffffff');
             this.iconFacil.setFillStyle('0xffffff');
-            this.dificultyFilter =  DifficultyFilter.Hard;
+            this.dificultyFilter = DifficultyFilter.Hard;
 
 
 
@@ -793,7 +775,7 @@ export class RankingScene extends Phaser.Scene {
             }
         )
 
-        // Create a text warning the user that connection to internet was not possible
+        // Create a text, warning the user that connection to internet was not possible
         let noConnectionWarningText: BetterText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 - 64,
             "Não foi possível ligar à internet.", { fontFamily: 'Vertiky', align: 'center', fontSize: 64, color: "#4e2400" });
         noConnectionWarningText.setAlpha(0);
@@ -814,7 +796,7 @@ export class RankingScene extends Phaser.Scene {
 
     }
 
-    /* =================== Data manipulation ================================ */
+    /* ================================ Data manipulation ================================ */
 
     /**
        * Creates an array filled with strings relating to the school years from 2015 until the current year.
@@ -875,7 +857,7 @@ export class RankingScene extends Phaser.Scene {
         return tableData;
     }
 
-    /* ======================== Connection with backend =================== */
+    /* ================================ Connection with backend ================================ */
 
 
     /**
@@ -914,4 +896,14 @@ export class RankingScene extends Phaser.Scene {
     }
 
 
+    /* ================================ Utilities ================================ */
+    private HideUserFilter(): void {
+        this.lblFiltro.visible = false;
+        this.lblFiltroTurma.visible = false;
+        this.iconTurma.visible = false;
+        this.lblFiltroEscola.visible = false;
+        this.iconEscola.visible = false;
+        this.lblFiltroTodos.visible = false;
+        this.iconTodos.visible = false;
+    }
 }

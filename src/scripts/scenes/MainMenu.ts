@@ -15,7 +15,7 @@ import LoginForm from '../components/LoginForm';
 import { DestroySession, Login } from '../backend/BackendConnection';
 
 
-enum Panels {
+ enum Panels {
     AboutGame,
     HowToPlay,
     Credits,
@@ -60,7 +60,7 @@ export class MainMenuScene extends Phaser.Scene {
     /**
      * The button responsible for starting the transition to the Ranking scene.
      */
-    private btnLeaderboards: BetterButton;
+    private btnRankingScene: BetterButton;
 
     /**
     * The button responsible for starting the transition to the Multiplayer Game mode scene.
@@ -178,8 +178,8 @@ export class MainMenuScene extends Phaser.Scene {
         this.btnFullscreenToggle.on('pointerup', () => this.ToggleFullscreen());
 
         // Top 100 button
-        this.btnLeaderboards = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 11 * 32, 0.8, 0.8, "", {}, "btn_top");
-        this.btnLeaderboards.on('pointerup', () => this.StartRankingScene());
+        this.btnRankingScene = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 11 * 32, 0.8, 0.8, "", {}, "btn_top");
+        this.btnRankingScene.on('pointerup', () => this.StartRankingScene());
 
         // About the game button
         this.btnAboutGame = new BetterButton(this, this.scale.width - 128, this.scale.height - 64 - 6 * 32, 0.8, 0.8, "", {}, 'btn_about');
@@ -201,11 +201,14 @@ export class MainMenuScene extends Phaser.Scene {
 
         // Play Solo Medium button
         this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 128, 1.2, 1.2, "", {}, 'btn_medium', 0);
-        this.btnPlaySoloMedium.on("pointerup", () => this.StartSoloGame(Difficulty.Medium));
+
 
         // Play Solo Hard button
         this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 320, 1.2, 1.2, "", {}, 'btn_hard', 0);
-        this.btnPlaySoloHard.on("pointerup", () => this.StartSoloGame(Difficulty.Hard));
+
+        this.btnPlaySoloEasy.on("pointerup",    () => this.StartSoloGame(Difficulty.Easy));
+        this.btnPlaySoloMedium.on("pointerup",  () => this.StartSoloGame(Difficulty.Medium));
+        this.btnPlaySoloHard.on("pointerup",    () => this.StartSoloGame(Difficulty.Hard));
 
 
         this.SetupLoginLogoutButtons();
@@ -459,7 +462,7 @@ export class MainMenuScene extends Phaser.Scene {
          *  3 - Pofit?
          */
 
-       
+
 
         const username: string = this.loginForm.GetUsername();
         const password: string = this.loginForm.GetPassword();
@@ -563,7 +566,7 @@ export class MainMenuScene extends Phaser.Scene {
     private EnableRightSideButtons(): void {
         this.btnTabletMode.SetEnabled(1);
         this.btnCredits.SetEnabled(1);
-        this.btnLeaderboards.SetEnabled(1);
+        this.btnRankingScene.SetEnabled(1);
         this.btnHowToPlay.SetEnabled(1);
         this.btnAboutGame.SetEnabled(1)
     }
@@ -575,7 +578,7 @@ export class MainMenuScene extends Phaser.Scene {
     private DisableRightSideButtons(): void {
         this.btnTabletMode.SetDisabled(1);
         this.btnCredits.SetDisabled(1);
-        this.btnLeaderboards.SetDisabled(1);
+        this.btnRankingScene.SetDisabled(1);
         this.btnHowToPlay.SetDisabled(1);
         this.btnAboutGame.SetDisabled(1)
     }

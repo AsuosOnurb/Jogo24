@@ -29,11 +29,9 @@ export  class BetterText extends Phaser.GameObjects.Text
      */
     constructor(scene: Phaser.Scene, x: number, y: number, text: string, style: any )
     {
-
         if (!style.color)
-        {
             style.color = "#292d33";
-        }        
+                
 
         super(scene, x  , y   , text, style);
         
@@ -41,6 +39,4 @@ export  class BetterText extends Phaser.GameObjects.Text
         
         scene.add.existing(this);
     }
-
-    
 }

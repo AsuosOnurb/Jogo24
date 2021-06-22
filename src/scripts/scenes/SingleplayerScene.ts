@@ -316,7 +316,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
         if (this.gameState.GetPlayerState() === PlayerState.PickingOperand1) {
 
-
             // Mark it as used, so that it doesnt get enabled again.
             this.m_BtnUsed[clickedButtonIndex] = true;
 
@@ -332,8 +331,6 @@ export class SingleplayerScene extends Phaser.Scene {
             // Disable the number buttons
             this.DisableNumberButtons();
 
-
-
         } else if (this.gameState.GetPlayerState() === PlayerState.PickingOperand2) {
 
             // Complete the current operation and get its expression 
@@ -347,7 +344,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
             /*
                 This is where we check if the player got the answer right.
-                First, we must only check the answer if all the card buttons have been picked (no number can be left untouched).
+                First, we must check the answer only if all the card buttons have been picked (no number can be left untouched).
 
                 If all numbers have been used, then we check the solution.
             */
@@ -364,11 +361,9 @@ export class SingleplayerScene extends Phaser.Scene {
                     this.gameState.IncrTotalCorrect();
                     this.ShowPlayerWon(expression);
                 }
-
                 else {
                     this.gameState.IncrTotalWrong();
                     this.ShowPlayerLost(expression);
-
                 }
 
                 // Disable all numbers and operations
@@ -378,11 +373,7 @@ export class SingleplayerScene extends Phaser.Scene {
                 this.btnUndo.SetDisabled();
                 this.btnNewCard.SetEnabled();
             }
-
-
         }
-
-
     }
 
     /**
@@ -391,7 +382,8 @@ export class SingleplayerScene extends Phaser.Scene {
      */
     private HandleButtonClick_Operation(operator: string) {
 
-        // Pick the operator and get the most updated expression string. Also, this call sendds us to the next state (pickign operand 2)
+        // Pick the operator and get the most updated expression string. 
+        //Also, this call sendds us to the next state (picking operand 2)
         const mostRecentExpression: string = this.gameState.PickOperator(operator);
 
         // Enable card buttons
@@ -399,6 +391,8 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Disable operation buttons
         this.DisableOperationButtons();
+
+        // Update the expression text bar
         this.expressionBar.SetText(mostRecentExpression);
     }
 
@@ -406,7 +400,6 @@ export class SingleplayerScene extends Phaser.Scene {
      * Handles the functionality of the Undo Button.
      */
     private HandleButtonClick_Undo(): void {
-
 
         if (this.gameState.GetPlayerState() === PlayerState.PickingOperand1) {
             /* 
@@ -416,11 +409,8 @@ export class SingleplayerScene extends Phaser.Scene {
            */
 
             let lastOperation = this.gameState.RevertToLastOperation();
-            if (lastOperation === undefined) {
+            if (lastOperation === undefined)
                 return;
-
-
-            }
 
             // We have to change the buttons to the previous numbers and enable them
             this.m_CardButtons[lastOperation.operand1BtnIndex].NumberButtonSetText(lastOperation.operand1);
@@ -430,7 +420,6 @@ export class SingleplayerScene extends Phaser.Scene {
             this.m_CardButtons[lastOperation.operand2BtnIndex].NumberButtonSetText(lastOperation.operand2);
             this.m_CardButtons[lastOperation.operand2BtnIndex].SetEnabled();
             this.m_BtnUsed[lastOperation.operand2BtnIndex] = false;
-
 
             // Update the text expression bar
             this.expressionBar.SetText("");
@@ -549,8 +538,6 @@ export class SingleplayerScene extends Phaser.Scene {
         verifConnection.then((scores) => {
             this.playerScores = scores;
 
-            console.log("No time left. Connection to Db to retrieve scores was successfull. Verifying login status")
-
             if (LoginData.IsLoggedIn()) {
 
                 // Show the final card telling the player the result of the game.
@@ -559,21 +546,16 @@ export class SingleplayerScene extends Phaser.Scene {
                 // Send the data to the database
                 this.SendScoreToDB(playerScore);
 
-            } else {
+            } else
                 this.ShowEndgameMessageNotLoggedIn(playerScore);
-            }
-
 
         }).catch((err) => {
             /* 
-                Connection throught internet was not possible.
+                Connection through internet was not possible.
                 We'll have to display a simple message congratulating the player. 
             */
             this.ShowEndgameMessageNotConnected(playerScore);
         });
-
-
-
     }
 
     /** 
