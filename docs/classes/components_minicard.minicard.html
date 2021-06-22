@@ -68,6 +68,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A Minicard object is just an image, with some 4 numbers on top, that resembles the main card on the multiplayer game mode.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -278,22 +285,39 @@
 							<aside class="tsd-sources">
 								<p>Overrides Phaser.GameObjects.Image.constructor</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/Minicard.ts#L5">src/scripts/components/Minicard.ts:5</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/Minicard.ts#L19">src/scripts/components/Minicard.ts:19</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a Minicard object.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>scene: <span class="tsd-signature-type">Scene</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The scene where the minicard is to be placed.</p>
+									</div>
 								</li>
 								<li>
 									<h5>x: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The x coordinate of the minicard.</p>
+									</div>
 								</li>
 								<li>
 									<h5>y: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The y coordinate of the minicard.</p>
+									</div>
 								</li>
 								<li>
 									<h5>cardString: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The string representation of the card, i.e: something like &quot;2159&quot;.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="components_minicard.minicard.html" class="tsd-signature-type" data-tsd-kind="Class">Minicard</a></h4>
@@ -835,9 +859,14 @@
 					<div class="tsd-signature tsd-kind-icon">numbers<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/Minicard.ts#L5">src/scripts/components/Minicard.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/Minicard.ts#L19">src/scripts/components/Minicard.ts:19</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The four numbers written on the card.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
 					<a name="originx" class="tsd-anchor"></a>
@@ -1412,9 +1441,19 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/Minicard.ts#L32">src/scripts/components/Minicard.ts:32</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/Minicard.ts#L62">src/scripts/components/Minicard.ts:62</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Flips the minicard so that it can be read by the players playing on the bottom part of the screen.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>Used only in the multiplayer scene.</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -1429,9 +1468,19 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/Minicard.ts#L37">src/scripts/components/Minicard.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/Minicard.ts#L71">src/scripts/components/Minicard.ts:71</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Flips the minicard so that it can be read by the players playing on the top part of the screen.</p>
+								</div>
+								<dl class="tsd-comment-tags">
+									<dt>remarks</dt>
+									<dd><p>Used only in the multiplayer scene.</p>
+									</dd>
+								</dl>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -1446,13 +1495,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/Minicard.ts#L43">src/scripts/components/Minicard.ts:43</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/Minicard.ts#L81">src/scripts/components/Minicard.ts:81</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Changes the numbers on the minicard.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>card: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The string sequence with the new card numbers</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1469,16 +1526,27 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/Minicard.ts#L23">src/scripts/components/Minicard.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/Minicard.ts#L49">src/scripts/components/Minicard.ts:49</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Sets the position of the minicard.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>x: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The new x coordinate</p>
+									</div>
 								</li>
 								<li>
 									<h5>y: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The new y coordinate</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -1495,13 +1563,21 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/Minicard.ts#L48">src/scripts/components/Minicard.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/Minicard.ts#L90">src/scripts/components/Minicard.ts:90</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Set the visibility of the minicard.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>flag: <span class="tsd-signature-type">boolean</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Whether or not the minicard is to be set visible.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>

@@ -103,7 +103,6 @@ export  class PreloadScene extends Phaser.Scene {
 
   create() {
     this.PreloadFonts();
-
     this.scene.start('MainMenu')
   }
 

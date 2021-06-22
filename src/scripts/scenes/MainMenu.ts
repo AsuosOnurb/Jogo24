@@ -11,7 +11,7 @@ import { LoginData } from '../backend/LoginData';
 import { BetterButton } from '../components/BetterButton'
 import { BetterText } from '../components/BetterText';
 import { Difficulty } from '../utils/CardGenerator';
-import LoginForm from '../components/LoginForm';
+import { LoginForm } from '../components/LoginForm';
 import { DestroySession, Login } from '../backend/BackendConnection';
 
 

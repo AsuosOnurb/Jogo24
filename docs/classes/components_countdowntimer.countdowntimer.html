@@ -68,6 +68,14 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>A timer that ticks until 00:00 is reached.
+						A callback function can be specified so that it can be triggered when time time runs out.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -89,13 +97,13 @@
 						<section class="tsd-index-section tsd-is-private tsd-is-private-protected">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#m_initial_time" class="tsd-kind-icon">m_<wbr>INITIAL_<wbr>TIME</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#m_callback" class="tsd-kind-icon">m_<wbr>callback</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#m_currentscene" class="tsd-kind-icon">m_<wbr>current<wbr>Scene</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#m_currenttime" class="tsd-kind-icon">m_<wbr>current<wbr>Time</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#m_isrunning" class="tsd-kind-icon">m_<wbr>is<wbr>Running</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#m_textobject" class="tsd-kind-icon">m_<wbr>text<wbr>Object</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#m_timerevent" class="tsd-kind-icon">m_<wbr>timer<wbr>Event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#initial_time" class="tsd-kind-icon">INITIAL_<wbr>TIME</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#callback" class="tsd-kind-icon">callback</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#currentscene" class="tsd-kind-icon">current<wbr>Scene</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#currenttime" class="tsd-kind-icon">current<wbr>Time</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#isrunning" class="tsd-kind-icon">is<wbr>Running</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#textobject" class="tsd-kind-icon">text<wbr>Object</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="components_countdowntimer.countdowntimer.html#timerevent" class="tsd-kind-icon">timer<wbr>Event</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -123,31 +131,57 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L15">src/scripts/components/CountdownTimer.ts:15</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L50">src/scripts/components/CountdownTimer.ts:50</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates a new CountdownTimer.</p>
+								</div>
+							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
 							<ul class="tsd-parameters">
 								<li>
 									<h5>scene: <span class="tsd-signature-type">Scene</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The scene where the timer is to be placed.</p>
+									</div>
 								</li>
 								<li>
 									<h5>startingTime: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The starting amount of time.</p>
+									</div>
 								</li>
 								<li>
 									<h5>callback: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The method/function that is to be called once the time runs out.</p>
+									</div>
 								</li>
 								<li>
 									<h5>textX: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The x coordinate of the text representation of the timer</p>
+									</div>
 								</li>
 								<li>
 									<h5>textY: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The y coordinate of the text representation of the timer</p>
+									</div>
 								</li>
 								<li>
 									<h5>textSize: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The size of the text</p>
+									</div>
 								</li>
 								<li>
 									<h5>optionalInitialText: <span class="tsd-signature-type">undefined</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The (optional) initial text string</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="components_countdowntimer.countdowntimer.html" class="tsd-signature-type" data-tsd-kind="Class">CountdownTimer</a></h4>
@@ -158,74 +192,114 @@
 			<section class="tsd-panel-group tsd-member-group tsd-is-private tsd-is-private-protected">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_initial_time" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> m_<wbr>INITIAL_<wbr>TIME</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr>INITIAL_<wbr>TIME<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="initial_time" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> <span class="tsd-flag ts-flagReadonly">Readonly</span> INITIAL_<wbr>TIME</h3>
+					<div class="tsd-signature tsd-kind-icon">INITIAL_<wbr>TIME<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L9">src/scripts/components/CountdownTimer.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L29">src/scripts/components/CountdownTimer.ts:29</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The amount of time the timer starts with.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_callback" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> m_<wbr>callback</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr>callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<a name="callback" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> callback</h3>
+					<div class="tsd-signature tsd-kind-icon">callback<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L15">src/scripts/components/CountdownTimer.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L50">src/scripts/components/CountdownTimer.ts:50</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The function/method that gets called when the time reaches zero.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_currentscene" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> m_<wbr>current<wbr>Scene</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr>current<wbr>Scene<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Scene</span></div>
+					<a name="currentscene" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> current<wbr>Scene</h3>
+					<div class="tsd-signature tsd-kind-icon">current<wbr>Scene<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Scene</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L5">src/scripts/components/CountdownTimer.ts:5</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L19">src/scripts/components/CountdownTimer.ts:19</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The scene where the timer is placed.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_currenttime" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> m_<wbr>current<wbr>Time</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr>current<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
+					<a name="currenttime" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> current<wbr>Time</h3>
+					<div class="tsd-signature tsd-kind-icon">current<wbr>Time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L10">src/scripts/components/CountdownTimer.ts:10</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L34">src/scripts/components/CountdownTimer.ts:34</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The amount of time left to count down.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_isrunning" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> m_<wbr>is<wbr>Running</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr>is<wbr>Running<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<a name="isrunning" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> is<wbr>Running</h3>
+					<div class="tsd-signature tsd-kind-icon">is<wbr>Running<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L11">src/scripts/components/CountdownTimer.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L40">src/scripts/components/CountdownTimer.ts:40</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Whether or not the timer is (or should be) ticking.</p>
+						</div>
+						<dl class="tsd-comment-tags">
+							<dt>remarks</dt>
+							<dd><p>CountdownTimers are not ticking by default. Time starts counting after using <a href="components_countdowntimer.countdowntimer.html#startcountdown">CountdownTimer.StartCountdown</a> method.</p>
+							</dd>
+						</dl>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_textobject" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> m_<wbr>text<wbr>Object</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr>text<wbr>Object<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<a name="textobject" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> text<wbr>Object</h3>
+					<div class="tsd-signature tsd-kind-icon">text<wbr>Object<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L13">src/scripts/components/CountdownTimer.ts:13</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L45">src/scripts/components/CountdownTimer.ts:45</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The text representation of the time.</p>
+						</div>
+					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
-					<a name="m_timerevent" class="tsd-anchor"></a>
-					<h3><span class="tsd-flag ts-flagPrivate">Private</span> m_<wbr>timer<wbr>Event</h3>
-					<div class="tsd-signature tsd-kind-icon">m_<wbr>timer<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TimerEvent</span></div>
+					<a name="timerevent" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> timer<wbr>Event</h3>
+					<div class="tsd-signature tsd-kind-icon">timer<wbr>Event<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TimerEvent</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L7">src/scripts/components/CountdownTimer.ts:7</a></li>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L24">src/scripts/components/CountdownTimer.ts:24</a></li>
 						</ul>
 					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Phaser.Event object that ticks every second.</p>
+						</div>
+					</div>
 				</section>
 			</section>
 			<section class="tsd-panel-group tsd-member-group ">
@@ -240,10 +314,16 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L86">src/scripts/components/CountdownTimer.ts:86</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L152">src/scripts/components/CountdownTimer.ts:152</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Returns a string specifically formated for the timer.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>A formatted string for the representation of the remaining time.</p>
 						</li>
 					</ul>
 				</section>
@@ -257,9 +337,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L103">src/scripts/components/CountdownTimer.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L115">src/scripts/components/CountdownTimer.ts:115</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Resets the timer by putting it in the same state it had when it was created.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -274,9 +359,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L36">src/scripts/components/CountdownTimer.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L85">src/scripts/components/CountdownTimer.ts:85</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Begins the ticking/counting down of time.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -291,9 +381,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L57">src/scripts/components/CountdownTimer.ts:57</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L106">src/scripts/components/CountdownTimer.ts:106</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Pauses the timer ticking.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -308,9 +403,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/da93dfb/src/scripts/components/CountdownTimer.ts#L63">src/scripts/components/CountdownTimer.ts:63</a></li>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/8602da5/src/scripts/components/CountdownTimer.ts#L125">src/scripts/components/CountdownTimer.ts:125</a></li>
 								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Handles each tick of the timer.</p>
+								</div>
+							</div>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -375,25 +475,25 @@
 								<a href="components_countdowntimer.countdowntimer.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="components_countdowntimer.countdowntimer.html#m_initial_time" class="tsd-kind-icon">m_<wbr>INITIAL_<wbr>TIME</a>
+								<a href="components_countdowntimer.countdowntimer.html#initial_time" class="tsd-kind-icon">INITIAL_<wbr>TIME</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="components_countdowntimer.countdowntimer.html#m_callback" class="tsd-kind-icon">m_<wbr>callback</a>
+								<a href="components_countdowntimer.countdowntimer.html#callback" class="tsd-kind-icon">callback</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="components_countdowntimer.countdowntimer.html#m_currentscene" class="tsd-kind-icon">m_<wbr>current<wbr>Scene</a>
+								<a href="components_countdowntimer.countdowntimer.html#currentscene" class="tsd-kind-icon">current<wbr>Scene</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="components_countdowntimer.countdowntimer.html#m_currenttime" class="tsd-kind-icon">m_<wbr>current<wbr>Time</a>
+								<a href="components_countdowntimer.countdowntimer.html#currenttime" class="tsd-kind-icon">current<wbr>Time</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="components_countdowntimer.countdowntimer.html#m_isrunning" class="tsd-kind-icon">m_<wbr>is<wbr>Running</a>
+								<a href="components_countdowntimer.countdowntimer.html#isrunning" class="tsd-kind-icon">is<wbr>Running</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="components_countdowntimer.countdowntimer.html#m_textobject" class="tsd-kind-icon">m_<wbr>text<wbr>Object</a>
+								<a href="components_countdowntimer.countdowntimer.html#textobject" class="tsd-kind-icon">text<wbr>Object</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
-								<a href="components_countdowntimer.countdowntimer.html#m_timerevent" class="tsd-kind-icon">m_<wbr>timer<wbr>Event</a>
+								<a href="components_countdowntimer.countdowntimer.html#timerevent" class="tsd-kind-icon">timer<wbr>Event</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
 								<a href="components_countdowntimer.countdowntimer.html#formattime" class="tsd-kind-icon">Format<wbr>Time</a>
