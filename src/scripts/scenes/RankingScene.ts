@@ -869,12 +869,8 @@ export class RankingScene extends Phaser.Scene {
          * 
          * Also, notice how we have to parse what we receive from the database. We don't use the raw data we receive from the DB.
          */
-
-
         let connection = GetFilteredTOP(this.dataInicial, this.dataFinal, this.spaceFilter, this.dificultyFilter);
-
         connection.then((data) => {
-
 
             let parsedData = ParsedUpdatedScoreData(data);
             if (parsedData.length < 4)

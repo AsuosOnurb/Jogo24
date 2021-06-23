@@ -199,7 +199,7 @@ export class MultiplayerScene extends Phaser.Scene {
         this.HidePeekSolutionButton();
 
 
-        // Increment the total of cards played, and update the tard counter
+        // Increment the total of cards played, and update the card counter text
         const totalCards = this.gameState.IncrementTotalCardsUsed();
         this.cardCounter.SetText(`${totalCards} / ${this.gameState.MAX_CARD_TOTAL}`)
 
@@ -246,15 +246,11 @@ export class MultiplayerScene extends Phaser.Scene {
         // Prevent player from getting a new card
         this.btnNewcard.SetDisabled();
 
-
+        // Draw the minicards in the correct place
         this.RedrawMiniCards(clickedButtonIndex);
 
         // Start counting time
         this.countdownTimer.StartCountdown();
-
-
-
-
     }
 
     /**
@@ -373,7 +369,7 @@ export class MultiplayerScene extends Phaser.Scene {
                 // Disable all numbers and operations
                 this.DisableNumberButtons();
                 this.DisableOperationButtons()
-                this.btnNewcard.SetEnabled(); // PLayers have to pick a new cards
+                this.btnNewcard.SetEnabled(); // Players have to pick a new cards
 
                 // Stop time counter
                 this.countdownTimer.StopCountdown();
@@ -705,27 +701,20 @@ export class MultiplayerScene extends Phaser.Scene {
         this.expressionBars.forEach((exprBar: BetterButton) => {
             exprBar.SetText(expression + ` = ${24}`);
             exprBar.SetTextColor("#00ff1a");
-
         });
 
-        this.playerButtons[this.gameState.GetCurrentPlayer()].SetText(this.gameState.GetCurrentPlayerScore().toString());
-
-
+        this.playerButtons[this.gameState.GetCurrentPlayer()]
+            .SetText(this.gameState.GetCurrentPlayerScore().toString());
     }
 
     ShowPlayerLost(expression: string): void {
         this.expressionBars.forEach((exprBar: BetterButton) => {
             exprBar.SetText(expression + ` = ${ValueOfExpression(expression)}`);
             exprBar.SetTextColor("#ff2600");
-
-
         });
 
-        this.playerButtons[this.gameState.GetCurrentPlayer()].SetText(this.gameState.GetCurrentPlayerScore().toString());
-
-
-
-
+        this.playerButtons[this.gameState.GetCurrentPlayer()]
+            .SetText(this.gameState.GetCurrentPlayerScore().toString());
     }
 
     /**
@@ -905,19 +894,18 @@ export class MultiplayerScene extends Phaser.Scene {
         if (winningPlayersIndexes.length > 1) {
             // More than one winner
             congratsText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 54,
-                `Parabéns               \n\n\nObtiveram um total de ${winningScore} pontos!`, { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });
+                `Parabéns               \n\n\nObtiveram um total de ${winningScore} pontos!`, 
+                            { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });
         }
         else {
             // Only one winner
-
             congratsText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 54,
-                `Parabéns               \n\n\nObtiveste um total de ${winningScore} pontos!`, { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });
-
-
+                `Parabéns               \n\n\nObtiveste um total de ${winningScore} pontos!`, 
+                            { fontFamily: 'Vertiky', align: 'center', fontSize: 54, color: "#4e2400" });
         }
 
 
-        congratsText!.setAlpha(0);
+        congratsText.setAlpha(0);
         this.tweens.add(
             {
                 targets: [congratsText],
@@ -927,14 +915,13 @@ export class MultiplayerScene extends Phaser.Scene {
             }
         )
 
-        // Move the buttons to the panel to show which players won
+        // Move the buttons, of the players that won, to the panel 
         for (let i = 0; i < winningPlayersIndexes.length; i++) {
             const associatedButton: BetterButton = this.playerButtons[winningPlayersIndexes[i]];
             associatedButton.SetText("");
             associatedButton.setDepth(1);
 
-            this.tweens.add(
-                {
+            this.tweens.add({
                     targets: associatedButton,
                     alpha: 1,
                     x: this.scale.width / 2 + 96 + i * 64,
