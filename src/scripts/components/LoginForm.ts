@@ -152,8 +152,6 @@ export class LoginForm {
         (<HTMLInputElement>this.passwordInput.getChildByName('password')).disabled = false;
 
         document.getElementById("loginFormContainer")?.style.removeProperty("pointer-events");
-
-
     }
 
     /**

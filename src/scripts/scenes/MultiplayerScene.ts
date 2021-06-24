@@ -78,8 +78,6 @@ export class MultiplayerScene extends Phaser.Scene {
     private usedButtons: Array<boolean>;
     private btnNewcard: BetterButton;              // Resets player input and gives player a new card / new numbers
 
-    private txtSolution: BetterText; // debug only
-
     private playerButtons: Array<BetterButton>; // The array that holds the 4 coloured player buttons
 
     private btnOperationAdd: BetterButton;         // Performs Addition
@@ -116,10 +114,6 @@ export class MultiplayerScene extends Phaser.Scene {
         });
 
 
-
-
-        // Debug solutution label
-        this.txtSolution = new BetterText(this, 128, 256, "", { fontSize: 32 });
 
         /**
          * Register event handlers/listeners only if the scene hasn't been started before.
@@ -169,8 +163,6 @@ export class MultiplayerScene extends Phaser.Scene {
         this.btnOperationMultiply.SetDisabled();
         this.btnOperationDivide.SetDisabled();
 
-        // Update the solution debug text
-        this.txtSolution.setText(`Solução: ${Solutions.GetSolution(this.gameState.GetCurrentCard())}`);
 
         // Clear the text from expression bars
         for (let i = 0; i < 4; i++)

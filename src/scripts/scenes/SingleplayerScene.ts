@@ -10,7 +10,6 @@ import Phaser from 'phaser'
 
 import { BetterText } from '../components/BetterText'
 import { BetterButton } from '../components/BetterButton'
-import { Solutions } from '../utils/Solutions'
 import { CountdownTimer } from '../components/CountdownTimer'
 import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../utils/Utils'
@@ -53,7 +52,6 @@ export class SingleplayerScene extends Phaser.Scene {
      */
     private expressionBar: BetterButton;
 
-    private textSolution: BetterText; // debug only
 
     // Buttons
     /**
@@ -173,8 +171,6 @@ export class SingleplayerScene extends Phaser.Scene {
         this.countdownTimer = // 180
             new CountdownTimer(this, 180, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
 
-        this.textSolution =
-            new BetterText(this, 256, 256, "", { fontFamily: 'Vertiky', fontSize: 32 });
 
         // Add the player input bar :
         this.expressionBar = new BetterButton(this, this.scale.width / 2, 128 - 32, 1, 0.9, '', { fontFamily: 'Bubblegum', fontSize: 48, fill: '#FFFFFF' }, 'inputBar');
@@ -355,9 +351,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Disable 'Backspace' button
         this.btnUndo.SetDisabled();
-
-        // Update the solution debug text
-        this.textSolution.setText(`[DEBUG] Solução: ${Solutions.GetSolution(this.gameState.GetCurrentCard())}`);
 
         // Clear the expression text
         this.expressionBar.SetText("");

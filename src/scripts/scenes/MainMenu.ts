@@ -141,7 +141,6 @@ export class MainMenuScene extends Phaser.Scene {
     constructor() {
         super('MainMenu');
 
-        console.warn("Final tweaks version");
 
     }
     
@@ -492,7 +491,6 @@ export class MainMenuScene extends Phaser.Scene {
                 this.txtUserName.setText(`Olá, ${LoginData.GetFirstName()}`)
             }
             else {
-                console.log("Login failed!")
                 this.loginForm.ShowErrorLoginWrongCredentials();
             
             }
