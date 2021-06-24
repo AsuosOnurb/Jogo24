@@ -86,6 +86,9 @@ export class MultiplayerScene extends Phaser.Scene {
     private btnOperationDivide: BetterButton;      // Perfroms Division
 
     private btnGotoMenu: BetterButton;             // Redirects player to the main menu
+    private btnPlayAgain: BetterButton;
+
+
     private imageDifficulty: Phaser.GameObjects.Image; // The image that displays the current game difficulty
     private cardCounter: BetterButton;  // The card counter (Its a button just for simplicity)
 
@@ -108,10 +111,18 @@ export class MultiplayerScene extends Phaser.Scene {
         bgImg.setDisplaySize(this.scale.width, this.scale.height);
 
         // Main Menu button
-        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 70, 0.65, 0.65, "", {}, 'btn_gotoMenu');
+        this.btnGotoMenu = new BetterButton(this, this.scale.width / 2, 70, 0.6, 0.6, "", {}, 'btn_gotoMenu');
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
         });
+
+        this.btnPlayAgain = new BetterButton(this, this.scale.width / 2, 70, 0.75, 0.75, "", {}, 'btn_playCard');
+        this.btnPlayAgain.SetDisabled(0);
+        this.btnPlayAgain.on('pointerup', () => {
+            this.registry.destroy(); // destroy registry
+            this.scene.restart(); // restart current scene
+        });
+        
 
 
 
@@ -846,16 +857,8 @@ export class MultiplayerScene extends Phaser.Scene {
         }
 
 
-        // Move the main menu button to the panel
-        this.btnGotoMenu.setDepth(1);
-        this.tweens.add({
-            targets: this.btnGotoMenu,
-            scale: 1,
-            duration: 500,
-            ease: 'Power1',
-            x: this.scale.width / 2,
-            y: this.scale.height / 2 + 300
-        });
+        this.MoveMenuPlayAgainBtns();
+        
 
 
     }
@@ -928,4 +931,34 @@ export class MultiplayerScene extends Phaser.Scene {
 
     }
 
+
+    private MoveMenuPlayAgainBtns (): void 
+    {
+        this.btnGotoMenu.setDepth(1);
+        this.btnGotoMenu.SetNewDefaultScale(1)
+        this.btnPlayAgain.setDepth(1);
+        this.btnPlayAgain.SetEnabled(0);
+
+        this.tweens.add(
+            {
+                targets: this.btnGotoMenu,
+                x: this.scale.width / 2 - 128,
+                y: this.scale.height / 2 + 280,
+                scale: 1,
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        this.tweens.add(
+            {
+                targets: this.btnPlayAgain,
+                x: this.scale.width / 2 + 128,
+                y: this.scale.height / 2 + 280,
+                alpha: 1,
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+    }
 }

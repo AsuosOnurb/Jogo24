@@ -94,6 +94,8 @@ export class SingleplayerScene extends Phaser.Scene {
      */
     private btnGotoMenu!: BetterButton;
 
+    private btnPlayAgain: BetterButton;
+
     /**
      *  The final image and information that appears everytime the timer runs out
      */
@@ -224,8 +226,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
         }
 
-
-
     }
 
     /**
@@ -254,6 +254,13 @@ export class SingleplayerScene extends Phaser.Scene {
         this.btnGotoMenu = new BetterButton(this, 128, this.scale.height - 128, 1, 1, "", {}, 'btn_gotoMenu');
         this.btnGotoMenu.on("pointerup", () => {
             this.scene.start("MainMenu");
+        });
+
+        this.btnPlayAgain = new BetterButton(this, 128 + 256, this.scale.height - 128, 0.75, 0.75, "", {}, 'btn_playCard')
+        this.btnPlayAgain.SetDisabled(0);
+        this.btnPlayAgain.on('pointerup', () => {
+            this.registry.destroy(); // destroy registry
+            this.scene.restart();// restart current scene
         });
 
         // Setup a button for each number in the card (4 buttons)
@@ -605,7 +612,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.btnNewCard.SetDisabled();
 
-        const playerScore = this.gameState.GetTotalCorrect();
+       const playerScore = this.gameState.GetTotalCorrect();
         // Check the most updated scores from the DB
         let verifConnection = GetUpdatedScores(playerScore, this.gameState.difficulty + 1);
         verifConnection.then((scores) => {
@@ -629,6 +636,8 @@ export class SingleplayerScene extends Phaser.Scene {
             */
             this.ShowEndgameMessageNotConnected(playerScore);
         });
+
+        this.MoveMenuPlayAgainBtns();
     }
 
     /** 
@@ -662,16 +671,16 @@ export class SingleplayerScene extends Phaser.Scene {
 
             } else
                 // Player got  a new personal best.
-                winMessage = `${playerName}, conseguiste melhorar o teu\nresultado anterior.\n\nNo entanto, ainda não conseguiste \nentrar no TOP 100.\n\nTenta outra vez.`;
+                winMessage = `${playerName}, conseguiste melhorar o teu\nresultado anterior.\n\nNo entanto, ainda não conseguiste \nentrar no TOP 100.\nTenta outra vez.`;
 
         } else {
             // Nohing new happened
-            winMessage = `Obtiveste ${playerScore} pontos.\n\nNão conseguiste melhorar o teu\nresultado anterior\n(o teu melhor resultado é ${personalBest} pontos)\n\n\nTenta outra vez!`;
+            winMessage = `Obtiveste ${playerScore} pontos.\nNão conseguiste melhorar o teu\nresultado anterior\n(o teu melhor resultado é ${personalBest} pontos)\n\nTenta outra vez!`;
 
         }
 
         // Prepare the text that will be shown
-        this.txtGameResults = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 34 });
+        this.txtGameResults = new BetterText(this, this.scale.width / 2, this.scale.height / 2, "", { fontFamily: 'Vertiky', align: 'center', fontSize: 32 });
         this.txtGameResults.setText(winMessage)
         this.txtGameResults.setColor("#4e2400");
         this.txtGameResults.setAlpha(0);
@@ -730,7 +739,7 @@ export class SingleplayerScene extends Phaser.Scene {
         if (playerScore > top100GlobalBest) {
             message = `Se estivesses registado o teu\nnome figuraria no TOP 100 absoluto\ncom ${playerScore} pontos.\n\nRegista-te em\nwww.hypatiamat.com `;
         } else {
-            message = `Obtiveste ${playerScore} pontos!\n\n\n Para que o teu nome figure nos TOPs \n tens de estar registado.\n\n\n\nRegista-te em www.hypatiamat.com`;
+            message = `Obtiveste ${playerScore} pontos!\n\nPara que o teu nome figure no TOP\ntens de estar registado.\n\nRegista-te em www.hypatiamat.com`;
 
         }
 
@@ -891,6 +900,34 @@ export class SingleplayerScene extends Phaser.Scene {
         }
 
 
+    }
+
+    private MoveMenuPlayAgainBtns(): void {
+        this.btnGotoMenu.setDepth(1);
+        this.btnPlayAgain.setDepth(1);
+        this.btnPlayAgain.SetEnabled(1);
+
+        this.tweens.add(
+            {
+                targets: this.btnGotoMenu,
+                x: this.scale.width / 2 - 128,
+                y: this.scale.height / 2 + 280,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
+
+        this.tweens.add(
+            {
+                targets: this.btnPlayAgain,
+                x: this.scale.width / 2 + 128,
+                y: this.scale.height / 2 + 280,
+
+                duration: 500,
+                ease: 'Power1'
+            }
+        );
     }
 
 }

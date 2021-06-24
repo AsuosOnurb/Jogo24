@@ -103,26 +103,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
      */
     SetupButtonOutAnimation(): void {
 
-        /*
-
-        this.m_Tween_ButtonOut = this.mCurrentScene.tweens.add({
-            targets: this,
-            props: {
-                scale: this.m_OriginalScale,
-                angle: 0
-
-            },
-            ease: 'Power1',
-            duration: 40,
-            paused: true,
-            delay: 60
-        });
-
-
-        this.on('pointerout', () => this.m_Tween_ButtonOut.play());
-        */
-
-        this.on('pointerout', () => {this.scale -= 0.1; this.textObject.scale -= 0.1;});
+        this.on('pointerout', () => {this.scale = this.originalScale; });
 
     }
 
@@ -148,7 +129,7 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.on('pointerover', () => this.m_Tween_ButtonHover.play());
         */
 
-        this.on('pointerover', () => {this.scale += 0.1; this.textObject.scale += 0.1});
+        this.on('pointerover', () => {this.scale += 0.1; });
 
     }
 
@@ -252,7 +233,15 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
 
         this.setAlpha(alpha);
 
+        this.scale = this.originalScale;
 
+
+
+    }
+
+    SetNewDefaultScale(scale: number) : void 
+    {
+        this.originalScale = scale;
     }
 
     /**
@@ -264,6 +253,8 @@ export class BetterButton extends Phaser.GameObjects.Sprite {
         this.disableInteractive();
         this.textObject.setAlpha(alpha);
         this.setAlpha(alpha);
+
+        this.scale = this.originalScale;
     }
 
     /**
