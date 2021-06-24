@@ -24,6 +24,10 @@ export  class PreloadScene extends Phaser.Scene {
 
     this.load.image('btn_peekImage', 'assets/img/common/eye.png');
 
+    this.load.image('panel_empty', 'assets/img/common/painelVazio.png')
+    this.load.image('gameEndBGg', 'assets/img/solo_game/finalDoJogo.png');
+
+
     /* =================================== Main menu assets =================================== */
     this.load.image('fullscreenOn', 'assets/img/main_menu/fullscreenBT-1.png')
     this.load.image('fullscreenOff', 'assets/img/main_menu/fullscreenBT-2.png')
@@ -77,7 +81,6 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_multiplication',   'assets/img/solo_game/opMultiplicacao.png');
     this.load.image('btn_division',   'assets/img/solo_game/opDivisao.png');
 
-    this.load.image('gameEndBGg', 'assets/img/solo_game/finalDoJogo.png');
   
 
     /* =================================== Multiplayer game assets ============================== */
@@ -91,23 +94,15 @@ export  class PreloadScene extends Phaser.Scene {
     this.load.image('btn_player3', 'assets/img/multiplayer_game/btt3.png');
     this.load.image('btn_player4', 'assets/img/multiplayer_game/btt4.png');
 
+    this.load.image('cardCounterBG', 'assets/img/multiplayer_game/cardCounterBG.png');
+
     /* ========================== Ranking scene ==================================== */
     this.load.image('sliderThumb', 'assets/img/common/numeroBTBG.png');
 
   }
 
   create() {
-    this.PreloadFonts();
-
     this.scene.start('MainMenu')
   }
 
-  PreloadFonts () : void
-  {
-    this.add.text(0,0,"DEFAULT", {font: '1px Vertiky'}).setVisible(false);
-    this.add.text(0,0,"DEFAULT", {font: '1px Folks-Normal'}).setVisible(false);
-    this.add.text(0,0,"DEFAULT", {font: '1px Folks-Bold'}).setVisible(false);
-    this.add.text(0,0,"DEFAULT", {font: '1px Bubblegum'}).setVisible(false);
-
-  }
 }

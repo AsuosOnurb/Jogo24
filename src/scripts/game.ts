@@ -49,5 +49,4 @@ const config = {
 
 
 var game = new Phaser.Game(config);
-game.scale.fullscreenTarget = document.getElementById(`phaser-game`);
-var userLoginData = LoginData.GetInstance();
+game.scale.fullscreenTarget = document.getElementById(`game`);

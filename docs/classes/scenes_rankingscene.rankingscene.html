@@ -1,0 +1,1694 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>RankingScene | Jogo24</title>
+	<meta name="description" content="Documentation for Jogo24">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="../assets/css/main.css">
+	<script async src="../assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="../assets/js/search.json" data-base="..">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="../index.html" class="title">Jogo24</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="../modules.html">Jogo24</a>
+				</li>
+				<li>
+					<a href="../modules/scenes_rankingscene.html">scenes/RankingScene</a>
+				</li>
+				<li>
+					<a href="scenes_rankingscene.rankingscene.html">RankingScene</a>
+				</li>
+			</ul>
+			<h1>Class RankingScene</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>The class that implements the ranking/socreboard/top scene.
+						The only way yo arrive to this scene is from the main menu.</p>
+					</div>
+					<p>Here&#39; we&#39;re using the BackendConnection (static) object to facilitate the communication between this and the database.</p>
+					<p>To speed up things, we&#39;re using 2 pieces of external code.
+					The first one is the RexUI&#39;s plugin. It provides us some tools to create scrollable tables, radio buttons and the likes.</p>
+					<p>The other one is the AlignGrid object defined on AlignedGrid.js . This object lets us create a grid where we can specify positions for the UI elements.
+					Not only that, this object will also scale and position them according to the game&#39;s scale.</p>
+					<p> ================================================================================
+						Filter Based Updating
+						Another thing one might notice is how the table is updated everytime a filter is clicked.
+						We have to connect to the database everyime because we want to receive the most updated information/scores.
+						We could just retrieve them all and store them in based on their filter categories, but that would mean we wouldn&#39;t take into account
+						the new scores that could be added during the time the player is in this scene.
+					===========================================================================================</p>
+				</div>
+			</section>
+			<section class="tsd-panel tsd-hierarchy">
+				<h3>Hierarchy</h3>
+				<ul class="tsd-hierarchy">
+					<li>
+						<span class="tsd-signature-type">Scene</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">RankingScene</span>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</section>
+			<section class="tsd-panel-group tsd-index-group">
+				<h2>Index</h2>
+				<section class="tsd-panel tsd-index-panel">
+					<div class="tsd-index-content">
+						<section class="tsd-index-section ">
+							<h3>Constructors</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite"><a href="scenes_rankingscene.rankingscene.html#constructor" class="tsd-kind-icon">constructor</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Properties</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#add" class="tsd-kind-icon">add</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#alignmentgrid" class="tsd-kind-icon">alignment<wbr>Grid</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#anims" class="tsd-kind-icon">anims</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#btnmainmenu" class="tsd-kind-icon">btn<wbr>Main<wbr>Menu</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#cache" class="tsd-kind-icon">cache</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#cameras" class="tsd-kind-icon">cameras</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#children" class="tsd-kind-icon">children</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#data" class="tsd-kind-icon">data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#datafinal" class="tsd-kind-icon">data<wbr>Final</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#datainicial" class="tsd-kind-icon">data<wbr>Inicial</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#databasedata" class="tsd-kind-icon">database<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#dificultyfilter" class="tsd-kind-icon">dificulty<wbr>Filter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#events" class="tsd-kind-icon">events</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#facebook" class="tsd-kind-icon">facebook</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#filterbackground" class="tsd-kind-icon">filter<wbr>Background</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#game" class="tsd-kind-icon">game</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#icondificil" class="tsd-kind-icon">icon<wbr>Dificil</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#iconescola" class="tsd-kind-icon">icon<wbr>Escola</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#iconfacil" class="tsd-kind-icon">icon<wbr>Facil</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#iconnormal" class="tsd-kind-icon">icon<wbr>Normal</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#icontodos" class="tsd-kind-icon">icon<wbr>Todos</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#iconturma" class="tsd-kind-icon">icon<wbr>Turma</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#imgtitle" class="tsd-kind-icon">img<wbr>Title</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#input" class="tsd-kind-icon">input</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblanoletivo" class="tsd-kind-icon">lbl<wbr>Ano<wbr>Letivo</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lbldata" class="tsd-kind-icon">lbl<wbr>Data</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lbldificil" class="tsd-kind-icon">lbl<wbr>Dificil</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lbldificuldade" class="tsd-kind-icon">lbl<wbr>Dificuldade</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblescola" class="tsd-kind-icon">lbl<wbr>Escola</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblfacil" class="tsd-kind-icon">lbl<wbr>Facil</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblfiltro" class="tsd-kind-icon">lbl<wbr>Filtro</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblfiltroescola" class="tsd-kind-icon">lbl<wbr>Filtro<wbr>Escola</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblfiltrotodos" class="tsd-kind-icon">lbl<wbr>Filtro<wbr>Todos</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblfiltroturma" class="tsd-kind-icon">lbl<wbr>Filtro<wbr>Turma</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lbljogador" class="tsd-kind-icon">lbl<wbr>Jogador</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblnormal" class="tsd-kind-icon">lbl<wbr>Normal</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblpontos" class="tsd-kind-icon">lbl<wbr>Pontos</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#lblturma" class="tsd-kind-icon">lbl<wbr>Turma</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#lights" class="tsd-kind-icon">lights</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#load" class="tsd-kind-icon">load</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#make" class="tsd-kind-icon">make</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#matter" class="tsd-kind-icon">matter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#physics" class="tsd-kind-icon">physics</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#plugins" class="tsd-kind-icon">plugins</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#registry" class="tsd-kind-icon">registry</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#renderer" class="tsd-kind-icon">renderer</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#rexui" class="tsd-kind-icon">rexUI</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#scale" class="tsd-kind-icon">scale</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#scene" class="tsd-kind-icon">scene</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#schoolyeardropdown" class="tsd-kind-icon">school<wbr>Year<wbr>Dropdown</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#scoretable" class="tsd-kind-icon">score<wbr>Table</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#sound" class="tsd-kind-icon">sound</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#spacefilter" class="tsd-kind-icon">space<wbr>Filter</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#sys" class="tsd-kind-icon">sys</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#textures" class="tsd-kind-icon">textures</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#time" class="tsd-kind-icon">time</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#tweens" class="tsd-kind-icon">tweens</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Methods</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#completescene" class="tsd-kind-icon">Complete<wbr>Scene</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#createtable" class="tsd-kind-icon">Create<wbr>Table</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#getschoolyearlist" class="tsd-kind-icon">Get<wbr>School<wbr>Year<wbr>List</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#gettabledata" class="tsd-kind-icon">Get<wbr>Table<wbr>Data</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#hideuserfilter" class="tsd-kind-icon">Hide<wbr>User<wbr>Filter</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#loademptyscene" class="tsd-kind-icon">Load<wbr>Empty<wbr>Scene</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#setupfilter" class="tsd-kind-icon">Setup<wbr>Filter</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#setupmenubutton" class="tsd-kind-icon">Setup<wbr>Menu<wbr>Button</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#setupyearfilterdropdown" class="tsd-kind-icon">Setup<wbr>Year<wbr>Filter<wbr>Dropdown</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#updatetable" class="tsd-kind-icon">Update<wbr>Table</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#init" class="tsd-kind-icon">init</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><a href="scenes_rankingscene.rankingscene.html#preload" class="tsd-kind-icon">preload</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external"><a href="scenes_rankingscene.rankingscene.html#update" class="tsd-kind-icon">update</a></li>
+							</ul>
+						</section>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Constructors</h2>
+				<section class="tsd-panel tsd-member tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+					<a name="constructor" class="tsd-anchor"></a>
+					<h3>constructor</h3>
+					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Ranking<wbr>Scene<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="scenes_rankingscene.rankingscene.html" class="tsd-signature-type" data-tsd-kind="Class">RankingScene</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Overrides Phaser.Scene.constructor</p>
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L187">src/scripts/scenes/RankingScene.ts:187</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <a href="scenes_rankingscene.rankingscene.html" class="tsd-signature-type" data-tsd-kind="Class">RankingScene</a></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Properties</h2>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="add" class="tsd-anchor"></a>
+					<h3>add</h3>
+					<div class="tsd-signature tsd-kind-icon">add<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">GameObjectFactory</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.add</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86100</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Game Object Factory.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="alignmentgrid" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> alignment<wbr>Grid</h3>
+					<div class="tsd-signature tsd-kind-icon">alignment<wbr>Grid<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L146">src/scripts/scenes/RankingScene.ts:146</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The alignment grid that helps us align the elements on the screen.
+							This is javascript object defined on the corresponding file (AlignGrid.js).</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="anims" class="tsd-anchor"></a>
+					<h3>anims</h3>
+					<div class="tsd-signature tsd-kind-icon">anims<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AnimationManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.anims</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86051</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the global Animation Manager.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="btnmainmenu" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> btn<wbr>Main<wbr>Menu</h3>
+					<div class="tsd-signature tsd-kind-icon">btn<wbr>Main<wbr>Menu<span class="tsd-signature-symbol">:</span> <a href="components_betterbutton.betterbutton.html" class="tsd-signature-type" data-tsd-kind="Class">BetterButton</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L134">src/scripts/scenes/RankingScene.ts:134</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The button that starts the transition to the main menu.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="cache" class="tsd-anchor"></a>
+					<h3>cache</h3>
+					<div class="tsd-signature tsd-kind-icon">cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">CacheManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.cache</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86058</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the global Cache.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="cameras" class="tsd-anchor"></a>
+					<h3>cameras</h3>
+					<div class="tsd-signature tsd-kind-icon">cameras<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">CameraManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.cameras</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86093</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Camera Manager.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="children" class="tsd-anchor"></a>
+					<h3>children</h3>
+					<div class="tsd-signature tsd-kind-icon">children<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">DisplayList</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.children</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86121</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Game Object Display List belonging to this Scene.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="data" class="tsd-anchor"></a>
+					<h3>data</h3>
+					<div class="tsd-signature tsd-kind-icon">data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">DataManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.data</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86137</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A Scene specific Data Manager Plugin.</p>
+						</div>
+						<p>See the <code>registry</code> property for the global Data Manager.</p>
+						<p>This property will only be available if defined in the Scene Injection Map and the plugin is installed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="datafinal" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> data<wbr>Final</h3>
+					<div class="tsd-signature tsd-kind-icon">data<wbr>Final<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L166">src/scripts/scenes/RankingScene.ts:166</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="datainicial" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> data<wbr>Inicial</h3>
+					<div class="tsd-signature tsd-kind-icon">data<wbr>Inicial<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L165">src/scripts/scenes/RankingScene.ts:165</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="databasedata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> database<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">database<wbr>Data<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L162">src/scripts/scenes/RankingScene.ts:162</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>An array that contains the data we parse from the DB&#39;s response everytime we resquest something from it.
+								Specifically, its an array with structured objects, where each of these objects contain information pertaining to a user/player (things like score, name, school, class, etc...)
+							Only parsed/human readable data is assigned to this array.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="dificultyfilter" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> dificulty<wbr>Filter</h3>
+					<div class="tsd-signature tsd-kind-icon">dificulty<wbr>Filter<span class="tsd-signature-symbol">:</span> <a href="../enums/backend_backendconnection.difficultyfilter.html" class="tsd-signature-type" data-tsd-kind="Enumeration">DifficultyFilter</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L177">src/scripts/scenes/RankingScene.ts:177</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The dificulty filter parameter that is sent with the url to the DB. Value range is [1,2,3].</p>
+						</div>
+						<p>If dificulty = 1, then the user is asking for the &#39;Easy&#39; mode scores
+							If dificulty = 2, then the user is asking for the &#39;Normal&#39;/&#39;Medium&#39; mode scores
+						If dificulty = 3, then the user is asking for the &#39;Hard&#39; mode scores</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="events" class="tsd-anchor"></a>
+					<h3>events</h3>
+					<div class="tsd-signature tsd-kind-icon">events<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">EventEmitter</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.events</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86086</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A Scene specific Event Emitter.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="facebook" class="tsd-anchor"></a>
+					<h3>facebook</h3>
+					<div class="tsd-signature tsd-kind-icon">facebook<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">FacebookInstantGamesPlugin</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.facebook</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86186</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Facebook Instant Games Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="filterbackground" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> filter<wbr>Background</h3>
+					<div class="tsd-signature tsd-kind-icon">filter<wbr>Background<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L110">src/scripts/scenes/RankingScene.ts:110</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The orange(brownish) background of the filter option on the right side of the screen.
+							It&#39;s another UI element from RexUI, so we&#39;re oblivious to what its type might be.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="game" class="tsd-anchor"></a>
+					<h3>game</h3>
+					<div class="tsd-signature tsd-kind-icon">game<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Game</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.game</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86044</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the Phaser.Game instance.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="icondificil" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> icon<wbr>Dificil</h3>
+					<div class="tsd-signature tsd-kind-icon">icon<wbr>Dificil<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L67">src/scripts/scenes/RankingScene.ts:67</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="iconescola" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> icon<wbr>Escola</h3>
+					<div class="tsd-signature tsd-kind-icon">icon<wbr>Escola<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L104">src/scripts/scenes/RankingScene.ts:104</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="iconfacil" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> icon<wbr>Facil</h3>
+					<div class="tsd-signature tsd-kind-icon">icon<wbr>Facil<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L79">src/scripts/scenes/RankingScene.ts:79</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="iconnormal" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> icon<wbr>Normal</h3>
+					<div class="tsd-signature tsd-kind-icon">icon<wbr>Normal<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L73">src/scripts/scenes/RankingScene.ts:73</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="icontodos" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> icon<wbr>Todos</h3>
+					<div class="tsd-signature tsd-kind-icon">icon<wbr>Todos<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L96">src/scripts/scenes/RankingScene.ts:96</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="iconturma" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> icon<wbr>Turma</h3>
+					<div class="tsd-signature tsd-kind-icon">icon<wbr>Turma<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L90">src/scripts/scenes/RankingScene.ts:90</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="imgtitle" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> img<wbr>Title</h3>
+					<div class="tsd-signature tsd-kind-icon">img<wbr>Title<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Image</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L129">src/scripts/scenes/RankingScene.ts:129</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The image with the game&#39;s title.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="input" class="tsd-anchor"></a>
+					<h3>input</h3>
+					<div class="tsd-signature tsd-kind-icon">input<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">InputPlugin</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.input</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86144</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Input Manager Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map and the plugin is installed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblanoletivo" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Ano<wbr>Letivo</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Ano<wbr>Letivo<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L56">src/scripts/scenes/RankingScene.ts:56</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Ano Letivo&#39;</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lbldata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Data</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Data<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L48">src/scripts/scenes/RankingScene.ts:48</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lbldificil" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Dificil</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Dificil<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L66">src/scripts/scenes/RankingScene.ts:66</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Dificil&#39;</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lbldificuldade" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Dificuldade</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Dificuldade<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L61">src/scripts/scenes/RankingScene.ts:61</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Dificuldade&#39;</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblescola" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Escola</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Escola<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L46">src/scripts/scenes/RankingScene.ts:46</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblfacil" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Facil</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Facil<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L78">src/scripts/scenes/RankingScene.ts:78</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Fácil&#39;</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblfiltro" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Filtro</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Filtro<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L84">src/scripts/scenes/RankingScene.ts:84</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Filtro&#39;.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblfiltroescola" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Filtro<wbr>Escola</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Filtro<wbr>Escola<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L103">src/scripts/scenes/RankingScene.ts:103</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Escola&#39; (on the right side of the screen).</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblfiltrotodos" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Filtro<wbr>Todos</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Filtro<wbr>Todos<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L95">src/scripts/scenes/RankingScene.ts:95</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Todos&#39;.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblfiltroturma" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Filtro<wbr>Turma</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Filtro<wbr>Turma<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L89">src/scripts/scenes/RankingScene.ts:89</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Turma&#39;.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lbljogador" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Jogador</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Jogador<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L44">src/scripts/scenes/RankingScene.ts:44</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblnormal" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Normal</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Normal<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L72">src/scripts/scenes/RankingScene.ts:72</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The label that reads &#39;Normal&#39;</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblpontos" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Pontos</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Pontos<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L45">src/scripts/scenes/RankingScene.ts:45</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="lblturma" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> lbl<wbr>Turma</h3>
+					<div class="tsd-signature tsd-kind-icon">lbl<wbr>Turma<span class="tsd-signature-symbol">:</span> <a href="components_bettertext.bettertext.html" class="tsd-signature-type" data-tsd-kind="Class">BetterText</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L47">src/scripts/scenes/RankingScene.ts:47</a></li>
+						</ul>
+					</aside>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="lights" class="tsd-anchor"></a>
+					<h3>lights</h3>
+					<div class="tsd-signature tsd-kind-icon">lights<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">LightsManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.lights</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86128</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Lights Manager Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map and the plugin is installed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="load" class="tsd-anchor"></a>
+					<h3>load</h3>
+					<div class="tsd-signature tsd-kind-icon">load<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">LoaderPlugin</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.load</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86151</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Loader Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map and the plugin is installed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="make" class="tsd-anchor"></a>
+					<h3>make</h3>
+					<div class="tsd-signature tsd-kind-icon">make<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">GameObjectCreator</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.make</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86107</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Game Object Creator.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="matter" class="tsd-anchor"></a>
+					<h3>matter</h3>
+					<div class="tsd-signature tsd-kind-icon">matter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">MatterPhysics</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.matter</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86179</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Matter Physics Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="physics" class="tsd-anchor"></a>
+					<h3>physics</h3>
+					<div class="tsd-signature tsd-kind-icon">physics<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ArcadePhysics</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.physics</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86172</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Arcade Physics Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map, the plugin is installed and configured.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="plugins" class="tsd-anchor"></a>
+					<h3>plugins</h3>
+					<div class="tsd-signature tsd-kind-icon">plugins<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">PluginManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.plugins</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86201</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the global Plugin Manager.</p>
+						</div>
+						<p>The Plugin Manager is a global system that allows plugins to register themselves with it, and can then install
+						those plugins into Scenes as required.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="registry" class="tsd-anchor"></a>
+					<h3>registry</h3>
+					<div class="tsd-signature tsd-kind-icon">registry<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">DataManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.registry</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86065</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the global Data Manager.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="renderer" class="tsd-anchor"></a>
+					<h3>renderer</h3>
+					<div class="tsd-signature tsd-kind-icon">renderer<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">CanvasRenderer</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">WebGLRenderer</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.renderer</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86206</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the renderer instance Phaser is using, either Canvas Renderer or WebGL Renderer.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="rexui" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> rexUI</h3>
+					<div class="tsd-signature tsd-kind-icon">rexUI<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L140">src/scripts/scenes/RankingScene.ts:140</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the RexUI&#39;s plugin.
+							Again, we&#39;re mixing javascript with typescript. It&#39;s not ideal, but its what we got.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="scale" class="tsd-anchor"></a>
+					<h3>scale</h3>
+					<div class="tsd-signature tsd-kind-icon">scale<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ScaleManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.scale</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86193</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the global Scale Manager.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="scene" class="tsd-anchor"></a>
+					<h3>scene</h3>
+					<div class="tsd-signature tsd-kind-icon">scene<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ScenePlugin</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.scene</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86114</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the Scene Manager Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="schoolyeardropdown" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> school<wbr>Year<wbr>Dropdown</h3>
+					<div class="tsd-signature tsd-kind-icon">school<wbr>Year<wbr>Dropdown<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L123">src/scripts/scenes/RankingScene.ts:123</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Another (scrollable) table created using RexUI&#39;s plugin.
+							This specific tables is the one we use to display the different school years list on the right side of the screen.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="scoretable" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> score<wbr>Table</h3>
+					<div class="tsd-signature tsd-kind-icon">score<wbr>Table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">any</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L117">src/scripts/scenes/RankingScene.ts:117</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The (scrollable) table object created using RexUI&#39;s plugin.
+							This specific table is the one we use to display the scores.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="sound" class="tsd-anchor"></a>
+					<h3>sound</h3>
+					<div class="tsd-signature tsd-kind-icon">sound<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NoAudioSoundManager</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">HTML5AudioSoundManager</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">WebAudioSoundManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.sound</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86072</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the Sound Manager.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map and the plugin is installed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-private">
+					<a name="spacefilter" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> space<wbr>Filter</h3>
+					<div class="tsd-signature tsd-kind-icon">space<wbr>Filter<span class="tsd-signature-symbol">:</span> <a href="../enums/backend_backendconnection.spacefilter.html" class="tsd-signature-type" data-tsd-kind="Enumeration">SpaceFilter</a></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L187">src/scripts/scenes/RankingScene.ts:187</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The parameter that is sent to the DB and determines the space of scores to retrieve. Value range is [0,1,2].</p>
+						</div>
+						<p>If flag = 2, then the user is trying to see the global scores.
+							If flag = 1, then the user is trying to see the school scores.
+						If flag = 0, then the user is trying to see his/her classe&#39;s scores.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="sys" class="tsd-anchor"></a>
+					<h3>sys</h3>
+					<div class="tsd-signature tsd-kind-icon">sys<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Systems</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.sys</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86037</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Systems. You must never overwrite this property, or all hell will break lose.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="textures" class="tsd-anchor"></a>
+					<h3>textures</h3>
+					<div class="tsd-signature tsd-kind-icon">textures<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TextureManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.textures</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86079</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>A reference to the Texture Manager.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="time" class="tsd-anchor"></a>
+					<h3>time</h3>
+					<div class="tsd-signature tsd-kind-icon">time<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Clock</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.time</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86158</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Time and Clock Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map and the plugin is installed.</p>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="tweens" class="tsd-anchor"></a>
+					<h3>tweens</h3>
+					<div class="tsd-signature tsd-kind-icon">tweens<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TweenManager</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from Phaser.Scene.tweens</p>
+						<ul>
+							<li>Defined in node_modules/phaser/types/phaser.d.ts:86165</li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>The Scene Tween Manager Plugin.</p>
+						</div>
+						<p>This property will only be available if defined in the Scene Injection Map and the plugin is installed.</p>
+					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Methods</h2>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="completescene" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Complete<wbr>Scene</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Complete<wbr>Scene<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L297">src/scripts/scenes/RankingScene.ts:297</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Starts the whole scene creation process.
+									At the end of execution, the scene is completely done and ready for interaction.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="createtable" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Create<wbr>Table</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Create<wbr>Table<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L325">src/scripts/scenes/RankingScene.ts:325</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates the scoreboard table.
+									Utilizes the RexUI&#39;s plugin.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="getschoolyearlist" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Get<wbr>School<wbr>Year<wbr>List</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Get<wbr>School<wbr>Year<wbr>List<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L802">src/scripts/scenes/RankingScene.ts:802</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates an array filled with strings relating to the school years from 2015 until the current year.
+									This procedure is used, only, when we&#39;re creating the fitlers for each school year on the topmost portion on the right side of the screen.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>An array with strings for each school year interval, i.e: an array like [&quot;Todos&quot;, &quot;20-21&quot;, &quot;18-19&quot;, &quot;17-18&quot;, &quot;16-17&quot;, &quot;15-16&quot;]</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="gettabledata" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Get<wbr>Table<wbr>Data</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Get<wbr>Table<wbr>Data<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L835">src/scripts/scenes/RankingScene.ts:835</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates an array with user data by parsing the array &#39;databaseData&#39;.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">[]</span></h4>
+							<p>An array of objects that RexUI understands and can use to add to the table.</p>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="hideuserfilter" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Hide<wbr>User<wbr>Filter</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Hide<wbr>User<wbr>Filter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L891">src/scripts/scenes/RankingScene.ts:891</a></li>
+								</ul>
+							</aside>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="loademptyscene" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Load<wbr>Empty<wbr>Scene</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Load<wbr>Empty<wbr>Scene<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L745">src/scripts/scenes/RankingScene.ts:745</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Used to create an empty table (an empty scene).</p>
+								</div>
+								<p>We use this when no connection to the database is possible when we enter this scene. This way, we dont get just a blank screen.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="setupfilter" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Setup<wbr>Filter</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Setup<wbr>Filter<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L453">src/scripts/scenes/RankingScene.ts:453</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Procedure responsible for the setting up of the labels and their radio buttons.
+									These labels are the ones we see on the right side of the screen (the filter).</p>
+								</div>
+								<p>The radio buttons have the UpdateTop() procedure assocciated because we want the table to update when we click them.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="setupmenubutton" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Setup<wbr>Menu<wbr>Button</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Setup<wbr>Menu<wbr>Button<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L442">src/scripts/scenes/RankingScene.ts:442</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p> Sets up the &quot;Go back to menu&quot; button.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="setupyearfilterdropdown" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Setup<wbr>Year<wbr>Filter<wbr>Dropdown</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Setup<wbr>Year<wbr>Filter<wbr>Dropdown<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L627">src/scripts/scenes/RankingScene.ts:627</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Creates the school year list/dropdown filter.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="updatetable" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> Update<wbr>Table</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">Update<wbr>Table<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L862">src/scripts/scenes/RankingScene.ts:862</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Fetches information from the DB and updates the ranking table with that data.
+									If, at the time of invocation, it is not possible to correctly communicate with the DB, then the score table is emptied.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="init" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> init</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">init<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L247">src/scripts/scenes/RankingScene.ts:247</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The init() procedure provided by phaser.</p>
+								</div>
+								<p>Here&#39;s where we setup the whole UI.</p>
+								<p>It begins with one decision:</p>
+								<p>We try to connect to the database to retrieve it&#39;s data. If there&#39;s no internet connection, or if the connection fails (for some reason),
+								then we&#39;ll just load the blue background with an empty table.</p>
+								<p>If the connection to the database is successfull, then things run normally.</p>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-private">
+					<a name="preload" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagPrivate">Private</span> preload</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-private">
+						<li class="tsd-signature tsd-kind-icon">preload<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/AsuosOnurb/Jogo24/blob/ccddcd0/src/scripts/scenes/RankingScene.ts#L223">src/scripts/scenes/RankingScene.ts:223</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>The preload() procedure provided by phaser.
+									THe only reason we&#39;re using this procedure is because the RexUI&#39;s plugin has to be pre-loaded before everything else.</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+					<a name="update" class="tsd-anchor"></a>
+					<h3>update</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+						<li class="tsd-signature tsd-kind-icon">update<span class="tsd-signature-symbol">(</span>time<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span>, delta<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Inherited from Phaser.Scene.update</p>
+								<ul>
+									<li>Defined in node_modules/phaser/types/phaser.d.ts:86215</li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>This method should be overridden by your own Scenes.</p>
+								</div>
+								<p>This method is called once per game step while the scene is running.</p>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>time: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The current time. Either a High Resolution Timer value if it comes from Request Animation Frame, or Date.now if using SetTimeout.</p>
+									</div>
+								</li>
+								<li>
+									<h5>delta: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The delta time in ms since the last frame. This is a smoothed and capped value based on the FPS rate.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+			</section>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="../modules.html">Modules</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/backend_backendconnection.html">backend/<wbr>Backend<wbr>Connection</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/backend_logindata.html">backend/<wbr>Login<wbr>Data</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/components_betterbutton.html">components/<wbr>Better<wbr>Button</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/components_bettertext.html">components/<wbr>Better<wbr>Text</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/components_countdowntimer.html">components/<wbr>Countdown<wbr>Timer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/components_loginform.html">components/<wbr>Login<wbr>Form</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/components_minicard.html">components/<wbr>Minicard</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/game_multiplayergame.html">game/<wbr>Multiplayer<wbr>Game</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/game_singleplayergame.html">game/<wbr>Singleplayer<wbr>Game</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/scenes_mainmenu.html">scenes/<wbr>Main<wbr>Menu</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/scenes_multiplayerscene.html">scenes/<wbr>Multiplayer<wbr>Scene</a>
+					</li>
+					<li class="current tsd-kind-module">
+						<a href="../modules/scenes_rankingscene.html">scenes/<wbr>Ranking<wbr>Scene</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="../modules/scenes_singleplayerscene.html">scenes/<wbr>Singleplayer<wbr>Scene</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+				<ul class="current">
+					<li class="current tsd-kind-class tsd-parent-kind-module">
+						<a href="scenes_rankingscene.rankingscene.html" class="tsd-kind-icon">Ranking<wbr>Scene</a>
+						<ul>
+							<li class=" tsd-kind-constructor tsd-parent-kind-class tsd-is-overwrite">
+								<a href="scenes_rankingscene.rankingscene.html#constructor" class="tsd-kind-icon">constructor</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#add" class="tsd-kind-icon">add</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#alignmentgrid" class="tsd-kind-icon">alignment<wbr>Grid</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#anims" class="tsd-kind-icon">anims</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#btnmainmenu" class="tsd-kind-icon">btn<wbr>Main<wbr>Menu</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#cache" class="tsd-kind-icon">cache</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#cameras" class="tsd-kind-icon">cameras</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#children" class="tsd-kind-icon">children</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#data" class="tsd-kind-icon">data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#datafinal" class="tsd-kind-icon">data<wbr>Final</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#datainicial" class="tsd-kind-icon">data<wbr>Inicial</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#databasedata" class="tsd-kind-icon">database<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#dificultyfilter" class="tsd-kind-icon">dificulty<wbr>Filter</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#events" class="tsd-kind-icon">events</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#facebook" class="tsd-kind-icon">facebook</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#filterbackground" class="tsd-kind-icon">filter<wbr>Background</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#game" class="tsd-kind-icon">game</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#icondificil" class="tsd-kind-icon">icon<wbr>Dificil</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#iconescola" class="tsd-kind-icon">icon<wbr>Escola</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#iconfacil" class="tsd-kind-icon">icon<wbr>Facil</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#iconnormal" class="tsd-kind-icon">icon<wbr>Normal</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#icontodos" class="tsd-kind-icon">icon<wbr>Todos</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#iconturma" class="tsd-kind-icon">icon<wbr>Turma</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#imgtitle" class="tsd-kind-icon">img<wbr>Title</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#input" class="tsd-kind-icon">input</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblanoletivo" class="tsd-kind-icon">lbl<wbr>Ano<wbr>Letivo</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lbldata" class="tsd-kind-icon">lbl<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lbldificil" class="tsd-kind-icon">lbl<wbr>Dificil</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lbldificuldade" class="tsd-kind-icon">lbl<wbr>Dificuldade</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblescola" class="tsd-kind-icon">lbl<wbr>Escola</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblfacil" class="tsd-kind-icon">lbl<wbr>Facil</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblfiltro" class="tsd-kind-icon">lbl<wbr>Filtro</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblfiltroescola" class="tsd-kind-icon">lbl<wbr>Filtro<wbr>Escola</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblfiltrotodos" class="tsd-kind-icon">lbl<wbr>Filtro<wbr>Todos</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblfiltroturma" class="tsd-kind-icon">lbl<wbr>Filtro<wbr>Turma</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lbljogador" class="tsd-kind-icon">lbl<wbr>Jogador</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblnormal" class="tsd-kind-icon">lbl<wbr>Normal</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblpontos" class="tsd-kind-icon">lbl<wbr>Pontos</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#lblturma" class="tsd-kind-icon">lbl<wbr>Turma</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#lights" class="tsd-kind-icon">lights</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#load" class="tsd-kind-icon">load</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#make" class="tsd-kind-icon">make</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#matter" class="tsd-kind-icon">matter</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#physics" class="tsd-kind-icon">physics</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#plugins" class="tsd-kind-icon">plugins</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#registry" class="tsd-kind-icon">registry</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#renderer" class="tsd-kind-icon">renderer</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#rexui" class="tsd-kind-icon">rexUI</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#scale" class="tsd-kind-icon">scale</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#scene" class="tsd-kind-icon">scene</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#schoolyeardropdown" class="tsd-kind-icon">school<wbr>Year<wbr>Dropdown</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#scoretable" class="tsd-kind-icon">score<wbr>Table</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#sound" class="tsd-kind-icon">sound</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#spacefilter" class="tsd-kind-icon">space<wbr>Filter</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#sys" class="tsd-kind-icon">sys</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#textures" class="tsd-kind-icon">textures</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#time" class="tsd-kind-icon">time</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#tweens" class="tsd-kind-icon">tweens</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#completescene" class="tsd-kind-icon">Complete<wbr>Scene</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#createtable" class="tsd-kind-icon">Create<wbr>Table</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#getschoolyearlist" class="tsd-kind-icon">Get<wbr>School<wbr>Year<wbr>List</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#gettabledata" class="tsd-kind-icon">Get<wbr>Table<wbr>Data</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#hideuserfilter" class="tsd-kind-icon">Hide<wbr>User<wbr>Filter</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#loademptyscene" class="tsd-kind-icon">Load<wbr>Empty<wbr>Scene</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#setupfilter" class="tsd-kind-icon">Setup<wbr>Filter</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#setupmenubutton" class="tsd-kind-icon">Setup<wbr>Menu<wbr>Button</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#setupyearfilterdropdown" class="tsd-kind-icon">Setup<wbr>Year<wbr>Filter<wbr>Dropdown</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#updatetable" class="tsd-kind-icon">Update<wbr>Table</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#init" class="tsd-kind-icon">init</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-private">
+								<a href="scenes_rankingscene.rankingscene.html#preload" class="tsd-kind-icon">preload</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-inherited tsd-is-external">
+								<a href="scenes_rankingscene.rankingscene.html#update" class="tsd-kind-icon">update</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+				<ul class="after-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-constructor tsd-parent-kind-class"><span class="tsd-kind-icon">Constructor</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-property tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private property</span></li>
+				<li class="tsd-kind-method tsd-parent-kind-class tsd-is-private"><span class="tsd-kind-icon">Private method</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="../assets/js/main.js"></script>
+</body>
+</html>
