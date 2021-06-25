@@ -11,160 +11,129 @@ import { BetterText } from "./BetterText";
  * A timer that ticks until 00:00 is reached.
  * A callback function can be specified so that it can be triggered when time time runs out.
  */
-export class CountdownTimer {
+export class CountdownTimer extends BetterText {
 
-    /**
-     * The scene where the timer is placed.
-     */
-    private currentScene: Phaser.Scene;
 
-    /**
-     * The Phaser.Event object that ticks every second.
-     */
-    private timerEvent: Phaser.Time.TimerEvent;
+    private startTime: Date;
 
-    /**
-     * The amount of time the timer starts with.
-     */
-    private readonly INITIAL_TIME: number;
+    private totalTime: number;
+    private timeElapsed: number;
+    private minutes: number;
+    private seconds: number;
 
-    /**
-     * The amount of time left to count down.
-     */
-    private currentTime: number;
+    private displayString: string;
+    private initialString: string;
 
-    /**
-     * Whether or not the timer is (or should be) ticking.
-     * @remarks CountdownTimers are not ticking by default. Time starts counting after using {@link CountdownTimer.StartCountdown} method.
-     */
-    private isRunning: boolean;
 
-    /**
-     * The text representation of the time.
-     */
-    private textObject: BetterText;
-
-    /**
-     * The function/method that gets called when the time reaches zero.
-     */
+    private currScene: Phaser.Scene;
     private callback;
 
-    /**
-     * Creates a new CountdownTimer.
-     * @param scene The scene where the timer is to be placed.
-     * @param startingTime The starting amount of time.
-     * @param callback The method/function that is to be called once the time runs out.
-     * @param textX The x coordinate of the text representation of the timer
-     * @param textY The y coordinate of the text representation of the timer
-     * @param textSize The size of the text
-     * @param optionalInitialText The (optional) initial text string
-     */
-    constructor(scene: Phaser.Scene, startingTime: number, callback, textX: number, textY: number, textSize: number, optionalInitialText: string | undefined) {
+    private isCounting: boolean;
+    private reachedEnd: boolean;
 
-        this.currentScene = scene;
+    constructor(scene: Phaser.Scene, totalTime: number, callback, x, y, initialText:string, textSize: number) {
 
-        this.isRunning = false;
+        super(scene, x, y, initialText, { fontFamily: 'Vertiky', fill: "#fff", fontStyle: "bold", fontSize: textSize });
 
-        this.INITIAL_TIME = startingTime;
-        this.currentTime = startingTime;
+        this.displayString = initialText;
+        this.initialString = initialText;
 
-        this.textObject = new BetterText(scene, textX, textY, "", { fontFamily: 'Vertiky', fill: "#fff", fontStyle: "bold", fontSize: textSize });
+        this.isCounting = false;
+        this.reachedEnd = false;
+        this.startTime = new Date();
+        this.totalTime = totalTime;
+        this.timeElapsed = 0;
 
-        if (optionalInitialText)
-            this.textObject.setText(optionalInitialText);
-        else
-            this.textObject.setText(this.FormatTime());
 
+        this.currScene = scene;
         this.callback = callback;
+
+
     }
 
+    update() {
 
-    /**
-     * Begins the ticking/counting down of time.
-     */
+
+        if (this.isCounting) {
+            const currTime = new Date();
+            const delta = this.startTime.getTime() - currTime.getTime();
+
+            this.timeElapsed = Math.abs(delta / 1000);
+
+            const secondsRemaining = this.totalTime - this.timeElapsed;
+
+             this.minutes = Math.floor(secondsRemaining / 60);
+             this.seconds = Math.floor(secondsRemaining) - (60 *  this.minutes);
+
+            this.displayString = this.FormattedString( this.minutes,  this.seconds);
+        }
+
+
+        if (this.timeElapsed >= this.totalTime) {
+            this.isCounting = false;
+
+            if (!this.reachedEnd)
+            {
+                this.reachedEnd = true;
+                this.callback(this.currScene);
+
+            }
+
+            this.displayString = "00:00";
+        }
+
+        this.setText(this.displayString);
+
+    }
+
     StartCountdown(): void {
-
-        if (!this.isRunning) {
-            this.timerEvent = this.currentScene.time.addEvent({
-                delay: 1000,
-                callback: this.Tick,
-                callbackScope: this,
-                loop: true
-            });
-
-            this.currentTime = this.INITIAL_TIME;
-            this.isRunning = true;
-
-            // Make text white
-            this.textObject.setFill("#fff");
-        }
+        this.isCounting = true;
+        this.startTime = new Date();
     }
 
-    /**
-     * Pauses the timer ticking.
-     */
     StopCountdown(): void {
-        if (this.isRunning) {
-            this.timerEvent.paused = true;
-        }
+        this.isCounting = false;
     }
 
-    /**
-     * Resets the timer by putting it in the same state it had when it was created.
-     */
-    Reset(): void {
-        this.isRunning = false;
-        this.currentTime = this.INITIAL_TIME
-        this.textObject.setText(this.FormatTime());
-        this.textObject.setFill("#fff");
+    Reset () : void 
+    {
+        this.isCounting = false;
+        this.reachedEnd = false;
+        this.timeElapsed = 0
+
+
+        this.minutes = Math.floor(this.totalTime / 60);
+        this.seconds = Math.floor(this.totalTime) - (60 *  this.minutes);
+        this.displayString = this.initialString;
     }
 
-    /**
-     * Handles each tick of the timer.
-     */
-    private Tick(): void {
-        if (this.currentTime > 0) {
-            this.currentTime -= 1; // One second 
-            //Update Timer  
-            this.textObject.setText(this.FormatTime());
-        } else {
-            this.callback(this.currentScene);
 
-            this.isRunning = false;
-            this.currentScene.time.removeEvent(this.timerEvent); // Stop the timer event
-            //Update Timer  
-            this.textObject.setText("00 : 00");
+    private FormattedString(minutes, seconds): string {
+        
+        let secondString, minuteString;
+        
 
 
-        }
+        if (seconds < 10)
+            secondString = `0${seconds}`;
+        else 
+            secondString = seconds;
 
-        if (this.currentTime < 10)
-            // Make text red
-            this.textObject.setFill("#ff251a");
 
+
+        if (minutes < 10)
+            minuteString = `0${minutes}`;
+        else 
+            minuteString = minutes;
+
+
+        if (minutes < 1)
+            return `00:${secondString}`;
+        else 
+            return `${minuteString}:${secondString}`;
 
     }
 
-    /**
-     * Returns a string specifically formated for the timer.
-     * @returns A formatted string for the representation of the remaining time.
-     */
-    private FormatTime(): string {
-        if (this.currentTime == 121 || this.currentTime == 120)
-            return `02 : 00`;
-        // Returns formated time
-        // Minutes Portion
-        var minutes = Math.floor(this.currentTime / 60);
-
-        // Seconds Portion
-        var partInSeconds = this.currentTime % 60;
 
 
-        if (partInSeconds < 10)//maintain the first 0 of the seconds portion
-            return `0${minutes} : 0${partInSeconds}`;
-        else
-            return `0${minutes} : ${partInSeconds}`;
-    }
-
-   
 }

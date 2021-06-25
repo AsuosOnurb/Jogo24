@@ -170,9 +170,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Add the timer background
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
+        
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer = // 180
-            new CountdownTimer(this, 180, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, 64, "");
+            new CountdownTimer(this, 181, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20,  "03:00", 64);
 
 
         // Add the player input bar :
@@ -236,6 +237,11 @@ export class SingleplayerScene extends Phaser.Scene {
     {
          // Add the difficulty image under the logo
          this.SetupDifficultyImage(this.gameState.difficulty);
+    }
+
+    update(time, delta) 
+    {
+        this.countdownTimer.update();
     }
 
     /**
@@ -611,6 +617,7 @@ export class SingleplayerScene extends Phaser.Scene {
      * @remarks Activates only once during the whole game.
      */
     private NoTimeLeft() {
+
         for (let i = 0; i < 4; i++)
             this.cardButtons[i].SetDisabled();
 

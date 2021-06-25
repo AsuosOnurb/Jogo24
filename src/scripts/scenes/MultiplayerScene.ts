@@ -122,6 +122,9 @@ export class MultiplayerScene extends Phaser.Scene {
             this.registry.destroy(); // destroy registry
             this.scene.restart(); // restart current scene
         });
+
+        this.countdownTimer = new CountdownTimer(this, 13, this.NoTimeLeft.bind(this), 256 + 60, this.scale.height / 2, "00:12", 40);
+        this.countdownTimer.setVisible(false);
         
 
 
@@ -143,6 +146,11 @@ export class MultiplayerScene extends Phaser.Scene {
         }
 
         this.Setup();
+    }
+
+    update(time, delta)
+    {
+        this.countdownTimer.update();
     }
 
 
@@ -660,15 +668,14 @@ export class MultiplayerScene extends Phaser.Scene {
         this.minicard2 = new Minicard(this, this.scale.width - 384, 128, '    ');
 
 
-        // Setup the countdown timer
-        this.add.image(256 - 32, this.scale.height / 2, "clockBG1");
-        this.countdownTimer = new CountdownTimer(this, 12, this.NoTimeLeft.bind(this), 256 + 60, this.scale.height / 2, 40, "00 : 12");
+       
 
 
         /* =============== Setup the 'Peek Solution' Button ================ */
         this.btnPeekSolution = new BetterButton(this, this.scale.width / 2 + 320, - 40, 0.8, 0.8, "", {}, 'btn_peekImage');
         this.btnPeekSolution.SetDisabled(0);
         this.btnPeekSolution.on('pointerup', () => this.events.emit('PeekSolutionButtonClick'));
+        this.SetupCountdownTimer();
     }
 
 
@@ -960,5 +967,13 @@ export class MultiplayerScene extends Phaser.Scene {
                 ease: 'Power1'
             }
         );
+    }
+
+    SetupCountdownTimer () : void 
+    {
+         // Setup the countdown timer
+         this.add.image(256 - 32, this.scale.height / 2, "clockBG1");
+         this.countdownTimer.setVisible(true);
+         this.countdownTimer.setDepth(1)
     }
 }
