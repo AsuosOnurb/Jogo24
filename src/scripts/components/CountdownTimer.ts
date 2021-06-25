@@ -31,7 +31,7 @@ export class CountdownTimer extends BetterText {
     private isCounting: boolean;
     private reachedEnd: boolean;
 
-    constructor(scene: Phaser.Scene, totalTime: number, callback, x, y, initialText:string, textSize: number) {
+    constructor(scene: Phaser.Scene, totalTime: number, callback, x, y, initialText: string, textSize: number) {
 
         super(scene, x, y, initialText, { fontFamily: 'Vertiky', fill: "#fff", fontStyle: "bold", fontSize: textSize });
 
@@ -62,18 +62,17 @@ export class CountdownTimer extends BetterText {
 
             const secondsRemaining = this.totalTime - this.timeElapsed;
 
-             this.minutes = Math.floor(secondsRemaining / 60);
-             this.seconds = Math.floor(secondsRemaining) - (60 *  this.minutes);
+            this.minutes = Math.floor(secondsRemaining / 60);
+            this.seconds = Math.floor(secondsRemaining) - (60 * this.minutes);
 
-            this.displayString = this.FormattedString( this.minutes,  this.seconds);
+            this.displayString = this.FormattedString(this.minutes, this.seconds);
         }
 
 
         if (this.timeElapsed >= this.totalTime) {
             this.isCounting = false;
 
-            if (!this.reachedEnd)
-            {
+            if (!this.reachedEnd) {
                 this.reachedEnd = true;
                 this.callback(this.currScene);
 
@@ -87,49 +86,52 @@ export class CountdownTimer extends BetterText {
     }
 
     StartCountdown(): void {
-        this.isCounting = true;
-        this.startTime = new Date();
+
+        if (!this.isCounting) {
+            this.isCounting = true;
+            this.startTime = new Date();
+        }
+
     }
 
     StopCountdown(): void {
         this.isCounting = false;
     }
 
-    Reset () : void 
-    {
+    Reset(): void {
         this.isCounting = false;
         this.reachedEnd = false;
         this.timeElapsed = 0
 
 
         this.minutes = Math.floor(this.totalTime / 60);
-        this.seconds = Math.floor(this.totalTime) - (60 *  this.minutes);
+        this.seconds = Math.floor(this.totalTime) - (60 * this.minutes);
         this.displayString = this.initialString;
     }
 
 
     private FormattedString(minutes, seconds): string {
-        
+
         let secondString, minuteString;
-        
+
 
 
         if (seconds < 10)
             secondString = `0${seconds}`;
-        else 
+        else
             secondString = seconds;
 
 
 
         if (minutes < 10)
             minuteString = `0${minutes}`;
-        else 
+        else
             minuteString = minutes;
 
 
         if (minutes < 1)
             return `00:${secondString}`;
-        else 
+        else
             return `${minuteString}:${secondString}`;
 
     }
