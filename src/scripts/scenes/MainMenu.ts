@@ -205,14 +205,13 @@ export class MainMenuScene extends Phaser.Scene {
 
         // Play Solo Medium button
         this.btnPlaySoloMedium = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 128, 1.2, 1.2, "", {}, 'btn_medium');
+        this.btnPlaySoloMedium.on("pointerup",  () => this.StartSoloGame(Difficulty.Medium));
 
 
         // Play Solo Hard button
         this.btnPlaySoloHard = new BetterButton(this, this.scale.width / 2, this.scale.height / 2 + 320, 1.2, 1.2, "", {}, 'btn_hard');
-
-        this.btnPlaySoloEasy.on("pointerup",    () => this.StartSoloGame(Difficulty.Easy));
-        this.btnPlaySoloMedium.on("pointerup",  () => this.StartSoloGame(Difficulty.Medium));
         this.btnPlaySoloHard.on("pointerup",    () => this.StartSoloGame(Difficulty.Hard));
+
 
 
         this.SetupLoginLogoutButtons();

@@ -196,7 +196,6 @@ export class SingleplayerScene extends Phaser.Scene {
     private init(data) {
 
         this.gameState = new SingleplayerGame(data.difficulty);
-        console.log(data)
 
         /**
          * Register event handlers/listeners onyl if the scene hasn't been started before.
