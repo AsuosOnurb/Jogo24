@@ -15,7 +15,8 @@ import { PlayerState, SingleplayerGame } from '../game/SingleplayerGame'
 import { ValueOfExpression } from '../utils/Utils'
 import { LoginData } from '../backend/LoginData'
 import { Operation } from '../utils/Operations'
-import { GetPreviousScores, UpdateScore, GetUpdatedScores } from '../backend/BackendConnection'
+import { GetPreviousScores, UpdateScore, GetUpdatedScores, DifficultyFilter } from '../backend/BackendConnection'
+import { Difficulty } from '../utils/CardGenerator'
 
 
 /**
@@ -195,6 +196,7 @@ export class SingleplayerScene extends Phaser.Scene {
     private init(data) {
 
         this.gameState = new SingleplayerGame(data.difficulty);
+        console.log(data)
 
         /**
          * Register event handlers/listeners onyl if the scene hasn't been started before.
@@ -223,9 +225,18 @@ export class SingleplayerScene extends Phaser.Scene {
 
             }).catch(function (err) {
             });
-
         }
 
+       
+
+
+    }
+
+
+    create() 
+    {
+         // Add the difficulty image under the logo
+         this.SetupDifficultyImage(this.gameState.difficulty);
     }
 
     /**
@@ -237,6 +248,8 @@ export class SingleplayerScene extends Phaser.Scene {
         this.textTotalCorrect.setOrigin(0.5, 0.5);
         this.textTotalWrong = new BetterText(this, this.scale.width / 2 + 740, 288, "0", { fontFamily: 'Vertiky', fontSize: 40, color: "#ffffff", fontStyle: "bold" })
         this.textTotalWrong.setOrigin(0.5, 0.5);
+
+
 
     }
 
@@ -612,7 +625,7 @@ export class SingleplayerScene extends Phaser.Scene {
 
         this.btnNewCard.SetDisabled();
 
-       const playerScore = this.gameState.GetTotalCorrect();
+        const playerScore = this.gameState.GetTotalCorrect();
         // Check the most updated scores from the DB
         let verifConnection = GetUpdatedScores(playerScore, this.gameState.difficulty + 1);
         verifConnection.then((scores) => {
@@ -928,6 +941,25 @@ export class SingleplayerScene extends Phaser.Scene {
                 ease: 'Power1'
             }
         );
+    }
+
+    /**
+     * Adds an image, just below the logo, of the current game difficulty
+     * @param diff The difficulty of the game.  
+     */
+    private SetupDifficultyImage(diff: Difficulty): void {
+
+        let imageName;
+        if (diff === Difficulty.Easy)
+            imageName = "btn_easy";
+        else if (diff === Difficulty.Medium)
+            imageName = "btn_medium";
+        else if (diff === Difficulty.Hard)
+            imageName = "btn_hard";
+
+        const diffImage  =  this.add.image(256, 208, imageName);
+        diffImage.setScale(0.6);
+
     }
 
 }
