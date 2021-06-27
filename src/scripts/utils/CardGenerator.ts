@@ -57,6 +57,5 @@ export class CardGenerator {
 
             // The cycle only stops when whe generate a unique card.
         }
-
     }
 }

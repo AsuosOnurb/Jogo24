@@ -206,8 +206,8 @@ export class RankingScene extends Phaser.Scene {
             x = n - 1;
             y = n;
         }
-        this.dataInicial = x + "-09-01";
-        this.dataFinal = y + "-08-31";
+        this.dataInicial =  `${x}-09-01`;
+        this.dataFinal =  `${y}-08-31`;
         this.dificultyFilter = DifficultyFilter.Easy;
         this.spaceFilter = SpaceFilter.All;
 

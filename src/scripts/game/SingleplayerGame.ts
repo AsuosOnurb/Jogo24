@@ -10,7 +10,7 @@
 
 import { Operation } from "../utils/Operations";
 import { CardGenerator, Difficulty } from "../utils/CardGenerator";
-import { evaluate } from 'mathjs'
+import { evaluate, format } from 'mathjs'
 import { IsNumeric } from "../utils/Utils";
 import { Stack } from '../utils/Stack'
 
@@ -142,7 +142,9 @@ export class SingleplayerGame {
      */
     public CheckSolution(operationExpression: string): boolean {
         const val = evaluate(operationExpression.replaceAll("x", "*"));
-        return val === 24;
+        const newVal = format(val, {precision: 14})
+
+        return newVal === "24";
     }
 
 
@@ -153,7 +155,7 @@ export class SingleplayerGame {
      * @param operand1 The (string) value of the first operand. It's astring value because we get it from its button and we also don't care about its numerical value.
      * @param operand1BtnIndex The index of the button associated with this operand.
      * 
-     * @remarks This procedure is does more than just setting the first operand. It also sets/advances the player state to {@link PlayerState.PickingOperator}.
+     * @remarks This procedure does more than just setting the first operand. It also sets/advances the player state to {@link PlayerState.PickingOperator}.
      */
     public PickOperand1(operand1: string, operand1BtnIndex: number): void {
         // Update the current operation
@@ -184,9 +186,9 @@ export class SingleplayerGame {
         // If it a more complex expression, then we put partentheses around it.
 
         if (IsNumeric(this.currentOperation.operand1))
-            return `${this.currentOperation.operand1} ${operator}`;
+            return `${this.currentOperation.operand1}${operator}`;
         else
-            return `(${this.currentOperation.operand1}) ${operator}`;
+            return `(${this.currentOperation.operand1})${operator}`;
     }
 
     /**

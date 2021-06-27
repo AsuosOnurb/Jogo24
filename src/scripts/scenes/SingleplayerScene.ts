@@ -170,10 +170,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
         // Add the timer background
         this.add.sprite(this.scale.width / 2 - 640, this.scale.height / 2 - 64, 'clockBG2');
-        
+
         // Setup the timer with a callback function that disables all buttons once the timer runs out.
         this.countdownTimer = // 180
-            new CountdownTimer(this, 181, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20,  "03:00", 64);
+            new CountdownTimer(this, 181, this.NoTimeLeft.bind(this), 320, this.scale.height / 2 + 20, "03:00", 64);
 
 
         // Add the player input bar :
@@ -227,20 +227,18 @@ export class SingleplayerScene extends Phaser.Scene {
             });
         }
 
-       
+
 
 
     }
 
 
-    create() 
-    {
-         // Add the difficulty image under the logo
-         this.SetupDifficultyImage(this.gameState.difficulty);
+    create() {
+        // Add the difficulty image under the logo
+        this.SetupDifficultyImage(this.gameState.difficulty);
     }
 
-    update(time, delta) 
-    {
+    update(time, delta) {
         this.countdownTimer.update();
     }
 
@@ -435,7 +433,7 @@ export class SingleplayerScene extends Phaser.Scene {
             // Complete the current operation and get its expression 
             const expression = this.gameState.PickOperand2(pickedNumber, clickedButtonIndex);
 
-            // Assigne the operation expression to the button we just clicked
+            // Assign the operation expression to the button we just clicked
             this.cardButtons[clickedButtonIndex].NumberButtonSetText(expression);
 
             // Also insert the expression on the expression bar
@@ -452,8 +450,6 @@ export class SingleplayerScene extends Phaser.Scene {
 
             if (usedCount === 3) {
                 // All numbers were used. Proceed to checking the solution
-
-
                 const won: boolean = this.gameState.CheckSolution(expression);
 
                 if (won) {
@@ -482,7 +478,7 @@ export class SingleplayerScene extends Phaser.Scene {
     private HandleButtonClick_Operation(operator: string) {
 
         // Pick the operator and get the most updated expression string. 
-        //Also, this call sendds us to the next state (picking operand 2)
+        //Also, this call sends us to the next state (picking operand 2)
         const mostRecentExpression: string = this.gameState.PickOperator(operator);
 
         // Enable card buttons
@@ -522,6 +518,10 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Update the text expression bar
             this.expressionBar.SetText("");
+
+            // Disable the undo button if the operation stac is empty
+            if (this.gameState.IsStackEmpty()) 
+                this.btnUndo.SetDisabled();
 
         } else if (this.gameState.GetPlayerState() === PlayerState.PickingOperator) {
             /*
@@ -575,15 +575,9 @@ export class SingleplayerScene extends Phaser.Scene {
 
             // Change the current state
             this.gameState.SetPlayerState(PlayerState.PickingOperator);
-
         }
 
-        // Disable the undo button if the operation stac is empty
-        if (this.gameState.IsStackEmpty()) {
-            this.btnUndo.SetDisabled();
 
-            //////// handle undo after btn reset!!!
-        }
 
     }
 
@@ -867,7 +861,7 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
     private ShowPlayerWon(expression: string): void {
-        this.expressionBar.SetText(expression + ` = ${24}`);
+        this.expressionBar.SetText(`${expression} = ${24}`);
         this.expressionBar.SetTextColor("#00ff1a");
         this.textTotalCorrect.setText(this.gameState.GetTotalCorrect().toString());
         this.expressionBar.PlayCorrectExpressionTween();
@@ -875,7 +869,7 @@ export class SingleplayerScene extends Phaser.Scene {
     }
 
     private ShowPlayerLost(expression: string): void {
-        this.expressionBar.SetText(expression + ` = ${ValueOfExpression(expression)}`);
+        this.expressionBar.SetText(`${expression} = ${ValueOfExpression(expression)}`);
         this.expressionBar.SetTextColor("#ff2600");
         this.textTotalWrong.setText(this.gameState.GetTotalWrong().toString());
         this.expressionBar.PlayIncorrectExpressionTween();
@@ -963,7 +957,7 @@ export class SingleplayerScene extends Phaser.Scene {
         else if (diff === Difficulty.Hard)
             imageName = "btn_hard";
 
-        const diffImage  =  this.add.image(256, 208, imageName);
+        const diffImage = this.add.image(256, 208, imageName);
         diffImage.setScale(0.6);
 
     }

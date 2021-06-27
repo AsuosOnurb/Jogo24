@@ -94,13 +94,13 @@ export class LoginForm {
         this.usernameInput = mainMenuScene.add.dom(0, 0).createFromHTML(user, 'div');
         this.usernameInput.setPosition(mainMenuScene.scale.width / 2, mainMenuScene.scale.height / 2);
         this.usernameInput.setScale(2.85, 3.2);
-        this.usernameInput.x -= 150;
+        this.usernameInput.x -= 163;
         this.usernameInput.y -= 60;
 
         this.passwordInput = mainMenuScene.add.dom(0, 0).createFromHTML(pass, 'div');
         this.passwordInput.setPosition(mainMenuScene.scale.width / 2, mainMenuScene.scale.height / 2);
         this.passwordInput.setScale(2.85, 3.2);
-        this.passwordInput.x += -150;
+        this.passwordInput.x += -163;
         this.passwordInput.y += 148;
 
         // Add an id to the html container

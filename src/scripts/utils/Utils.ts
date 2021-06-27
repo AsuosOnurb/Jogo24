@@ -1,7 +1,7 @@
 
 
 
-import { evaluate } from 'mathjs'
+import { evaluate,format} from 'mathjs'
 
 export function RandomInt(lowerbound: number, upperbound: number): number {
     let min = Math.ceil(lowerbound);
@@ -27,7 +27,9 @@ export function IsNumeric(n) {
 
 
 export function ValueOfExpression(arithExpression: string): number {
-    return evaluate(arithExpression.replaceAll("x", "*"));
+    const val = evaluate(arithExpression.replaceAll("x", "*"));
+    const newVal = format(val, {precision: 8})
+    return newVal;
  }
 
 

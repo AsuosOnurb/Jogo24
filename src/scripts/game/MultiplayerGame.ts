@@ -5,7 +5,7 @@
  */
 
 
-import { evaluate } from 'mathjs'
+import { evaluate, format} from 'mathjs'
 import { Operation } from '../utils/Operations'
 import { CardGenerator, Difficulty } from "../utils/CardGenerator";
 import { IsNumeric } from '../utils/Utils';
@@ -155,7 +155,9 @@ export class MultiplayerGame {
 
     CheckSolution(expression: string): boolean {
         const val = evaluate(expression.replaceAll("x", "*"));
-        return val === 24;
+        const newVal = format(val, {precision: 14})
+
+        return newVal === "24";
     }
 
 

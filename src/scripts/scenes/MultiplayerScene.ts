@@ -709,7 +709,7 @@ export class MultiplayerScene extends Phaser.Scene {
     ShowPlayerWon(expression: string): void {
 
         this.expressionBars.forEach((exprBar: BetterButton) => {
-            exprBar.SetText(expression + ` = ${24}`);
+            exprBar.SetText(`${expression} = ${24}`);
             exprBar.SetTextColor("#00ff1a");
         });
 
@@ -719,7 +719,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
     ShowPlayerLost(expression: string): void {
         this.expressionBars.forEach((exprBar: BetterButton) => {
-            exprBar.SetText(expression + ` = ${ValueOfExpression(expression)}`);
+            exprBar.SetText(`${expression} = ${ValueOfExpression(expression)}`);
             exprBar.SetTextColor("#ff2600");
         });
 
@@ -794,7 +794,7 @@ export class MultiplayerScene extends Phaser.Scene {
 
         // Show the solution in all expression bars
         this.expressionBars.forEach((exprBar) => {
-            exprBar.SetText(solution.replaceAll('*', 'x') + " = 24");
+            exprBar.SetText(`${solution.replaceAll('*', 'x')} = 24`);
             exprBar.SetTextColor("#00ff1a");
         })
 
