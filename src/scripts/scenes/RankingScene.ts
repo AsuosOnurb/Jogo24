@@ -776,7 +776,7 @@ export class RankingScene extends Phaser.Scene {
         noConnectionWarningText.setAlpha(0);
 
         let tryAgainText: BetterText = new BetterText(this, this.scale.width / 2, this.scale.height / 2 + 32,
-            "Verifica a tua ligação e tenta novemente.", { fontFamily: 'Vertiky', align: 'center', fontSize: 48, color: "#4e2400" });
+            "Verifica a tua ligação e tenta novamente.", { fontFamily: 'Vertiky', align: 'center', fontSize: 48, color: "#4e2400" });
         tryAgainText.setAlpha(0);
 
         this.tweens.add(
