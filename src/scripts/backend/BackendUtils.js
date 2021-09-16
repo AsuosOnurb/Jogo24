@@ -1,5 +1,13 @@
 export function ParseScoreData(dataString) {
 
+    /*
+        Sometimes, when a new school year starts, there exists no game data to populate the score table (for example, when no one has played the game since the new school year started)
+        Because of this, the Hypatiamat's server sends us a response with the string "error=0".
+        In these cases, we simply return an empty array, bacause the score table should be empty.
+    */
+    if (dataString === "erro=0")
+        return []
+
     let data = [];
     let j = 0;
     dataString = dataString.split('&');

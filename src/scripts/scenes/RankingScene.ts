@@ -282,7 +282,6 @@ export class RankingScene extends Phaser.Scene {
 
         }).catch((err) => {
             this.LoadEmptyScene();
-
         });
 
     }
@@ -746,6 +745,7 @@ export class RankingScene extends Phaser.Scene {
 
         // Move the menu button to the center of the screen
         this.btnMainMenu.setDepth(1); // This is not cool. We're making it so that this button stays in front of everything we're about to add next.
+        this.btnMainMenu.SetNewDefaultScale(1.1);
         this.tweens.add(
             {
                 targets: this.btnMainMenu,
