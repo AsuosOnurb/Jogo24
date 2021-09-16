@@ -193,23 +193,8 @@ export class RankingScene extends Phaser.Scene {
     constructor() {
         super('RankingScene');
 
-        const d = new Date();
-        const m = d.getMonth();
-        const n = d.getFullYear();
 
-        let x, y;
-        if (m > 7) {
-            x = n;
-            y = n + 1;
-        }
-        else {
-            x = n - 1;
-            y = n;
-        }
-        this.dataInicial =  `${x}-09-01`;
-        this.dataFinal =  `${y}-08-31`;
-        this.dificultyFilter = DifficultyFilter.Easy;
-        this.spaceFilter = SpaceFilter.All;
+        
 
     }
 
@@ -259,6 +244,11 @@ export class RankingScene extends Phaser.Scene {
         // This image fades out giving the illusion of the elements appearing
         let fadedoutImg = this.add.image(this.scale.width / 2, this.scale.height / 2, 'blueBackground').setDisplaySize(this.scale.width, this.scale.height);
 
+
+        this.ResetSchoolYear();
+        
+        this.dificultyFilter = DifficultyFilter.Easy;
+        this.spaceFilter = SpaceFilter.All;
 
         // Connecting to the DB. We're trying to collect the TOP global scores.
         let connection = GetGlobalTOP(this.dataInicial, this.dataFinal);
@@ -896,5 +886,25 @@ export class RankingScene extends Phaser.Scene {
         this.iconEscola.visible = false;
         this.lblFiltroTodos.visible = false;
         this.iconTodos.visible = false;
+    }
+
+
+    private ResetSchoolYear(): void
+    {
+        const d = new Date();
+        const m = d.getMonth();
+        const n = d.getFullYear();
+
+        let x, y;
+        if (m > 7) {
+            x = n;
+            y = n + 1;
+        }
+        else {
+            x = n - 1;
+            y = n;
+        }
+        this.dataInicial =  `${x}-09-01`;
+        this.dataFinal =  `${y}-08-31`;
     }
 }
